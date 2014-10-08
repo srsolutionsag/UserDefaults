@@ -36,8 +36,19 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 		 * @var $ilCtrl ilCtrl
 		 */
 
-		$ilUserSettingsGUI = new ilUserSettingsGUI($this);
-		$ilCtrl->forwardCommand($ilUserSettingsGUI);
+
+		$nextClass = $ilCtrl->getNextClass();
+		switch($nextClass) {
+			case 'iludfcheckgui':
+				$ilUDFCheckGUI = new ilUDFCheckGUI(new ilUserSettingsGUI($this));
+				$ilCtrl->forwardCommand($ilUDFCheckGUI);
+				break;
+			default;
+				$ilUserSettingsGUI = new ilUserSettingsGUI($this);
+				$ilCtrl->forwardCommand($ilUserSettingsGUI);
+				break;
+		}
+
 	}
 
 

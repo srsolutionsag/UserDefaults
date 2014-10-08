@@ -39,22 +39,15 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-
 		if ($a_component == 'Modules/Course' AND $a_event == 'update') {
 			global $ilUser;
-			//			ilUDFCheck::installDB();
-			//			ilUserSetting::installDB();
-			$ilUserSetting = new ilUserSetting();
-			$ilUserSetting->setTitle('Stuzdienanwärter');
-			$ilUserSetting->setGlobalRole(4);
-			$ilUserSetting->setAssignedCourses(array( 73 ));
-			$ilUserSetting->setStatus(ilUserSetting::STATUS_ACTIVE);
-			//			$ilUserSetting->create();
 			/**
 			 * @var $ilUserSetting ilUserSetting
 			 */
+			$ilUser = new ilObjUser(340);
+
 			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
-				$ilUserSetting->doAssignements();
+				$ilUserSetting->doAssignements($ilUser);
 			}
 		}
 
@@ -64,19 +57,12 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 			 */
 
 			$ilUser = $a_parameter['user_obj'];
+
 			if ($ilUser instanceof ilObjUser) {
 				// Do Stuff
-				/**
-				 * @var $ilUserDefinedFields ilUserDefinedFields
-				 */
-				//				$ilUserDefinedFields = ilUserDefinedFields::_getInstance();
-				//				var_dump($ilUserDefinedFields); // FSX
-
-				$ilUser->readUserDefinedFields();
-
-				echo '<pre>' . print_r($ilUser->user_defined_data, 1) . '</pre>';
-
-				exit;
+				foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
+					$ilUserSetting->doAssignements($ilUser);
+				}
 			}
 		}
 	}
@@ -87,6 +73,44 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 */
 	public function getPluginName() {
 		return self::PLUGIN_NAME;
+	}
+
+
+	public function updateLanguageFiles() {
+		ini_set('auto_detect_line_endings', true);
+		$path = substr(__FILE__, 0, strpos(__FILE__, 'classes')) . 'lang/';
+		if (file_exists($path . 'lang_custom.csv')) {
+			$file = $path . 'lang_custom.csv';
+		} else {
+			$file = $path . 'lang.csv';
+		}
+		$keys = array();
+		$new_lines = array();
+
+		foreach (file($file) as $n => $row) {
+			//			$row = utf8_encode($row);
+			if ($n == 0) {
+				$keys = str_getcsv($row, ";");
+				continue;
+			}
+			$data = str_getcsv($row, ";");;
+			foreach ($keys as $i => $k) {
+				if ($k != 'var' AND $k != 'part') {
+					$new_lines[$k][] = $data[0] . '_' . $data[1] . '#:#' . $data[$i];
+				}
+			}
+		}
+		$start = '<!-- language file start -->' . PHP_EOL;
+		$status = true;
+
+		foreach ($new_lines as $lng_key => $lang) {
+			$status = file_put_contents($path . 'ilias_' . $lng_key . '.lang', $start . implode(PHP_EOL, $lang));
+		}
+
+		if (! $status) {
+			ilUtil::sendFailure('Language-Files coul\'d not be written');
+		}
+		$this->updateLanguages();
 	}
 }
 

@@ -1,0 +1,35 @@
+<!-- language file start -->
+form_title#:#Einstellungen erfassen
+form_button_update#:#Update
+form_button_create#:#Erstellen
+form_button_cancel#:#Abbrechen
+set_title#:#Titel
+set_description#:#Beschreibung
+set_global_role#:#Globale Rolle
+set_assigned_courses#:#Einschreiben in Kurse
+set_assigned_groupes#:#Einschreiben in Gruppen
+set_portfolio_template_id#:#Portfolio-Vorlage
+set_portfolio_assigned_to_groups#:#Portfolio automatisch freigegen
+msg_entry_added#:#Eintrag gespeichert
+msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
+msg_confirm_delete#:#Möchten Sie den Datensatz wirklich löschen?
+set_table_title#:#Einstellungs-Sets
+set_status#:#Aktiv
+set_cancel#:#Abbrechen
+set_actions#:#Aktionen
+set_add#:#Neue Einstellung erfassen
+set_edit#:#Bearbeiten
+set_activate#:#Aktivieren
+set_deactivate#:#Deaktivieren
+set_udf_checks#:#UDF-Checks bearbeiten
+set_delete#:#Löschen
+check_table_title#:#UDF-Checks
+check_add#:#UDF-Check hinzufügen
+check_name#:#Feld
+check_operator#:#Vergleich
+check_value#:#Wert
+check_actions#:#Aktionen
+check_udf_field_id#:#UDF-Feld
+check_edit#:#Bearbeiten
+check_delete#:#Löschen
+check_back#:#<< Zurück

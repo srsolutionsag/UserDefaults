@@ -5,14 +5,14 @@ require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvan
 require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UDFCheck/class.ilUDFCheckGUI.php');
 
 /**
- * Class ilUserSettingsTableGUI
+ * Class ilUDFCheckTableGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  * @version 1.0.0
  */
-class ilUserSettingsTableGUI extends ilTable2GUI {
+class ilUDFCheckTableGUI extends ilTable2GUI {
 
-	const USR_DEF_CONTENT = 'usr_def_content';
+	const USR_DEF_CONTENT = 'usr_def_content_checks';
 	/**
 	 * @var ilCtrl $ctrl
 	 */
@@ -24,11 +24,11 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 
 	/**
-	 * @param ilUserSettingsGUI $parent_obj
-	 * @param string            $parent_cmd
-	 * @param string            $template_context
+	 * @param ilUDFCheckGUI $parent_obj
+	 * @param string        $parent_cmd
+	 * @param string        $template_context
 	 */
-	public function __construct(ilUserSettingsGUI $parent_obj, $parent_cmd = ilUserSettingsGUI::CMD_INDEX, $template_context = "") {
+	public function __construct(ilUDFCheckGUI $parent_obj, $parent_cmd = ilUDFCheckGUI::CMD_INDEX, $template_context = "") {
 		/**
 		 * @var              $ilCtrl ilCtrl
 		 * @var ilToolbarGUI $ilToolbar
@@ -42,7 +42,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->setPrefix(self::USR_DEF_CONTENT);
 		$this->setFormName(self::USR_DEF_CONTENT);
 		$this->setId(self::USR_DEF_CONTENT);
-		$this->setTitle($this->pl->txt('set_table_title'));
+		$this->setTitle($this->pl->txt('check_table_title'));
 		parent::__construct($parent_obj, $parent_cmd, $template_context);
 		$this->ctrl->saveParameter($parent_obj, $this->getNavParameter());
 		$this->setEnableNumInfo(true);
@@ -54,16 +54,17 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->setRowTemplate('Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/templates/default/tpl.settings_row.html');
 		$this->parseData();
 
-		$this->toolbar->addButton($this->pl->txt('set_add'), $this->ctrl->getLinkTarget($parent_obj, ilUserSettingsGUI::CMD_ADD), '', '', '', '', 'submit emphsubmit');
+		$this->toolbar->addButton($this->pl->txt('check_back'), $this->ctrl->getLinkTargetByClass('ilUserSettingsGUI', ilUserSettingsGUI::CMD_INDEX));
+		$this->toolbar->addButton($this->pl->txt('check_add'), $this->ctrl->getLinkTarget($parent_obj, ilUDFCheckGUI::CMD_ADD), '', '', '', '', 'submit emphsubmit');
 	}
 
 
 	protected function parseData() {
 		$this->determineOffsetAndOrder();
 		$this->determineLimit();
-		$xdglRequestList = ilUserSetting::getCollection();
-		$xdglRequestList->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$xdglRequestList->innerjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
+		$xdglRequestList = ilUDFCheck::getCollection();
+		$xdglRequestList->where(array( 'parent_id' => $_GET[ilUserSettingsGUI::IDENTIFIER] ));
+		$xdglRequestList->innerjoin('udf_definition', 'udf_field_id', 'field_id', array( 'field_name' ));
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {
@@ -75,13 +76,8 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
 		}
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
-		$xdglRequestList->orderBy('title');
 		$a_data = $xdglRequestList->getArray();
-		$img_on = ilUtil::img(ilUtil::getImagePath('icon_led_on_s.png'));
-		$img_off = ilUtil::img(ilUtil::getImagePath('icon_led_off_s.png'));
-		foreach ($a_data as $k => $d) {
-			$a_data[$k]['status_image'] = ($d['status'] == ilUserSetting::STATUS_ACTIVE ? $img_on : $img_off);
-		}
+		//		echo '<pre>' . print_r($a_data, 1) . '</pre>';
 		$this->setData($a_data);
 	}
 
@@ -90,26 +86,20 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	 * @param array $a_set
 	 */
 	public function fillRow($a_set) {
-		$ilUserSetting = ilUserSetting::find($a_set['id']);
+		$ilUDFCheck = ilUDFCheck::find($a_set['id']);
 		$ilUDFCheckGUI = new ilUDFCheckGUI($this->parent_obj);
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($k == 'actions') {
-				$this->ctrl->setParameter($this->parent_obj, ilUserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
-				$this->ctrl->setParameter($ilUDFCheckGUI, ilUserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
+				$this->ctrl->setParameter($this->parent_obj, ilUDFCheckGUI::IDENTIFIER, $ilUDFCheck->getId());
+				$this->ctrl->setParameter($ilUDFCheckGUI, ilUDFCheckGUI::IDENTIFIER, $ilUDFCheck->getId());
 
 				$current_selection_list = new ilAdvancedSelectionListGUI();
-				$current_selection_list->setListTitle($this->pl->txt('set_actions'));
-				$current_selection_list->setId('set_actions' . $ilUserSetting->getId());
+				$current_selection_list->setListTitle($this->pl->txt('check_actions'));
+				$current_selection_list->setId('check_actions' . $ilUDFCheck->getId());
 				$current_selection_list->setUseImages(false);
-				$current_selection_list->addItem($this->pl->txt('set_edit'), 'set_edit', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_EDIT));
+				$current_selection_list->addItem($this->pl->txt('check_edit'), 'check_edit', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_EDIT));
 
-				$current_selection_list->addItem($this->pl->txt('set_udf_checks'), 'set_udf_checks', $this->ctrl->getLinkTarget($ilUDFCheckGUI, ilUDFCheckGUI::CMD_INDEX));
-				if ($ilUserSetting->getStatus() == ilUserSetting::STATUS_ACTIVE) {
-					$current_selection_list->addItem($this->pl->txt('set_deactivate'), 'set_deactivate', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_DEACTIVATE));
-				} else {
-					$current_selection_list->addItem($this->pl->txt('set_activate'), 'set_activate', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_ACTIVATE));
-				}
-				$current_selection_list->addItem($this->pl->txt('set_delete'), 'set_delete', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_CONFIRM_DELETE));
+				//				$current_selection_list->addItem($this->pl->txt('check_delete'), 'check_delete', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_CONFIRM_DELETE));
 
 				$this->tpl->setCurrentBlock('td');
 				$this->tpl->setVariable('VALUE', $current_selection_list->getHTML());
@@ -145,15 +135,15 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	 * @return array
 	 */
 	public function getSelectableColumns() {
-		$cols['status_image'] = array( 'txt' => $this->pl->txt('set_status'), 'default' => true, 'width' => '30px', 'sort_field' => 'status' );
-		$cols['title'] = array( 'txt' => $this->pl->txt('set_title'), 'default' => true, 'width' => 'auto', 'sort_field' => 'title' );
-		$cols['object_data_title'] = array(
-			'txt' => $this->pl->txt('set_global_role'),
+		$cols['field_name'] = array(
+			'txt' => $this->pl->txt('check_name'),
 			'default' => true,
-			'width' => 'auto',
-			'sort_field' => 'object_data_title'
+			'width' => '40%',
+			'sort_field' => 'field_name'
 		);
-		$cols['actions'] = array( 'txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px', );
+		//		$cols['operator'] = array( 'txt' => $this->pl->txt('check_operator'), 'default' => true, 'width' => '20px', 'sort_field' => 'operator' );
+		$cols['check_value'] = array( 'txt' => $this->pl->txt('check_value'), 'default' => true, 'width' => 'auto', 'sort_field' => 'check_value' );
+		$cols['actions'] = array( 'txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px', );
 
 		return $cols;
 	}

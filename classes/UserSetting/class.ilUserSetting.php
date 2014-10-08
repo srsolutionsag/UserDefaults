@@ -91,9 +91,8 @@ class ilUserSetting extends ActiveRecord {
 	 * @param ilObjUser $ilObjUser
 	 */
 	public function doAssignements(ilObjUser $ilObjUser) {
-		$this->setUsrobject($ilObjUser);
-		$do_assignements = $this->isValid();
-		if ($do_assignements) {
+		$this->setUsrObject($ilObjUser);
+		if ($this->isValid()) {
 			$this->generatePortfolio();
 			$this->assignCourses();
 			$this->assignGroups();
@@ -109,7 +108,7 @@ class ilUserSetting extends ActiveRecord {
 		global $rbacadmin;
 		$global_role = $this->getGlobalRole();
 		if (ilObject2::_lookupType($global_role) == 'role') {
-			$rbacadmin->assignUser($global_role, $this->getUsrobject()->getId());
+			$rbacadmin->assignUser($global_role, $this->getUsrObject()->getId());
 		}
 	}
 
@@ -117,7 +116,7 @@ class ilUserSetting extends ActiveRecord {
 	protected function assignCourses() {
 		foreach ($this->getAssignedCourses() as $crs_obj_id) {
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
-			$part->add($this->getUsrobject()->getId(), ilCourseConstants::CRS_MEMBER);
+			$part->add($this->getUsrObject()->getId(), ilCourseConstants::CRS_MEMBER);
 		}
 	}
 
@@ -125,7 +124,7 @@ class ilUserSetting extends ActiveRecord {
 	protected function assignGroups() {
 		foreach ($this->getAssignedGroupes() as $grp_obj_id) {
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
-			$part->add($this->getUsrobject()->getId(), IL_GRP_MEMBER);
+			$part->add($this->getUsrObject()->getId(), IL_GRP_MEMBER);
 		}
 	}
 
@@ -136,7 +135,7 @@ class ilUserSetting extends ActiveRecord {
 	protected function isValid() {
 		$do_assignements = true;
 		foreach ($this->getUdfCheckObjects() as $udf) {
-			if (! $udf->isValid($this->getUsrobject())) {
+			if (! $udf->isValid($this->getUsrObject())) {
 				$do_assignements = false;
 			}
 		}
@@ -152,7 +151,7 @@ class ilUserSetting extends ActiveRecord {
 		// Generate Portfolio from Template
 		$source = new ilObjPortfolioTemplate($this->getPortfolioTemplateId(), false);
 		$target = new ilObjPortfolio();
-		$user = $this->getUsrobject();
+		$user = $this->getUsrObject();
 		$target->setOwner($user->getId());
 		$target->setTitle('optes-Angebote für ' . $user->getFirstname() . ' ' . $user->getLastname());
 		$target->create();
@@ -540,7 +539,7 @@ class ilUserSetting extends ActiveRecord {
 	/**
 	 * @param \ilObjUser $ilObjUser
 	 */
-	public function setUsrobject($ilObjUser) {
+	public function setUsrObject($ilObjUser) {
 		$this->usr_object = $ilObjUser;
 	}
 
@@ -548,7 +547,7 @@ class ilUserSetting extends ActiveRecord {
 	/**
 	 * @return \ilObjUser
 	 */
-	public function getUsrobject() {
+	public function getUsrObject() {
 		return $this->usr_object;
 	}
 }

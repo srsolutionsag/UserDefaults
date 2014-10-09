@@ -33,3 +33,5 @@ check_udf_field_id#:#UDF-Field
 check_edit#:#Edit
 check_delete#:#Delete
 check_back#:#<< Back
+crs_placeholder#:#Choose Courses
+grp_placeholder#:#Choose Groups

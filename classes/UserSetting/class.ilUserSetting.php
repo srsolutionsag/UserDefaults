@@ -154,8 +154,13 @@ class ilUserSetting extends ActiveRecord {
 		$user = $this->getUsrObject();
 		$target->setOwner($user->getId());
 		$target->setTitle('optes-Angebote für ' . $user->getFirstname() . ' ' . $user->getLastname());
+		$target->setUserDefault($user->getId());
+		$target->setOnline(true);
 		$target->create();
 		$source->clonePagesAndSettings($source, $target);
+
+		ilObjPortfolio::setUserDefault($user->getId(), $target->getId());
+
 
 		$ilPortfolioAccessHandler = new ilPortfolioAccessHandler();
 		foreach ($this->getPortfolioAssignedToGroups() as $grp_obj_id) {

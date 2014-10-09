@@ -1,8 +1,8 @@
 <?php
 
-require_once("./Services/Form/classes/class.ilMultiSelectInputGUI.php");
-require_once("./Services/User/classes/class.ilObjUser.php");
-require_once("./Services/UICore/classes/class.ilTemplate.php");
+require_once('./Services/Form/classes/class.ilMultiSelectInputGUI.php');
+require_once('./Services/User/classes/class.ilObjUser.php');
+require_once('./Services/UICore/classes/class.ilTemplate.php');
 
 /**
  * Class ilMultiSelectSearchInput2GUI
@@ -43,19 +43,19 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	 */
 	public function __construct($title, $post_var) {
 		global $tpl, $ilUser, $lng;
-				if (substr($post_var, - 2) != "[]") {
-					$post_var = $post_var . "[]";
-				}
+		if (substr($post_var, - 2) != '[]') {
+			$post_var = $post_var . '[]';
+		}
 		parent::__construct($title, $post_var);
 
 		$this->lng = $lng;
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-		$tpl->addJavaScript("./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.min.js");
-		$tpl->addJavaScript("./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2_locale_"
-			. $ilUser->getCurrentLanguage() . ".js");
-		$tpl->addCss("./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.css");
+		$tpl->addJavaScript('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.min.js');
+		$tpl->addJavaScript('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2_locale_'
+			. $ilUser->getCurrentLanguage() . '.js');
+		$tpl->addCss('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.css');
 		$this->setInputTemplate($this->pl->getTemplate('tpl.multiple_select.html'));
-		$this->setWidth("300px");
+		$this->setWidth('300px');
 	}
 
 
@@ -66,7 +66,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		global $lng;
 
 		if ($this->getRequired() && count($this->getValue()) == 0) {
-			$this->setAlert($lng->txt("msg_input_is_required"));
+			$this->setAlert($lng->txt('msg_input_is_required'));
 
 			return false;
 		}
@@ -85,7 +85,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		} elseif (! $val) {
 			return array();
 		} else {
-			return explode(",", $val);
+			return explode(',', $val);
 		}
 	}
 
@@ -111,36 +111,36 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		$values = $this->getValueAsJson();
 		$options = $this->getOptions();
 
-		$tpl->setVariable("POST_VAR", $this->getPostVar());
-		$tpl->setVariable("ID", substr($this->getPostVar(), 0, - 2));
-		$tpl->setVariable("WIDTH", $this->getWidth());
-		$tpl->setVariable("PRELOAD", $values);
-		$tpl->setVariable("HEIGHT", $this->getHeight());
-		$tpl->setVariable("PLACEHOLDER", $this->pl->txt("placeholder"));
-		$tpl->setVariable("MINIMUM_INPUT_LENGTH", $this->getMinimumInputLength());
-		$tpl->setVariable("CONTAINER_TYPE", $this->getContainerType());
-		$tpl->setVariable("Class", $this->getCssClass());
+		$tpl->setVariable('POST_VAR', $this->getPostVar());
+		$tpl->setVariable('ID', substr($this->getPostVar(), 0, - 2));
+		$tpl->setVariable('WIDTH', $this->getWidth());
+		$tpl->setVariable('PRELOAD', $values);
+		$tpl->setVariable('HEIGHT', $this->getHeight());
+		$tpl->setVariable('PLACEHOLDER', $this->pl->txt($this->getContainerType() . '_placeholder'));
+		$tpl->setVariable('MINIMUM_INPUT_LENGTH', $this->getMinimumInputLength());
+		$tpl->setVariable('CONTAINER_TYPE', $this->getContainerType());
+		$tpl->setVariable('Class', $this->getCssClass());
 
 		if (isset($this->ajax_link)) {
-			$tpl->setVariable("AJAX_LINK", $this->getAjaxLink());
+			$tpl->setVariable('AJAX_LINK', $this->getAjaxLink());
 		}
 
 		if ($this->getDisabled()) {
-			$tpl->setVariable("ALL_DISABLED", "disabled=\"disabled\"");
+			$tpl->setVariable('ALL_DISABLED', 'disabled=\'disabled\'');
 		}
 
 		if ($options) {
 			foreach ($options as $option_value => $option_text) {
-				$tpl->setCurrentBlock("item");
+				$tpl->setCurrentBlock('item');
 				if ($this->getDisabled()) {
-					$tpl->setVariable("DISABLED", " disabled=\"disabled\"");
+					$tpl->setVariable('DISABLED', ' disabled=\'disabled\'');
 				}
 				if (in_array($option_value, $values)) {
-					$tpl->setVariable("SELECTED", "selected");
+					$tpl->setVariable('SELECTED', 'selected');
 				}
 
-				$tpl->setVariable("VAL", ilUtil::prepareFormOutput($option_value));
-				$tpl->setVariable("TEXT", $option_text);
+				$tpl->setVariable('VAL', ilUtil::prepareFormOutput($option_value));
+				$tpl->setVariable('TEXT', $option_text);
 				$tpl->parseCurrentBlock();
 			}
 		}
@@ -226,7 +226,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 
 
 	/**
-	 * @param string $ajax_link setting the ajax link will lead to ignoration of the "setOptions" function as the link given will be used to get the
+	 * @param string $ajax_link setting the ajax link will lead to ignoration of the 'setOptions' function as the link given will be used to get the
 	 */
 	public function setAjaxLink($ajax_link) {
 		$this->ajax_link = $ajax_link;
@@ -274,12 +274,12 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 
 
 	/**
-	 * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do this stupid "trick". Shame on select2 project ;)
+	 * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do this stupid 'trick'. Shame on select2 project ;)
 	 *
 	 * @return string the real postvar.
 	 */
 	protected function searchPostVar() {
-		if (substr($this->getPostVar(), - 2) == "[]") {
+		if (substr($this->getPostVar(), - 2) == '[]') {
 			return substr($this->getPostVar(), 0, - 2);
 		} else {
 			return $this->getPostVar();
@@ -294,7 +294,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		} elseif (! $val) {
 			$val = array();
 		} else {
-			$val = explode(",", $val);
+			$val = explode(',', $val);
 		}
 		$this->setValue($val);
 	}

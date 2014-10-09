@@ -43,7 +43,7 @@ class ilUserSettingsGUI {
 		$this->ctrl = $ilCtrl;
 		$this->tpl = $tpl;
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-		$this->pl->updateLanguageFiles();
+//		$this->pl->updateLanguageFiles();
 		$this->ctrl->saveParameter($this, self::IDENTIFIER);
 	}
 

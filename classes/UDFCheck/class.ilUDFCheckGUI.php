@@ -61,6 +61,8 @@ class ilUDFCheckGUI {
 			case self::CMD_EDIT:
 			case self::CMD_ACTIVATE:
 			case self::CMD_DEACTIVATE:
+			case self::CMD_CONFIRM_DELETE:
+			case self::CMD_DELETE:
 				$this->{$cmd}();
 				break;
 		}
@@ -108,6 +110,23 @@ class ilUDFCheckGUI {
 			$this->cancel();
 		}
 		$this->tpl->setContent($ilUDFCheckFormGUI->getHTML());
+	}
+
+
+	public function confirmDelete() {
+		$conf = new ilConfirmationGUI();
+		$conf->setFormAction($this->ctrl->getFormAction($this));
+		$conf->setHeaderText($this->pl->txt('msg_confirm_delete'));
+		$conf->setConfirm($this->pl->txt('check_delete'), self::CMD_DELETE);
+		$conf->setCancel($this->pl->txt('check_cancel'), self::CMD_INDEX);
+		$this->tpl->setContent($conf->getHTML());
+	}
+
+
+	public function delete() {
+		$ilUDFCheck = ilUDFCheck::find($_GET[self::IDENTIFIER]);
+		$ilUDFCheck->delete();
+		$this->cancel();
 	}
 
 

@@ -8,7 +8,7 @@ Start at your ILIAS root directory
 ```bash
 mkdir -p Customizing/global/plugins/Services/EventHandling/EventHook/
 cd Customizing/global/plugins/Services/EventHandling/EventHook/
-git clone https://github.com/studer-raimann/UerDefaults.git
+git clone https://github.com/studer-raimann/UserDefaults.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.
 

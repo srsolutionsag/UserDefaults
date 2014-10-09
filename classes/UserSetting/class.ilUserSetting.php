@@ -8,6 +8,8 @@ require_once('./Modules/Group/classes/class.ilObjGroup.php');
 require_once('./Modules/Course/classes/class.ilCourseParticipants.php');
 require_once('./Modules/Group/classes/class.ilGroupParticipants.php');
 require_once('./Modules/Portfolio/classes/class.ilPortfolioAccessHandler.php');
+require_once('./Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php');
+require_once('./Services/Skill/classes/class.ilPersonalSkill.php');
 
 /**
  * Class ilUserSetting
@@ -97,6 +99,7 @@ class ilUserSetting extends ActiveRecord {
 			$this->assignCourses();
 			$this->assignGroups();
 			$this->assignToGlobalRole();
+			$this->addSkills();
 		}
 	}
 
@@ -149,6 +152,8 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	protected function generatePortfolio() {
 		// Generate Portfolio from Template
+		global $ilUser;
+		$tmp_user = $ilUser;
 		$source = new ilObjPortfolioTemplate($this->getPortfolioTemplateId(), false);
 		$target = new ilObjPortfolio();
 		$user = $this->getUsrObject();
@@ -157,16 +162,69 @@ class ilUserSetting extends ActiveRecord {
 		$target->setUserDefault($user->getId());
 		$target->setOnline(true);
 		$target->create();
+		$GLOBALS['ilUser'] = $user;
 		$source->clonePagesAndSettings($source, $target);
+		$GLOBALS['ilUser'] = $tmp_user;
 
 		ilObjPortfolio::setUserDefault($user->getId(), $target->getId());
-
 
 		$ilPortfolioAccessHandler = new ilPortfolioAccessHandler();
 		foreach ($this->getPortfolioAssignedToGroups() as $grp_obj_id) {
 			if (ilObject2::_lookupType($grp_obj_id) == 'grp') {
 				$ilPortfolioAccessHandler->addPermission($target->getId(), $grp_obj_id);
 			}
+		}
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasChecks() {
+		return ilUDFCheck::where(array( 'parent_id' => $this->getId() ))->hasSets();
+	}
+
+
+	public function afterObjectLoad() {
+		$ilUDFChecks = ilUDFCheck::where(array( 'parent_id' => $this->getId() ))->get();
+		$this->setUdfCheckObjects($ilUDFChecks);
+	}
+
+
+	/**
+	 * @return array
+	 */
+	protected function addSkills() {
+		$user = $this->getUsrObject();
+		$pskills = array_keys(ilPersonalSkill::getSelectedUserSkills($user->getId()));
+		$skill_ids = array();
+		$recipe = array();
+		foreach (ilPortfolioTemplatePage::getAllPages($this->getPortfolioTemplateId()) as $page) {
+			switch ($page['type']) {
+				case ilPortfolioTemplatePage::TYPE_PAGE:
+					$source_page = new ilPortfolioTemplatePage($page['id']);
+					$source_page->buildDom(true);
+					$dom = $source_page->getDom();
+					if ($dom instanceof php4DOMDocument) {
+						$dom = $dom->myDOMDocument;
+					}
+					$xpath = new DOMXPath($dom);
+					$nodes = $xpath->query('//PageContent/Skills');
+					foreach ($nodes as $node) {
+						$skill_id = $node->getAttribute('Id');
+						if (! in_array($skill_id, $pskills)) {
+							$skill_ids[] = $skill_id;
+						}
+					}
+					unset($nodes);
+					unset($xpath);
+					unset($dom);
+					break;
+			}
+		}
+
+		foreach ($skill_ids as $skill_id) {
+			ilPersonalSkill::addPersonalSkill($user->getId(), $skill_id);
 		}
 	}
 
@@ -274,20 +332,6 @@ class ilUserSetting extends ActiveRecord {
 	 * @var ilUDFCheck[]
 	 */
 	protected $udf_check_objects = array();
-
-
-	/**
-	 * @return bool
-	 */
-	public function hasChecks() {
-		return ilUDFCheck::where(array( 'parent_id' => $this->getId() ))->hasSets();
-	}
-
-
-	public function afterObjectLoad() {
-		$ilUDFChecks = ilUDFCheck::where(array( 'parent_id' => $this->getId() ))->get();
-		$this->setUdfCheckObjects($ilUDFChecks);
-	}
 
 
 	/**

@@ -98,8 +98,7 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 				$current_selection_list->setId('check_actions' . $ilUDFCheck->getId());
 				$current_selection_list->setUseImages(false);
 				$current_selection_list->addItem($this->pl->txt('check_edit'), 'check_edit', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_EDIT));
-
-				//				$current_selection_list->addItem($this->pl->txt('check_delete'), 'check_delete', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_CONFIRM_DELETE));
+				$current_selection_list->addItem($this->pl->txt('check_delete'), 'check_delete', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_CONFIRM_DELETE));
 
 				$this->tpl->setCurrentBlock('td');
 				$this->tpl->setVariable('VALUE', $current_selection_list->getHTML());

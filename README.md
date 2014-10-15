@@ -12,11 +12,12 @@ git clone https://github.com/studer-raimann/UserDefaults.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.
 
-Information
------------
-studer + raimann ag
-Waldeggstrasse 72
-3097 Liebefeld
+Contact
+-------
+studer + raimann ag  
+Waldeggstrasse 72  
+3097 Liebefeld  
+Switzerland 
 
-fs@studer-raimann.ch
-www.studer-raimann.ch
+info@studer-raimann.ch  
+www.studer-raimann.ch  

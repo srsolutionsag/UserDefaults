@@ -20,7 +20,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	/**
 	 * @var  array $filter
 	 */
-	protected $filter;
+	protected $filter = array();
 
 
 	/**

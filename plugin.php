@@ -1,6 +1,6 @@
 <?php
 $id = 'usrdef';
-$version = '1.0.2';
+$version = '1.0.3';
 $ilias_min_version = '4.4';
 $ilias_max_version = '4.4.99';
 $responsible = 'Fabian Schmid';

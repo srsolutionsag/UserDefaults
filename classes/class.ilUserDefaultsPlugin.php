@@ -109,7 +109,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 		}
 
 		if (! $status) {
-			ilUtil::sendFailure('Language-Files coul\'d not be written');
+			ilUtil::sendFailure('Language-Files could not be written');
 		}
 		$this->updateLanguages();
 	}

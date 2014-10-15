@@ -1,4 +1,5 @@
 <?php
+require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
 require_once('./Services/User/classes/class.ilUserDefinedFields.php');
 
 /**

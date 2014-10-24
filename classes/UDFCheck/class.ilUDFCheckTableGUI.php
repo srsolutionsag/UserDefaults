@@ -20,7 +20,7 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	/**
 	 * @var  array $filter
 	 */
-	protected $filter;
+	protected $filter = array();
 
 
 	/**
@@ -73,7 +73,7 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 		}
 		$this->setMaxCount($xdglRequestList->count());
 		if (! $xdglRequestList->hasSets()) {
-			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
+//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
 		}
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$a_data = $xdglRequestList->getArray();

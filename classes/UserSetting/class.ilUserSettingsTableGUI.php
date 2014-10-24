@@ -72,7 +72,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		}
 		$this->setMaxCount($xdglRequestList->count());
 		if (! $xdglRequestList->hasSets()) {
-			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
+//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
 		}
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$xdglRequestList->orderBy('title');

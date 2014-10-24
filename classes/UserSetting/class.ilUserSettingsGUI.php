@@ -161,8 +161,11 @@ class ilUserSettingsGUI {
 		$type = $ilDB->quote($_GET['container_type'], 'text');
 
 		$query = "SELECT obj.obj_id, obj.title FROM object_data obj
-		 LEFT JOIN object_translation trans ON trans.obj_id = obj.obj_id
-		 WHERE obj.type = $type and (obj.title LIKE $term OR trans.title LIKE $term)";
+				 LEFT JOIN object_translation trans ON trans.obj_id = obj.obj_id
+			 WHERE obj.type = $type AND
+				 (obj.title LIKE $term OR trans.title LIKE $term)
+			 ORDER BY  obj.title";
+
 		$res = $ilDB->query($query);
 		$result = array();
 		while ($row = $ilDB->fetchAssoc($res)) {

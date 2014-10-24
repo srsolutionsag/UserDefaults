@@ -157,6 +157,7 @@ class ilUserSetting extends ActiveRecord {
 		// Generate Portfolio from Template
 		global $ilUser;
 		$tmp_user = $ilUser;
+		$a_recipe['skills'] = array();
 		$source = new ilObjPortfolioTemplate($this->getPortfolioTemplateId(), false);
 		$target = new ilObjPortfolio();
 		$user = $this->getUsrObject();
@@ -166,7 +167,7 @@ class ilUserSetting extends ActiveRecord {
 		$target->setOnline(true);
 		$target->create();
 		$GLOBALS['ilUser'] = $user;
-		$source->clonePagesAndSettings($source, $target);
+		$source->clonePagesAndSettings($source, $target, $a_recipe);
 		$GLOBALS['ilUser'] = $tmp_user;
 
 		ilObjPortfolio::setUserDefault($user->getId(), $target->getId());

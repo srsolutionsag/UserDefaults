@@ -82,7 +82,6 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
 		$se = new ilSelectInputGUI($this->txt(self::F_PORTFOLIO_TEMPLATE_ID), self::F_PORTFOLIO_TEMPLATE_ID);
-		$se->setRequired(true);
 		$se->setOptions(ilObjPortfolioTemplate::getAvailablePortfolioTemplates());
 		$this->addItem($se);
 

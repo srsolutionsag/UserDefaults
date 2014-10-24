@@ -60,7 +60,7 @@ class ilUserSetting extends ActiveRecord {
 		global $ilUser;
 		$this->setOwner($ilUser->getId());
 		$this->setUpdateDate(time());
-		if (! $this->hasChecks() AND $this->getStatus() == self::STATUS_ACTIVE) {
+		if (!$this->hasChecks() AND $this->getStatus() == self::STATUS_ACTIVE) {
 			ilUtil::sendInfo(ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'));
 			ilUtil::sendInfo(ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'), true);
 			$this->setStatus(self::STATUS_INACTIVE);
@@ -74,7 +74,7 @@ class ilUserSetting extends ActiveRecord {
 		$this->setOwner($ilUser->getId());
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());
-		if (! $this->hasChecks()) {
+		if (!$this->hasChecks()) {
 			$this->setStatus(self::STATUS_INACTIVE);
 		}
 		parent::create();
@@ -138,7 +138,7 @@ class ilUserSetting extends ActiveRecord {
 	protected function isValid() {
 		$do_assignements = true;
 		foreach ($this->getUdfCheckObjects() as $udf) {
-			if (! $udf->isValid($this->getUsrObject())) {
+			if (!$udf->isValid($this->getUsrObject())) {
 				$do_assignements = false;
 			}
 		}
@@ -151,6 +151,9 @@ class ilUserSetting extends ActiveRecord {
 	 * @throws ilException
 	 */
 	protected function generatePortfolio() {
+		if (!$this->getPortfolioTemplateId()) {
+			return false;
+		}
 		// Generate Portfolio from Template
 		global $ilUser;
 		$tmp_user = $ilUser;
@@ -212,7 +215,7 @@ class ilUserSetting extends ActiveRecord {
 					$nodes = $xpath->query('//PageContent/Skills');
 					foreach ($nodes as $node) {
 						$skill_id = $node->getAttribute('Id');
-						if (! in_array($skill_id, $pskills)) {
+						if (!in_array($skill_id, $pskills)) {
 							$skill_ids[] = $skill_id;
 						}
 					}
@@ -319,7 +322,7 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $portfolio_template_id = 0;
+	protected $portfolio_template_id = NULL;
 	/**
 	 * @var array
 	 *
@@ -351,6 +354,7 @@ class ilUserSetting extends ActiveRecord {
 				return date(DATE_ISO8601, $this->{$field_name});
 				break;
 		}
+
 		return NULL;
 	}
 
@@ -373,6 +377,7 @@ class ilUserSetting extends ActiveRecord {
 				return strtotime($field_value);
 				break;
 		}
+
 		return NULL;
 	}
 

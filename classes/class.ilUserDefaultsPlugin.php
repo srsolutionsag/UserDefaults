@@ -39,15 +39,15 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-		if ($a_component == 'Modules/Course' AND $a_event == 'update') {
-			global $ilUser;
-			/**
-			 * @var $ilUserSetting ilUserSetting
-			 */
-			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
-				$ilUserSetting->doAssignements($ilUser);
-			}
-		}
+//		if ($a_component == 'Modules/Course' AND $a_event == 'update') {
+//			global $ilUser;
+//			/**
+//			 * @var $ilUserSetting ilUserSetting
+//			 */
+//			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
+//				$ilUserSetting->doAssignements($ilUser);
+//			}
+//		}
 
 		if ($a_component == 'Services/User' AND $a_event == 'saveAsNew') {
 			/**

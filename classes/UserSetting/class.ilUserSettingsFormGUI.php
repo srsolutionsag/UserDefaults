@@ -18,6 +18,11 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
 	const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
 	const F_DESCRIPTION = 'description';
+	const F_PORTFOLIO_NAME = 'portfolio_name';
+	const F_BLOG_NAME = 'blog_name';
+
+
+
 	/**
 	 * @var ilUserSettingsGUI
 	 */
@@ -39,6 +44,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object = $ilUserSetting;
 		$this->ctrl = $ilCtrl;
 		$this->pl = ilUserDefaultsPlugin::getInstance();
+//		$this->pl->updateLanguageFiles();
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 		$this->initForm();
 	}
@@ -85,6 +91,14 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$se->setOptions(ilObjPortfolioTemplate::getAvailablePortfolioTemplates());
 		$this->addItem($se);
 
+		$te = new ilTextInputGUI($this->txt(self::F_PORTFOLIO_NAME), self::F_PORTFOLIO_NAME);
+		$te->setInfo(ilUserSetting::getAvailablePlaceholdersAsString());
+		$te->setRequired(true);
+		$this->addItem($te);
+
+		$te = new ilTextInputGUI($this->txt(self::F_BLOG_NAME), self::F_BLOG_NAME);
+		$this->addItem($te);
+
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
 		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
@@ -125,6 +139,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_GLOBAL_ROLE => $this->object->getGlobalRole(),
 			self::F_PORTFOLIO_TEMPLATE_ID => $this->object->getPortfolioTemplateId(),
 			self::F_PORTFOLIO_ASSIGNED_TO_GROUPS => implode(',', $this->object->getPortfolioAssignedToGroups()),
+			self::F_BLOG_NAME => $this->object->getBlogName(),
+			self::F_PORTFOLIO_NAME => $this->object->getPortfolioName(),
+
 		);
 
 		$this->setValuesByArray($array);
@@ -135,7 +152,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	 * @return bool
 	 */
 	public function saveObject() {
-		if (! $this->checkInput()) {
+		if (!$this->checkInput()) {
 			return false;
 		}
 		$this->object->setTitle($this->getInput(self::F_TITLE));
@@ -149,6 +166,8 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setPortfolioTemplateId($this->getInput(self::F_PORTFOLIO_TEMPLATE_ID));
 		$portf_assignt_to_groups = $this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
 		$this->object->setPortfolioAssignedToGroups(explode(',', $portf_assignt_to_groups[0]));
+		$this->object->setBlogName($this->getInput(self::F_BLOG_NAME));
+		$this->object->setPortfolioName($this->getInput(self::F_PORTFOLIO_NAME));
 
 		if ($this->object->getId() > 0) {
 			$this->object->update();

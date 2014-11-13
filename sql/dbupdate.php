@@ -5,3 +5,8 @@ require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/User
 ilUDFCheck::installDB();
 ilUserSetting::installDB();
 ?>
+<#2>
+<?php
+require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+ilUserSetting::updateDB();
+?>

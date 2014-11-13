@@ -20,7 +20,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @return ilUserDefaultsPlugin
 	 */
 	public static function getInstance() {
-		if (! isset(self::$instance)) {
+		if (!isset(self::$instance)) {
 			self::$instance = new self();
 		}
 
@@ -39,15 +39,15 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-		//		if ($a_component == 'Modules/Course' AND $a_event == 'update') {
-		//			global $ilUser;
-		//			/**
-		//			 * @var $ilUserSetting ilUserSetting
-		//			 */
-		//			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
-		//				$ilUserSetting->doAssignements($ilUser);
-		//			}
-		//		}
+		if ($a_component == 'Modules/Course' AND $a_event == 'update') {
+			global $ilUser;
+			/**
+			 * @var $ilUserSetting ilUserSetting
+			 */
+			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
+				$ilUserSetting->doAssignements($ilUser);
+			}
+		}
 
 		if ($a_component == 'Services/User' AND $a_event == 'saveAsNew') {
 			/**
@@ -108,7 +108,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 			$status = file_put_contents($path . 'ilias_' . $lng_key . '.lang', $start . implode(PHP_EOL, $lang));
 		}
 
-		if (! $status) {
+		if (!$status) {
 			ilUtil::sendFailure('Language-Files could not be written');
 		}
 		$this->updateLanguages();

@@ -22,6 +22,68 @@ class ilUserSetting extends ActiveRecord {
 	const TABLE_NAME = 'usr_def_sets';
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
+	const P_USER_FIRSTNAME = 'FIRSTNAME';
+	const P_USER_LASTNAME = 'LASTNAME';
+	const P_USER_EMAIL = 'EMAIL';
+	/**
+	 * @var array
+	 */
+	protected static $placeholders = array(
+		self::P_USER_FIRSTNAME,
+		self::P_USER_LASTNAME,
+		self::P_USER_EMAIL,
+	);
+
+
+	/**
+	 * @param $key
+	 *
+	 * @return string
+	 */
+	protected function getPlaceholder($key) {
+		switch ($key) {
+			case self::P_USER_FIRSTNAME:
+				return $this->getUsrObject()->getFirstname();
+				break;
+			case self::P_USER_LASTNAME:
+				return $this->getUsrObject()->getLastname();
+				break;
+			case self::P_USER_EMAIL:
+				return $this->getUsrObject()->getEmail();
+				break;
+		}
+
+		return '';
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public static function getAvailablePlaceholdersAsString() {
+		$return = ilUserDefaultsPlugin::getInstance()->txt('set_placeholders');
+		$return .= ' [';
+		$return .= implode('] [', self::$placeholders);
+		$return .= '] ';
+
+		return $return;
+	}
+
+
+	/**
+	 * @return mixed|string
+	 */
+	public function getReplacesPortfolioTitle() {
+		$text = $this->getPortfolioName();
+
+		foreach (self::$placeholders as $p) {
+			$text = preg_replace("/\\[" . $p . "\\]/uim", $this->getPlaceholder($p), $text);
+		}
+
+		return $text;
+	}
+
+
 	/**
 	 * @var ilObjUser
 	 */
@@ -162,10 +224,21 @@ class ilUserSetting extends ActiveRecord {
 		$target = new ilObjPortfolio();
 		$user = $this->getUsrObject();
 		$target->setOwner($user->getId());
-		$target->setTitle('optes-Angebote für ' . $user->getFirstname() . ' ' . $user->getLastname());
+		$target->setTitle($this->getReplacesPortfolioTitle());
 		$target->setUserDefault($user->getId());
 		$target->setOnline(true);
 		$target->create();
+
+		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
+		foreach (ilPortfolioTemplatePage::getAllPages($this->getPortfolioTemplateId()) as $page) {
+			switch ($page["type"]) {
+				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
+					$a_recipe[$page["id"]] = array( "blog", "create", $this->getBlogName() );
+
+					break;
+			}
+		}
+
 		$GLOBALS['ilUser'] = $user;
 		$source->clonePagesAndSettings($source, $target, $a_recipe);
 		$GLOBALS['ilUser'] = $tmp_user;
@@ -332,6 +405,22 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $portfolio_assigned_to_groups = array();
+	/**
+	 * @var string
+	 *
+	 * @con_has_field true
+	 * @con_fieldtype text
+	 * @con_length    256
+	 */
+	protected $blog_name = '';
+	/**
+	 * @var string
+	 *
+	 * @con_has_field true
+	 * @con_fieldtype text
+	 * @con_length    256
+	 */
+	protected $portfolio_name = '';
 	/**
 	 * @var ilUDFCheck[]
 	 */
@@ -604,6 +693,38 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	public function getUsrObject() {
 		return $this->usr_object;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getBlogName() {
+		return $this->blog_name;
+	}
+
+
+	/**
+	 * @param string $blog_name
+	 */
+	public function setBlogName($blog_name) {
+		$this->blog_name = $blog_name;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getPortfolioName() {
+		return $this->portfolio_name;
+	}
+
+
+	/**
+	 * @param string $portfolio_name
+	 */
+	public function setPortfolioName($portfolio_name) {
+		$this->portfolio_name = $portfolio_name;
 	}
 }
 

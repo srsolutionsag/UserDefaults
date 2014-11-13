@@ -16,10 +16,13 @@ msg_confirm_delete#:#Do you really like to delete the dataset?
 set_table_title#:#Settings
 set_status#:#Active
 set_cancel#:#Abbrechen
+set_blog_name#:#Blog-Name
+set_portfolio_name#:#Portfolio-Name
 set_actions#:#Actions
 set_add#:#Add Setting
 set_edit#:#Edit
 set_activate#:#Activate
+set_placeholders#:#Placeholders
 set_deactivate#:#Deactivate
 set_udf_checks#:#Edit UDF-Checks
 set_delete#:#Delete

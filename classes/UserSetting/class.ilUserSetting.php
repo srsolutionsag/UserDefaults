@@ -179,6 +179,9 @@ class ilUserSetting extends ActiveRecord {
 
 
 	protected function assignCourses() {
+		if (count($this->getAssignedCourses()) == 0) {
+			return false;
+		}
 		foreach ($this->getAssignedCourses() as $crs_obj_id) {
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$part->add($this->getUsrObject()->getId(), ilCourseConstants::CRS_MEMBER);
@@ -187,6 +190,9 @@ class ilUserSetting extends ActiveRecord {
 
 
 	protected function assignGroups() {
+		if (count($this->getAssignedGroupes()) == 0) {
+			return false;
+		}
 		foreach ($this->getAssignedGroupes() as $grp_obj_id) {
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$part->add($this->getUsrObject()->getId(), IL_GRP_MEMBER);

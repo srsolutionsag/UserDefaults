@@ -20,9 +20,6 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_DESCRIPTION = 'description';
 	const F_PORTFOLIO_NAME = 'portfolio_name';
 	const F_BLOG_NAME = 'blog_name';
-
-
-
 	/**
 	 * @var ilUserSettingsGUI
 	 */
@@ -44,7 +41,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object = $ilUserSetting;
 		$this->ctrl = $ilCtrl;
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-//		$this->pl->updateLanguageFiles();
+		//		$this->pl->updateLanguageFiles();
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 		$this->initForm();
 	}
@@ -88,12 +85,16 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
 		$se = new ilSelectInputGUI($this->txt(self::F_PORTFOLIO_TEMPLATE_ID), self::F_PORTFOLIO_TEMPLATE_ID);
-		$se->setOptions(ilObjPortfolioTemplate::getAvailablePortfolioTemplates());
+		$options = ilObjPortfolioTemplate::getAvailablePortfolioTemplates();
+		$options[NULL] = $this->pl->txt('crs_no_template');
+		$options[NULL] = '--';
+		sort($options);
+		$se->setOptions($options);
 		$this->addItem($se);
 
 		$te = new ilTextInputGUI($this->txt(self::F_PORTFOLIO_NAME), self::F_PORTFOLIO_NAME);
 		$te->setInfo(ilUserSetting::getAvailablePlaceholdersAsString());
-		$te->setRequired(true);
+//		$te->setRequired(true);
 		$this->addItem($te);
 
 		$te = new ilTextInputGUI($this->txt(self::F_BLOG_NAME), self::F_BLOG_NAME);
@@ -163,7 +164,8 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$assigned_groups = $this->getInput(self::F_ASSIGNED_GROUPS);
 		$this->object->setAssignedGroupes(explode(',', $assigned_groups[0]));
 		$this->object->setGlobalRole($this->getInput(self::F_GLOBAL_ROLE));
-		$this->object->setPortfolioTemplateId($this->getInput(self::F_PORTFOLIO_TEMPLATE_ID));
+		$portfolio_template_id = $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID);
+		$this->object->setPortfolioTemplateId($portfolio_template_id > 0 ? $portfolio_template_id : NULL);
 		$portf_assignt_to_groups = $this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
 		$this->object->setPortfolioAssignedToGroups(explode(',', $portf_assignt_to_groups[0]));
 		$this->object->setBlogName($this->getInput(self::F_BLOG_NAME));

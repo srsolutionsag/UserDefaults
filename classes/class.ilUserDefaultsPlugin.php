@@ -54,13 +54,13 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 //			$ilUser->setLogin($a_str);
 //			$ilUser->saveAsNew(false);
 //			ilUtil::sendInfo($a_str, true);
-			/**
-			 * @var $ilUserSetting ilUserSetting
-			 */
-			global $ilUser;
-			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
-				$ilUserSetting->doAssignements($ilUser);
-			}
+//			/**
+//			 * @var $ilUserSetting ilUserSetting
+//			 */
+//			global $ilUser;
+//			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
+//				$ilUserSetting->doAssignements($ilUser);
+//			}
 		}
 
 		if ($a_component == 'Services/User' AND $a_event == 'saveAsNew') {

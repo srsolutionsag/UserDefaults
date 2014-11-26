@@ -39,15 +39,29 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-//		if ($a_component == 'Modules/Course' AND $a_event == 'update') {
-//			global $ilUser;
-//			/**
-//			 * @var $ilUserSetting ilUserSetting
-//			 */
-//			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
-//				$ilUserSetting->doAssignements($ilUser);
-//			}
-//		}
+		if ($a_component == 'Modules/Course' AND $a_event == 'update') {
+
+
+//			$ilUser = new ilObjUser();
+//			$ilUser->setEmail('info@fschmid.ch');
+//			$ilUser->setPasswd('homer');
+//			$ilUser->setActive(1);
+//			$ilUser->setTimeLimitUnlimited(true);
+//			$ilUser->setFirstname('Fabian');
+//			$ilUser->setLastname('Schmid');
+//			$a_str = 'fschmid' . rand(100, 99999);
+//			$ilUser->create();
+//			$ilUser->setLogin($a_str);
+//			$ilUser->saveAsNew(false);
+//			ilUtil::sendInfo($a_str, true);
+			/**
+			 * @var $ilUserSetting ilUserSetting
+			 */
+			global $ilUser;
+			foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
+				$ilUserSetting->doAssignements($ilUser);
+			}
+		}
 
 		if ($a_component == 'Services/User' AND $a_event == 'saveAsNew') {
 			/**

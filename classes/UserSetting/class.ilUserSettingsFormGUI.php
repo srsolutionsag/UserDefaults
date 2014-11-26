@@ -85,16 +85,19 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
 		$se = new ilSelectInputGUI($this->txt(self::F_PORTFOLIO_TEMPLATE_ID), self::F_PORTFOLIO_TEMPLATE_ID);
+
 		$options = ilObjPortfolioTemplate::getAvailablePortfolioTemplates();
-		$options[NULL] = $this->pl->txt('crs_no_template');
-		$options[NULL] = '--';
-		sort($options);
+//		$options[0] = $this->pl->txt('crs_no_template');
+		$options[1] = '--';
+
+		asort($options);
+
 		$se->setOptions($options);
 		$this->addItem($se);
 
 		$te = new ilTextInputGUI($this->txt(self::F_PORTFOLIO_NAME), self::F_PORTFOLIO_NAME);
 		$te->setInfo(ilUserSetting::getAvailablePlaceholdersAsString());
-//		$te->setRequired(true);
+		//		$te->setRequired(true);
 		$this->addItem($te);
 
 		$te = new ilTextInputGUI($this->txt(self::F_BLOG_NAME), self::F_BLOG_NAME);

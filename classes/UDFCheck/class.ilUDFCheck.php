@@ -1,5 +1,9 @@
 <?php
-require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
+if (is_file('./Services/ActiveRecord/class.ActiveRecord.php')) {
+	require_once('./Services/ActiveRecord/class.ActiveRecord.php');
+} else {
+	require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
+}
 require_once('./Services/User/classes/class.ilUserDefinedFields.php');
 
 /**
@@ -294,6 +298,7 @@ class ilUDFCheck extends ActiveRecord {
 				return date(DATE_ISO8601, $this->{$field_name});
 				break;
 		}
+
 		return NULL;
 	}
 
@@ -311,6 +316,7 @@ class ilUDFCheck extends ActiveRecord {
 				return strtotime($field_value);
 				break;
 		}
+
 		return NULL;
 	}
 

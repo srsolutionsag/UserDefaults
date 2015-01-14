@@ -183,17 +183,39 @@ class ilUserSetting extends ActiveRecord {
 
 
 	protected function assignCourses() {
+		if (count($this->getAssignedCourses()) == 0) {
+			return false;
+		}
 		foreach ($this->getAssignedCourses() as $crs_obj_id) {
+			if (!ilObject2::_lookupType($crs_obj_id) == 'crs') {
+				continue;
+			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
-			$part->add($this->getUsrObject()->getId(), ilCourseConstants::CRS_MEMBER);
+			$usr_id = $this->getUsrObject()->getId();
+			$part->add($usr_id, ilCourseConstants::CRS_MEMBER);
+
+			$all_refs = ilObject2::_getAllReferences($crs_obj_id);
+			$first = array_shift(array_values($all_refs));
+			ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
 		}
 	}
 
 
 	protected function assignGroups() {
+		if (count($this->getAssignedGroupes()) == 0) {
+			return false;
+		}
 		foreach ($this->getAssignedGroupes() as $grp_obj_id) {
+			if (!ilObject2::_lookupType($grp_obj_id) == 'grp') {
+				continue;
+			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
-			$part->add($this->getUsrObject()->getId(), IL_GRP_MEMBER);
+			$usr_id = $this->getUsrObject()->getId();
+			$part->add($usr_id, IL_GRP_MEMBER);
+
+			$all_refs = ilObject2::_getAllReferences($grp_obj_id);
+			$first = array_shift(array_values($all_refs));
+			ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
 		}
 	}
 
@@ -217,7 +239,7 @@ class ilUserSetting extends ActiveRecord {
 	 * @throws ilException
 	 */
 	protected function generatePortfolio() {
-		if (!$this->getPortfolioTemplateId()) {
+		if ($this->getPortfolioTemplateId() < 10) {
 			return false;
 		}
 		// Generate Portfolio from Template
@@ -244,7 +266,7 @@ class ilUserSetting extends ActiveRecord {
 		}
 
 		$GLOBALS['ilUser'] = $user;
-		$source->clonePagesAndSettings($source, $target, $a_recipe);
+		ilObjPortfolioTemplate::clonePagesAndSettings($source, $target, $a_recipe);
 		$GLOBALS['ilUser'] = $tmp_user;
 
 		ilObjPortfolio::setUserDefault($user->getId(), $target->getId());

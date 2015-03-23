@@ -157,13 +157,17 @@ class ilUserSettingsGUI {
 		/**
 		 * @var ilDB $ilDB
 		 */
+
 		$term = $ilDB->quote('%' . $_GET['term'] . '%', 'text');
 		$type = $ilDB->quote($_GET['container_type'], 'text');
 
-		$query = "SELECT obj.obj_id, obj.title FROM object_data obj
+		$query = "SELECT obj.obj_id, obj.title
+				FROM object_data obj
 				 LEFT JOIN object_translation trans ON trans.obj_id = obj.obj_id
+				 JOIN object_reference ref ON obj.obj_id = ref.obj_id
 			 WHERE obj.type = $type AND
 				 (obj.title LIKE $term OR trans.title LIKE $term)
+				 AND ref.deleted IS NULL
 			 ORDER BY  obj.title";
 
 		$res = $ilDB->query($query);

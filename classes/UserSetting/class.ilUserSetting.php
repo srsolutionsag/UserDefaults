@@ -161,11 +161,11 @@ class ilUserSetting extends ActiveRecord {
 	public function doAssignements(ilObjUser $ilObjUser) {
 		$this->setUsrObject($ilObjUser);
 		if ($this->isValid()) {
+			$this->addSkills();
 			$this->generatePortfolio();
 			$this->assignCourses();
 			$this->assignGroups();
 			$this->assignToGlobalRole();
-			$this->addSkills();
 		}
 	}
 
@@ -245,7 +245,6 @@ class ilUserSetting extends ActiveRecord {
 		// Generate Portfolio from Template
 		global $ilUser;
 		$tmp_user = $ilUser;
-		$a_recipe['skills'] = array();
 		$source = new ilObjPortfolioTemplate($this->getPortfolioTemplateId(), false);
 		$target = new ilObjPortfolio();
 		$user = $this->getUsrObject();
@@ -264,7 +263,6 @@ class ilUserSetting extends ActiveRecord {
 					break;
 			}
 		}
-
 		$GLOBALS['ilUser'] = $user;
 		ilObjPortfolioTemplate::clonePagesAndSettings($source, $target, $a_recipe);
 		$GLOBALS['ilUser'] = $tmp_user;

@@ -15,7 +15,6 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 	 */
 	protected $container_type = 'crs';
 
-
 	/**
 	 * @param string $container_type
 	 * @param string $title
@@ -25,7 +24,6 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 		$this->setContainerType($container_type);
 		parent::__construct($title, $post_var);
 	}
-
 
 	/**
 	 * @return string
@@ -37,12 +35,12 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 		$res = $ilDB->query($query);
 		$result = array();
 		while ($row = $ilDB->fetchAssoc($res)) {
+			// If the value is blacklisted we don't return it.
 			$result[] = array( "id" => $row['obj_id'], "text" => $row['title'] );
 		}
 
 		return json_encode($result);
 	}
-
 
 	/**
 	 * @return mixed
@@ -51,14 +49,12 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 		return $this->value;
 	}
 
-
 	/**
 	 * @param string $container_type
 	 */
 	public function setContainerType($container_type) {
 		$this->container_type = $container_type;
 	}
-
 
 	/**
 	 * @return string

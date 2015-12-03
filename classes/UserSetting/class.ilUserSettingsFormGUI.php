@@ -17,6 +17,8 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_ASSIGNED_GROUPS = 'assigned_groupes';
 	const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
 	const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
+	const F_ASSIGNED_ORGUS = 'assigned_orgus';
+	const F_ASSIGNED_STUDYPROGRAMS = 'assigned_studyprograms';
 	const F_DESCRIPTION = 'description';
 	const F_PORTFOLIO_NAME = 'portfolio_name';
 	const F_BLOG_NAME = 'blog_name';
@@ -107,6 +109,16 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
+		$ilOrgUnitMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('orgu', $this->txt(self::F_ASSIGNED_ORGUS), self::F_ASSIGNED_ORGUS);
+		$ilOrgUnitMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+		$this->addItem($ilOrgUnitMultiSelectInputGUI);
+
+		if($this->pl->is51()) {
+			$ilStudyProgramMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('prg', $this->txt(self::F_ASSIGNED_STUDYPROGRAMS), self::F_ASSIGNED_STUDYPROGRAMS);
+			$ilStudyProgramMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+			$this->addItem($ilStudyProgramMultiSelectInputGUI);
+		}
+
 		$this->addCommandButtons();
 	}
 
@@ -145,9 +157,10 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_PORTFOLIO_ASSIGNED_TO_GROUPS => implode(',', $this->object->getPortfolioAssignedToGroups()),
 			self::F_BLOG_NAME => $this->object->getBlogName(),
 			self::F_PORTFOLIO_NAME => $this->object->getPortfolioName(),
+			self::F_ASSIGNED_ORGUS=> implode(',',$this->object->getAssignedOrgus()),
+			self::F_ASSIGNED_STUDYPROGRAMS=> implode(',',$this->object->getAssignedStudyprograms()),
 
 		);
-
 		$this->setValuesByArray($array);
 	}
 
@@ -169,10 +182,14 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setGlobalRole($this->getInput(self::F_GLOBAL_ROLE));
 		$portfolio_template_id = $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID);
 		$this->object->setPortfolioTemplateId($portfolio_template_id > 0 ? $portfolio_template_id : NULL);
-		$portf_assignt_to_groups = $this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
-		$this->object->setPortfolioAssignedToGroups(explode(',', $portf_assignt_to_groups[0]));
+		$portf_assigned_to_groups = $this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
+		$this->object->setPortfolioAssignedToGroups(explode(',', $portf_assigned_to_groups[0]));
 		$this->object->setBlogName($this->getInput(self::F_BLOG_NAME));
 		$this->object->setPortfolioName($this->getInput(self::F_PORTFOLIO_NAME));
+		$assigned_orgus = $this->getInput(self::F_ASSIGNED_ORGUS);
+		$this->object->setAssignedOrgus(explode(',', $assigned_orgus[0]));
+		$assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
+		$this->object->setAssignedStudyprograms(explode(',', $assigned_studyprograms[0]));
 
 		if ($this->object->getId() > 0) {
 			$this->object->update();

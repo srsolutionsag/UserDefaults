@@ -14,6 +14,7 @@ require_once('./Modules/Group/classes/class.ilGroupParticipants.php');
 require_once('./Modules/Portfolio/classes/class.ilPortfolioAccessHandler.php');
 require_once('./Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php');
 require_once('./Services/Skill/classes/class.ilPersonalSkill.php');
+require_once('./Modules/OrgUnit/classes/class.ilObjOrgUnit.php');
 
 /**
  * Class ilUserSetting
@@ -166,6 +167,9 @@ class ilUserSetting extends ActiveRecord {
 			$this->assignCourses();
 			$this->assignGroups();
 			$this->assignToGlobalRole();
+			$this->assignOrgunits();
+			if(ilUserDefaultsPlugin::getInstance()->is51())
+				$this->assignStudyprograms();
 		}
 	}
 
@@ -187,7 +191,7 @@ class ilUserSetting extends ActiveRecord {
 			return false;
 		}
 		foreach ($this->getAssignedCourses() as $crs_obj_id) {
-			if (!ilObject2::_lookupType($crs_obj_id) == 'crs') {
+			if (ilObject2::_lookupType($crs_obj_id) != 'crs') {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
@@ -206,7 +210,7 @@ class ilUserSetting extends ActiveRecord {
 			return false;
 		}
 		foreach ($this->getAssignedGroupes() as $grp_obj_id) {
-			if (!ilObject2::_lookupType($grp_obj_id) == 'grp') {
+			if (ilObject2::_lookupType($grp_obj_id) != 'grp') {
 				continue;
 			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
@@ -445,6 +449,25 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_length    256
 	 */
 	protected $portfolio_name = '';
+
+	/**
+	 * @var array
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
+	protected $assigned_orgus = array();
+
+	/**
+	 * @var array
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
+	protected $assigned_studyprograms = array();
+
 	/**
 	 * @var ilUDFCheck[]
 	 */
@@ -461,6 +484,8 @@ class ilUserSetting extends ActiveRecord {
 			case 'assigned_courses':
 			case 'assigned_groupes':
 			case 'portfolio_assigned_to_groups':
+			case 'assigned_orgus':
+			case 'assigned_studyprograms':
 				return json_encode($this->{$field_name});
 				break;
 			case 'create_date':
@@ -484,6 +509,8 @@ class ilUserSetting extends ActiveRecord {
 			case 'assigned_courses':
 			case 'assigned_groupes':
 			case 'portfolio_assigned_to_groups':
+			case 'assigned_orgus':
+			case 'assigned_studyprograms':
 				return json_decode($field_value);
 				break;
 			case 'create_date':
@@ -749,6 +776,77 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	public function setPortfolioName($portfolio_name) {
 		$this->portfolio_name = $portfolio_name;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAssignedOrgus() {
+		return $this->assigned_orgus;
+	}
+
+	/**
+	 * @param array $assigned_orgus
+	 */
+	public function setAssignedOrgus($assigned_orgus) {
+		$this->assigned_orgus = $assigned_orgus;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAssignedStudyprograms() {
+		return $this->assigned_studyprograms;
+	}
+
+	/**
+	 * @param array $assigned_studyprogramms
+	 */
+	public function setAssignedStudyprograms($assigned_studyprogramms) {
+		$this->assigned_studyprograms = $assigned_studyprogramms;
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function assignOrgunits() {
+		if(!count($this->getAssignedOrgus()))
+			return false;
+		foreach ($this->getAssignedOrgus() as $orgu_obj_id) {
+			if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
+				continue;
+			}
+			$usr_id = $this->getUsrObject()->getId();
+			$orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
+			$orgu_ref_id = array_shift(array_values($orgu_ref_ids));
+			if(!$orgu_ref_id)
+				continue;
+			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
+			$orgUnit->assignUsersToEmployeeRole(array($usr_id));
+		}
+		return true;
+	}
+
+	protected function assignStudyprograms() {
+		if(!count($this->getAssignedStudyprograms()))
+			return false;
+		foreach($this->getAssignedStudyprograms() as $studyProgramObjId) {
+			if (ilObject2::_lookupType($studyProgramObjId) != 'prg') {
+				continue;
+			}
+
+			$usr_id = $this->getUsrObject()->getId();
+
+			// require stuff here in order not to break it in ILIAS <= 5.0.x
+			require_once("./Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
+			$prg_ref_ids = ilObjStudyProgramme::_getAllReferences($studyProgramObjId);
+			$prg_ref_id = array_shift(array_values($prg_ref_ids));
+			if(!$prg_ref_id)
+				continue;
+			$studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
+			$studyProgram->assignUser($usr_id, 6);
+		}
+		return true;
 	}
 }
 

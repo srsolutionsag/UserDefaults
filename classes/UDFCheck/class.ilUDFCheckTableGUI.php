@@ -134,13 +134,12 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	 * @return array
 	 */
 	public function getSelectableColumns() {
-		$cols['field_name'] = array(
+		$cols['udf_definition_field_name'] = array(
 			'txt' => $this->pl->txt('check_name'),
 			'default' => true,
 			'width' => '40%',
-			'sort_field' => 'field_name'
+			'sort_field' => 'udf_definition_field_name'
 		);
-		//		$cols['operator'] = array( 'txt' => $this->pl->txt('check_operator'), 'default' => true, 'width' => '20px', 'sort_field' => 'operator' );
 		$cols['check_value'] = array( 'txt' => $this->pl->txt('check_value'), 'default' => true, 'width' => 'auto', 'sort_field' => 'check_value' );
 		$cols['actions'] = array( 'txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px', );
 

@@ -9,7 +9,7 @@ require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/User
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  *
  * @version 1.0.00
- *
+ * ilCtrl_IsCalledBy ilUserDefaultsConfigGUI : ilObjComponentSettingsGUI
  */
 class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 

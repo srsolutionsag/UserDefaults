@@ -77,7 +77,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$xdglRequestList->orderBy('title');
 		$a_data = $xdglRequestList->getArray();
-		if(ilUserDefaultsPlugin::is55()) {
+		if(ilUserDefaultsPlugin::is50()) {
 			$img_on = ilUtil::img(ilUtil::getImagePath('icon_ok.svg'));
 			$img_off = ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
 		}else {

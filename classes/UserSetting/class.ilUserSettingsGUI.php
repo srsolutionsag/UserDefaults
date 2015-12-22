@@ -173,7 +173,8 @@ class ilUserSettingsGUI {
 		$res = $ilDB->query($query);
 		$result = array();
 		while ($row = $ilDB->fetchAssoc($res)) {
-			$result[] = array( "id" => $row['obj_id'], "text" => $row['title'] );
+			if($row['title'] != "__OrgUnitAdministration")
+				$result[] = array( "id" => $row['obj_id'], "text" => $row['title'] );
 		}
 		echo json_encode($result);
 		exit;

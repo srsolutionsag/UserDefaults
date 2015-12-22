@@ -80,8 +80,17 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	/**
 	 * @return bool
 	 */
-	public static function is55() {
-		return ((int)str_ireplace('.', '', ILIAS_VERSION_NUMERIC)) >= 500;
+	public static function is50() {
+		$version = explode('.', ILIAS_VERSION_NUMERIC);
+		return $version[0] >= 5;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function is51() {
+		$version = explode('.', ILIAS_VERSION_NUMERIC);
+		return $version[0] >= 5 && $version[1] >= 1;
 	}
 
 

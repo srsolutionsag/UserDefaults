@@ -39,3 +39,7 @@ check_back#:#<< Zurück
 crs_placeholder#:#Kurse wählen
 grp_placeholder#:#Gruppen wählen
 check_cancel#:#Abbrechen
+set_assigned_orgus#:#Einschreiben in Organisationseinheiten
+set_assigned_studyprograms#:#Einschreiben in Studienprogramme
+orgu_placeholder#:#Organisationseinheiten wählen
+prg_placeholder#:#Studienprogramme wählen

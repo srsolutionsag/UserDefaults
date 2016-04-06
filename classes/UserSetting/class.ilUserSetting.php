@@ -168,8 +168,9 @@ class ilUserSetting extends ActiveRecord {
 			$this->assignGroups();
 			$this->assignToGlobalRole();
 			$this->assignOrgunits();
-			if(ilUserDefaultsPlugin::getInstance()->is51())
+			if (ilUserDefaultsPlugin::getInstance()->is51()) {
 				$this->assignStudyprograms();
+			}
 		}
 	}
 
@@ -424,7 +425,7 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $portfolio_template_id = NULL;
+	protected $portfolio_template_id = null;
 	/**
 	 * @var array
 	 *
@@ -449,7 +450,6 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_length    256
 	 */
 	protected $portfolio_name = '';
-
 	/**
 	 * @var array
 	 *
@@ -458,7 +458,6 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $assigned_orgus = array();
-
 	/**
 	 * @var array
 	 *
@@ -467,7 +466,6 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $assigned_studyprograms = array();
-
 	/**
 	 * @var ilUDFCheck[]
 	 */
@@ -494,7 +492,7 @@ class ilUserSetting extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -511,7 +509,9 @@ class ilUserSetting extends ActiveRecord {
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
-				return json_decode($field_value);
+				$json_decode = json_decode($field_value);
+
+				return is_array($json_decode) ? $json_decode : array();
 				break;
 			case 'create_date':
 			case 'update_date':
@@ -519,7 +519,7 @@ class ilUserSetting extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -778,12 +778,14 @@ class ilUserSetting extends ActiveRecord {
 		$this->portfolio_name = $portfolio_name;
 	}
 
+
 	/**
 	 * @return array
 	 */
 	public function getAssignedOrgus() {
 		return $this->assigned_orgus;
 	}
+
 
 	/**
 	 * @param array $assigned_orgus
@@ -792,12 +794,14 @@ class ilUserSetting extends ActiveRecord {
 		$this->assigned_orgus = $assigned_orgus;
 	}
 
+
 	/**
 	 * @return array
 	 */
 	public function getAssignedStudyprograms() {
 		return $this->assigned_studyprograms;
 	}
+
 
 	/**
 	 * @param array $assigned_studyprogramms
@@ -806,12 +810,14 @@ class ilUserSetting extends ActiveRecord {
 		$this->assigned_studyprograms = $assigned_studyprogramms;
 	}
 
+
 	/**
 	 * @return bool
 	 */
 	protected function assignOrgunits() {
-		if(!count($this->getAssignedOrgus()))
+		if (!count($this->getAssignedOrgus())) {
 			return false;
+		}
 		foreach ($this->getAssignedOrgus() as $orgu_obj_id) {
 			if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
 				continue;
@@ -819,18 +825,22 @@ class ilUserSetting extends ActiveRecord {
 			$usr_id = $this->getUsrObject()->getId();
 			$orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
 			$orgu_ref_id = array_shift(array_values($orgu_ref_ids));
-			if(!$orgu_ref_id)
+			if (!$orgu_ref_id) {
 				continue;
+			}
 			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-			$orgUnit->assignUsersToEmployeeRole(array($usr_id));
+			$orgUnit->assignUsersToEmployeeRole(array( $usr_id ));
 		}
+
 		return true;
 	}
 
+
 	protected function assignStudyprograms() {
-		if(!count($this->getAssignedStudyprograms()))
+		if (!count($this->getAssignedStudyprograms())) {
 			return false;
-		foreach($this->getAssignedStudyprograms() as $studyProgramObjId) {
+		}
+		foreach ($this->getAssignedStudyprograms() as $studyProgramObjId) {
 			if (ilObject2::_lookupType($studyProgramObjId) != 'prg') {
 				continue;
 			}
@@ -841,11 +851,13 @@ class ilUserSetting extends ActiveRecord {
 			require_once("./Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
 			$prg_ref_ids = ilObjStudyProgramme::_getAllReferences($studyProgramObjId);
 			$prg_ref_id = array_shift(array_values($prg_ref_ids));
-			if(!$prg_ref_id)
+			if (!$prg_ref_id) {
 				continue;
+			}
 			$studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
 			$studyProgram->assignUser($usr_id, 6);
 		}
+
 		return true;
 	}
 }

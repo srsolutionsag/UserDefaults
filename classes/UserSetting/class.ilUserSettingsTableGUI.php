@@ -25,8 +25,8 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param ilUserSettingsGUI $parent_obj
-	 * @param string            $parent_cmd
-	 * @param string            $template_context
+	 * @param string $parent_cmd
+	 * @param string $template_context
 	 */
 	public function __construct(ilUserSettingsGUI $parent_obj, $parent_cmd = ilUserSettingsGUI::CMD_INDEX, $template_context = "") {
 		/**
@@ -71,16 +71,16 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 			}
 		}
 		$this->setMaxCount($xdglRequestList->count());
-		if (! $xdglRequestList->hasSets()) {
-//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
+		if (!$xdglRequestList->hasSets()) {
+			//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
 		}
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$xdglRequestList->orderBy('title');
 		$a_data = $xdglRequestList->getArray();
-		if(ilUserDefaultsPlugin::is50()) {
+		if (ilUserDefaultsPlugin::is50()) {
 			$img_on = ilUtil::img(ilUtil::getImagePath('icon_ok.svg'));
 			$img_off = ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
-		}else {
+		} else {
 			$img_on = ilUtil::img(ilUtil::getImagePath('icon_led_on_s.png'));
 			$img_off = ilUtil::img(ilUtil::getImagePath('icon_led_off_s.png'));
 		}
@@ -154,10 +154,10 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$cols['status_image'] = array( 'txt' => $this->pl->txt('set_status'), 'default' => true, 'width' => '30px', 'sort_field' => 'status' );
 		$cols['title'] = array( 'txt' => $this->pl->txt('set_title'), 'default' => true, 'width' => 'auto', 'sort_field' => 'title' );
 		$cols['object_data_title'] = array(
-			'txt' => $this->pl->txt('set_global_role'),
-			'default' => true,
-			'width' => 'auto',
-			'sort_field' => 'object_data_title'
+			'txt'        => $this->pl->txt('set_global_role'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'object_data_title',
 		);
 		$cols['actions'] = array( 'txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px', );
 
@@ -173,7 +173,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 				} else {
 					$sort = $k;
 				}
-				$this->addColumn($v['txt'], $sort, $v['width']);
+				$this->addColumn($v['txt'], ($k == 'actions' ? false : $sort), $v['width']);
 			}
 		}
 	}
@@ -186,8 +186,8 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param object $a_worksheet
-	 * @param int    $a_row
-	 * @param array  $a_set
+	 * @param int $a_row
+	 * @param array $a_set
 	 */
 	protected function fillRowExcel($a_worksheet, &$a_row, $a_set) {
 		$col = 0;
@@ -195,7 +195,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 			if (is_array($value)) {
 				$value = implode(', ', $value);
 			}
-			if (! in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
+			if (!in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
 				$a_worksheet->writeString($a_row, $col, strip_tags($value));
 				$col ++;
 			}
@@ -205,14 +205,14 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param object $a_csv
-	 * @param array  $a_set
+	 * @param array $a_set
 	 */
 	protected function fillRowCSV($a_csv, $a_set) {
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
 				$value = implode(', ', $value);
 			}
-			if (! in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
+			if (!in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
 				$a_csv->addColumn(strip_tags($value));
 			}
 		}

@@ -21,3 +21,11 @@ Switzerland
 
 info@studer-raimann.ch  
 www.studer-raimann.ch  
+
+##Plugin-Patenschaft
+Dieses Plugin wird unterstützt von
+
+**DHBW Karlsruhe**, 12.2016 - 12.2017
+
+Weitere Informationen unter https://studer-raimann.ch/produkte/ilias-plugins/plugin-patenschaften/
+

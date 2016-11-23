@@ -1,9 +1,5 @@
 <?php
-if (is_file('./Services/ActiveRecord/class.ActiveRecord.php')) {
-	require_once('./Services/ActiveRecord/class.ActiveRecord.php');
-} else {
-	require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
-}
+require_once('./Services/ActiveRecord/class.ActiveRecord.php');
 require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UDFCheck/class.ilUDFCheck.php');
 require_once('./Modules/Portfolio/classes/class.ilObjPortfolio.php');
 require_once('./Modules/Portfolio/classes/class.ilObjPortfolioTemplate.php');
@@ -861,5 +857,3 @@ class ilUserSetting extends ActiveRecord {
 		return true;
 	}
 }
-
-?>

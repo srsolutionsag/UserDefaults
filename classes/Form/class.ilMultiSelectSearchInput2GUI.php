@@ -52,7 +52,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		$this->pl = ilUserDefaultsPlugin::getInstance();
 		$tpl->addJavaScript('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.min.js');
 		$tpl->addJavaScript('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2_locale_'
-			. $ilUser->getCurrentLanguage() . '.js');
+		                    . $ilUser->getCurrentLanguage() . '.js');
 		$tpl->addCss('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.css');
 		$this->setInputTemplate($this->pl->getTemplate('tpl.multiple_select.html'));
 		$this->setWidth('300px');
@@ -82,7 +82,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		$val = parent::getValue();
 		if (is_array($val)) {
 			return $val;
-		} elseif (! $val) {
+		} elseif (!$val) {
 			return array();
 		} else {
 			return explode(',', $val);
@@ -274,7 +274,8 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 
 
 	/**
-	 * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do this stupid 'trick'. Shame on select2 project ;)
+	 * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do
+	 * this stupid 'trick'. Shame on select2 project ;)
 	 *
 	 * @return string the real postvar.
 	 */
@@ -287,11 +288,14 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	}
 
 
+	/**
+	 * @param array $array
+	 */
 	public function setValueByArray($array) {
 		$val = $array[$this->searchPostVar()];
 		if (is_array($val)) {
 			$val;
-		} elseif (! $val) {
+		} elseif (!$val) {
 			$val = array();
 		} else {
 			$val = explode(',', $val);

@@ -34,7 +34,7 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 		$ilTabs->clearTargets();
 
 		$ilTabs->addTab('settings', $this->plugin_object->txt('tabs_settings'), $ilCtrl->getLinkTargetByClass('ilUserSettingsGUI'));
-		$ilTabs->addTab('users', $this->plugin_object->txt('tabs_users'), $ilCtrl->getLinkTargetByClass('ilUserSettingsGUI'));
+		$ilTabs->addTab('users', $this->plugin_object->txt('tabs_users'), $ilCtrl->getLinkTargetByClass('usrdefUserGUI'));
 
 		//		if ($_GET["plugin_id"]) {
 		//			$ilTabs->setBackTarget($lng->txt("cmps_plugin"), $ilCtrl->getLinkTargetByClass("ilobjcomponentsettingsgui", "showPlugin"));
@@ -48,6 +48,12 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 				$ilTabs->activateTab('settings');
 				$ilUDFCheckGUI = new ilUDFCheckGUI(new ilUserSettingsGUI($this));
 				$ilCtrl->forwardCommand($ilUDFCheckGUI);
+				break;
+			case 'usrdefusergui':
+				require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSearch/class.usrdefUserGUI.php');
+				$ilTabs->activateTab('users');
+				$usrdefUserGUI = new usrdefUserGUI();
+				$ilCtrl->forwardCommand($usrdefUserGUI);
 				break;
 			default;
 				$ilTabs->activateTab('settings');

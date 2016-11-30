@@ -44,3 +44,9 @@ orgu_placeholder#:#Organisationseinheiten wÃ¤hlen
 prg_placeholder#:#Studienprogramme wÃ¤hlen
 tabs_settings#:#Einstellungen
 tabs_users#:#Benutzersuche
+usr_firstname#:#Vorname
+usr_lastname#:#Nachname
+usr_email#:#E-Mail
+usr_login#:#Login
+common_actions#:#Aktionen
+button_select_user#:#Benutzer auswählen

@@ -171,6 +171,18 @@ class ilUserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 * @param \ilObjUser[] $ilObjUsers
+	 */
+	public function doMultipleAssignements(array $ilObjUsers) {
+		foreach ($ilObjUsers as $ilObjUser) {
+			if ($ilObjUser instanceof ilObjUser) {
+				$this->doAssignements($ilObjUser);
+			}
+		}
+	}
+
+
 	protected function assignToGlobalRole() {
 		/**
 		 * @var $rbacadmin ilRbacAdmin
@@ -301,7 +313,7 @@ class ilUserSetting extends ActiveRecord {
 		$pskills = array_keys(ilPersonalSkill::getSelectedUserSkills($user->getId()));
 		$skill_ids = array();
 		$recipe = array();
-		foreach (ilPortfolioTemplatePage::getAllPages($this->getPortfolioTemplateId()) as $page) {
+		foreach (ilPortfolioTemplatePage::getAllPages('prtt', $this->getPortfolioTemplateId()) as $page) {
 			switch ($page['type']) {
 				case ilPortfolioTemplatePage::TYPE_PAGE:
 					$source_page = new ilPortfolioTemplatePage($page['id']);

@@ -39,4 +39,10 @@ check_cancel#:#Cancel
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
 tabs_settings#:#Settings
-tabs_users#:#Applay to Users
+tabs_users#:#Apply to Users
+usr_firstname#:#Firstname
+usr_lastname#:#Lastname
+usr_email#:#E-Mail
+usr_login#:#Login
+common_actions#:#Actions
+button_select_user#:#Select Users

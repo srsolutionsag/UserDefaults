@@ -1,4 +1,3 @@
-<!-- language file start -->
 form_title#:#Einstellungen erfassen
 form_button_update#:#Update
 form_button_create#:#Erstellen
@@ -10,9 +9,6 @@ set_assigned_courses#:#Einschreiben in Kurse
 set_assigned_groupes#:#Einschreiben in Gruppen
 set_portfolio_template_id#:#Portfolio-Vorlage
 set_portfolio_assigned_to_groups#:#Portfolio automatisch freigegen
-msg_entry_added#:#Eintrag gespeichert
-msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
-msg_confirm_delete#:#Möchten Sie den Datensatz wirklich löschen?
 set_table_title#:#Einstellungs-Sets
 set_status#:#Aktiv
 set_cancel#:#Abbrechen
@@ -25,21 +21,32 @@ set_activate#:#Aktivieren
 set_placeholders#:#Platzhalter
 set_deactivate#:#Deaktivieren
 set_udf_checks#:#UDF-Checks bearbeiten
-set_delete#:#Löschen
+set_delete#:#LÃ¶schen
+set_assigned_orgus#:#Einschreiben in Organisationseinheiten
+set_assigned_studyprograms#:#Einschreiben in Studienprogramme
+msg_entry_added#:#Eintrag gespeichert
+msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
+msg_confirm_delete#:#MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?
 check_table_title#:#UDF-Checks
-check_add#:#UDF-Check hinzufügen
+check_add#:#UDF-Check hinzufÃ¼gen
 check_name#:#Feld
 check_operator#:#Vergleich
 check_value#:#Wert
 check_actions#:#Aktionen
 check_udf_field_id#:#UDF-Feld
 check_edit#:#Bearbeiten
-check_delete#:#Löschen
-check_back#:#<< Zurück
-crs_placeholder#:#Kurse wählen
-grp_placeholder#:#Gruppen wählen
+check_delete#:#LÃ¶schen
+check_back#:#<< ZurÃ¼ck
 check_cancel#:#Abbrechen
-set_assigned_orgus#:#Einschreiben in Organisationseinheiten
-set_assigned_studyprograms#:#Einschreiben in Studienprogramme
-orgu_placeholder#:#Organisationseinheiten wählen
-prg_placeholder#:#Studienprogramme wählen
+crs_placeholder#:#Kurse wÃ¤hlen
+grp_placeholder#:#Gruppen wÃ¤hlen
+orgu_placeholder#:#Organisationseinheiten wÃ¤hlen
+prg_placeholder#:#Studienprogramme wÃ¤hlen
+tabs_settings#:#Einstellungen
+tabs_users#:#Benutzersuche
+usr_firstname#:#Vorname
+usr_lastname#:#Nachname
+usr_email#:#E-Mail
+usr_login#:#Login
+common_actions#:#Aktionen
+button_select_user#:#Benutzer auswählen

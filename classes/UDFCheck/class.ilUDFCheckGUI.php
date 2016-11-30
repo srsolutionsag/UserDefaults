@@ -131,27 +131,7 @@ class ilUDFCheckGUI {
 
 
 	public function cancel() {
-		$this->ctrl->setParameter($this, self::IDENTIFIER, NULL);
+		$this->ctrl->setParameter($this, self::IDENTIFIER, null);
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
-
-
-
-	//
-	//	protected function activate() {
-	//		$ilUserSetting = ilUserSetting::find($_GET[self::IDENTIFIER]);
-	//		$ilUserSetting->setStatus(ilUserSetting::STATUS_ACTIVE);
-	//		$ilUserSetting->update();
-	//		$this->cancel();
-	//	}
-	//
-	//
-	//	protected function deactivate() {
-	//		$ilUserSetting = ilUserSetting::find($_GET[self::IDENTIFIER]);
-	//		$ilUserSetting->setStatus(ilUserSetting::STATUS_INACTIVE);
-	//		$ilUserSetting->update();
-	//		$this->cancel();
-	//	}
 }
-
-?>

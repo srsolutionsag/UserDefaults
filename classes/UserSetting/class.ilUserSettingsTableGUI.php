@@ -21,6 +21,10 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	 * @var  array $filter
 	 */
 	protected $filter = array();
+	/**
+	 * @var array
+	 */
+	protected $ignored_cols = array();
 
 
 	/**
@@ -179,17 +183,17 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	}
 
 
-	public function setExportFormats() {
+	public function setExportFormats(array $formats) {
 		parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
 	}
 
 
 	/**
-	 * @param object $a_worksheet
+	 * @param \ilExcel $a_worksheet
 	 * @param int $a_row
 	 * @param array $a_set
 	 */
-	protected function fillRowExcel($a_worksheet, &$a_row, $a_set) {
+	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
 		$col = 0;
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
@@ -245,5 +249,3 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		return $this->ignored_cols;
 	}
 }
-
-?>

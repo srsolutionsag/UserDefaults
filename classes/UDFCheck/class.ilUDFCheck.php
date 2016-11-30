@@ -1,9 +1,5 @@
 <?php
-if (is_file('./Services/ActiveRecord/class.ActiveRecord.php')) {
-	require_once('./Services/ActiveRecord/class.ActiveRecord.php');
-} else {
-	require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
-}
+require_once('./Services/ActiveRecord/class.ActiveRecord.php');
 require_once('./Services/User/classes/class.ilUserDefinedFields.php');
 
 /**
@@ -299,7 +295,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -317,7 +313,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -393,7 +389,7 @@ class ilUDFCheck extends ActiveRecord {
 	/**
 	 * @param $udf_field_id
 	 *
-	 * @return array
+	 * @return int
 	 */
 	public static function getDefinitionTypeForId($udf_field_id) {
 		foreach (self::getAllDefinitions() as $def) {
@@ -406,4 +402,3 @@ class ilUDFCheck extends ActiveRecord {
 	}
 }
 
-?>

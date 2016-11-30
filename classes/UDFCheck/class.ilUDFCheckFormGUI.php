@@ -19,6 +19,18 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 	 * @var ilUDFCheck
 	 */
 	protected $object;
+	/**
+	 * @var bool
+	 */
+	protected $is_new = true;
+	/**
+	 * @var ilCtrl
+	 */
+	protected $ctrl;
+	/**
+	 * @var \ilUserDefaultsPlugin
+	 */
+	protected $pl;
 
 
 	/**
@@ -118,4 +130,3 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 	}
 }
 
-?>

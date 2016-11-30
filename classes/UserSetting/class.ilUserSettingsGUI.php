@@ -43,7 +43,7 @@ class ilUserSettingsGUI {
 		$this->ctrl = $ilCtrl;
 		$this->tpl = $tpl;
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-//		$this->pl->updateLanguageFiles();
+		//		$this->pl->updateLanguageFiles();
 		$this->ctrl->saveParameter($this, self::IDENTIFIER);
 	}
 
@@ -147,7 +147,7 @@ class ilUserSettingsGUI {
 
 
 	public function cancel() {
-		$this->ctrl->setParameter($this, self::IDENTIFIER, NULL);
+		$this->ctrl->setParameter($this, self::IDENTIFIER, null);
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 
@@ -173,8 +173,9 @@ class ilUserSettingsGUI {
 		$res = $ilDB->query($query);
 		$result = array();
 		while ($row = $ilDB->fetchAssoc($res)) {
-			if($row['title'] != "__OrgUnitAdministration")
+			if ($row['title'] != "__OrgUnitAdministration") {
 				$result[] = array( "id" => $row['obj_id'], "text" => $row['title'] );
+			}
 		}
 		echo json_encode($result);
 		exit;
@@ -197,4 +198,3 @@ class ilUserSettingsGUI {
 	}
 }
 
-?>

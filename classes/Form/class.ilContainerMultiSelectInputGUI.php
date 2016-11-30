@@ -15,6 +15,7 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 	 */
 	protected $container_type = 'crs';
 
+
 	/**
 	 * @param string $container_type
 	 * @param string $title
@@ -25,13 +26,14 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 		parent::__construct($title, $post_var);
 	}
 
+
 	/**
 	 * @return string
 	 */
 	protected function getValueAsJson() {
 		global $ilDB;
-		$query = "SELECT obj_id, title FROM object_data WHERE type = '" . $this->getContainerType()
-			. "' AND " . $ilDB->in("obj_id", $this->getValue(), false, "integer");
+		$query = "SELECT obj_id, title FROM object_data WHERE type = '" . $this->getContainerType() . "' AND "
+		         . $ilDB->in("obj_id", $this->getValue(), false, "integer");
 		$res = $ilDB->query($query);
 		$result = array();
 		while ($row = $ilDB->fetchAssoc($res)) {
@@ -42,6 +44,7 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 		return json_encode($result);
 	}
 
+
 	/**
 	 * @return mixed
 	 */
@@ -49,12 +52,14 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 		return $this->value;
 	}
 
+
 	/**
 	 * @param string $container_type
 	 */
 	public function setContainerType($container_type) {
 		$this->container_type = $container_type;
 	}
+
 
 	/**
 	 * @return string

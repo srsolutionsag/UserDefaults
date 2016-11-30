@@ -1,0 +1,367 @@
+{
+    "plugin_prefix": "evnt_evhk_usrdef",
+    "languages": [
+        "de",
+        "en"
+    ],
+    "entries": {
+        "form": {
+            "title": {
+                "translations": {
+                    "de": "Einstellungen erfassen",
+                    "en": "Setup"
+                }
+            },
+            "button_update": {
+                "translations": {
+                    "de": "Update",
+                    "en": "Update"
+                }
+            },
+            "button_create": {
+                "translations": {
+                    "de": "Erstellen",
+                    "en": "Create"
+                }
+            },
+            "button_cancel": {
+                "translations": {
+                    "de": "Abbrechen",
+                    "en": "Cancel"
+                }
+            }
+        },
+        "set": {
+            "title": {
+                "translations": {
+                    "de": "Titel",
+                    "en": "Title"
+                },
+                "last_used": "24.11.2016"
+            },
+            "description": {
+                "translations": {
+                    "de": "Beschreibung",
+                    "en": "Description"
+                }
+            },
+            "global_role": {
+                "translations": {
+                    "de": "Globale Rolle",
+                    "en": "Global Role"
+                },
+                "last_used": "24.11.2016"
+            },
+            "assigned_courses": {
+                "translations": {
+                    "de": "Einschreiben in Kurse",
+                    "en": "Assign to Courses"
+                }
+            },
+            "assigned_groupes": {
+                "translations": {
+                    "de": "Einschreiben in Gruppen",
+                    "en": "Assign to Groups"
+                }
+            },
+            "portfolio_template_id": {
+                "translations": {
+                    "de": "Portfolio-Vorlage",
+                    "en": "Portfolio-Template"
+                }
+            },
+            "portfolio_assigned_to_groups": {
+                "translations": {
+                    "de": "Portfolio automatisch freigegen",
+                    "en": "Share Portfolio to"
+                }
+            },
+            "table_title": {
+                "translations": {
+                    "de": "Einstellungs-Sets",
+                    "en": "Settings"
+                },
+                "last_used": "24.11.2016"
+            },
+            "status": {
+                "translations": {
+                    "de": "Aktiv",
+                    "en": "Active"
+                },
+                "last_used": "24.11.2016"
+            },
+            "cancel": {
+                "translations": {
+                    "de": "Abbrechen",
+                    "en": "Abbrechen"
+                }
+            },
+            "blog_name": {
+                "translations": {
+                    "de": "Blog-Name",
+                    "en": "Blog-Name"
+                }
+            },
+            "portfolio_name": {
+                "translations": {
+                    "de": "Portfolio-Name",
+                    "en": "Portfolio-Name"
+                }
+            },
+            "actions": {
+                "translations": {
+                    "de": "Aktionen",
+                    "en": "Actions"
+                },
+                "last_used": "24.11.2016"
+            },
+            "add": {
+                "translations": {
+                    "de": "Neue Einstellung erfassen",
+                    "en": "Add Setting"
+                },
+                "last_used": "24.11.2016"
+            },
+            "edit": {
+                "translations": {
+                    "de": "Bearbeiten",
+                    "en": "Edit"
+                },
+                "last_used": "24.11.2016"
+            },
+            "activate": {
+                "translations": {
+                    "de": "Aktivieren",
+                    "en": "Activate"
+                }
+            },
+            "placeholders": {
+                "translations": {
+                    "de": "Platzhalter",
+                    "en": "Placeholders"
+                }
+            },
+            "deactivate": {
+                "translations": {
+                    "de": "Deaktivieren",
+                    "en": "Deactivate"
+                },
+                "last_used": "24.11.2016"
+            },
+            "udf_checks": {
+                "translations": {
+                    "de": "UDF-Checks bearbeiten",
+                    "en": "Edit UDF-Checks"
+                },
+                "last_used": "24.11.2016"
+            },
+            "delete": {
+                "translations": {
+                    "de": "LÃ¶schen",
+                    "en": "Delete"
+                },
+                "last_used": "24.11.2016"
+            },
+            "assigned_orgus": {
+                "translations": {
+                    "de": "Einschreiben in Organisationseinheiten"
+                }
+            },
+            "assigned_studyprograms": {
+                "translations": {
+                    "de": "Einschreiben in Studienprogramme"
+                }
+            }
+        },
+        "msg": {
+            "entry_added": {
+                "translations": {
+                    "de": "Eintrag gespeichert",
+                    "en": "Entry saved"
+                }
+            },
+            "activation_failed": {
+                "translations": {
+                    "de": "Einstellung nicht aktiviert, da keine UDF-Checks vorhanden",
+                    "en": "Due to missing UDF-Checks the Setting has not been activated"
+                }
+            },
+            "confirm_delete": {
+                "translations": {
+                    "de": "MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?",
+                    "en": "Do you really like to delete the dataset?"
+                }
+            }
+        },
+        "check": {
+            "table_title": {
+                "translations": {
+                    "de": "UDF-Checks",
+                    "en": "UDF-Checks"
+                },
+                "last_used": "24.11.2016"
+            },
+            "add": {
+                "translations": {
+                    "de": "UDF-Check hinzufÃ¼gen",
+                    "en": "Add UDF-Check"
+                },
+                "last_used": "24.11.2016"
+            },
+            "name": {
+                "translations": {
+                    "de": "Feld",
+                    "en": "Field"
+                },
+                "last_used": "24.11.2016"
+            },
+            "operator": {
+                "translations": {
+                    "de": "Vergleich",
+                    "en": "Operator"
+                }
+            },
+            "value": {
+                "translations": {
+                    "de": "Wert",
+                    "en": "Value"
+                },
+                "last_used": "24.11.2016"
+            },
+            "actions": {
+                "translations": {
+                    "de": "Aktionen",
+                    "en": "Actions"
+                },
+                "last_used": "24.11.2016"
+            },
+            "udf_field_id": {
+                "translations": {
+                    "de": "UDF-Feld",
+                    "en": "UDF-Field"
+                }
+            },
+            "edit": {
+                "translations": {
+                    "de": "Bearbeiten",
+                    "en": "Edit"
+                },
+                "last_used": "24.11.2016"
+            },
+            "delete": {
+                "translations": {
+                    "de": "LÃ¶schen",
+                    "en": "Delete"
+                },
+                "last_used": "24.11.2016"
+            },
+            "back": {
+                "translations": {
+                    "de": "<< ZurÃ¼ck",
+                    "en": "<< Back"
+                },
+                "last_used": "24.11.2016"
+            },
+            "cancel": {
+                "translations": {
+                    "de": "Abbrechen",
+                    "en": "Cancel"
+                }
+            }
+        },
+        "crs": {
+            "placeholder": {
+                "translations": {
+                    "de": "Kurse wÃ¤hlen",
+                    "en": "Choose Courses"
+                }
+            }
+        },
+        "grp": {
+            "placeholder": {
+                "translations": {
+                    "de": "Gruppen wÃ¤hlen",
+                    "en": "Choose Groups"
+                }
+            }
+        },
+        "orgu": {
+            "placeholder": {
+                "translations": {
+                    "de": "Organisationseinheiten wÃ¤hlen"
+                }
+            }
+        },
+        "prg": {
+            "placeholder": {
+                "translations": {
+                    "de": "Studienprogramme wÃ¤hlen"
+                }
+            }
+        },
+        "tabs": {
+            "settings": {
+                "translations": {
+                    "de": "Einstellungen",
+                    "en": "Settings"
+                },
+                "last_used": "24.11.2016"
+            },
+            "users": {
+                "translations": {
+                    "de": "Benutzersuche",
+                    "en": "Apply to Users"
+                },
+                "last_used": "24.11.2016"
+            }
+        },
+        "usr": {
+            "firstname": {
+                "translations": {
+                    "de": "Vorname",
+                    "en": "Firstname"
+                },
+                "last_used": "24.11.2016"
+            },
+            "lastname": {
+                "translations": {
+                    "de": "Nachname",
+                    "en": "Lastname"
+                },
+                "last_used": "24.11.2016"
+            },
+            "email": {
+                "translations": {
+                    "de": "E-Mail",
+                    "en": "E-Mail"
+                },
+                "last_used": "24.11.2016"
+            },
+            "login": {
+                "translations": {
+                    "de": "Login",
+                    "en": "Login"
+                },
+                "last_used": "24.11.2016"
+            }
+        },
+        "common": {
+            "actions": {
+                "translations": {
+                    "de": "Aktionen",
+                    "en": "Actions"
+                },
+                "last_used": "24.11.2016"
+            }
+        },
+        "button": {
+            "select_user": {
+                "translations": {
+                    "de": "Benutzer auswählen",
+                    "en": "Select Users"
+                },
+                "last_used": "24.11.2016"
+            }
+        }
+    }
+}

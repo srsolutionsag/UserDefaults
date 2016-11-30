@@ -1,4 +1,3 @@
-<!-- language file start -->
 form_title#:#Setup
 form_button_update#:#Update
 form_button_create#:#Create
@@ -10,9 +9,6 @@ set_assigned_courses#:#Assign to Courses
 set_assigned_groupes#:#Assign to Groups
 set_portfolio_template_id#:#Portfolio-Template
 set_portfolio_assigned_to_groups#:#Share Portfolio to
-msg_entry_added#:#Entry saved
-msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
-msg_confirm_delete#:#Do you really like to delete the dataset?
 set_table_title#:#Settings
 set_status#:#Active
 set_cancel#:#Abbrechen
@@ -26,6 +22,9 @@ set_placeholders#:#Placeholders
 set_deactivate#:#Deactivate
 set_udf_checks#:#Edit UDF-Checks
 set_delete#:#Delete
+msg_entry_added#:#Entry saved
+msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
+msg_confirm_delete#:#Do you really like to delete the dataset?
 check_table_title#:#UDF-Checks
 check_add#:#Add UDF-Check
 check_name#:#Field
@@ -36,6 +35,14 @@ check_udf_field_id#:#UDF-Field
 check_edit#:#Edit
 check_delete#:#Delete
 check_back#:#<< Back
+check_cancel#:#Cancel
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
-check_cancel#:#Cancel
+tabs_settings#:#Settings
+tabs_users#:#Apply to Users
+usr_firstname#:#Firstname
+usr_lastname#:#Lastname
+usr_email#:#E-Mail
+usr_login#:#Login
+common_actions#:#Actions
+button_select_user#:#Select Users

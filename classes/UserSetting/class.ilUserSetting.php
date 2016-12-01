@@ -20,7 +20,7 @@ require_once('./Modules/OrgUnit/classes/class.ilObjOrgUnit.php');
  */
 class ilUserSetting extends ActiveRecord {
 
-	const TABLE_NAME = 'usr_def_sets';
+		const TABLE_NAME = 'usr_def_sets';
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
 	const P_USER_FIRSTNAME = 'FIRSTNAME';
@@ -196,39 +196,46 @@ class ilUserSetting extends ActiveRecord {
 
 
 	protected function assignCourses() {
-		if (count($this->getAssignedCourses()) == 0) {
+		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
+		if (count($courses) == 0) {
 			return false;
 		}
-		foreach ($this->getAssignedCourses() as $crs_obj_id) {
-			if (ilObject2::_lookupType($crs_obj_id) != 'crs') {
+		foreach ($courses as $crs_obj_id) {
+			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != 'crs') {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 			$part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
-			$all_refs = ilObject2::_getAllReferences($crs_obj_id);
-			$first = array_shift(array_values($all_refs));
-			ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
+			if(!in_array($crs_obj_id, $this->getAssignedCoursesDesktop())) {
+				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
+				$first = array_shift(array_values($all_refs));
+				ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
+			}
 		}
 	}
 
 
 	protected function assignGroups() {
-		if (count($this->getAssignedGroupes()) == 0) {
+		$groups = array_merge($this->getAssignedGroupes(), $this->getAssignedGroupesDesktop());
+		if (count($groups) == 0) {
 			return false;
 		}
-		foreach ($this->getAssignedGroupes() as $grp_obj_id) {
-			if (ilObject2::_lookupType($grp_obj_id) != 'grp') {
+
+		foreach ($groups as $grp_obj_id) {
+			if ($grp_obj_id =="" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
 				continue;
 			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 			$part->add($usr_id, IL_GRP_MEMBER);
 
-			$all_refs = ilObject2::_getAllReferences($grp_obj_id);
-			$first = array_shift(array_values($all_refs));
-			ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
+			if(!in_array($grp_obj_id, $this->getAssignedGroupesDesktop())) {
+				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
+				$first = array_shift(array_values($all_refs));
+				ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
+			}
 		}
 	}
 
@@ -438,6 +445,22 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	protected $assigned_groupes = array();
 	/**
+	 * @var array
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
+	protected $assigned_courses_desktop = array();
+	/**
+	 * @var int
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
+	protected $assigned_groupes_desktop = array();
+	/**
 	 * @var int
 	 *
 	 * @con_has_field  true
@@ -499,7 +522,9 @@ class ilUserSetting extends ActiveRecord {
 	public function sleep($field_name) {
 		switch ($field_name) {
 			case 'assigned_courses':
+			case 'assigned_courses_desktop':
 			case 'assigned_groupes':
+			case 'assigned_groupes_desktop':
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
@@ -528,7 +553,9 @@ class ilUserSetting extends ActiveRecord {
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
-				$json_decode = json_decode($field_value);
+			case 'assigned_courses_desktop':
+			case 'assigned_groupes_desktop':
+			$json_decode = json_decode($field_value);
 
 				return is_array($json_decode) ? $json_decode : array();
 				break;
@@ -635,6 +662,34 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	public function getAssignedGroupes() {
 		return $this->assigned_groupes;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAssignedCoursesDesktop() {
+		return $this->assigned_courses_desktop;
+	}
+
+	/**
+	 * @param array $assigned_courses_desktop
+	 */
+	public function setAssignedCoursesDesktop($assigned_courses_desktop) {
+		$this->assigned_courses_desktop = $assigned_courses_desktop;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getAssignedGroupesDesktop() {
+		return $this->assigned_groupes_desktop;
+	}
+
+	/**
+	 * @param int $assigned_groupes_desktop
+	 */
+	public function setAssignedGroupesDesktop($assigned_groupes_desktop) {
+		$this->assigned_groupes_desktop = $assigned_groupes_desktop;
 	}
 
 

@@ -27,6 +27,9 @@ set_assigned_studyprograms#:#In Studienprogramm einschreiben
 set_form_please_choose#:#-- BItte wählen --
 set_duplicate#:#Duplizieren
 set_input_to_desktop#:#MISSING
+set_assigned_courses_desktop#:#In Kurs einschreiben und Kurs auf den Desktop legen
+set_assigned_groups_desktop#:#Zu Gruppe hinzufügen und Gruppe auf den Desktop legen
+set_assigned_groups#:#Zu Gruppe hinzufügen
 msg_entry_added#:#Eintrag gespeichert
 msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
 msg_confirm_delete#:#MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?
@@ -56,3 +59,4 @@ usr_login#:#Login
 common_actions#:#Aktionen
 button_select_user#:#Benutzer auswählen
 duplicate_successful#:#MISSING
+userdef_users_assigned#:#MISSING

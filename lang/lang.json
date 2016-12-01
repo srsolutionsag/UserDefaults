@@ -209,6 +209,27 @@
                     "de": "MISSING",
                     "en": "MISSING"
                 }
+            },
+            "assigned_courses_desktop": {
+                "translations": {
+                    "de": "In Kurs einschreiben und Kurs auf den Desktop legen",
+                    "en": "Assign to course and put course on desktop"
+                },
+                "last_used": "01.12.2016"
+            },
+            "assigned_groups_desktop": {
+                "translations": {
+                    "de": "Zu Gruppe hinzufügen und Gruppe auf den Desktop legen",
+                    "en": "Assign to groupt and put group on desktop"
+                },
+                "last_used": "01.12.2016"
+            },
+            "assigned_groups": {
+                "translations": {
+                    "de": "Zu Gruppe hinzufügen",
+                    "en": "Assign to Group"
+                },
+                "last_used": "01.12.2016"
             }
         },
         "msg": {
@@ -383,28 +404,28 @@
                     "de": "Vorname",
                     "en": "Firstname"
                 },
-                "last_used": "30.11.2016"
+                "last_used": "01.12.2016"
             },
             "lastname": {
                 "translations": {
                     "de": "Nachname",
                     "en": "Lastname"
                 },
-                "last_used": "30.11.2016"
+                "last_used": "01.12.2016"
             },
             "email": {
                 "translations": {
                     "de": "E-Mail",
                     "en": "E-Mail"
                 },
-                "last_used": "30.11.2016"
+                "last_used": "01.12.2016"
             },
             "login": {
                 "translations": {
                     "de": "Login",
                     "en": "Login"
                 },
-                "last_used": "30.11.2016"
+                "last_used": "01.12.2016"
             }
         },
         "common": {
@@ -413,7 +434,7 @@
                     "de": "Aktionen",
                     "en": "Actions"
                 },
-                "last_used": "30.11.2016"
+                "last_used": "01.12.2016"
             }
         },
         "button": {
@@ -422,11 +443,19 @@
                     "de": "Benutzer auswählen",
                     "en": "Select Users"
                 },
-                "last_used": "30.11.2016"
+                "last_used": "01.12.2016"
             }
         },
         "duplicate": {
             "successful": {
+                "translations": {
+                    "de": "MISSING",
+                    "en": "MISSING"
+                }
+            }
+        },
+        "userdef": {
+            "users_assigned": {
                 "translations": {
                     "de": "MISSING",
                     "en": "MISSING"

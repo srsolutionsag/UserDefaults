@@ -54,12 +54,6 @@ class ilUserSettingsGUI {
 		$cmd = $this->ctrl->getCmd(self::CMD_INDEX);
 		$cmdClass = $this->ctrl->getCmdClass();
 
-		switch ($cmdClass) {
-			case 'ilPropertyFormGUI':
-				$reponew ilRepositorySelectorInputGUI();
-				$this->ctrl->forwardCommand()
-		}
-
 		switch ($cmd) {
 			case self::CMD_INDEX:
 				$this->index();

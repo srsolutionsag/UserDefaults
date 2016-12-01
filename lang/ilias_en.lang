@@ -27,6 +27,9 @@ set_assigned_studyprograms#:#Register to studyprogram
 set_form_please_choose#:#-- Please choose --
 set_duplicate#:#Duplicate
 set_input_to_desktop#:#MISSING
+set_assigned_courses_desktop#:#Assign to course and put course on desktop
+set_assigned_groups_desktop#:#Assign to groupt and put group on desktop
+set_assigned_groups#:#Assign to Group
 msg_entry_added#:#Entry saved
 msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
 msg_confirm_delete#:#Do you really like to delete the dataset?
@@ -56,3 +59,4 @@ usr_login#:#Login
 common_actions#:#Actions
 button_select_user#:#Select Users
 duplicate_successful#:#MISSING
+userdef_users_assigned#:#MISSING

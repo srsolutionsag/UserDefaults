@@ -16,7 +16,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_STATUS = 'status';
 	const F_GLOBAL_ROLE = 'global_role';
 	const F_ASSIGNED_COURSES = 'assigned_courses';
-	const F_ASSIGNED_GROUPS = 'assigned_groupes';
+	const F_ASSIGNED_COURSES_DESKTOP = 'assigned_courses_desktop';
+	const F_ASSIGNED_GROUPS = 'assigned_groups';
+	const F_ASSIGNED_GROUPS_DESKTOP = 'assigned_groups_desktop';
 	const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
 	const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
 	const F_ASSIGNED_ORGUS = 'assigned_orgus';
@@ -83,23 +85,20 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$multiSelect = new udfMultiLineInputGUI($this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), "MultiGroup");
 		$multiSelect->setShowLabel(true);
 
-//		$explorer = new ilRepositoryExplorerGUI($this->parent_gui, "index");
-//		$explorer->setTypeWhiteList(array("crs"));
-		$treeSelect = new ilRepositorySelectorInputGUI($this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
-		$treeSelect->setClickableTypes(array("crs"));
-//		$treeSelect->setParent($this->parent_gui);
-		$multiSelect->addInput($treeSelect);
 
-//		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('crs', $this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
-//		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
-//		$multiSelect->addInput($ilCourseMultiSelectInputGUI);
+		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('crs', $this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
+		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+		$this->addItem($ilCourseMultiSelectInputGUI);
 
-		$toDesktop = new ilCheckboxInputGUI($this->txt("input_to_desktop"), "toDesktop");
-		$multiSelect->addInput($toDesktop);
-
-		$this->addItem($multiSelect);
+		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('crs', $this->txt(self::F_ASSIGNED_COURSES_DESKTOP), self::F_ASSIGNED_COURSES_DESKTOP);
+		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+		$this->addItem($ilCourseMultiSelectInputGUI);
 
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS), self::F_ASSIGNED_GROUPS);
+		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+		$this->addItem($ilCourseMultiSelectInputGUI);
+
+		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS_DESKTOP), self::F_ASSIGNED_GROUPS_DESKTOP);
 		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
@@ -168,7 +167,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_DESCRIPTION                  => $this->object->getDescription(),
 			//			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
 			self::F_ASSIGNED_COURSES             => implode(',', $this->object->getAssignedCourses()),
+			self::F_ASSIGNED_COURSES_DESKTOP	 => implode(',', $this->object->getAssignedCoursesDesktop()),
 			self::F_ASSIGNED_GROUPS              => implode(',', $this->object->getAssignedGroupes()),
+			self::F_ASSIGNED_GROUPS_DESKTOP      => implode(',', $this->object->getAssignedGroupesDesktop()),
 			self::F_GLOBAL_ROLE                  => $this->object->getGlobalRole(),
 			self::F_PORTFOLIO_TEMPLATE_ID        => $this->object->getPortfolioTemplateId(),
 			self::F_PORTFOLIO_ASSIGNED_TO_GROUPS => implode(',', $this->object->getPortfolioAssignedToGroups()),
@@ -194,8 +195,12 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		//		$this->object->setStatus($this->getInput(self::F_STATUS));
 		$assigned_courses = $this->getInput(self::F_ASSIGNED_COURSES);
 		$this->object->setAssignedCourses(explode(',', $assigned_courses[0]));
+		$assigned_courses_desktop = $this->getInput(self::F_ASSIGNED_COURSES_DESKTOP);
+		$this->object->setAssignedCoursesDesktop(explode(',', $assigned_courses_desktop[0]));
 		$assigned_groups = $this->getInput(self::F_ASSIGNED_GROUPS);
 		$this->object->setAssignedGroupes(explode(',', $assigned_groups[0]));
+		$assigned_groups_desktop = $this->getInput(self::F_ASSIGNED_GROUPS_DESKTOP);
+		$this->object->setAssignedGroupesDesktop(explode(',', $assigned_groups_desktop[0]));
 		$this->object->setGlobalRole($this->getInput(self::F_GLOBAL_ROLE));
 		$portfolio_template_id = $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID);
 		$this->object->setPortfolioTemplateId($portfolio_template_id > 0 ? $portfolio_template_id : null);

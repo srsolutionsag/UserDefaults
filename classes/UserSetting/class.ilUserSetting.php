@@ -342,6 +342,17 @@ class ilUserSetting extends ActiveRecord {
 		}
 	}
 
+	/**
+	 * @return ilUserSetting
+	 * Duplicate this setting and it's dependencies and save everything to the databse.
+	 */
+	public function duplicate() {
+		$next_id = $this->getArConnector()->nextID($this);
+		$copy = $this->copy($next_id);
+		$copy->create();
+		$this->copyDependencies($copy);
+		return $copy;
+	}
 
 	/**
 	 * @var int
@@ -867,5 +878,32 @@ class ilUserSetting extends ActiveRecord {
 		}
 
 		return true;
+	}
+
+	/**
+	 * @return ilUDFCheck[]
+	 */
+	protected function copyDependencies($copy) {
+		$original_udf_checks = $this->getUdfCheckObjects();
+		/** @var ilUDFCheck[] $new_udf_checks */
+		$new_udf_checks = [];
+		foreach($original_udf_checks as $original_udf_check) {
+			$new_udf_checks[] = $this->copyUdfCheck($original_udf_check, $copy);
+		}
+		return $new_udf_checks;
+	}
+
+	/**
+	 * @param $original_udf_check ilUdfCheck
+	 * @param $parent ilUserSetting
+	 * @return mixed
+	 */
+	protected function copyUdfCheck($original_udf_check, $parent) {
+		$next_id = $original_udf_check->getArConnector()->nextID($original_udf_check);
+		/** @var ilUDFCheck $new_udf_check */
+		$new_udf_check = $original_udf_check->copy($next_id);
+		$new_udf_check->setParentId($parent->getId());
+		$new_udf_check->create();
+		return $new_udf_check;
 	}
 }

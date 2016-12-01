@@ -1,6 +1,8 @@
 <?php
 require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.ilContainerMultiSelectInputGUI.php');
+require_once("./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.udfMultiLineInputGUI.php");
+require_once("./Services/Form/classes/class.ilRepositorySelectorInputGUI.php");
 
 /**
  * Class ilUserSettingsFormGUI
@@ -69,18 +71,33 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$te = new ilTextAreaInputGUI($this->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
 		$this->addItem($te);
 
-		$cb = new ilCheckboxInputGUI($this->txt(self::F_STATUS), self::F_STATUS);
-		//		$this->addItem($cb);
 
 		$se = new ilSelectInputGUI($this->txt(self::F_GLOBAL_ROLE), self::F_GLOBAL_ROLE);
 		$se->setRequired(true);
-		$global_roles = self::getRoles(ilRbacReview::FILTER_ALL_GLOBAL);
+		$global_roles = array("" => $this->txt("form_please_choose"));
+		$global_roles = array_merge($global_roles, self::getRoles(ilRbacReview::FILTER_ALL_GLOBAL));
 		$se->setOptions($global_roles);
 		$this->addItem($se);
 
-		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('crs', $this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
-		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
-		$this->addItem($ilCourseMultiSelectInputGUI);
+		/// Assigned Courses
+		$multiSelect = new udfMultiLineInputGUI($this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), "MultiGroup");
+		$multiSelect->setShowLabel(true);
+
+//		$explorer = new ilRepositoryExplorerGUI($this->parent_gui, "index");
+//		$explorer->setTypeWhiteList(array("crs"));
+		$treeSelect = new ilRepositorySelectorInputGUI($this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
+		$treeSelect->setClickableTypes(array("crs"));
+//		$treeSelect->setParent($this->parent_gui);
+		$multiSelect->addInput($treeSelect);
+
+//		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('crs', $this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
+//		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+//		$multiSelect->addInput($ilCourseMultiSelectInputGUI);
+
+		$toDesktop = new ilCheckboxInputGUI($this->txt("input_to_desktop"), "toDesktop");
+		$multiSelect->addInput($toDesktop);
+
+		$this->addItem($multiSelect);
 
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS), self::F_ASSIGNED_GROUPS);
 		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));

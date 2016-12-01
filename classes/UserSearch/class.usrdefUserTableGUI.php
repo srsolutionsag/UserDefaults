@@ -95,22 +95,22 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$usrdefUser = usrdefUser::getCollection();
 		$usrdefUser->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$fitered = false;
+		$filtered = false;
 		foreach ($this->filter as $field => $value) {
 			if ($value) {
 				$value = str_replace('%', '', $value);
 				if (strlen($value) < 3) {
-					ilUtil::sendFailure($this->pl->txt('msg_failure_more_characters_needed'));
+					ilUtil::sendFailure($this->pl->txt('msg_failure_more_characters_needed'), true);
 					continue;
 				}
-				$fitered = true;
+				$filtered = true;
 				$usrdefUser->where(array( $field => '%' . $value . '%' ), 'LIKE');
 			}
 		}
-
-		if (!$fitered) {
-			$usrdefUser->where(array( 'usr_id' => 4 ));
-		}
+		//TODO: @FSX für was war das?
+//		if (!$filtered) {
+//			$usrdefUser->where(array( 'usr_id' => 4 ));
+//		}
 
 		$this->setMaxCount($usrdefUser->count());
 		if (!$usrdefUser->hasSets()) {

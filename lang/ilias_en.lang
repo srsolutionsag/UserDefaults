@@ -22,6 +22,11 @@ set_placeholders#:#Placeholders
 set_deactivate#:#Deactivate
 set_udf_checks#:#Edit UDF-Checks
 set_delete#:#Delete
+set_assigned_orgus#:#Assign to organisational units
+set_assigned_studyprograms#:#Register to studyprogram
+set_form_please_choose#:#-- Please choose --
+set_duplicate#:#Duplicate
+set_input_to_desktop#:#MISSING
 msg_entry_added#:#Entry saved
 msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
 msg_confirm_delete#:#Do you really like to delete the dataset?
@@ -36,8 +41,12 @@ check_edit#:#Edit
 check_delete#:#Delete
 check_back#:#<< Back
 check_cancel#:#Cancel
+check_udf_negate_value#:#Negate
+check_udf_negate_value_info#:#If you check this option, this rule is applied to all user that do NOT associate with the value given below.
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
+orgu_placeholder#:#Organisational unit
+prg_placeholder#:#Studyprogram
 tabs_settings#:#Settings
 tabs_users#:#Apply to Users
 usr_firstname#:#Firstname
@@ -46,3 +55,4 @@ usr_email#:#E-Mail
 usr_login#:#Login
 common_actions#:#Actions
 button_select_user#:#Select Users
+duplicate_successful#:#MISSING

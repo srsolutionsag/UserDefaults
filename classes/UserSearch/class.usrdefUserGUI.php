@@ -87,9 +87,7 @@ class usrdefUserGUI {
 		foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
 			$ilUserSetting->doMultipleAssignements($user_objects);
 		}
-
-		$this->tpl->setContent('<pre>' . print_r($usr_ids, 1) . '</pre>');
-//		ilSession::set(self::SESSION_ID, $usr_id);
-//		$this->ilCtrl->redirectByClass(array( 'usrdefCourseGUI' ));
+		ilUtil::sendSuccess(sprintf($this->pl->txt("userdef_users_assigned"), count($usr_ids)), true);
+		$this->ilCtrl->redirect($this, self::CMD_INDEX);
 	}
 }

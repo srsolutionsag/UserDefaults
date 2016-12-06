@@ -67,7 +67,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$xdglRequestList = ilUserSetting::getCollection();
 		$xdglRequestList->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$xdglRequestList->innerjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
+		$xdglRequestList->leftjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {

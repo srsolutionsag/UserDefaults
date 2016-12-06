@@ -139,7 +139,7 @@ class ilUserSettingsGUI {
 		$copy = $original->duplicate();
 		$copy->setStatus(ilUserSetting::STATUS_INACTIVE);
 		$copy->update();
-		ilUtil::sendSuccess($this->pl->txt("duplicate_successful"), true);
+		ilUtil::sendSuccess($this->pl->txt("msg_duplicate_successful"), true);
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 

@@ -275,7 +275,7 @@ class ilUserSetting extends ActiveRecord {
 		$target->create();
 
 		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
-		foreach (ilPortfolioTemplatePage::getAllPages($this->getPortfolioTemplateId()) as $page) {
+		foreach (ilPortfolioTemplatePage::getAllPages('prtt', $this->getPortfolioTemplateId()) as $page) {
 			switch ($page["type"]) {
 				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
 					$a_recipe[$page["id"]] = array( "blog", "create", $this->getBlogName() );
@@ -349,15 +349,21 @@ class ilUserSetting extends ActiveRecord {
 		}
 	}
 
+
 	/**
 	 * @return ilUserSetting
 	 * Duplicate this setting and it's dependencies and save everything to the databse.
 	 */
 	public function duplicate() {
+		/**
+		 * @var $copy ilUserSetting
+		 */
 		$next_id = $this->getArConnector()->nextID($this);
 		$copy = $this->copy($next_id);
+		$copy->setTitle($this->getTitle() . ' (2)');
 		$copy->create();
 		$this->copyDependencies($copy);
+
 		return $copy;
 	}
 

@@ -33,6 +33,7 @@ set_assigned_groups#:#Zu Gruppe hinzufügen
 msg_entry_added#:#Eintrag gespeichert
 msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
 msg_confirm_delete#:#MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?
+msg_duplicate_successful#:#Erfolgreich kopiert?
 check_table_title#:#UDF-Checks
 check_add#:#UDF-Check hinzufÃ¼gen
 check_name#:#Feld
@@ -58,5 +59,4 @@ usr_email#:#E-Mail
 usr_login#:#Login
 common_actions#:#Aktionen
 button_select_user#:#Benutzer auswählen
-duplicate_successful#:#MISSING
-userdef_users_assigned#:#MISSING
+userdef_users_assigned#:#%s Benutzer aktualisiert

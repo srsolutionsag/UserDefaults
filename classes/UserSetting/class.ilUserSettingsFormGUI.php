@@ -73,18 +73,16 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$te = new ilTextAreaInputGUI($this->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
 		$this->addItem($te);
 
-
 		$se = new ilSelectInputGUI($this->txt(self::F_GLOBAL_ROLE), self::F_GLOBAL_ROLE);
 		$se->setRequired(true);
-		$global_roles = array("" => $this->txt("form_please_choose"));
-		$global_roles = array_merge($global_roles, self::getRoles(ilRbacReview::FILTER_ALL_GLOBAL));
+		$global_roles = array( "" => $this->txt("form_please_choose") );
+		self::appendRoles($global_roles, ilRbacReview::FILTER_ALL_GLOBAL);
 		$se->setOptions($global_roles);
 		$this->addItem($se);
 
 		/// Assigned Courses
 		$multiSelect = new udfMultiLineInputGUI($this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), "MultiGroup");
 		$multiSelect->setShowLabel(true);
-
 
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('crs', $this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
 		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
@@ -140,24 +138,20 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param int $filter
-	 * @param bool $with_text
-	 *
+	 * @param $existing_array
+	 * @param $filter
 	 * @return array
 	 */
-	public static function getRoles($filter, $with_text = true) {
+	protected static function appendRoles(array &$existing_array, $filter) {
 		global $rbacreview;
-		$opt = array();
-		$role_ids = array();
+		/**
+		 * @var $rbacreview ilRbacReview
+		 */
 		foreach ($rbacreview->getRolesByFilter($filter) as $role) {
-			$opt[$role['obj_id']] = $role[self::F_TITLE] . ' (' . $role['obj_id'] . ')';
-			$role_ids[] = $role['obj_id'];
+			$existing_array[$role['obj_id']] = $role[self::F_TITLE] . ' (' . $role['obj_id'] . ')';
 		}
-		if ($with_text) {
-			return $opt;
-		} else {
-			return $role_ids;
-		}
+
+		return $existing_array;
 	}
 
 
@@ -167,7 +161,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_DESCRIPTION                  => $this->object->getDescription(),
 			//			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
 			self::F_ASSIGNED_COURSES             => implode(',', $this->object->getAssignedCourses()),
-			self::F_ASSIGNED_COURSES_DESKTOP	 => implode(',', $this->object->getAssignedCoursesDesktop()),
+			self::F_ASSIGNED_COURSES_DESKTOP     => implode(',', $this->object->getAssignedCoursesDesktop()),
 			self::F_ASSIGNED_GROUPS              => implode(',', $this->object->getAssignedGroupes()),
 			self::F_ASSIGNED_GROUPS_DESKTOP      => implode(',', $this->object->getAssignedGroupesDesktop()),
 			self::F_GLOBAL_ROLE                  => $this->object->getGlobalRole(),
@@ -177,7 +171,6 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_PORTFOLIO_NAME               => $this->object->getPortfolioName(),
 			self::F_ASSIGNED_ORGUS               => implode(',', $this->object->getAssignedOrgus()),
 			self::F_ASSIGNED_STUDYPROGRAMS       => implode(',', $this->object->getAssignedStudyprograms()),
-
 		);
 		$this->setValuesByArray($array);
 	}

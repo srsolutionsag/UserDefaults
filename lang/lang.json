@@ -41,7 +41,7 @@
                     "de": "Titel",
                     "en": "Title"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "description": {
                 "translations": {
@@ -55,7 +55,7 @@
                     "de": "Globale Rolle",
                     "en": "Global Role"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "assigned_courses": {
                 "translations": {
@@ -90,14 +90,14 @@
                     "de": "Einstellungs-Sets",
                     "en": "Settings"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "status": {
                 "translations": {
                     "de": "Aktiv",
                     "en": "Active"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "cancel": {
                 "translations": {
@@ -125,21 +125,21 @@
                     "de": "Aktionen",
                     "en": "Actions"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "add": {
                 "translations": {
                     "de": "Neue Einstellung erfassen",
                     "en": "Add Setting"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "edit": {
                 "translations": {
                     "de": "Bearbeiten",
                     "en": "Edit"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "activate": {
                 "translations": {
@@ -160,21 +160,21 @@
                     "de": "Deaktivieren",
                     "en": "Deactivate"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "udf_checks": {
                 "translations": {
                     "de": "UDF-Checks bearbeiten",
                     "en": "Edit UDF-Checks"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "delete": {
                 "translations": {
                     "de": "LÃ¶schen",
                     "en": "Delete"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "assigned_orgus": {
                 "translations": {
@@ -202,7 +202,7 @@
                     "de": "Duplizieren",
                     "en": "Duplicate"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "input_to_desktop": {
                 "translations": {
@@ -395,14 +395,14 @@
                     "de": "Einstellungen",
                     "en": "Settings"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "users": {
                 "translations": {
                     "de": "Benutzersuche",
                     "en": "Apply to Users"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             }
         },
         "usr": {
@@ -411,28 +411,28 @@
                     "de": "Vorname",
                     "en": "Firstname"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "lastname": {
                 "translations": {
                     "de": "Nachname",
                     "en": "Lastname"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "email": {
                 "translations": {
                     "de": "E-Mail",
                     "en": "E-Mail"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             },
             "login": {
                 "translations": {
                     "de": "Login",
                     "en": "Login"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             }
         },
         "common": {
@@ -441,7 +441,7 @@
                     "de": "Aktionen",
                     "en": "Actions"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             }
         },
         "button": {
@@ -450,7 +450,7 @@
                     "de": "Benutzer auswählen",
                     "en": "Select Users"
                 },
-                "last_used": "06.12.2016"
+                "last_used": "10.12.2016"
             }
         },
         "userdef": {

@@ -107,14 +107,12 @@ class usrdefUserTableGUI extends ilTable2GUI {
 				$usrdefUser->where(array( $field => '%' . $value . '%' ), 'LIKE');
 			}
 		}
-		//TODO: @FSX für was war das?
-//		if (!$filtered) {
-//			$usrdefUser->where(array( 'usr_id' => 4 ));
-//		}
 
 		$this->setMaxCount($usrdefUser->count());
+
+		$usrdefUser->where(array( 'usr_id' => 13 ), '!=');
 		if (!$usrdefUser->hasSets()) {
-			//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
+			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
 		}
 		$usrdefUser->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$usrdefUser->orderBy('email');
@@ -140,10 +138,11 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	private function addColumns() {
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
+				$sort = null;
 				if ($v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
-					$sort = $k;
+					//					$sort = $k;
 				}
 				$this->addColumn($v['txt'], $sort, $v['width']);
 			}

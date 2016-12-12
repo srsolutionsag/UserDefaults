@@ -57,6 +57,8 @@ usr_firstname#:#Vorname
 usr_lastname#:#Nachname
 usr_email#:#E-Mail
 usr_login#:#Login
+usr_repo#:#Mitglied in Kurs/Gruppe
+usr_orgu#:#Mitarbeiter in Organisationseinheit
 common_actions#:#Aktionen
 button_select_user#:#Benutzer auswählen
 userdef_users_assigned#:#%s Benutzer aktualisiert

@@ -57,17 +57,16 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
 
-	/**
-	 * @param $key
-	 * @return mixed|string
-	 * @throws \ilException
-	 */
-	public function txt($key) {
-		require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
-
-		return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
-	}
-
+//		/**
+//		 * @param $key
+//		 * @return mixed|string
+//		 * @throws \ilException
+//		 */
+//		public function txt($key) {
+//			require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
+//
+//			return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
+//		}
 
 	/**
 	 * @return string

@@ -148,6 +148,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		 * @var $rbacreview ilRbacReview
 		 */
 		foreach ($rbacreview->getRolesByFilter($filter) as $role) {
+			if($role['obj_id'] == 2) {
+				continue;
+			}
 			$existing_array[$role['obj_id']] = $role[self::F_TITLE] . ' (' . $role['obj_id'] . ')';
 		}
 

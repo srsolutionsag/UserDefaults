@@ -253,7 +253,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		// courses
 		require_once('./Services/Form/classes/class.ilRepositorySelector2InputGUI.php');
 		$crs = new ilRepositorySelector2InputGUI($this->pl->txt('usr_repo'), 'repo', true);
-		$crs->getExplorerGUI()->setClickableTypes(array( 'grp', 'crs' ));
+		$crs->getExplorerGUI()->setSelectableTypes(array( 'grp', 'crs' ));
 
 		return $crs;
 	}

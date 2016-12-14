@@ -299,7 +299,7 @@ class ilUDFCheck extends ActiveRecord {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':
-				return date(DATE_ISO8601, $this->{$field_name});
+				return date("Y-m-d H:i:s", $this->{$field_name});
 				break;
 		}
 
@@ -342,7 +342,9 @@ class ilUDFCheck extends ActiveRecord {
 				return false;
 		}
 
-		return !$this->isNegated() == $valid;
+		$b = !$this->isNegated() == $valid;
+
+		return $b;
 	}
 
 

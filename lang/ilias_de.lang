@@ -34,6 +34,7 @@ msg_entry_added#:#Eintrag gespeichert
 msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
 msg_confirm_delete#:#MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?
 msg_duplicate_successful#:#Erfolgreich kopiert?
+msg_no_users_selected#:#Keine Benutzer ausgewählt
 check_table_title#:#UDF-Checks
 check_add#:#UDF-Check hinzufÃ¼gen
 check_name#:#Feld
@@ -47,6 +48,7 @@ check_back#:#<< ZurÃ¼ck
 check_cancel#:#Abbrechen
 check_udf_negate_value#:#Negieren
 check_udf_negate_value_info#:#Wenn diese Option gewählt ist, wird die Regel angewendet auf alle Benutzer die NICHT dem untenstehenden Wert entsprechen.
+check_negation_gobal#:#Negation
 crs_placeholder#:#Kurse wÃ¤hlen
 grp_placeholder#:#Gruppen wÃ¤hlen
 orgu_placeholder#:#Organisationseinheit

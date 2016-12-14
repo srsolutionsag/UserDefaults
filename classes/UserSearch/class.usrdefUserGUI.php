@@ -92,6 +92,10 @@ class usrdefUserGUI {
 	protected function selectUser() {
 		$usr_ids = $_POST['id'];
 		$user_objects = array();
+		if (count($usr_ids) == 0 || !is_array($usr_ids)) {
+			ilUtil::sendFailure($this->pl->txt('msg_no_users_selected'), true);
+			$this->ilCtrl->redirect($this, self::CMD_INDEX);
+		}
 		foreach ($usr_ids as $usr_id) {
 			$user_objects[] = new ilObjUser($usr_id);
 		}

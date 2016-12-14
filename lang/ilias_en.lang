@@ -34,6 +34,7 @@ msg_entry_added#:#Entry saved
 msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
 msg_confirm_delete#:#Do you really like to delete the dataset?
 msg_duplicate_successful#:#Cloned successfully?
+msg_no_users_selected#:#No Accounts selected
 check_table_title#:#UDF-Checks
 check_add#:#Add UDF-Check
 check_name#:#Field
@@ -47,6 +48,7 @@ check_back#:#<< Back
 check_cancel#:#Cancel
 check_udf_negate_value#:#Negate
 check_udf_negate_value_info#:#If you check this option, this rule is applied to all user that do NOT associate with the value given below.
+check_negation_gobal#:#Negation
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
 orgu_placeholder#:#Organisational unit

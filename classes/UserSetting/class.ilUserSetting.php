@@ -20,7 +20,7 @@ require_once('./Modules/OrgUnit/classes/class.ilObjOrgUnit.php');
  */
 class ilUserSetting extends ActiveRecord {
 
-		const TABLE_NAME = 'usr_def_sets';
+	const TABLE_NAME = 'usr_def_sets';
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
 	const P_USER_FIRSTNAME = 'FIRSTNAME';
@@ -200,15 +200,16 @@ class ilUserSetting extends ActiveRecord {
 		if (count($courses) == 0) {
 			return false;
 		}
+
 		foreach ($courses as $crs_obj_id) {
 			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != 'crs') {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
-			$part->add($usr_id, ilCourseConstants::CRS_MEMBER);
+			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
-			if(!in_array($crs_obj_id, $this->getAssignedCoursesDesktop())) {
+			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop())) {
 				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
 				$first = array_shift(array_values($all_refs));
 				ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
@@ -224,14 +225,14 @@ class ilUserSetting extends ActiveRecord {
 		}
 
 		foreach ($groups as $grp_obj_id) {
-			if ($grp_obj_id =="" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
+			if ($grp_obj_id == "" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
 				continue;
 			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 			$part->add($usr_id, IL_GRP_MEMBER);
 
-			if(!in_array($grp_obj_id, $this->getAssignedGroupesDesktop())) {
+			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop())) {
 				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
 				$first = array_shift(array_values($all_refs));
 				ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
@@ -262,36 +263,59 @@ class ilUserSetting extends ActiveRecord {
 		if ($this->getPortfolioTemplateId() < 10) {
 			return false;
 		}
+		// Do not apply if user already has a portfolio with the same name
+		$existing_id = 0;
+		$title = $this->getReplacesPortfolioTitle();
+		foreach (ilObjPortfolio::getPortfoliosOfUser($this->getUsrObject()->getId()) as $p) {
+			if (trim($p['title']) == trim($title)) {
+				$existing_id = $p['id'];
+				break;
+			}
+		}
+
 		// Generate Portfolio from Template
 		global $ilUser;
 		$tmp_user = $ilUser;
 		$source = new ilObjPortfolioTemplate($this->getPortfolioTemplateId(), false);
-		$target = new ilObjPortfolio();
+		if ($existing_id) {
+			$target = new ilObjPortfolio($existing_id, false);
+		} else {
+			$target = new ilObjPortfolio();
+		}
 		$user = $this->getUsrObject();
 		$target->setOwner($user->getId());
 		$target->setTitle($this->getReplacesPortfolioTitle());
 		$target->setUserDefault($user->getId());
 		$target->setOnline(true);
-		$target->create();
-
-		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
-		foreach (ilPortfolioTemplatePage::getAllPages('prtt', $this->getPortfolioTemplateId()) as $page) {
-			switch ($page["type"]) {
-				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
-					$a_recipe[$page["id"]] = array( "blog", "create", $this->getBlogName() );
-
-					break;
-			}
+		if ($existing_id) {
+			$target->update();
+		} else {
+			$target->create();
 		}
-		$GLOBALS['ilUser'] = $user;
-		ilObjPortfolioTemplate::clonePagesAndSettings($source, $target, $a_recipe);
-		$GLOBALS['ilUser'] = $tmp_user;
 
-		ilObjPortfolio::setUserDefault($user->getId(), $target->getId());
+		// Clone content
+		if (!$existing_id) {
+			include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
+			foreach (ilPortfolioTemplatePage::getAllPages('prtt', $this->getPortfolioTemplateId()) as $page) {
+				switch ($page["type"]) {
+					case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
+						$a_recipe[$page["id"]] = array( "blog", "create", $this->getBlogName() );
 
+						break;
+				}
+			}
+			$GLOBALS['ilUser'] = $user;
+			ilObjPortfolioTemplate::clonePagesAndSettings($source, $target, $a_recipe);
+			$GLOBALS['ilUser'] = $tmp_user;
+
+			ilObjPortfolio::setUserDefault($user->getId(), $target->getId());
+		}
+
+		// Set permissions
 		$ilPortfolioAccessHandler = new ilPortfolioAccessHandler();
 		foreach ($this->getPortfolioAssignedToGroups() as $grp_obj_id) {
 			if (ilObject2::_lookupType($grp_obj_id) == 'grp') {
+				$ilPortfolioAccessHandler->removePermission($target->getId(), $grp_obj_id);
 				$ilPortfolioAccessHandler->addPermission($target->getId(), $grp_obj_id);
 			}
 		}
@@ -366,6 +390,7 @@ class ilUserSetting extends ActiveRecord {
 
 		return $copy;
 	}
+
 
 	/**
 	 * @var int
@@ -538,7 +563,7 @@ class ilUserSetting extends ActiveRecord {
 				break;
 			case 'create_date':
 			case 'update_date':
-				return date(DATE_ISO8601, $this->{$field_name});
+				return date("Y-m-d H:i:s", $this->{$field_name});
 				break;
 		}
 
@@ -561,7 +586,7 @@ class ilUserSetting extends ActiveRecord {
 			case 'assigned_studyprograms':
 			case 'assigned_courses_desktop':
 			case 'assigned_groupes_desktop':
-			$json_decode = json_decode($field_value);
+				$json_decode = json_decode($field_value);
 
 				return is_array($json_decode) ? $json_decode : array();
 				break;
@@ -670,12 +695,14 @@ class ilUserSetting extends ActiveRecord {
 		return $this->assigned_groupes;
 	}
 
+
 	/**
 	 * @return array
 	 */
 	public function getAssignedCoursesDesktop() {
 		return $this->assigned_courses_desktop;
 	}
+
 
 	/**
 	 * @param array $assigned_courses_desktop
@@ -684,12 +711,14 @@ class ilUserSetting extends ActiveRecord {
 		$this->assigned_courses_desktop = $assigned_courses_desktop;
 	}
 
+
 	/**
 	 * @return int
 	 */
 	public function getAssignedGroupesDesktop() {
 		return $this->assigned_groupes_desktop;
 	}
+
 
 	/**
 	 * @param int $assigned_groupes_desktop
@@ -941,6 +970,7 @@ class ilUserSetting extends ActiveRecord {
 		return true;
 	}
 
+
 	/**
 	 * @return ilUDFCheck[]
 	 */
@@ -948,15 +978,17 @@ class ilUserSetting extends ActiveRecord {
 		$original_udf_checks = $this->getUdfCheckObjects();
 		/** @var ilUDFCheck[] $new_udf_checks */
 		$new_udf_checks = [];
-		foreach($original_udf_checks as $original_udf_check) {
+		foreach ($original_udf_checks as $original_udf_check) {
 			$new_udf_checks[] = $this->copyUdfCheck($original_udf_check, $copy);
 		}
+
 		return $new_udf_checks;
 	}
 
+
 	/**
 	 * @param $original_udf_check ilUdfCheck
-	 * @param $parent ilUserSetting
+	 * @param $parent             ilUserSetting
 	 * @return mixed
 	 */
 	protected function copyUdfCheck($original_udf_check, $parent) {
@@ -965,6 +997,7 @@ class ilUserSetting extends ActiveRecord {
 		$new_udf_check = $original_udf_check->copy($next_id);
 		$new_udf_check->setParentId($parent->getId());
 		$new_udf_check->create();
+
 		return $new_udf_check;
 	}
 }

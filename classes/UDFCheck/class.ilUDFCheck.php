@@ -1,9 +1,5 @@
 <?php
-if (is_file('./Services/ActiveRecord/class.ActiveRecord.php')) {
-	require_once('./Services/ActiveRecord/class.ActiveRecord.php');
-} else {
-	require_once('./Customizing/global/plugins/Libraries/ActiveRecord/class.ActiveRecord.php');
-}
+require_once('./Services/ActiveRecord/class.ActiveRecord.php');
 require_once('./Services/User/classes/class.ilUserDefinedFields.php');
 
 /**
@@ -64,6 +60,14 @@ class ilUDFCheck extends ActiveRecord {
 	 * @con_length     1
 	 */
 	protected $operator = self::OP_EQUALS;
+	/**
+	 * @var bool
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  integer
+	 * @con_length     1
+	 */
+	protected $negated = false;
 	/**
 	 * @var int
 	 *
@@ -295,11 +299,11 @@ class ilUDFCheck extends ActiveRecord {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':
-				return date(DATE_ISO8601, $this->{$field_name});
+				return date("Y-m-d H:i:s", $this->{$field_name});
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -317,7 +321,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -332,8 +336,15 @@ class ilUDFCheck extends ActiveRecord {
 
 		switch ($this->getOperator()) {
 			case self::OP_EQUALS:
-				return $value == $this->getCheckValue();
+				$valid = $value == $this->getCheckValue();
+				break;
+			default:
+				return false;
 		}
+
+		$b = !$this->isNegated() == $valid;
+
+		return $b;
 	}
 
 
@@ -393,7 +404,7 @@ class ilUDFCheck extends ActiveRecord {
 	/**
 	 * @param $udf_field_id
 	 *
-	 * @return array
+	 * @return int
 	 */
 	public static function getDefinitionTypeForId($udf_field_id) {
 		foreach (self::getAllDefinitions() as $def) {
@@ -404,6 +415,19 @@ class ilUDFCheck extends ActiveRecord {
 
 		return 0;
 	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isNegated() {
+		return $this->negated;
+	}
+
+	/**
+	 * @param boolean $negated
+	 */
+	public function setNegated($negated) {
+		$this->negated = $negated;
+	}
 }
 
-?>

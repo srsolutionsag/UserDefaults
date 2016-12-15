@@ -10,6 +10,7 @@ require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/User
  */
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
+	const PLUGIN_NAME = 'UserDefaults';
 	/**
 	 * @var
 	 */
@@ -28,9 +29,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
 
-	const PLUGIN_NAME = 'UserDefaults';
-
-
 	/**
 	 * Handle the event
 	 *
@@ -39,12 +37,10 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-
 		if ($a_component == 'Services/User' AND ($a_event == 'saveAsNew' OR $a_event == 'afterCreate')) {
 			/**
 			 * @var $ilUser ilObjUser
 			 */
-
 
 			$ilUser = $a_parameter['user_obj'];
 
@@ -61,6 +57,17 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
 
+//		/**
+//		 * @param $key
+//		 * @return mixed|string
+//		 * @throws \ilException
+//		 */
+//		public function txt($key) {
+//			require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
+//
+//			return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
+//		}
+
 	/**
 	 * @return string
 	 */
@@ -74,54 +81,17 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 */
 	public static function is50() {
 		$version = explode('.', ILIAS_VERSION_NUMERIC);
+
 		return $version[0] >= 5;
 	}
+
 
 	/**
 	 * @return bool
 	 */
 	public static function is51() {
 		$version = explode('.', ILIAS_VERSION_NUMERIC);
+
 		return $version[0] >= 5 && $version[1] >= 1;
 	}
-
-
-	public function updateLanguageFiles() {
-		ini_set('auto_detect_line_endings', true);
-		$path = substr(__FILE__, 0, strpos(__FILE__, 'classes')) . 'lang/';
-		if (file_exists($path . 'lang_custom.csv')) {
-			$file = $path . 'lang_custom.csv';
-		} else {
-			$file = $path . 'lang.csv';
-		}
-		$keys = array();
-		$new_lines = array();
-
-		foreach (file($file) as $n => $row) {
-			//			$row = utf8_encode($row);
-			if ($n == 0) {
-				$keys = str_getcsv($row, ";");
-				continue;
-			}
-			$data = str_getcsv($row, ";");;
-			foreach ($keys as $i => $k) {
-				if ($k != 'var' AND $k != 'part') {
-					$new_lines[$k][] = $data[0] . '_' . $data[1] . '#:#' . $data[$i];
-				}
-			}
-		}
-		$start = '<!-- language file start -->' . PHP_EOL;
-		$status = true;
-
-		foreach ($new_lines as $lng_key => $lang) {
-			$status = file_put_contents($path . 'ilias_' . $lng_key . '.lang', $start . implode(PHP_EOL, $lang));
-		}
-
-		if (!$status) {
-			ilUtil::sendFailure('Language-Files could not be written');
-		}
-		$this->updateLanguages();
-	}
 }
-
-?>

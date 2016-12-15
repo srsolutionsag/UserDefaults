@@ -176,5 +176,3 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 		return $this->values;
 	}
 }
-
-?>

@@ -21,12 +21,16 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	 * @var  array $filter
 	 */
 	protected $filter = array();
+	/**
+	 * @var array
+	 */
+	protected $ignored_cols = array();
 
 
 	/**
 	 * @param ilUDFCheckGUI $parent_obj
-	 * @param string        $parent_cmd
-	 * @param string        $template_context
+	 * @param string $parent_cmd
+	 * @param string $template_context
 	 */
 	public function __construct(ilUDFCheckGUI $parent_obj, $parent_cmd = ilUDFCheckGUI::CMD_INDEX, $template_context = "") {
 		/**
@@ -72,12 +76,12 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 			}
 		}
 		$this->setMaxCount($xdglRequestList->count());
-		if (! $xdglRequestList->hasSets()) {
-//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
+		if (!$xdglRequestList->hasSets()) {
+			//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
 		}
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$a_data = $xdglRequestList->getArray();
-		//		echo '<pre>' . print_r($a_data, 1) . '</pre>';
+
 		$this->setData($a_data);
 	}
 
@@ -105,8 +109,21 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 				$this->tpl->parseCurrentBlock();
 				continue;
 			}
+			global $DIC;
 
 			if ($this->isColumnSelected($k)) {
+				if ($k == 'negated') {
+					$this->tpl->setCurrentBlock('td');
+					if ($a_set[$k]) {
+						$r = $DIC->ui()->renderer()->render($DIC->ui()->factory()->image()
+						                                        ->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
+						$this->tpl->setVariable('VALUE', $r);
+					} else {
+						$this->tpl->setVariable('VALUE', '&nbsp;');
+					}
+					$this->tpl->parseCurrentBlock();
+					continue;
+				}
 				if ($a_set[$k]) {
 					$this->tpl->setCurrentBlock('td');
 					$this->tpl->setVariable('VALUE', (is_array($a_set[$k]) ? implode(", ", $a_set[$k]) : $a_set[$k]));
@@ -135,12 +152,18 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	 */
 	public function getSelectableColumns() {
 		$cols['udf_definition_field_name'] = array(
-			'txt' => $this->pl->txt('check_name'),
-			'default' => true,
-			'width' => '40%',
-			'sort_field' => 'udf_definition_field_name'
+			'txt'        => $this->pl->txt('check_name'),
+			'default'    => true,
+			'width'      => '40%',
+			'sort_field' => 'udf_definition_field_name',
 		);
 		$cols['check_value'] = array( 'txt' => $this->pl->txt('check_value'), 'default' => true, 'width' => 'auto', 'sort_field' => 'check_value' );
+		$cols['negated'] = array(
+			'txt'        => $this->pl->txt('check_negation_gobal'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'check_value',
+		);
 		$cols['actions'] = array( 'txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px', );
 
 		return $cols;
@@ -161,23 +184,26 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	}
 
 
-	public function setExportFormats() {
+	/**
+	 * @param array $formats
+	 */
+	public function setExportFormats(array $formats) {
 		parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
 	}
 
 
 	/**
-	 * @param object $a_worksheet
-	 * @param int    $a_row
-	 * @param array  $a_set
+	 * @param \ilExcel $a_worksheet
+	 * @param int $a_row
+	 * @param array $a_set
 	 */
-	protected function fillRowExcel($a_worksheet, &$a_row, $a_set) {
+	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
 		$col = 0;
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
 				$value = implode(', ', $value);
 			}
-			if (! in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
+			if (!in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
 				$a_worksheet->writeString($a_row, $col, strip_tags($value));
 				$col ++;
 			}
@@ -187,14 +213,14 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param object $a_csv
-	 * @param array  $a_set
+	 * @param array $a_set
 	 */
 	protected function fillRowCSV($a_csv, $a_set) {
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
 				$value = implode(', ', $value);
 			}
-			if (! in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
+			if (!in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
 				$a_csv->addColumn(strip_tags($value));
 			}
 		}
@@ -228,4 +254,3 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	}
 }
 
-?>

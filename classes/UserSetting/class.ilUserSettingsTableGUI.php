@@ -21,6 +21,10 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	 * @var  array $filter
 	 */
 	protected $filter = array();
+	/**
+	 * @var array
+	 */
+	protected $ignored_cols = array();
 
 
 	/**
@@ -63,7 +67,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$xdglRequestList = ilUserSetting::getCollection();
 		$xdglRequestList->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$xdglRequestList->innerjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
+		$xdglRequestList->leftjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {
@@ -115,6 +119,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 				} else {
 					$current_selection_list->addItem($this->pl->txt('set_activate'), 'set_activate', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_ACTIVATE));
 				}
+				$current_selection_list->addItem($this->pl->txt('set_duplicate'), 'set_duplicate', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_DUPLICATE));
 				$current_selection_list->addItem($this->pl->txt('set_delete'), 'set_delete', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_CONFIRM_DELETE));
 
 				$this->tpl->setCurrentBlock('td');
@@ -179,17 +184,17 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	}
 
 
-	public function setExportFormats() {
+	public function setExportFormats(array $formats) {
 		parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
 	}
 
 
 	/**
-	 * @param object $a_worksheet
+	 * @param \ilExcel $a_worksheet
 	 * @param int $a_row
 	 * @param array $a_set
 	 */
-	protected function fillRowExcel($a_worksheet, &$a_row, $a_set) {
+	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
 		$col = 0;
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
@@ -245,5 +250,3 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		return $this->ignored_cols;
 	}
 }
-
-?>

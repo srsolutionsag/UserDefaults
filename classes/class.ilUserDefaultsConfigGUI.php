@@ -24,31 +24,38 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 
 		$tpl->setTitle($lng->txt("cmps_plugin") . ": " . $_GET["pname"]);
 		$tpl->setDescription("");
-
-		$ilTabs->clearTargets();
-
-		if ($_GET["plugin_id"]) {
-			$ilTabs->setBackTarget($lng->txt("cmps_plugin"), $ilCtrl->getLinkTargetByClass("ilobjcomponentsettingsgui", "showPlugin"));
-		} else {
-			$ilTabs->setBackTarget($lng->txt("cmps_plugins"), $ilCtrl->getLinkTargetByClass("ilobjcomponentsettingsgui", "listPlugins"));
-		}
+		/**
+		 * @var $ilTabs ilTabsGUI
+		 */
 		/**
 		 * @var $ilCtrl ilCtrl
 		 */
 
+		$ilTabs->clearTargets();
+
+		$ilTabs->addTab('settings', $this->plugin_object->txt('tabs_settings'), $ilCtrl->getLinkTargetByClass('ilUserSettingsGUI'));
+		$ilTabs->addTab('users', $this->plugin_object->txt('tabs_users'), $ilCtrl->getLinkTargetByClass('usrdefUserGUI'));
+
 
 		$nextClass = $ilCtrl->getNextClass();
-		switch($nextClass) {
+		switch ($nextClass) {
 			case 'iludfcheckgui':
+				$ilTabs->activateTab('settings');
 				$ilUDFCheckGUI = new ilUDFCheckGUI(new ilUserSettingsGUI($this));
 				$ilCtrl->forwardCommand($ilUDFCheckGUI);
 				break;
+			case 'usrdefusergui':
+				require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSearch/class.usrdefUserGUI.php');
+				$ilTabs->activateTab('users');
+				$usrdefUserGUI = new usrdefUserGUI();
+				$ilCtrl->forwardCommand($usrdefUserGUI);
+				break;
 			default;
+				$ilTabs->activateTab('settings');
 				$ilUserSettingsGUI = new ilUserSettingsGUI($this);
 				$ilCtrl->forwardCommand($ilUserSettingsGUI);
 				break;
 		}
-
 	}
 
 
@@ -56,4 +63,3 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 	}
 }
 
-?>

@@ -11,10 +11,21 @@ require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/User
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 	const PLUGIN_NAME = 'UserDefaults';
+	const CREATED_1 = 'saveAsNew';
+	const CREATED_2 = 'afterCreate';
+	const UPDATED = 'afterUpdate';
 	/**
 	 * @var
 	 */
 	protected static $instance;
+	/**
+	 * @var array
+	 */
+	protected static $mapping = array(
+		self::CREATED_1 => 'on_create',
+		self::CREATED_2 => 'on_create',
+		self::UPDATED   => 'on_update',
+	);
 
 
 	/**
@@ -37,7 +48,8 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-		if ($a_component == 'Services/User' AND ($a_event == 'saveAsNew' OR $a_event == 'afterCreate')) {
+		if ($a_component == 'Services/User') {
+
 			/**
 			 * @var $ilUser ilObjUser
 			 */
@@ -45,12 +57,18 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 			$ilUser = $a_parameter['user_obj'];
 
 			if ($ilUser instanceof ilObjUser) {
-				// Do Stuff
-				/**
-				 * @var $ilUserSetting ilUserSetting
-				 */
-				foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
-					$ilUserSetting->doAssignements($ilUser);
+				switch ($a_event) {
+					case self::CREATED_1:
+					case self::CREATED_2:
+						// Do Stuff
+						/**
+						 * @var $ilUserSetting ilUserSetting
+						 */
+						foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))
+						                      ->get() as $ilUserSetting) {
+							$ilUserSetting->doAssignements($ilUser);
+						}
+						break;
 				}
 			}
 		}
@@ -62,12 +80,11 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @return mixed|string
 	 * @throws \ilException
 	 */
-	public function txt($key) {
-		require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
+	/*	public function txt($key) {
+			require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
 
-		return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
-	}
-
+			return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
+		}*/
 
 	/**
 	 * @return string

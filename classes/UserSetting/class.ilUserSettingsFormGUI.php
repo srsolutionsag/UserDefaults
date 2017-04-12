@@ -65,12 +65,13 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$te->setRequired(true);
 		$this->addItem($te);
 
-		$this->setTitle($this->pl->txt('form_title'));
 		$te = new ilTextAreaInputGUI($this->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
 		$this->addItem($te);
 
+
 		$cb = new ilCheckboxInputGUI($this->txt(self::F_STATUS), self::F_STATUS);
 		//		$this->addItem($cb);
+
 
 		$se = new ilSelectInputGUI($this->txt(self::F_GLOBAL_ROLE), self::F_GLOBAL_ROLE);
 		$se->setRequired(true);
@@ -113,11 +114,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$ilOrgUnitMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilOrgUnitMultiSelectInputGUI);
 
-		if ($this->pl->is51()) {
-			$ilStudyProgramMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('prg', $this->txt(self::F_ASSIGNED_STUDYPROGRAMS), self::F_ASSIGNED_STUDYPROGRAMS);
-			$ilStudyProgramMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
-			$this->addItem($ilStudyProgramMultiSelectInputGUI);
-		}
+		$ilStudyProgramMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('prg', $this->txt(self::F_ASSIGNED_STUDYPROGRAMS), self::F_ASSIGNED_STUDYPROGRAMS);
+		$ilStudyProgramMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+		$this->addItem($ilStudyProgramMultiSelectInputGUI);
 
 		$this->addCommandButtons();
 	}
@@ -134,6 +133,10 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$opt = array();
 		$role_ids = array();
 		foreach ($rbacreview->getRolesByFilter($filter) as $role) {
+			if ($role['obj_id'] == 2) {
+				continue;
+			}
+			$existing_array[$role['obj_id']] = $role[self::F_TITLE] . ' (' . $role['obj_id'] . ')';
 			$opt[$role['obj_id']] = $role[self::F_TITLE] . ' (' . $role['obj_id'] . ')';
 			$role_ids[] = $role['obj_id'];
 		}
@@ -181,7 +184,8 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedGroupes(explode(',', $assigned_groups[0]));
 		$this->object->setGlobalRole($this->getInput(self::F_GLOBAL_ROLE));
 		$portfolio_template_id = $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID);
-		$this->object->setPortfolioTemplateId($portfolio_template_id > 0 ? $portfolio_template_id : null);
+		$this->object->setPortfolioTemplateId($portfolio_template_id
+		                                      > 0 ? $portfolio_template_id : null);
 		$portf_assigned_to_groups = $this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
 		$this->object->setPortfolioAssignedToGroups(explode(',', $portf_assigned_to_groups[0]));
 		$this->object->setBlogName($this->getInput(self::F_BLOG_NAME));

@@ -35,3 +35,16 @@ ilUserSetting::updateDB();
 require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
 ilUserSetting::updateDB();
 ?>
+<#8>
+<?php
+require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+/**
+ * @var $ilUserSetting ilUserSetting
+ */
+foreach (ilUserSetting::get() as $ilUserSetting) {
+	$ilUserSetting->setOnCreate(true);
+	$ilUserSetting->setOnUpdate(false);
+	$ilUserSetting->setOnManual(true);
+	$ilUserSetting->update();
+}
+?>

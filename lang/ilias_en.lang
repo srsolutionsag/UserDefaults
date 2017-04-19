@@ -22,6 +22,13 @@ set_placeholders#:#Placeholders
 set_deactivate#:#Deactivate
 set_udf_checks#:#Edit UDF-Checks
 set_delete#:#Delete
+set_assigned_orgus#:#Organisational Units
+set_assigned_studyprograms#:#Study-Programs
+set_on_create#:#On Creating User-Accounts
+set_on_update#:#On Updating User Settings
+set_on_manual#:#On manual application
+set_application#:#Apply Set
+set_specific_settings#:#Settings
 msg_entry_added#:#Entry saved
 msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
 msg_confirm_delete#:#Do you really like to delete the dataset?
@@ -38,6 +45,8 @@ check_back#:#<< Back
 check_cancel#:#Cancel
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
+orgu_placeholder#:#Choose
+prg_placeholder#:#Choose
 tabs_settings#:#Settings
 tabs_users#:#Apply to Users
 usr_firstname#:#Firstname

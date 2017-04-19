@@ -10,13 +10,15 @@
                 "translations": {
                     "de": "Einstellungen erfassen",
                     "en": "Setup"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "button_update": {
                 "translations": {
                     "de": "Update",
                     "en": "Update"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "button_create": {
                 "translations": {
@@ -28,7 +30,8 @@
                 "translations": {
                     "de": "Abbrechen",
                     "en": "Cancel"
-                }
+                },
+                "last_used": "12.04.2017"
             }
         },
         "set": {
@@ -37,58 +40,63 @@
                     "de": "Titel",
                     "en": "Title"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "description": {
                 "translations": {
                     "de": "Beschreibung",
                     "en": "Description"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "global_role": {
                 "translations": {
                     "de": "Globale Rolle",
                     "en": "Global Role"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "assigned_courses": {
                 "translations": {
                     "de": "Einschreiben in Kurse",
                     "en": "Assign to Courses"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "assigned_groupes": {
                 "translations": {
                     "de": "Einschreiben in Gruppen",
                     "en": "Assign to Groups"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "portfolio_template_id": {
                 "translations": {
                     "de": "Portfolio-Vorlage",
                     "en": "Portfolio-Template"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "portfolio_assigned_to_groups": {
                 "translations": {
                     "de": "Portfolio automatisch freigegen",
                     "en": "Share Portfolio to"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "table_title": {
                 "translations": {
                     "de": "Einstellungs-Sets",
                     "en": "Settings"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "status": {
                 "translations": {
                     "de": "Aktiv",
                     "en": "Active"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "cancel": {
                 "translations": {
@@ -100,34 +108,36 @@
                 "translations": {
                     "de": "Blog-Name",
                     "en": "Blog-Name"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "portfolio_name": {
                 "translations": {
                     "de": "Portfolio-Name",
                     "en": "Portfolio-Name"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "actions": {
                 "translations": {
                     "de": "Aktionen",
                     "en": "Actions"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "add": {
                 "translations": {
                     "de": "Neue Einstellung erfassen",
                     "en": "Add Setting"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "edit": {
                 "translations": {
                     "de": "Bearbeiten",
                     "en": "Edit"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "activate": {
                 "translations": {
@@ -139,38 +149,78 @@
                 "translations": {
                     "de": "Platzhalter",
                     "en": "Placeholders"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "deactivate": {
                 "translations": {
                     "de": "Deaktivieren",
                     "en": "Deactivate"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "udf_checks": {
                 "translations": {
                     "de": "UDF-Checks bearbeiten",
                     "en": "Edit UDF-Checks"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "delete": {
                 "translations": {
                     "de": "LÃ¶schen",
                     "en": "Delete"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "assigned_orgus": {
                 "translations": {
-                    "de": "Einschreiben in Organisationseinheiten"
-                }
+                    "de": "Organisationseinheiten",
+                    "en": "Organisational Units"
+                },
+                "last_used": "12.04.2017"
             },
             "assigned_studyprograms": {
                 "translations": {
-                    "de": "Einschreiben in Studienprogramme"
-                }
+                    "de": "Studienprogramme",
+                    "en": "Study-Programs"
+                },
+                "last_used": "12.04.2017"
+            },
+            "on_create": {
+                "translations": {
+                    "de": "Beim Erstellen eines Benutzers",
+                    "en": "On Creating User-Accounts"
+                },
+                "last_used": "12.04.2017"
+            },
+            "on_update": {
+                "translations": {
+                    "de": "Beim Updaten von Benutzereinstellungen",
+                    "en": "On Updating User Settings"
+                },
+                "last_used": "12.04.2017"
+            },
+            "on_manual": {
+                "translations": {
+                    "de": "Beim manuellen anwenden",
+                    "en": "On manual application"
+                },
+                "last_used": "12.04.2017"
+            },
+            "application": {
+                "translations": {
+                    "de": "Set anwenden",
+                    "en": "Apply Set"
+                },
+                "last_used": "12.04.2017"
+            },
+            "specific_settings": {
+                "translations": {
+                    "de": "Einstellungen",
+                    "en": "Settings"
+                },
+                "last_used": "12.04.2017"
             }
         },
         "msg": {
@@ -178,7 +228,8 @@
                 "translations": {
                     "de": "Eintrag gespeichert",
                     "en": "Entry saved"
-                }
+                },
+                "last_used": "12.04.2017"
             },
             "activation_failed": {
                 "translations": {
@@ -274,7 +325,8 @@
                 "translations": {
                     "de": "Kurse wÃ¤hlen",
                     "en": "Choose Courses"
-                }
+                },
+                "last_used": "12.04.2017"
             }
         },
         "grp": {
@@ -282,21 +334,26 @@
                 "translations": {
                     "de": "Gruppen wÃ¤hlen",
                     "en": "Choose Groups"
-                }
+                },
+                "last_used": "12.04.2017"
             }
         },
         "orgu": {
             "placeholder": {
                 "translations": {
-                    "de": "Organisationseinheiten wÃ¤hlen"
-                }
+                    "de": "Auswählen",
+                    "en": "Choose"
+                },
+                "last_used": "12.04.2017"
             }
         },
         "prg": {
             "placeholder": {
                 "translations": {
-                    "de": "Studienprogramme wÃ¤hlen"
-                }
+                    "de": "Auswählen",
+                    "en": "Choose"
+                },
+                "last_used": "12.04.2017"
             }
         },
         "tabs": {
@@ -305,14 +362,14 @@
                     "de": "Einstellungen",
                     "en": "Settings"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "users": {
                 "translations": {
                     "de": "Benutzersuche",
                     "en": "Apply to Users"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             }
         },
         "usr": {
@@ -321,28 +378,28 @@
                     "de": "Vorname",
                     "en": "Firstname"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "lastname": {
                 "translations": {
                     "de": "Nachname",
                     "en": "Lastname"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "email": {
                 "translations": {
                     "de": "E-Mail",
                     "en": "E-Mail"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             },
             "login": {
                 "translations": {
                     "de": "Login",
                     "en": "Login"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             }
         },
         "common": {
@@ -351,7 +408,7 @@
                     "de": "Aktionen",
                     "en": "Actions"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             }
         },
         "button": {
@@ -360,7 +417,7 @@
                     "de": "Benutzer auswählen",
                     "en": "Select Users"
                 },
-                "last_used": "24.11.2016"
+                "last_used": "12.04.2017"
             }
         }
     }

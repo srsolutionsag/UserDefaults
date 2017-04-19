@@ -84,7 +84,10 @@ class usrdefUserGUI {
 		 * @var $ilUserSetting ilUserSetting
 		 */
 		require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
-		foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
+		foreach (ilUserSetting::where(array(
+			'status'    => ilUserSetting::STATUS_ACTIVE,
+			'on_manual' => true,
+		))->get() as $ilUserSetting) {
 			$ilUserSetting->doMultipleAssignements($user_objects);
 		}
 

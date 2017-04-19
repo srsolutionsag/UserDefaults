@@ -88,6 +88,9 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 		foreach ($a_data as $k => $d) {
 			$a_data[$k]['status_image'] = ($d['status'] == ilUserSetting::STATUS_ACTIVE ? $img_on : $img_off);
+			$a_data[$k]['on_create'] = ($d['on_create'] ? $img_on : $img_off);
+			$a_data[$k]['on_update'] = ($d['on_update'] ? $img_on : $img_off);
+			$a_data[$k]['on_manual'] = ($d['on_manual'] ? $img_on : $img_off);
 		}
 		$this->setData($a_data);
 	}
@@ -160,6 +163,9 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 			'width'      => 'auto',
 			'sort_field' => 'object_data_title',
 		);
+		$cols['on_create'] = array( 'txt' => $this->pl->txt('set_on_create'), 'default' => true, 'width' => 'auto' );
+		$cols['on_update'] = array( 'txt' => $this->pl->txt('set_on_update'), 'default' => true, 'width' => 'auto' );
+		$cols['on_manual'] = array( 'txt' => $this->pl->txt('set_on_manual'), 'default' => true, 'width' => 'auto' );
 		$cols['actions'] = array( 'txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px', );
 
 		return $cols;
@@ -172,14 +178,17 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 				if ($v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
-					$sort = $k;
+					$sort = false;
 				}
-				$this->addColumn($v['txt'], ($k == 'actions' ? false : $sort), $v['width']);
+				$this->addColumn($v['txt'], $sort, $v['width']);
 			}
 		}
 	}
 
 
+	/**
+	 * @param array $formats
+	 */
 	public function setExportFormats(array $formats) {
 		parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
 	}

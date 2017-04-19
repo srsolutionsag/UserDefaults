@@ -22,6 +22,10 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_DESCRIPTION = 'description';
 	const F_PORTFOLIO_NAME = 'portfolio_name';
 	const F_BLOG_NAME = 'blog_name';
+	const F_ON_CREATE = 'on_create';
+	const F_ON_UPDATE = 'on_update';
+	const F_ON_MANUAL = 'on_manual';
+	const F_APPLICATION = 'application';
 	/**
 	 * @var ilUserSettingsGUI
 	 */
@@ -68,10 +72,19 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$te = new ilTextAreaInputGUI($this->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
 		$this->addItem($te);
 
-
 		$cb = new ilCheckboxInputGUI($this->txt(self::F_STATUS), self::F_STATUS);
 		//		$this->addItem($cb);
 
+		$a_item = new ilFormSectionHeaderGUI();
+		$a_item->setTitle($this->txt(self::F_APPLICATION));
+		$this->addItem($a_item);
+		$this->addItem(new ilCheckboxInputGUI($this->txt(self::F_ON_CREATE), self::F_ON_CREATE));
+		$this->addItem(new ilCheckboxInputGUI($this->txt(self::F_ON_UPDATE), self::F_ON_UPDATE));
+		$this->addItem(new ilCheckboxInputGUI($this->txt(self::F_ON_MANUAL), self::F_ON_MANUAL));
+
+		$a_item = new ilFormSectionHeaderGUI();
+		$a_item->setTitle($this->txt('specific_settings'));
+		$this->addItem($a_item);
 
 		$se = new ilSelectInputGUI($this->txt(self::F_GLOBAL_ROLE), self::F_GLOBAL_ROLE);
 		$se->setRequired(true);
@@ -162,6 +175,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_PORTFOLIO_NAME               => $this->object->getPortfolioName(),
 			self::F_ASSIGNED_ORGUS               => implode(',', $this->object->getAssignedOrgus()),
 			self::F_ASSIGNED_STUDYPROGRAMS       => implode(',', $this->object->getAssignedStudyprograms()),
+			self::F_ON_CREATE                    => $this->object->isOnCreate(),
+			self::F_ON_UPDATE                    => $this->object->isOnUpdate(),
+			self::F_ON_MANUAL                    => $this->object->isOnManual(),
 
 		);
 		$this->setValuesByArray($array);
@@ -194,6 +210,10 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedOrgus(explode(',', $assigned_orgus[0]));
 		$assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
 		$this->object->setAssignedStudyprograms(explode(',', $assigned_studyprograms[0]));
+
+		$this->object->setOnCreate($this->getInput(self::F_ON_CREATE));
+		$this->object->setOnUpdate($this->getInput(self::F_ON_UPDATE));
+		$this->object->setOnManual($this->getInput(self::F_ON_MANUAL));
 
 		if ($this->object->getId() > 0) {
 			$this->object->update();

@@ -15,6 +15,7 @@ class usrdefUserGUI {
 	const CMD_APPLY_FILTER = 'applyFilter';
 	const CMD_RESET_FILTER = 'resetFilter';
 	const CMD_SELECT_USER = 'selectUser';
+	const CMD_CONFIRM = 'confirmSelectUser';
 	const IDENTIFIER = 'usr_id';
 	const SESSION_ID = 'multi_assign_user_id';
 
@@ -37,9 +38,6 @@ class usrdefUserGUI {
 
 
 	public function executeCommand() {
-//		if (!usrdefAccess::hasAccess()) {
-//			return false;
-//		}
 		$cmd = $this->ilCtrl->getCmd(self::CMD_INDEX);
 		switch ($cmd) {
 			case self::CMD_INDEX:
@@ -74,6 +72,11 @@ class usrdefUserGUI {
 	}
 
 
+	protected function confirmSelectUser() {
+		// Optinal
+	}
+
+
 	protected function selectUser() {
 		$usr_ids = $_POST['id'];
 		$user_objects = array();
@@ -91,8 +94,6 @@ class usrdefUserGUI {
 			$ilUserSetting->doMultipleAssignements($user_objects);
 		}
 
-		$this->tpl->setContent('<pre>' . print_r($usr_ids, 1) . '</pre>');
-//		ilSession::set(self::SESSION_ID, $usr_id);
-//		$this->ilCtrl->redirectByClass(array( 'usrdefCourseGUI' ));
+		$this->ilCtrl->redirect($this);
 	}
 }

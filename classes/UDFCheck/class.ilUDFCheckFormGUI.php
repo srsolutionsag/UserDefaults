@@ -72,7 +72,9 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 			$te = new ilHiddenInputGUI($this->txt(self::F_UDF_FIELD_ID), self::F_UDF_FIELD_ID);
 			$this->addItem($te);
 
-			switch (ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId())) {
+			$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
+			$definition = ilUDFCheck::getDefinitionForId($udf_type);
+			switch ($udf_type) {
 				case ilUDFCheck::TYPE_TEXT:
 					$se = new ilTextInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
 					$this->addItem($se);
@@ -81,6 +83,17 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 					$se = new ilSelectInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
 					$se->setOptions(ilUDFCheck::getDefinitionValuesForId($this->object->getUdfFieldId()));
 					$this->addItem($se);
+					break;
+				default:
+					require_once('./Services/User/classes/class.ilCustomUserFieldsHelper.php');
+					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+					if($plugin instanceof ilUDFDefinitionPlugin)
+					{
+						$input_gui = $plugin->getFormPropertyForDefinition($definition);
+						$input_gui->setPostVar(self::F_CHECK_VALUE);
+						$this->addItem($input_gui);
+					}
+
 					break;
 			}
 		}

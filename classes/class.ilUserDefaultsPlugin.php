@@ -64,8 +64,22 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 						/**
 						 * @var $ilUserSetting ilUserSetting
 						 */
-						foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))
-						                      ->get() as $ilUserSetting) {
+						foreach (ilUserSetting::where(array(
+							'status'    => ilUserSetting::STATUS_ACTIVE,
+							'on_create' => true,
+						))->get() as $ilUserSetting) {
+							$ilUserSetting->doAssignements($ilUser);
+						}
+						break;
+					case self::UPDATED:
+						// Do Stuff
+						/**
+						 * @var $ilUserSetting ilUserSetting
+						 */
+						foreach (ilUserSetting::where(array(
+							'status'    => ilUserSetting::STATUS_ACTIVE,
+							'on_update' => true,
+						))->get() as $ilUserSetting) {
 							$ilUserSetting->doAssignements($ilUser);
 						}
 						break;
@@ -75,41 +89,21 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
 
-	/**
-	 * @param $key
-	 * @return mixed|string
-	 * @throws \ilException
-	 */
-		public function txt($key) {
-			require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
-
-			return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
-		}
+	//	/**
+	//	 * @param $key
+	//	 * @return mixed|string
+	//	 * @throws \ilException
+	//	 */
+	//	public function txt($key) {
+	//		require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
+	//
+	//		return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
+	//	}
 
 	/**
 	 * @return string
 	 */
 	public function getPluginName() {
 		return self::PLUGIN_NAME;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is50() {
-		$version = explode('.', ILIAS_VERSION_NUMERIC);
-
-		return $version[0] >= 5;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is51() {
-		$version = explode('.', ILIAS_VERSION_NUMERIC);
-
-		return $version[0] >= 5 && $version[1] >= 1;
 	}
 }

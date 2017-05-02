@@ -337,6 +337,10 @@ class ilUDFCheck extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getAllDefinitions() {
+		static $return;
+		if (is_array($return)) {
+			return $return;
+		}
 		$return = array();
 		/**
 		 * @var $ilUserDefinedFields ilUserDefinedFields
@@ -344,11 +348,22 @@ class ilUDFCheck extends ActiveRecord {
 		$ilUserDefinedFields = ilUserDefinedFields::_getInstance();
 		foreach ($ilUserDefinedFields->getDefinitions() as $def) {
 			if ($def['visib_reg'] == 1) {
-				$return [] = $def;
+				$return [$def['field_type']] = $def;
 			}
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * @param $id
+	 * @return array
+	 */
+	public static function getDefinitionForId($id) {
+		$definitions = self::getAllDefinitions();
+
+		return $definitions[$id];
 	}
 
 

@@ -81,7 +81,7 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 		}
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$a_data = $xdglRequestList->getArray();
-		//		echo '<pre>' . print_r($a_data, 1) . '</pre>';
+
 		$this->setData($a_data);
 	}
 
@@ -109,8 +109,21 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 				$this->tpl->parseCurrentBlock();
 				continue;
 			}
+			global $DIC;
 
 			if ($this->isColumnSelected($k)) {
+				if ($k == 'negated') {
+					$this->tpl->setCurrentBlock('td');
+					if ($a_set[$k]) {
+						$r = $DIC->ui()->renderer()->render($DIC->ui()->factory()->image()
+						                                        ->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
+						$this->tpl->setVariable('VALUE', $r);
+					} else {
+						$this->tpl->setVariable('VALUE', '&nbsp;');
+					}
+					$this->tpl->parseCurrentBlock();
+					continue;
+				}
 				if ($a_set[$k]) {
 					$this->tpl->setCurrentBlock('td');
 					$this->tpl->setVariable('VALUE', (is_array($a_set[$k]) ? implode(", ", $a_set[$k]) : $a_set[$k]));
@@ -145,6 +158,12 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 			'sort_field' => 'udf_definition_field_name',
 		);
 		$cols['check_value'] = array( 'txt' => $this->pl->txt('check_value'), 'default' => true, 'width' => 'auto', 'sort_field' => 'check_value' );
+		$cols['negated'] = array(
+			'txt'        => $this->pl->txt('check_negation_gobal'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'check_value',
+		);
 		$cols['actions'] = array( 'txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px', );
 
 		return $cols;

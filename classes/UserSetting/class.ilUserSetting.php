@@ -195,39 +195,47 @@ class ilUserSetting extends ActiveRecord {
 
 
 	protected function assignCourses() {
-		if (count($this->getAssignedCourses()) == 0) {
+		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
+		if (count($courses) == 0) {
 			return false;
 		}
-		foreach ($this->getAssignedCourses() as $crs_obj_id) {
-			if (ilObject2::_lookupType($crs_obj_id) != 'crs') {
+
+		foreach ($courses as $crs_obj_id) {
+			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != 'crs') {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
-			$part->add($usr_id, ilCourseConstants::CRS_MEMBER);
+			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
-			$all_refs = ilObject2::_getAllReferences($crs_obj_id);
-			$first = array_shift(array_values($all_refs));
-			ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
+			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop())) {
+				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
+				$first = array_shift(array_values($all_refs));
+				ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
+			}
 		}
 	}
 
 
 	protected function assignGroups() {
-		if (count($this->getAssignedGroupes()) == 0) {
+		$groups = array_merge($this->getAssignedGroupes(), $this->getAssignedGroupesDesktop());
+		if (count($groups) == 0) {
 			return false;
 		}
-		foreach ($this->getAssignedGroupes() as $grp_obj_id) {
-			if (ilObject2::_lookupType($grp_obj_id) != 'grp') {
+
+		foreach ($groups as $grp_obj_id) {
+			if ($grp_obj_id == "" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
 				continue;
 			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 			$part->add($usr_id, IL_GRP_MEMBER);
 
-			$all_refs = ilObject2::_getAllReferences($grp_obj_id);
-			$first = array_shift(array_values($all_refs));
-			ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
+			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop())) {
+				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
+				$first = array_shift(array_values($all_refs));
+				ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
+			}
 		}
 	}
 
@@ -262,36 +270,6 @@ class ilUserSetting extends ActiveRecord {
 		$prtt_id = (int)$_REQUEST["prtt"];
 		$recipe = null;
 		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
-		foreach (ilPortfolioTemplatePage::getAllPortfolioPages($prtt_id) as $page) {
-			switch ($page["type"]) {
-				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
-					if (!$ilSetting->get('disable_wsp_blogs')) {
-						$field_id = "blog_" . $page["id"];
-						switch ($form->getInput($field_id)) {
-							case "blog_create":
-								$recipe[$page["id"]] = array(
-									"blog",
-									"create",
-									trim($form->getInput($field_id . "_create_title")),
-								);
-								break;
-
-							case "blog_resuse":
-								$recipe[$page["id"]] = array(
-									"blog",
-									"reuse",
-									(int)$form->getInput($field_id . "_reuse_blog"),
-								);
-								break;
-
-							case "blog_ignore":
-								$recipe[$page["id"]] = array( "blog", "ignore" );
-								break;
-						}
-					}
-					break;
-			}
-		}
 
 		// $recipe["skills"] = (array)$form->getInput("skill_ids");
 
@@ -327,9 +305,11 @@ class ilUserSetting extends ActiveRecord {
 
 		ilObjPortfolio::setUserDefault($user->getId(), $target->getId());
 
+		// Set permissions
 		$ilPortfolioAccessHandler = new ilPortfolioAccessHandler();
 		foreach ($this->getPortfolioAssignedToGroups() as $grp_obj_id) {
 			if (ilObject2::_lookupType($grp_obj_id) == 'grp') {
+				$ilPortfolioAccessHandler->removePermission($target->getId(), $grp_obj_id);
 				$ilPortfolioAccessHandler->addPermission($target->getId(), $grp_obj_id);
 			}
 		}
@@ -418,6 +398,24 @@ class ilUserSetting extends ActiveRecord {
 
 
 	/**
+	 * @return ilUserSetting
+	 * Duplicate this setting and it's dependencies and save everything to the databse.
+	 */
+	public function duplicate() {
+		/**
+		 * @var $copy ilUserSetting
+		 */
+		$next_id = $this->getArConnector()->nextID($this);
+		$copy = $this->copy($next_id);
+		$copy->setTitle($this->getTitle() . ' (2)');
+		$copy->create();
+		$this->copyDependencies($copy);
+
+		return $copy;
+	}
+
+
+	/**
 	 * @var int
 	 *
 	 * @con_is_primary true
@@ -500,6 +498,22 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $assigned_groupes = array();
+	/**
+	 * @var array
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
+	protected $assigned_courses_desktop = array();
+	/**
+	 * @var int
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
+	protected $assigned_groupes_desktop = array();
 	/**
 	 * @var int
 	 *
@@ -586,7 +600,9 @@ class ilUserSetting extends ActiveRecord {
 	public function sleep($field_name) {
 		switch ($field_name) {
 			case 'assigned_courses':
+			case 'assigned_courses_desktop':
 			case 'assigned_groupes':
+			case 'assigned_groupes_desktop':
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
@@ -594,7 +610,7 @@ class ilUserSetting extends ActiveRecord {
 				break;
 			case 'create_date':
 			case 'update_date':
-				return date(DATE_ISO8601, $this->{$field_name});
+				return date("Y-m-d H:i:s", $this->{$field_name});
 				break;
 		}
 
@@ -615,6 +631,8 @@ class ilUserSetting extends ActiveRecord {
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
+			case 'assigned_courses_desktop':
+			case 'assigned_groupes_desktop':
 				$json_decode = json_decode($field_value);
 
 				return is_array($json_decode) ? $json_decode : array();
@@ -722,6 +740,38 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	public function getAssignedGroupes() {
 		return $this->assigned_groupes;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getAssignedCoursesDesktop() {
+		return $this->assigned_courses_desktop;
+	}
+
+
+	/**
+	 * @param array $assigned_courses_desktop
+	 */
+	public function setAssignedCoursesDesktop($assigned_courses_desktop) {
+		$this->assigned_courses_desktop = $assigned_courses_desktop;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getAssignedGroupesDesktop() {
+		return $this->assigned_groupes_desktop;
+	}
+
+
+	/**
+	 * @param int $assigned_groupes_desktop
+	 */
+	public function setAssignedGroupesDesktop($assigned_groupes_desktop) {
+		$this->assigned_groupes_desktop = $assigned_groupes_desktop;
 	}
 
 
@@ -1013,5 +1063,36 @@ class ilUserSetting extends ActiveRecord {
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * @return ilUDFCheck[]
+	 */
+	protected function copyDependencies($copy) {
+		$original_udf_checks = $this->getUdfCheckObjects();
+		/** @var ilUDFCheck[] $new_udf_checks */
+		$new_udf_checks = [];
+		foreach ($original_udf_checks as $original_udf_check) {
+			$new_udf_checks[] = $this->copyUdfCheck($original_udf_check, $copy);
+		}
+
+		return $new_udf_checks;
+	}
+
+
+	/**
+	 * @param $original_udf_check ilUdfCheck
+	 * @param $parent             ilUserSetting
+	 * @return mixed
+	 */
+	protected function copyUdfCheck($original_udf_check, $parent) {
+		$next_id = $original_udf_check->getArConnector()->nextID($original_udf_check);
+		/** @var ilUDFCheck $new_udf_check */
+		$new_udf_check = $original_udf_check->copy($next_id);
+		$new_udf_check->setParentId($parent->getId());
+		$new_udf_check->create();
+
+		return $new_udf_check;
 	}
 }

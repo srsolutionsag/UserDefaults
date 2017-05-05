@@ -22,16 +22,19 @@ set_placeholders#:#Platzhalter
 set_deactivate#:#Deaktivieren
 set_udf_checks#:#UDF-Checks bearbeiten
 set_delete#:#LÃ¶schen
-set_assigned_orgus#:#Organisationseinheiten
-set_assigned_studyprograms#:#Studienprogramme
-set_on_create#:#Beim Erstellen eines Benutzers
-set_on_update#:#Beim Updaten von Benutzereinstellungen
-set_on_manual#:#Beim manuellen anwenden
-set_application#:#Set anwenden
-set_specific_settings#:#Einstellungen
+set_assigned_orgus#:#Organisationseinheiten Zuweisen
+set_assigned_studyprograms#:#In Studienprogramm einschreiben
+set_form_please_choose#:#-- BItte wählen --
+set_duplicate#:#Duplizieren
+set_input_to_desktop#:#MISSING
+set_assigned_courses_desktop#:#In Kurs einschreiben und Kurs auf den Desktop legen
+set_assigned_groups_desktop#:#Zu Gruppe hinzufügen und Gruppe auf den Desktop legen
+set_assigned_groups#:#Zu Gruppe hinzufügen
 msg_entry_added#:#Eintrag gespeichert
 msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
 msg_confirm_delete#:#MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?
+msg_duplicate_successful#:#Erfolgreich kopiert?
+msg_no_users_selected#:#Keine Benutzer ausgewählt
 check_table_title#:#UDF-Checks
 check_add#:#UDF-Check hinzufÃ¼gen
 check_name#:#Feld
@@ -43,15 +46,21 @@ check_edit#:#Bearbeiten
 check_delete#:#LÃ¶schen
 check_back#:#<< ZurÃ¼ck
 check_cancel#:#Abbrechen
+check_udf_negate_value#:#Negieren
+check_udf_negate_value_info#:#Wenn diese Option gewählt ist, wird die Regel angewendet auf alle Benutzer die NICHT dem untenstehenden Wert entsprechen.
+check_negation_gobal#:#Negation
 crs_placeholder#:#Kurse wÃ¤hlen
 grp_placeholder#:#Gruppen wÃ¤hlen
-orgu_placeholder#:#Auswählen
-prg_placeholder#:#Auswählen
+orgu_placeholder#:#Organisationseinheit
+prg_placeholder#:#Studienprogramm
 tabs_settings#:#Einstellungen
 tabs_users#:#Benutzersuche
 usr_firstname#:#Vorname
 usr_lastname#:#Nachname
 usr_email#:#E-Mail
 usr_login#:#Login
+usr_repo#:#Mitglied in Kurs/Gruppe
+usr_orgu#:#Mitarbeiter in Organisationseinheit
 common_actions#:#Aktionen
 button_select_user#:#Benutzer auswählen
+userdef_users_assigned#:#%s Benutzer aktualisiert

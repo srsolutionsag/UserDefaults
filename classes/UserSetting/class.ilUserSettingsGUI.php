@@ -10,6 +10,7 @@ require_once('./Services/Utilities/classes/class.ilConfirmationGUI.php');
  * @version           1.0.0
  *
  * @ilCtrl_IsCalledBy ilUserSettingsGUI : ilUserDefaultsConfigGUI
+ * @ilCtrl_Calls ilUserSettingsGUI : ilPropertyFormGUI
  */
 class ilUserSettingsGUI {
 
@@ -24,6 +25,7 @@ class ilUserSettingsGUI {
 	const CMD_DEACTIVATE = 'deactivate';
 	const CMD_ACTIVATE = 'activate';
 	const CMD_DELETE = 'delete';
+	const CMD_DUPLICATE = 'duplicate';
 	const IDENTIFIER = 'set_id';
 	/**
 	 * @var ilCtrl
@@ -50,6 +52,8 @@ class ilUserSettingsGUI {
 
 	public function executeCommand() {
 		$cmd = $this->ctrl->getCmd(self::CMD_INDEX);
+		$cmdClass = $this->ctrl->getCmdClass();
+
 		switch ($cmd) {
 			case self::CMD_INDEX:
 				$this->index();
@@ -64,6 +68,7 @@ class ilUserSettingsGUI {
 			case self::CMD_DEACTIVATE:
 			case self::CMD_CONFIRM_DELETE:
 			case self::CMD_DELETE:
+			case self::CMD_DUPLICATE:
 				$this->{$cmd}();
 				break;
 		}
@@ -128,6 +133,15 @@ class ilUserSettingsGUI {
 		$this->tpl->setContent($ilUserSettingsFormGUI->getHTML());
 	}
 
+	protected function duplicate() {
+		$original = ilUserSetting::find($_GET[self::IDENTIFIER]);
+		/** @var ilUserSetting $copy */
+		$copy = $original->duplicate();
+		$copy->setStatus(ilUserSetting::STATUS_INACTIVE);
+		$copy->update();
+		ilUtil::sendSuccess($this->pl->txt("msg_duplicate_successful"), true);
+		$this->ctrl->redirect($this, self::CMD_INDEX);
+	}
 
 	public function confirmDelete() {
 		$conf = new ilConfirmationGUI();

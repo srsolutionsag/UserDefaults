@@ -36,11 +36,6 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 		$ilTabs->addTab('settings', $this->plugin_object->txt('tabs_settings'), $ilCtrl->getLinkTargetByClass('ilUserSettingsGUI'));
 		$ilTabs->addTab('users', $this->plugin_object->txt('tabs_users'), $ilCtrl->getLinkTargetByClass('usrdefUserGUI'));
 
-		//		if ($_GET["plugin_id"]) {
-		//			$ilTabs->setBackTarget($lng->txt("cmps_plugin"), $ilCtrl->getLinkTargetByClass("ilobjcomponentsettingsgui", "showPlugin"));
-		//		} else {
-		//			$ilTabs->setBackTarget($lng->txt("cmps_plugins"), $ilCtrl->getLinkTargetByClass("ilobjcomponentsettingsgui", "listPlugins"));
-		//		}
 
 		$nextClass = $ilCtrl->getNextClass();
 		switch ($nextClass) {

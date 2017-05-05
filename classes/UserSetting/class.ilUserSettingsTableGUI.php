@@ -67,7 +67,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$xdglRequestList = ilUserSetting::getCollection();
 		$xdglRequestList->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$xdglRequestList->innerjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
+		$xdglRequestList->leftjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {
@@ -119,6 +119,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 				} else {
 					$current_selection_list->addItem($this->pl->txt('set_activate'), 'set_activate', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_ACTIVATE));
 				}
+				$current_selection_list->addItem($this->pl->txt('set_duplicate'), 'set_duplicate', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_DUPLICATE));
 				$current_selection_list->addItem($this->pl->txt('set_delete'), 'set_delete', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_CONFIRM_DELETE));
 
 				$this->tpl->setCurrentBlock('td');

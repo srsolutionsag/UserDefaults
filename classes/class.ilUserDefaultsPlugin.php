@@ -89,6 +89,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
 
+
 	//	/**
 	//	 * @param $key
 	//	 * @return mixed|string

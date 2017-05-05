@@ -112,7 +112,8 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		$options = $this->getOptions();
 
 		$tpl->setVariable('POST_VAR', $this->getPostVar());
-		$tpl->setVariable('ID', substr($this->getPostVar(), 0, - 2));
+		$tpl->setVariable('ID', $this->stripLastStringOccurrence($this->getPostVar(), "[]"));
+		$tpl->setVariable('ESCAPED_ID', $this->escapePostVar($this->getPostVar()));
 		$tpl->setVariable('WIDTH', $this->getWidth());
 		$tpl->setVariable('PRELOAD', $values);
 		$tpl->setVariable('HEIGHT', $this->getHeight());
@@ -301,5 +302,25 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 			$val = explode(',', $val);
 		}
 		$this->setValue($val);
+	}
+
+	protected function escapePostVar($postVar) {
+		$postVar = $this->stripLastStringOccurrence($postVar, "[]");
+		$postVar = str_replace("[", '\\\\[', $postVar);
+		$postVar = str_replace("]", '\\\\]', $postVar);
+		return $postVar;
+	}
+
+	/**
+	 * @param $text string
+	 * @param $string string
+	 * @return string
+	 */
+	private function stripLastStringOccurrence($text, $string) {
+		$pos = strrpos($text, $string);
+		if($pos !== false) {
+			$text = substr_replace($text, "", $pos, strlen($string));
+		}
+		return $text;
 	}
 }

@@ -22,16 +22,19 @@ set_placeholders#:#Placeholders
 set_deactivate#:#Deactivate
 set_udf_checks#:#Edit UDF-Checks
 set_delete#:#Delete
-set_assigned_orgus#:#Organisational Units
-set_assigned_studyprograms#:#Study-Programs
-set_on_create#:#On Creating User-Accounts
-set_on_update#:#On Updating User Settings
-set_on_manual#:#On manual application
-set_application#:#Apply Set
-set_specific_settings#:#Settings
+set_assigned_orgus#:#Assign to organisational units
+set_assigned_studyprograms#:#Register to studyprogram
+set_form_please_choose#:#-- Please choose --
+set_duplicate#:#Duplicate
+set_input_to_desktop#:#MISSING
+set_assigned_courses_desktop#:#Assign to course and put course on desktop
+set_assigned_groups_desktop#:#Assign to groupt and put group on desktop
+set_assigned_groups#:#Assign to Group
 msg_entry_added#:#Entry saved
 msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
 msg_confirm_delete#:#Do you really like to delete the dataset?
+msg_duplicate_successful#:#Cloned successfully?
+msg_no_users_selected#:#No Accounts selected
 check_table_title#:#UDF-Checks
 check_add#:#Add UDF-Check
 check_name#:#Field
@@ -43,15 +46,21 @@ check_edit#:#Edit
 check_delete#:#Delete
 check_back#:#<< Back
 check_cancel#:#Cancel
+check_udf_negate_value#:#Negate
+check_udf_negate_value_info#:#If you check this option, this rule is applied to all user that do NOT associate with the value given below.
+check_negation_gobal#:#Negation
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
-orgu_placeholder#:#Choose
-prg_placeholder#:#Choose
+orgu_placeholder#:#Organisational unit
+prg_placeholder#:#Studyprogram
 tabs_settings#:#Settings
 tabs_users#:#Apply to Users
 usr_firstname#:#Firstname
 usr_lastname#:#Lastname
 usr_email#:#E-Mail
 usr_login#:#Login
+usr_repo#:#Member of Course/Group
+usr_orgu#:#Member of Org Unit
 common_actions#:#Actions
 button_select_user#:#Select Users
+userdef_users_assigned#:#%s Users updated

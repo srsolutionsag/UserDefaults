@@ -11,9 +11,11 @@ require_once('./Services/Form/classes/class.ilTextInputGUI.php');
 /**
  * Class usrdefUserTableGUI
  *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.00
+ * @author       Fabian Schmid <fs@studer-raimann.ch>
+ * @version      1.0.00
  *
+ *
+ * @ilCtrl_Calls usrdefUserTableGUI: ilFormPropertyDispatchGUI
  */
 class usrdefUserTableGUI extends ilTable2GUI {
 
@@ -59,6 +61,22 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	}
 
 
+	public function executeCommand() {
+		switch ($this->ctrl->getNextClass($this)) {
+			case strtolower(__CLASS__):
+			case '':
+				$cmd = $this->ctrl->getCmd() . 'Cmd';
+
+				return $this->$cmd();
+
+			default:
+				$this->ctrl->setReturn($this, 'index');
+
+				return parent::executeCommand();
+		}
+	}
+
+
 	/**
 	 * @param array $a_set
 	 */
@@ -95,30 +113,57 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$usrdefUser = usrdefUser::getCollection();
 		$usrdefUser->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$fitered = false;
+
 		foreach ($this->filter as $field => $value) {
-			if ($value) {
+			if (in_array($field, array( 'repo', 'org' ))) {
+				continue;
+			}
+			if ($value && !is_array($value)) {
 				$value = str_replace('%', '', $value);
 				if (strlen($value) < 3) {
-					ilUtil::sendFailure($this->pl->txt('msg_failure_more_characters_needed'));
+					ilUtil::sendFailure($this->pl->txt('msg_failure_more_characters_needed'), true);
 					continue;
 				}
-				$fitered = true;
+
 				$usrdefUser->where(array( $field => '%' . $value . '%' ), 'LIKE');
 			}
 		}
 
-		if (!$fitered) {
-			$usrdefUser->where(array( 'usr_id' => 4 ));
+		// CRS and GRPS
+		if ($this->filter['repo'] && is_array($this->filter['repo']) && count($this->filter['repo']) > 0) {
+			$value = $this->filter['repo'];
+			$obj_ids = array();
+			foreach ($value as $ref_id) {
+				$obj_ids[] = ilObject2::_lookupObjId($ref_id);
+			}
+
+			$usrdefUser->innerjoin('obj_members', 'usr_id', 'usr_id');
+			$usrdefUser->where(array( 'obj_members.obj_id' => $obj_ids, 'obj_members.member' => 1 ));
+		}
+
+		// ORGU
+		if ($this->filter['orgu'] && is_array($this->filter['orgu']) && count($this->filter['orgu']) > 0) {
+			$value = $this->filter['orgu'];
+			$role_ids = array();
+			$roles = ilObjOrgUnitTree::_getInstance()->getEmployeeRoles();
+			foreach ($value as $ref_id) {
+				if ($roles[$ref_id]) {
+					$role_ids[] = $roles[$ref_id];
+				}
+			}
+			$usrdefUser->innerjoin('rbac_ua', 'usr_id', 'usr_id');
+			$usrdefUser->where(array( 'rbac_ua.rol_id' => $role_ids ));
 		}
 
 		$this->setMaxCount($usrdefUser->count());
+
+		$usrdefUser->where(array( 'usr_id' => 13 ), '!=');
 		if (!$usrdefUser->hasSets()) {
-			//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
+			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
 		}
 		$usrdefUser->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$usrdefUser->orderBy('email');
-		//		$usrdefUser->debug();
+		// $usrdefUser->debug();
 		$this->setData($usrdefUser->getArray());
 	}
 
@@ -140,10 +185,11 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	private function addColumns() {
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
+				$sort = null;
 				if ($v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
-					$sort = $k;
+					//					$sort = $k;
 				}
 				$this->addColumn($v['txt'], $sort, $v['width']);
 			}
@@ -152,6 +198,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 
 
 	protected function initFilters() {
+		$this->setFilterCols(6);
 		// firstname
 		$te = new ilTextInputGUI($this->pl->txt('usr_firstname'), 'firstname');
 		$this->addAndReadFilterItem($te);
@@ -164,6 +211,19 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		// login
 		$te = new ilTextInputGUI($this->pl->txt('usr_login'), 'login');
 		$this->addAndReadFilterItem($te);
+
+
+		$crs = $this->getCrsSelectorGUI();
+		$this->addAndReadFilterItem($crs);
+
+		// orgu
+		$crs = $this->getOrguSelectorGUI();
+		$this->addAndReadFilterItem($crs);
+
+		// orgu legacy
+		//		$orgu = new ilMultiSelectInputGUI($this->pl->txt('usr_orgu'), 'orgu');
+		//		$orgu->setOptions(ilObjOrgUnitTree::_getInstance()->getAllChildren(56));
+		//		$this->addAndReadFilterItem($orgu);
 	}
 
 
@@ -183,5 +243,32 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	public function resetOffset($a_in_determination = false) {
 		parent::resetOffset(false);
 		$this->ctrl->setParameter($this->parent_obj, $this->getNavParameter(), $this->nav_value);
+	}
+
+
+	/**
+	 * @return \ilRepositorySelector2InputGUI
+	 */
+	public function getCrsSelectorGUI() {
+		// courses
+		require_once('./Services/Form/classes/class.ilRepositorySelector2InputGUI.php');
+		$crs = new ilRepositorySelector2InputGUI($this->pl->txt('usr_repo'), 'repo', true);
+		$crs->getExplorerGUI()->setSelectableTypes(array( 'grp', 'crs' ));
+
+		return $crs;
+	}
+
+
+	/**
+	 * @return \usrdefOrguSelectorInputGUI
+	 */
+	public function getOrguSelectorGUI() {
+		require_once('./Services/Form/classes/class.ilRepositorySelector2InputGUI.php');
+		require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.usrdefOrguSelectorInputGUI.php');
+		$crs = new usrdefOrguSelectorInputGUI($this->pl->txt('usr_orgu'), 'orgu', true);
+		$crs->getExplorerGUI()->setRootId(56);
+		$crs->getExplorerGUI()->setClickableTypes(array( 'orgu' ));
+
+		return $crs;
 	}
 }

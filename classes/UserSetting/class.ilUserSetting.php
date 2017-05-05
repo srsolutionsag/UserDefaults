@@ -263,13 +263,27 @@ class ilUserSetting extends ActiveRecord {
 			return false;
 		}
 
-		global $ilUser;
+		global $ilUser, $ilSetting;
 		$user = $this->getUsrObject();
 		$tmp_user = $ilUser;
-		$title = trim($_REQUEST["pt"]);
-		$prtt_id = (int)$_REQUEST["prtt"];
+		$prtt_id =$this->getPortfolioTemplateId();
 		$recipe = null;
 		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
+		foreach (ilPortfolioTemplatePage::getAllPortfolioPages($prtt_id) as $page) {
+			switch ($page["type"]) {
+				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
+					if (!$ilSetting->get('disable_wsp_blogs')) {
+						$field_id = "blog_" . $page["id"];
+
+						$recipe[$page["id"]] = array(
+							"blog",
+							"create",
+							$page['title'],
+						);
+					}
+					break;
+			}
+		}
 
 		// $recipe["skills"] = (array)$form->getInput("skill_ids");
 
@@ -278,7 +292,7 @@ class ilUserSetting extends ActiveRecord {
 		// create portfolio
 		include_once "Modules/Portfolio/classes/class.ilObjPortfolio.php";
 		$target = new ilObjPortfolio();
-		$target->setTitle($title);
+		$target->setTitle($this->getReplacesPortfolioTitle());
 		$target->create();
 		$target_id = $target->getId();
 

@@ -12,6 +12,7 @@ class ilUDFCheck extends ActiveRecord {
 
 	const TABLE_NAME = 'usr_def_checks';
 	const OP_EQUALS = 1;
+	const OP_LIKE = 2;
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
 	const TYPE_TEXT = 1;
@@ -338,6 +339,10 @@ class ilUDFCheck extends ActiveRecord {
 			case self::OP_EQUALS:
 				$valid = $value == $this->getCheckValue();
 				break;
+
+			case self::OP_LIKE:
+				$valid = (strpos($value, $this->getCheckValue()) === 0);
+				break;
 			default:
 				return false;
 		}
@@ -431,12 +436,14 @@ class ilUDFCheck extends ActiveRecord {
 		return 0;
 	}
 
+
 	/**
 	 * @return boolean
 	 */
 	public function isNegated() {
 		return $this->negated;
 	}
+
 
 	/**
 	 * @param boolean $negated

@@ -157,14 +157,23 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 			'width'      => '40%',
 			'sort_field' => 'udf_definition_field_name',
 		);
-		$cols['check_value'] = array( 'txt' => $this->pl->txt('check_value'), 'default' => true, 'width' => 'auto', 'sort_field' => 'check_value' );
+		$cols['check_value'] = array(
+			'txt'        => $this->pl->txt('check_value'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'check_value',
+		);
 		$cols['negated'] = array(
 			'txt'        => $this->pl->txt('check_negation_gobal'),
 			'default'    => true,
 			'width'      => 'auto',
 			'sort_field' => 'check_value',
 		);
-		$cols['actions'] = array( 'txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px', );
+		$cols['actions'] = array(
+			'txt'     => $this->pl->txt('check_actions'),
+			'default' => true,
+			'width'   => '150px',
+		);
 
 		return $cols;
 	}

@@ -263,10 +263,19 @@ class ilUserSetting extends ActiveRecord {
 			return false;
 		}
 
+		$data = ilObjPortfolio::getPortfoliosOfUser($this->getUsrObject()->getId());
+
+		foreach ($data as $p) {
+			if (trim($p['title']) == trim($this->getReplacesPortfolioTitle())) {
+				return false;
+			}
+		}
+
 		global $ilUser, $ilSetting;
-		$user = $this->getUsrObject();
-		$tmp_user = $ilUser;
-		$prtt_id =$this->getPortfolioTemplateId();
+		$backup_user = $ilUser;
+		$ilUser = $this->getUsrObject();
+
+		$prtt_id = $this->getPortfolioTemplateId();
 		$recipe = null;
 		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
 		foreach (ilPortfolioTemplatePage::getAllPortfolioPages($prtt_id) as $page) {
@@ -296,9 +305,7 @@ class ilUserSetting extends ActiveRecord {
 		$target->create();
 		$target_id = $target->getId();
 
-		$GLOBALS['ilUser'] = $user;
 		$source->clonePagesAndSettings($source, $target, $recipe);
-		$GLOBALS['ilUser'] = $tmp_user;
 
 		// link portfolio to exercise assignment
 		$exc_ref_id = (int)$_REQUEST["exc_id"];
@@ -317,7 +324,7 @@ class ilUserSetting extends ActiveRecord {
 			$sub->addResourceObject($target_id);
 		}
 
-		ilObjPortfolio::setUserDefault($user->getId(), $target->getId());
+		ilObjPortfolio::setUserDefault($ilUser->getId(), $target->getId());
 
 		// Set permissions
 		$ilPortfolioAccessHandler = new ilPortfolioAccessHandler();
@@ -327,6 +334,8 @@ class ilUserSetting extends ActiveRecord {
 				$ilPortfolioAccessHandler->addPermission($target->getId(), $grp_obj_id);
 			}
 		}
+
+		$ilUser = $backup_user;
 
 		//		return;
 

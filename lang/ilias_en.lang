@@ -30,6 +30,11 @@ set_input_to_desktop#:#MISSING
 set_assigned_courses_desktop#:#Assign to course and put course on desktop
 set_assigned_groups_desktop#:#Assign to groupt and put group on desktop
 set_assigned_groups#:#Assign to Group
+set_on_create#:#On Create
+set_on_update#:#On Update
+set_on_manual#:#Manual
+set_application#:#Application
+set_specific_settings#:#Settings
 msg_entry_added#:#Entry saved
 msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
 msg_confirm_delete#:#Do you really like to delete the dataset?

@@ -30,6 +30,11 @@ set_input_to_desktop#:#MISSING
 set_assigned_courses_desktop#:#In Kurs einschreiben und Kurs auf den Desktop legen
 set_assigned_groups_desktop#:#Zu Gruppe hinzufügen und Gruppe auf den Desktop legen
 set_assigned_groups#:#Zu Gruppe hinzufügen
+set_on_create#:#Erstellen
+set_on_update#:#Updaten
+set_on_manual#:#manuell
+set_application#:#Anwenden
+set_specific_settings#:#Einstellungen
 msg_entry_added#:#Eintrag gespeichert
 msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
 msg_confirm_delete#:#MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?

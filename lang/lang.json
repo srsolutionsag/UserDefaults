@@ -11,14 +11,14 @@
                     "de": "Einstellungen erfassen",
                     "en": "Setup"
                 },
-                "last_used": "09.05.2017"
+                "last_used": "10.05.2017"
             },
             "button_update": {
                 "translations": {
                     "de": "Update",
                     "en": "Update"
                 },
-                "last_used": "09.05.2017"
+                "last_used": "10.05.2017"
             },
             "button_create": {
                 "translations": {
@@ -32,7 +32,7 @@
                     "de": "Abbrechen",
                     "en": "Cancel"
                 },
-                "last_used": "09.05.2017"
+                "last_used": "10.05.2017"
             }
         },
         "set": {
@@ -310,69 +310,70 @@
                     "de": "UDF-Checks",
                     "en": "UDF-Checks"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "add": {
                 "translations": {
                     "de": "UDF-Check hinzufÃ¼gen",
                     "en": "Add UDF-Check"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "name": {
                 "translations": {
                     "de": "Feld",
                     "en": "Field"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "operator": {
                 "translations": {
                     "de": "Vergleich",
                     "en": "Operator"
-                }
+                },
+                "last_used": "10.05.2017"
             },
             "value": {
                 "translations": {
                     "de": "Wert",
                     "en": "Value"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "actions": {
                 "translations": {
                     "de": "Aktionen",
                     "en": "Actions"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "udf_field_id": {
                 "translations": {
                     "de": "UDF-Feld",
                     "en": "UDF-Field"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "edit": {
                 "translations": {
                     "de": "Bearbeiten",
                     "en": "Edit"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "delete": {
                 "translations": {
                     "de": "LÃ¶schen",
                     "en": "Delete"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "back": {
                 "translations": {
                     "de": "<< ZurÃ¼ck",
                     "en": "<< Back"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "cancel": {
                 "translations": {
@@ -385,21 +386,42 @@
                     "de": "Negieren",
                     "en": "Negate"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "udf_negate_value_info": {
                 "translations": {
                     "de": "Wenn diese Option gewählt ist, wird die Regel angewendet auf alle Benutzer die NICHT dem untenstehenden Wert entsprechen.",
                     "en": "If you check this option, this rule is applied to all user that do NOT associate with the value given below."
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
             },
             "negation_gobal": {
                 "translations": {
                     "de": "Negation",
                     "en": "Negation"
                 },
-                "last_used": "14.12.2016"
+                "last_used": "10.05.2017"
+            },
+            "op_equals": {
+                "translations": {
+                    "de": "Ist gleich",
+                    "en": "Equals"
+                },
+                "last_used": "10.05.2017"
+            },
+            "udf_operator": {
+                "translations": {
+                    "de": "Vergleich",
+                    "en": "Operator"
+                },
+                "last_used": "10.05.2017"
+            },
+            "op_like": {
+                "translations": {
+                    "de": "Beginnt mit",
+                    "en": "Starts with"
+                },
+                "last_used": "10.05.2017"
             }
         },
         "crs": {
@@ -444,14 +466,14 @@
                     "de": "Einstellungen",
                     "en": "Settings"
                 },
-                "last_used": "09.05.2017"
+                "last_used": "10.05.2017"
             },
             "users": {
                 "translations": {
                     "de": "Benutzersuche",
                     "en": "Apply to Users"
                 },
-                "last_used": "09.05.2017"
+                "last_used": "10.05.2017"
             }
         },
         "usr": {

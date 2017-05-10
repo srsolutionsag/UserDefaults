@@ -12,6 +12,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 	const F_UDF_FIELD_ID = 'udf_field_id';
 	const F_CHECK_VALUE = 'check_value';
 	const F_UDF_NEGATE_ID = 'udf_negate_value';
+	const F_UDF_OPERATOR = 'udf_operator';
 	/**
 	 * @var ilUserSettingsGUI
 	 */
@@ -69,13 +70,21 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 		$te->setOptions(ilUDFCheck::getDefinitionData());
 		$this->addItem($te);
 
-		$cb = new ilCheckboxInputGUI($this->txt(self::F_UDF_NEGATE_ID), self::F_UDF_NEGATE_ID);
-		$cb->setInfo($this->txt(self::F_UDF_NEGATE_ID . "_info"));
-		$this->addItem($cb);
-
 		if (!$this->is_new) {
 			$te = new ilHiddenInputGUI($this->txt(self::F_UDF_FIELD_ID), self::F_UDF_FIELD_ID);
 			$this->addItem($te);
+
+			$cb = new ilCheckboxInputGUI($this->txt(self::F_UDF_NEGATE_ID), self::F_UDF_NEGATE_ID);
+			$cb->setInfo($this->txt(self::F_UDF_NEGATE_ID . "_info"));
+			$this->addItem($cb);
+
+			$op = new ilSelectInputGUI($this->txt(self::F_UDF_OPERATOR), self::F_UDF_OPERATOR);
+			$options = array();
+			foreach (ilUDFCheck::$operator_text_keys as $key => $v) {
+				$options[$key] = $this->pl->txt("check_op_" . $v);
+			}
+			$op->setOptions($options);
+			$this->addItem($op);
 
 			$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 			$definition = ilUDFCheck::getDefinitionForId($udf_type);
@@ -95,6 +104,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 					if ($plugin instanceof ilUDFDefinitionPlugin) {
 						$input_gui = $plugin->getFormPropertyForDefinition($definition);
 						$input_gui->setPostVar(self::F_CHECK_VALUE);
+						$input_gui->setRequired(false);
 						$this->addItem($input_gui);
 					}
 
@@ -111,6 +121,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 			self::F_UDF_FIELD_ID  => $this->object->getUdfFieldId(),
 			self::F_CHECK_VALUE   => $this->object->getCheckValue(),
 			self::F_UDF_NEGATE_ID => $this->object->isNegated(),
+			self::F_UDF_OPERATOR  => $this->object->getOperator(),
 		);
 
 		$this->setValuesByArray($array);
@@ -128,6 +139,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 		if (!$this->is_new) {
 			$this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE));
 			$this->object->setNegated($this->getInput(self::F_UDF_NEGATE_ID));
+			$this->object->setOperator($this->getInput(self::F_UDF_OPERATOR));
 			$this->object->update();
 		} else {
 			$this->object->setUdfFieldId($this->getInput(self::F_UDF_FIELD_ID));

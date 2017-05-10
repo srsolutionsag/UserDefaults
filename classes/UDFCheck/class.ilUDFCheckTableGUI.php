@@ -90,16 +90,20 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	 * @param array $a_set
 	 */
 	public function fillRow($a_set) {
-		$ilUDFCheck = ilUDFCheck::find($a_set['id']);
+		global $DIC;
+
+		$a_set["operator"] = $this->pl->txt("check_op_"
+		                                    . ilUDFCheck::$operator_text_keys[$a_set["operator"]]);
+
 		$ilUDFCheckGUI = new ilUDFCheckGUI($this->parent_obj);
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($k == 'actions') {
-				$this->ctrl->setParameter($this->parent_obj, ilUDFCheckGUI::IDENTIFIER, $ilUDFCheck->getId());
-				$this->ctrl->setParameter($ilUDFCheckGUI, ilUDFCheckGUI::IDENTIFIER, $ilUDFCheck->getId());
+				$this->ctrl->setParameter($this->parent_obj, ilUDFCheckGUI::IDENTIFIER, $a_set["id"]);
+				$this->ctrl->setParameter($ilUDFCheckGUI, ilUDFCheckGUI::IDENTIFIER, $a_set["id"]);
 
 				$current_selection_list = new ilAdvancedSelectionListGUI();
 				$current_selection_list->setListTitle($this->pl->txt('check_actions'));
-				$current_selection_list->setId('check_actions' . $ilUDFCheck->getId());
+				$current_selection_list->setId('check_actions' . $a_set["id"]);
 				$current_selection_list->setUseImages(false);
 				$current_selection_list->addItem($this->pl->txt('check_edit'), 'check_edit', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_EDIT));
 				$current_selection_list->addItem($this->pl->txt('check_delete'), 'check_delete', $this->ctrl->getLinkTarget($this->parent_obj, ilUserSettingsGUI::CMD_CONFIRM_DELETE));
@@ -109,29 +113,31 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 				$this->tpl->parseCurrentBlock();
 				continue;
 			}
-			global $DIC;
 
 			if ($this->isColumnSelected($k)) {
-				if ($k == 'negated') {
-					$this->tpl->setCurrentBlock('td');
-					if ($a_set[$k]) {
-						$r = $DIC->ui()->renderer()->render($DIC->ui()->factory()->image()
-						                                        ->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
-						$this->tpl->setVariable('VALUE', $r);
-					} else {
-						$this->tpl->setVariable('VALUE', '&nbsp;');
-					}
-					$this->tpl->parseCurrentBlock();
-					continue;
-				}
-				if ($a_set[$k]) {
-					$this->tpl->setCurrentBlock('td');
-					$this->tpl->setVariable('VALUE', (is_array($a_set[$k]) ? implode(", ", $a_set[$k]) : $a_set[$k]));
-					$this->tpl->parseCurrentBlock();
-				} else {
-					$this->tpl->setCurrentBlock('td');
-					$this->tpl->setVariable('VALUE', '&nbsp;');
-					$this->tpl->parseCurrentBlock();
+				switch ($k) {
+					case "negated":
+						$this->tpl->setCurrentBlock('td');
+						if ($a_set[$k]) {
+							$r = $DIC->ui()->renderer()->render($DIC->ui()->factory()->image()
+							                                        ->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
+							$this->tpl->setVariable('VALUE', $r);
+						} else {
+							$this->tpl->setVariable('VALUE', '&nbsp;');
+						}
+						$this->tpl->parseCurrentBlock();
+						break;
+					default:
+						if ($a_set[$k]) {
+							$this->tpl->setCurrentBlock('td');
+							$this->tpl->setVariable('VALUE', (is_array($a_set[$k]) ? implode(", ", $a_set[$k]) : $a_set[$k]));
+							$this->tpl->parseCurrentBlock();
+						} else {
+							$this->tpl->setCurrentBlock('td');
+							$this->tpl->setVariable('VALUE', '&nbsp;');
+							$this->tpl->parseCurrentBlock();
+						}
+						break;
 				}
 			}
 		}
@@ -167,7 +173,12 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 			'txt'        => $this->pl->txt('check_negation_gobal'),
 			'default'    => true,
 			'width'      => 'auto',
-			'sort_field' => 'check_value',
+			'sort_field' => 'check_negated',
+		);
+		$cols['operator'] = array(
+			'txt'     => $this->pl->txt('check_operator'),
+			'default' => true,
+			'width'   => 'auto',
 		);
 		$cols['actions'] = array(
 			'txt'     => $this->pl->txt('check_actions'),

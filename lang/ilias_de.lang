@@ -54,6 +54,9 @@ check_cancel#:#Abbrechen
 check_udf_negate_value#:#Negieren
 check_udf_negate_value_info#:#Wenn diese Option gewählt ist, wird die Regel angewendet auf alle Benutzer die NICHT dem untenstehenden Wert entsprechen.
 check_negation_gobal#:#Negation
+check_op_equals#:#Ist gleich
+check_udf_operator#:#Vergleich
+check_op_like#:#Beginnt mit
 crs_placeholder#:#Kurse wÃ¤hlen
 grp_placeholder#:#Gruppen wÃ¤hlen
 orgu_placeholder#:#Organisationseinheit

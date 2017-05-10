@@ -302,6 +302,9 @@ class ilUserSetting extends ActiveRecord {
 		include_once "Modules/Portfolio/classes/class.ilObjPortfolio.php";
 		$target = new ilObjPortfolio();
 		$target->setTitle($this->getReplacesPortfolioTitle());
+		$target->setOnline(true);
+		$target->setDefault(true);
+		$target->setOwner($ilUser->getId());
 		$target->create();
 		$target_id = $target->getId();
 
@@ -336,35 +339,6 @@ class ilUserSetting extends ActiveRecord {
 		}
 
 		$ilUser = $backup_user;
-
-		//		return;
-
-		// Generate Portfolio from Template
-		//		global $ilUser;
-		//		$tmp_user = $ilUser;
-		//		$source = new ilObjPortfolioTemplate($this->getPortfolioTemplateId(), false);
-		//		$target = new ilObjPortfolio();
-		//		$user = $this->getUsrObject();
-		//		$target->setOwner($user->getId());
-		//		$target->setTitle($this->getReplacesPortfolioTitle());
-		//		$target->setUserDefault($user->getId());
-		//		$target->setOnline(true);
-		//		$target->create();
-		//
-		//		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
-		//		$a_recipe = array();
-		//		foreach (ilPortfolioTemplatePage::getAllPages('prtt', $this->getPortfolioTemplateId()) as $page) {
-		//			switch ($page["type"]) {
-		//				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
-		//					$a_recipe[$page["id"]] = array( "blog", "create", $this->getBlogName() );
-		//
-		//					break;
-		//			}
-		//		}
-		//		$GLOBALS['ilUser'] = $user;
-		//		ilObjPortfolioTemplate::clonePagesAndSettings($source, $target, $a_recipe);
-		//		$GLOBALS['ilUser'] = $tmp_user;
-
 	}
 
 

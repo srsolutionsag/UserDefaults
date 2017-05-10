@@ -19,6 +19,13 @@ class ilUDFCheck extends ActiveRecord {
 	const TYPE_SELECT = 2;
 	const TYPE_WYSIWYG = 3;
 	/**
+	 * @var array
+	 */
+	public static $operator_text_keys = array(
+		self::OP_EQUALS => 'equals',
+		self::OP_LIKE   => 'like',
+	);
+	/**
 	 * @var int
 	 *
 	 * @con_is_primary true
@@ -341,7 +348,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 
 			case self::OP_LIKE:
-				$valid = (strpos($value, $this->getCheckValue()) === 0);
+				$valid = (strpos(trim($value), trim($this->getCheckValue())) === 0);
 				break;
 			default:
 				return false;

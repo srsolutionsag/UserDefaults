@@ -130,7 +130,9 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		}
 
 		// CRS and GRPS
-		if ($this->filter['repo'] && is_array($this->filter['repo']) && count($this->filter['repo']) > 0) {
+		if ($this->filter['repo'] && is_array($this->filter['repo'])
+		    && count($this->filter['repo']) > 0
+		) {
 			$value = $this->filter['repo'];
 			$obj_ids = array();
 			foreach ($value as $ref_id) {
@@ -138,11 +140,16 @@ class usrdefUserTableGUI extends ilTable2GUI {
 			}
 
 			$usrdefUser->innerjoin('obj_members', 'usr_id', 'usr_id');
-			$usrdefUser->where(array( 'obj_members.obj_id' => $obj_ids, 'obj_members.member' => 1 ));
+			$usrdefUser->where(array(
+				'obj_members.obj_id' => $obj_ids,
+				'obj_members.member' => 1,
+			));
 		}
 
 		// ORGU
-		if ($this->filter['orgu'] && is_array($this->filter['orgu']) && count($this->filter['orgu']) > 0) {
+		if ($this->filter['orgu'] && is_array($this->filter['orgu'])
+		    && count($this->filter['orgu']) > 0
+		) {
 			$value = $this->filter['orgu'];
 			$role_ids = array();
 			$roles = ilObjOrgUnitTree::_getInstance()->getEmployeeRoles();
@@ -172,11 +179,35 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	 * @return array
 	 */
 	public function getSelectableColumns() {
-		$cols['firstname'] = array( 'txt' => $this->pl->txt('usr_firstname'), 'default' => true, 'width' => 'auto', 'sort_field' => 'firstname' );
-		$cols['lastname'] = array( 'txt' => $this->pl->txt('usr_lastname'), 'default' => true, 'width' => 'auto', 'sort_field' => 'lastname' );
-		$cols['email'] = array( 'txt' => $this->pl->txt('usr_email'), 'default' => true, 'width' => 'auto', 'sort_field' => 'email' );
-		$cols['login'] = array( 'txt' => $this->pl->txt('usr_login'), 'default' => true, 'width' => 'auto', 'sort_field' => 'login' );
-		$cols['actions'] = array( 'txt' => $this->pl->txt('common_actions'), 'default' => true, 'width' => '50px', );
+		$cols['firstname'] = array(
+			'txt'        => $this->pl->txt('usr_firstname'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'firstname',
+		);
+		$cols['lastname'] = array(
+			'txt'        => $this->pl->txt('usr_lastname'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'lastname',
+		);
+		$cols['email'] = array(
+			'txt'        => $this->pl->txt('usr_email'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'email',
+		);
+		$cols['login'] = array(
+			'txt'        => $this->pl->txt('usr_login'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'login',
+		);
+		$cols['actions'] = array(
+			'txt'     => $this->pl->txt('common_actions'),
+			'default' => true,
+			'width'   => '50px',
+		);
 
 		return $cols;
 	}
@@ -211,7 +242,6 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		// login
 		$te = new ilTextInputGUI($this->pl->txt('usr_login'), 'login');
 		$this->addAndReadFilterItem($te);
-
 
 		$crs = $this->getCrsSelectorGUI();
 		$this->addAndReadFilterItem($crs);

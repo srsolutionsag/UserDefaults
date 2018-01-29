@@ -34,17 +34,20 @@ class usrdefUser extends ActiveRecord {
 
 
 	public function create() {
-		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
+		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to '
+		                      . __METHOD__ . ' objects');
 	}
 
 
 	public function update() {
-		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
+		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to '
+		                      . __METHOD__ . ' objects');
 	}
 
 
 	public function delete() {
-		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
+		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to '
+		                      . __METHOD__ . ' objects');
 	}
 
 

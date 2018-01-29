@@ -26,6 +26,10 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_DESCRIPTION = 'description';
 	const F_PORTFOLIO_NAME = 'portfolio_name';
 	const F_BLOG_NAME = 'blog_name';
+	const F_ON_CREATE = 'on_create';
+	const F_ON_UPDATE = 'on_update';
+	const F_ON_MANUAL = 'on_manual';
+	const F_APPLICATION = 'application';
 	/**
 	 * @var ilUserSettingsGUI
 	 */
@@ -69,9 +73,22 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$te->setRequired(true);
 		$this->addItem($te);
 
-		$this->setTitle($this->pl->txt('form_title'));
 		$te = new ilTextAreaInputGUI($this->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
 		$this->addItem($te);
+
+		$cb = new ilCheckboxInputGUI($this->txt(self::F_STATUS), self::F_STATUS);
+		//		$this->addItem($cb);
+
+		$a_item = new ilFormSectionHeaderGUI();
+		$a_item->setTitle($this->txt(self::F_APPLICATION));
+		$this->addItem($a_item);
+		$this->addItem(new ilCheckboxInputGUI($this->txt(self::F_ON_CREATE), self::F_ON_CREATE));
+		$this->addItem(new ilCheckboxInputGUI($this->txt(self::F_ON_UPDATE), self::F_ON_UPDATE));
+		$this->addItem(new ilCheckboxInputGUI($this->txt(self::F_ON_MANUAL), self::F_ON_MANUAL));
+
+		$a_item = new ilFormSectionHeaderGUI();
+		$a_item->setTitle($this->txt('specific_settings'));
+		$this->addItem($a_item);
 
 		$se = new ilSelectInputGUI($this->txt(self::F_GLOBAL_ROLE), self::F_GLOBAL_ROLE);
 		$se->setRequired(true);
@@ -127,11 +144,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$ilOrgUnitMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilOrgUnitMultiSelectInputGUI);
 
-		if ($this->pl->is51()) {
-			$ilStudyProgramMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('prg', $this->txt(self::F_ASSIGNED_STUDYPROGRAMS), self::F_ASSIGNED_STUDYPROGRAMS);
-			$ilStudyProgramMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
-			$this->addItem($ilStudyProgramMultiSelectInputGUI);
-		}
+		$ilStudyProgramMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('prg', $this->txt(self::F_ASSIGNED_STUDYPROGRAMS), self::F_ASSIGNED_STUDYPROGRAMS);
+		$ilStudyProgramMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
+		$this->addItem($ilStudyProgramMultiSelectInputGUI);
 
 		$this->addCommandButtons();
 	}
@@ -148,10 +163,13 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		 * @var $rbacreview ilRbacReview
 		 */
 		foreach ($rbacreview->getRolesByFilter($filter) as $role) {
-			if($role['obj_id'] == 2) {
+
+			if ($role['obj_id'] == 2) {
 				continue;
 			}
 			$existing_array[$role['obj_id']] = $role[self::F_TITLE] . ' (' . $role['obj_id'] . ')';
+			$opt[$role['obj_id']] = $role[self::F_TITLE] . ' (' . $role['obj_id'] . ')';
+			$role_ids[] = $role['obj_id'];
 		}
 
 		return $existing_array;
@@ -174,6 +192,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_PORTFOLIO_NAME               => $this->object->getPortfolioName(),
 			self::F_ASSIGNED_ORGUS               => implode(',', $this->object->getAssignedOrgus()),
 			self::F_ASSIGNED_STUDYPROGRAMS       => implode(',', $this->object->getAssignedStudyprograms()),
+			self::F_ON_CREATE                    => $this->object->isOnCreate(),
+			self::F_ON_UPDATE                    => $this->object->isOnUpdate(),
+			self::F_ON_MANUAL                    => $this->object->isOnManual(),
 		);
 		$this->setValuesByArray($array);
 	}
@@ -199,7 +220,8 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedGroupesDesktop(explode(',', $assigned_groups_desktop[0]));
 		$this->object->setGlobalRole($this->getInput(self::F_GLOBAL_ROLE));
 		$portfolio_template_id = $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID);
-		$this->object->setPortfolioTemplateId($portfolio_template_id > 0 ? $portfolio_template_id : null);
+		$this->object->setPortfolioTemplateId($portfolio_template_id
+		                                      > 0 ? $portfolio_template_id : null);
 		$portf_assigned_to_groups = $this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
 		$this->object->setPortfolioAssignedToGroups(explode(',', $portf_assigned_to_groups[0]));
 		$this->object->setBlogName($this->getInput(self::F_BLOG_NAME));
@@ -208,6 +230,10 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedOrgus(explode(',', $assigned_orgus[0]));
 		$assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
 		$this->object->setAssignedStudyprograms(explode(',', $assigned_studyprograms[0]));
+
+		$this->object->setOnCreate($this->getInput(self::F_ON_CREATE));
+		$this->object->setOnUpdate($this->getInput(self::F_ON_UPDATE));
+		$this->object->setOnManual($this->getInput(self::F_ON_MANUAL));
 
 		if ($this->object->getId() > 0) {
 			$this->object->update();

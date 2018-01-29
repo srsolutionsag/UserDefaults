@@ -12,11 +12,19 @@ class ilUDFCheck extends ActiveRecord {
 
 	const TABLE_NAME = 'usr_def_checks';
 	const OP_EQUALS = 1;
+	const OP_LIKE = 2;
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
 	const TYPE_TEXT = 1;
 	const TYPE_SELECT = 2;
 	const TYPE_WYSIWYG = 3;
+	/**
+	 * @var array
+	 */
+	public static $operator_text_keys = array(
+		self::OP_EQUALS => 'equals',
+		self::OP_LIKE   => 'like',
+	);
 	/**
 	 * @var int
 	 *
@@ -338,6 +346,10 @@ class ilUDFCheck extends ActiveRecord {
 			case self::OP_EQUALS:
 				$valid = $value == $this->getCheckValue();
 				break;
+
+			case self::OP_LIKE:
+				$valid = (strpos(trim($value), trim($this->getCheckValue())) === 0);
+				break;
 			default:
 				return false;
 		}
@@ -352,6 +364,10 @@ class ilUDFCheck extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getAllDefinitions() {
+		static $return;
+		if (is_array($return)) {
+			return $return;
+		}
 		$return = array();
 		/**
 		 * @var $ilUserDefinedFields ilUserDefinedFields
@@ -359,11 +375,22 @@ class ilUDFCheck extends ActiveRecord {
 		$ilUserDefinedFields = ilUserDefinedFields::_getInstance();
 		foreach ($ilUserDefinedFields->getDefinitions() as $def) {
 			if ($def['visib_reg'] == 1) {
-				$return [] = $def;
+				$return [$def['field_type']] = $def;
 			}
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * @param $id
+	 * @return array
+	 */
+	public static function getDefinitionForId($id) {
+		$definitions = self::getAllDefinitions();
+
+		return $definitions[$id];
 	}
 
 
@@ -416,12 +443,14 @@ class ilUDFCheck extends ActiveRecord {
 		return 0;
 	}
 
+
 	/**
 	 * @return boolean
 	 */
 	public function isNegated() {
 		return $this->negated;
 	}
+
 
 	/**
 	 * @param boolean $negated

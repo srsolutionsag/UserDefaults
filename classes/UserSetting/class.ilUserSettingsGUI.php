@@ -10,7 +10,7 @@ require_once('./Services/Utilities/classes/class.ilConfirmationGUI.php');
  * @version           1.0.0
  *
  * @ilCtrl_IsCalledBy ilUserSettingsGUI : ilUserDefaultsConfigGUI
- * @ilCtrl_Calls ilUserSettingsGUI : ilPropertyFormGUI
+ * @ilCtrl_Calls      ilUserSettingsGUI : ilPropertyFormGUI
  */
 class ilUserSettingsGUI {
 
@@ -133,6 +133,7 @@ class ilUserSettingsGUI {
 		$this->tpl->setContent($ilUserSettingsFormGUI->getHTML());
 	}
 
+
 	protected function duplicate() {
 		$original = ilUserSetting::find($_GET[self::IDENTIFIER]);
 		/** @var ilUserSetting $copy */
@@ -142,6 +143,7 @@ class ilUserSettingsGUI {
 		ilUtil::sendSuccess($this->pl->txt("msg_duplicate_successful"), true);
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
+
 
 	public function confirmDelete() {
 		$conf = new ilConfirmationGUI();

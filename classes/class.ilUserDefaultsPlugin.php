@@ -10,11 +10,28 @@ require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/User
  */
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
+	// Known Components
+	const SERVICES_USER = 'Services/User';
+	const SERVICES_AUTHENTICATION = 'Services/Authentication';
+	// Known Actions
 	const PLUGIN_NAME = 'UserDefaults';
+	const CREATED_1 = 'saveAsNew';
+	const CREATED_2 = 'afterCreate';
+	const UPDATED = 'afterUpdate';
+	const AFTER_LOGIN = 'afterLogin';
 	/**
 	 * @var
 	 */
 	protected static $instance;
+	/**
+	 * @var array
+	 */
+	protected static $mapping = array(
+		self::CREATED_1   => 'on_create',
+		self::CREATED_2   => 'on_create',
+		self::UPDATED     => 'on_update',
+		self::AFTER_LOGIN => 'on_update',
+	);
 
 
 	/**
@@ -37,61 +54,67 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-		if ($a_component == 'Services/User' AND ($a_event == 'saveAsNew' OR $a_event == 'afterCreate')) {
-			/**
-			 * @var $ilUser ilObjUser
-			 */
+		$run = false;
+		$ilUser = null;
+		switch ($a_component) {
+			case self::SERVICES_AUTHENTICATION:
+				switch ($a_event) {
+					case self::AFTER_LOGIN:
+						require_once('./Services/User/classes/class.ilObjUser.php');
+						$user_id = ilObjUser::getUserIdByLogin($a_parameter['username']);
+						$ilUser = new ilObjUser ($user_id);
 
-			$ilUser = $a_parameter['user_obj'];
-
-			if ($ilUser instanceof ilObjUser) {
-				// Do Stuff
-				/**
-				 * @var $ilUserSetting ilUserSetting
-				 */
-				foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
-					$ilUserSetting->doAssignements($ilUser);
+						$run = true;
+						break;
 				}
+				break;
+			case self::SERVICES_USER:
+				switch ($a_event) {
+					case self::CREATED_1:
+					case self::CREATED_2:
+					case self::UPDATED:
+						$ilUser = $a_parameter['user_obj'];
+						$run = true;
+						break;
+				}
+				break;
+			default:
+				$run = false;
+				break;
+		}
+
+		$sets = self::$mapping[$a_event];
+
+		if ($run === true && $sets && $ilUser instanceof ilObjUser) {
+			/**
+			 * @var $ilUserSetting ilUserSetting
+			 */
+			foreach (ilUserSetting::where(array(
+				'status' => ilUserSetting::STATUS_ACTIVE,
+				$sets    => true,
+			))->get() as $ilUserSetting) {
+				$ilUserSetting->doAssignements($ilUser);
 			}
 		}
 	}
 
 
-//		/**
-//		 * @param $key
-//		 * @return mixed|string
-//		 * @throws \ilException
-//		 */
-//		public function txt($key) {
-//			require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
-//
-//			return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
-//		}
+
+	//	/**
+	//	 * @param $key
+	//	 * @return mixed|string
+	//	 * @throws \ilException
+	//	 */
+	//	public function txt($key) {
+	//		require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
+	//
+	//		return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
+	//	}
 
 	/**
 	 * @return string
 	 */
 	public function getPluginName() {
 		return self::PLUGIN_NAME;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is50() {
-		$version = explode('.', ILIAS_VERSION_NUMERIC);
-
-		return $version[0] >= 5;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public static function is51() {
-		$version = explode('.', ILIAS_VERSION_NUMERIC);
-
-		return $version[0] >= 5 && $version[1] >= 1;
 	}
 }

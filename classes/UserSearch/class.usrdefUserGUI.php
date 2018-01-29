@@ -16,6 +16,7 @@ class usrdefUserGUI {
 	const CMD_APPLY_FILTER = 'applyFilter';
 	const CMD_RESET_FILTER = 'resetFilter';
 	const CMD_SELECT_USER = 'selectUser';
+	const CMD_CONFIRM = 'confirmSelectUser';
 	const IDENTIFIER = 'usr_id';
 	const SESSION_ID = 'multi_assign_user_id';
 
@@ -89,6 +90,11 @@ class usrdefUserGUI {
 	}
 
 
+	protected function confirmSelectUser() {
+		// Optinal
+	}
+
+
 	protected function selectUser() {
 		$usr_ids = $_POST['id'];
 		$user_objects = array();
@@ -103,9 +109,13 @@ class usrdefUserGUI {
 		 * @var $ilUserSetting ilUserSetting
 		 */
 		require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
-		foreach (ilUserSetting::where(array( 'status' => ilUserSetting::STATUS_ACTIVE ))->get() as $ilUserSetting) {
+		foreach (ilUserSetting::where(array(
+			'status'    => ilUserSetting::STATUS_ACTIVE,
+			'on_manual' => true,
+		))->get() as $ilUserSetting) {
 			$ilUserSetting->doMultipleAssignements($user_objects);
 		}
+
 		ilUtil::sendSuccess(sprintf($this->pl->txt("userdef_users_assigned"), count($usr_ids)), true);
 		$this->ilCtrl->redirect($this, self::CMD_INDEX);
 	}

@@ -81,16 +81,16 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$xdglRequestList->orderBy('title');
 		$a_data = $xdglRequestList->getArray();
-		if (ilUserDefaultsPlugin::is50()) {
-			$img_on = ilUtil::img(ilUtil::getImagePath('icon_ok.svg'));
-			$img_off = ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
-		} else {
-			$img_on = ilUtil::img(ilUtil::getImagePath('icon_led_on_s.png'));
-			$img_off = ilUtil::img(ilUtil::getImagePath('icon_led_off_s.png'));
-		}
+
+		$img_on = ilUtil::img(ilUtil::getImagePath('icon_ok.svg'));
+		$img_off = ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
 
 		foreach ($a_data as $k => $d) {
-			$a_data[$k]['status_image'] = ($d['status'] == ilUserSetting::STATUS_ACTIVE ? $img_on : $img_off);
+			$a_data[$k]['status_image'] = ($d['status']
+			                               == ilUserSetting::STATUS_ACTIVE ? $img_on : $img_off);
+			$a_data[$k]['on_create'] = ($d['on_create'] ? $img_on : $img_off);
+			$a_data[$k]['on_update'] = ($d['on_update'] ? $img_on : $img_off);
+			$a_data[$k]['on_manual'] = ($d['on_manual'] ? $img_on : $img_off);
 		}
 		$this->setData($a_data);
 	}
@@ -156,15 +156,44 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	 * @return array
 	 */
 	public function getSelectableColumns() {
-		$cols['status_image'] = array( 'txt' => $this->pl->txt('set_status'), 'default' => true, 'width' => '30px', 'sort_field' => 'status' );
-		$cols['title'] = array( 'txt' => $this->pl->txt('set_title'), 'default' => true, 'width' => 'auto', 'sort_field' => 'title' );
+		$cols['status_image'] = array(
+			'txt'        => $this->pl->txt('set_status'),
+			'default'    => true,
+			'width'      => '30px',
+			'sort_field' => 'status',
+		);
+		$cols['title'] = array(
+			'txt'        => $this->pl->txt('set_title'),
+			'default'    => true,
+			'width'      => 'auto',
+			'sort_field' => 'title',
+		);
 		$cols['object_data_title'] = array(
 			'txt'        => $this->pl->txt('set_global_role'),
 			'default'    => true,
 			'width'      => 'auto',
 			'sort_field' => 'object_data_title',
 		);
-		$cols['actions'] = array( 'txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px', );
+		$cols['on_create'] = array(
+			'txt'     => $this->pl->txt('set_on_create'),
+			'default' => true,
+			'width'   => 'auto',
+		);
+		$cols['on_update'] = array(
+			'txt'     => $this->pl->txt('set_on_update'),
+			'default' => true,
+			'width'   => 'auto',
+		);
+		$cols['on_manual'] = array(
+			'txt'     => $this->pl->txt('set_on_manual'),
+			'default' => true,
+			'width'   => 'auto',
+		);
+		$cols['actions'] = array(
+			'txt'     => $this->pl->txt('set_actions'),
+			'default' => true,
+			'width'   => '150px',
+		);
 
 		return $cols;
 	}
@@ -176,14 +205,17 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 				if ($v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
-					$sort = $k;
+					$sort = false;
 				}
-				$this->addColumn($v['txt'], ($k == 'actions' ? false : $sort), $v['width']);
+				$this->addColumn($v['txt'], $sort, $v['width']);
 			}
 		}
 	}
 
 
+	/**
+	 * @param array $formats
+	 */
 	public function setExportFormats(array $formats) {
 		parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
 	}

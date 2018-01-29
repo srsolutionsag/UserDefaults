@@ -36,7 +36,6 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 		$ilTabs->addTab('settings', $this->plugin_object->txt('tabs_settings'), $ilCtrl->getLinkTargetByClass('ilUserSettingsGUI'));
 		$ilTabs->addTab('users', $this->plugin_object->txt('tabs_users'), $ilCtrl->getLinkTargetByClass('usrdefUserGUI'));
 
-
 		$nextClass = $ilCtrl->getNextClass();
 		switch ($nextClass) {
 			case 'iludfcheckgui':

@@ -171,7 +171,7 @@
             },
             "delete": {
                 "translations": {
-                    "de": "LÃ¶schen",
+                    "de": "Löschen",
                     "en": "Delete"
                 },
                 "last_used": "09.05.2017"
@@ -284,7 +284,7 @@
             },
             "confirm_delete": {
                 "translations": {
-                    "de": "MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?",
+                    "de": "Möchten Sie den Datensatz wirklich löschen?",
                     "en": "Do you really like to delete the dataset?"
                 },
                 "last_used": "06.12.2016"
@@ -314,7 +314,7 @@
             },
             "add": {
                 "translations": {
-                    "de": "UDF-Check hinzufÃ¼gen",
+                    "de": "UDF-Check hinzufügen",
                     "en": "Add UDF-Check"
                 },
                 "last_used": "10.05.2017"
@@ -363,14 +363,14 @@
             },
             "delete": {
                 "translations": {
-                    "de": "LÃ¶schen",
+                    "de": "Löschen",
                     "en": "Delete"
                 },
                 "last_used": "10.05.2017"
             },
             "back": {
                 "translations": {
-                    "de": "<< ZurÃ¼ck",
+                    "de": "<< Zurück",
                     "en": "<< Back"
                 },
                 "last_used": "10.05.2017"
@@ -427,7 +427,7 @@
         "crs": {
             "placeholder": {
                 "translations": {
-                    "de": "Kurse wÃ¤hlen",
+                    "de": "Kurse wählen",
                     "en": "Choose Courses"
                 },
                 "last_used": "09.05.2017"
@@ -436,7 +436,7 @@
         "grp": {
             "placeholder": {
                 "translations": {
-                    "de": "Gruppen wÃ¤hlen",
+                    "de": "Gruppen wählen",
                     "en": "Choose Groups"
                 },
                 "last_used": "09.05.2017"

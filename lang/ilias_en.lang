@@ -72,3 +72,6 @@ usr_orgu#:#Member of Org Unit
 common_actions#:#Actions
 button_select_user#:#Select Users
 userdef_users_assigned#:#%s Users updated
+msg_confirm_activate_multiple#:#Are you sure you want to activate the following settings:
+msg_confirm_deactivate_multiple#:#Are you sure you want to deactivate the following settings:
+msg_confirm_delete_multiple#:#Are you sure you want to delete the following settings:

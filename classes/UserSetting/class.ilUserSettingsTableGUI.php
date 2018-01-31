@@ -59,6 +59,11 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->parseData();
 
 		$this->toolbar->addButton($this->pl->txt('set_add'), $this->ctrl->getLinkTarget($parent_obj, ilUserSettingsGUI::CMD_ADD), '', '', '', '', 'submit emphsubmit');
+
+		$this->setSelectAllCheckbox('setting_select');
+		$this->addMultiCommand(ilUserSettingsGUI::CMD_ACTIVATE_MULTIPLE_CONFIRM, $this->pl->txt('set_activate'));
+		$this->addMultiCommand(ilUserSettingsGUI::CMD_DEACTIVATE_MULTIPLE_CONFIRM, $this->pl->txt('set_deactivate'));
+		$this->addMultiCommand(ilUserSettingsGUI::CMD_DELETE_MULTIPLE_CONFIRM, $this->pl->txt('set_delete'));
 	}
 
 
@@ -102,6 +107,11 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	public function fillRow($a_set) {
 		$ilUserSetting = ilUserSetting::find($a_set['id']);
 		$ilUDFCheckGUI = new ilUDFCheckGUI($this->parent_obj);
+
+		$this->tpl->setCurrentBlock('setting_select');
+		$this->tpl->setVariable('SETTING_ID', $ilUserSetting->getId());
+		$this->tpl->parseCurrentBlock();
+
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($k == 'actions') {
 				$this->ctrl->setParameter($this->parent_obj, ilUserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
@@ -200,6 +210,8 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 
 	private function addColumns() {
+		$this->addColumn('');
+
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
 				if ($v['sort_field']) {

@@ -26,6 +26,12 @@ class ilUserSettingsGUI {
 	const CMD_ACTIVATE = 'activate';
 	const CMD_DELETE = 'delete';
 	const CMD_DUPLICATE = 'duplicate';
+	const CMD_ACTIVATE_MULTIPLE_CONFIRM = 'activateMultipleConfirm';
+	const CMD_ACTIVATE_MULTIPLE = 'activateMultiple';
+	const CMD_DEACTIVATE_MULTIPLE_CONFIRM = 'deactivateMultipleConfirm';
+	const CMD_DEACTIVATE_MULTIPLE = 'deactivateMultiple';
+	const CMD_DELETE_MULTIPLE_CONFIRM = 'deleteMultipleConfirm';
+	const CMD_DELETE_MULTIPLE = 'deleteMultiple';
 	const IDENTIFIER = 'set_id';
 	/**
 	 * @var ilCtrl
@@ -69,6 +75,12 @@ class ilUserSettingsGUI {
 			case self::CMD_CONFIRM_DELETE:
 			case self::CMD_DELETE:
 			case self::CMD_DUPLICATE:
+			case self::CMD_ACTIVATE_MULTIPLE_CONFIRM:
+			case self::CMD_ACTIVATE_MULTIPLE:
+			case self::CMD_DEACTIVATE_MULTIPLE_CONFIRM:
+			case self::CMD_DEACTIVATE_MULTIPLE:
+			case self::CMD_DELETE_MULTIPLE_CONFIRM:
+			case self::CMD_DELETE_MULTIPLE:
 				$this->{$cmd}();
 				break;
 		}
@@ -210,6 +222,113 @@ class ilUserSettingsGUI {
 		$tableGui = new ilUserSettingsTableGUI($this, self::CMD_INDEX);
 		$tableGui->resetOffset();
 		$tableGui->resetFilter();
+		$this->ctrl->redirect($this, self::CMD_INDEX);
+	}
+
+	protected function activateMultipleConfirm() {
+		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		if (!is_array($setting_select) || count($setting_select) === 0) {
+			// No settings selected
+			$this->ctrl->redirect($this,self::CMD_INDEX);
+		};
+
+		$conf = new ilConfirmationGUI();
+		$conf->setFormAction($this->ctrl->getFormAction($this));
+		$conf->setHeaderText($this->pl->txt('msg_confirm_activate_multiple'));
+		$conf->setConfirm($this->pl->txt('set_activate'), self::CMD_ACTIVATE_MULTIPLE);
+		$conf->setCancel($this->pl->txt('set_cancel'), self::CMD_INDEX);
+
+		foreach($setting_select as $setting_id) {
+			$conf->addItem("setting_select[]", $setting_id, ilUserSetting::find($setting_id)->getTitle());
+		}
+
+		$this->tpl->setContent($conf->getHTML());
+	}
+
+	protected function activateMultiple() {
+		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		if (!is_array($setting_select) || count($setting_select) === 0) {
+			// No settings selected
+			$this->ctrl->redirect($this,self::CMD_INDEX);
+		};
+
+		foreach($setting_select as $setting_id) {
+			$ilUserSetting = ilUserSetting::find($setting_id);
+			$ilUserSetting->setStatus(ilUserSetting::STATUS_ACTIVE);
+			$ilUserSetting->update();
+		}
+
+		$this->ctrl->redirect($this, self::CMD_INDEX);
+	}
+
+	protected function deactivateMultipleConfirm() {
+		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		if (!is_array($setting_select) || count($setting_select) === 0) {
+			// No settings selected
+			$this->ctrl->redirect($this,self::CMD_INDEX);
+		};
+
+		$conf = new ilConfirmationGUI();
+		$conf->setFormAction($this->ctrl->getFormAction($this));
+		$conf->setHeaderText($this->pl->txt('msg_confirm_deactivate_multiple'));
+		$conf->setConfirm($this->pl->txt('set_deactivate'), self::CMD_DEACTIVATE_MULTIPLE);
+		$conf->setCancel($this->pl->txt('set_cancel'), self::CMD_INDEX);
+
+		foreach($setting_select as $setting_id) {
+			$conf->addItem("setting_select[]", $setting_id, ilUserSetting::find($setting_id)->getTitle());
+		}
+
+		$this->tpl->setContent($conf->getHTML());
+	}
+
+	protected function deactivateMultiple() {
+		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		if (!is_array($setting_select) || count($setting_select) === 0) {
+			// No settings selected
+			$this->ctrl->redirect($this,self::CMD_INDEX);
+		};
+
+		foreach($setting_select as $setting_id) {
+			$ilUserSetting = ilUserSetting::find($setting_id);
+			$ilUserSetting->setStatus(ilUserSetting::STATUS_INACTIVE);
+			$ilUserSetting->update();
+		}
+
+		$this->ctrl->redirect($this, self::CMD_INDEX);
+	}
+
+	protected function deleteMultipleConfirm() {
+		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		if (!is_array($setting_select) || count($setting_select) === 0) {
+			// No settings selected
+			$this->ctrl->redirect($this,self::CMD_INDEX);
+		};
+
+		$conf = new ilConfirmationGUI();
+		$conf->setFormAction($this->ctrl->getFormAction($this));
+		$conf->setHeaderText($this->pl->txt('msg_confirm_delete_multiple'));
+		$conf->setConfirm($this->pl->txt('set_delete'), self::CMD_DELETE_MULTIPLE);
+		$conf->setCancel($this->pl->txt('set_cancel'), self::CMD_INDEX);
+
+		foreach($setting_select as $setting_id) {
+			$conf->addItem("setting_select[]", $setting_id, ilUserSetting::find($setting_id)->getTitle());
+		}
+
+		$this->tpl->setContent($conf->getHTML());
+	}
+
+	protected function deleteMultiple() {
+		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		if (!is_array($setting_select) || count($setting_select) === 0) {
+			// No settings selected
+			$this->ctrl->redirect($this,self::CMD_INDEX);
+		};
+
+		foreach($setting_select as $setting_id) {
+			$ilUserSetting = ilUserSetting::find($setting_id);
+			$ilUserSetting->delete();
+		}
+
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 }

@@ -302,6 +302,27 @@
                     "en": "No Accounts selected"
                 },
                 "last_used": "14.12.2016"
+            },
+            "confirm_activate_multiple": {
+                "translations": {
+                    "de": "Sind Sie sicher, dass Sie folgende Einstellungen aktivieren möchten:",
+                    "en": "Are you sure you want to activate the following settings:"
+                },
+                "last_used": "31.01.2018"
+            },
+            "confirm_deactivate_multiple": {
+                "translations": {
+                    "de": "Sind Sie sicher, dass Sie folgende Einstellungen deaktivieren möchten:",
+                    "en": "Are you sure you want to deactivate the following settings:"
+                },
+                "last_used": "31.01.2018"
+            },
+            "confirm_delete_multiple": {
+                "translations": {
+                    "de": "Sind Sie sicher, dass Sie folgende Einstellungen löschen möchten:",
+                    "en": "Are you sure you want to delete the following settings:"
+                },
+                "last_used": "31.01.2018"
             }
         },
         "check": {

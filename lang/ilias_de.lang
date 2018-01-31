@@ -72,3 +72,6 @@ usr_orgu#:#Mitarbeiter in Organisationseinheit
 common_actions#:#Aktionen
 button_select_user#:#Benutzer auswählen
 userdef_users_assigned#:#%s Benutzer aktualisiert
+msg_confirm_activate_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen aktivieren möchten:
+msg_confirm_deactivate_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen deaktiveren möchten:
+msg_confirm_delete_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen löschen möchten:

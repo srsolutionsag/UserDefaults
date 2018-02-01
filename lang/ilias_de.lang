@@ -56,7 +56,7 @@ check_udf_negate_value_info#:#Wenn diese Option gewählt ist, wird die Regel ang
 check_negation_gobal#:#Negation
 check_op_equals#:#Ist gleich
 check_udf_operator#:#Vergleich
-check_op_like#:#Beginnt mit
+check_op_starts_with#:#Beginnt mit
 crs_placeholder#:#Kurse wählen
 grp_placeholder#:#Gruppen wählen
 orgu_placeholder#:#Organisationseinheit
@@ -75,3 +75,13 @@ userdef_users_assigned#:#%s Benutzer aktualisiert
 msg_confirm_activate_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen aktivieren möchten:
 msg_confirm_deactivate_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen deaktiveren möchten:
 msg_confirm_delete_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen löschen möchten:
+check_op_contains#:#Enthält
+check_op_ends_with#:#Endet mit
+check_op_not_equals#:#Ist nicht gleich
+check_op_not_starts_with#:#Beginnt nicht mit
+check_op_not_contains#:#Enthält nicht
+check_op_not_ends_with#:#Endet nicht mit
+check_op_is_empty#:#Ist leer
+check_op_not_is_empty#:#Ist nicht leer
+check_op_reg_ex#:#RegEx
+check_op_reg_ex_info#:#Hinweis: RegExp muss in / / geschrieben werden

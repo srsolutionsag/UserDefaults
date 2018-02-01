@@ -79,6 +79,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 			$this->addItem($cb);
 
 			$op = new ilSelectInputGUI($this->txt(self::F_UDF_OPERATOR), self::F_UDF_OPERATOR);
+			$op->setInfo($this->pl->txt('check_op_reg_ex_info'));
 			$options = array();
 			foreach (ilUDFCheck::$operator_text_keys as $key => $v) {
 				$options[$key] = $this->pl->txt("check_op_" . $v);

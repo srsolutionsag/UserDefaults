@@ -12,7 +12,16 @@ class ilUDFCheck extends ActiveRecord {
 
 	const TABLE_NAME = 'usr_def_checks';
 	const OP_EQUALS = 1;
-	const OP_LIKE = 2;
+	const OP_STARTS_WITH = 2;
+	const OP_CONTAINS = 3;
+	const OP_ENDS_WITH = 4;
+	const OP_NOT_EQUALS = 5;
+	const OP_NOT_STARTS_WITH = 6;
+	const OP_NOT_CONTAINS = 7;
+	const OP_NOT_ENDS_WITH = 8;
+	const OP_IS_EMPTY = 9;
+	const OP_NOT_IS_EMPTY = 10;
+	const OP_REG_EX = 11;
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
 	const TYPE_TEXT = 1;
@@ -23,7 +32,16 @@ class ilUDFCheck extends ActiveRecord {
 	 */
 	public static $operator_text_keys = array(
 		self::OP_EQUALS => 'equals',
-		self::OP_LIKE   => 'like',
+		self::OP_STARTS_WITH => 'starts_with',
+		self::OP_CONTAINS => 'contains',
+		self::OP_ENDS_WITH => 'ends_with',
+		self::OP_NOT_EQUALS => 'not_equals',
+		self::OP_NOT_STARTS_WITH => 'not_starts_with',
+		self::OP_NOT_CONTAINS => 'not_contains',
+		self::OP_NOT_ENDS_WITH => 'not_ends_with',
+		self::OP_IS_EMPTY => 'is_empty',
+		self::OP_NOT_IS_EMPTY => 'not_is_empty',
+		self::OP_REG_EX => 'reg_ex',
 	);
 	/**
 	 * @var int
@@ -340,21 +358,66 @@ class ilUDFCheck extends ActiveRecord {
 	 */
 	public function isValid(ilObjUser $ilUser) {
 		$ilUser->readUserDefinedFields();
-		$value = $ilUser->user_defined_data['f_' . $this->getUdfFieldId()];
+		$value = trim($ilUser->user_defined_data['f_' . $this->getUdfFieldId()]);
+		$check_value = trim($this->getCheckValue());
+
+		/*if ($this->isNoCase()) {
+			$value = strtolower($value);
+			if ($this->getOperator() !== self::OP_REG_EX) {
+				$check_value = strtolower($check_value);
+			}
+		}*/
 
 		switch ($this->getOperator()) {
 			case self::OP_EQUALS:
-				$valid = $value == $this->getCheckValue();
+				$valid = ($value === $check_value);
 				break;
 
-			case self::OP_LIKE:
-				$valid = (strpos(trim($value), trim($this->getCheckValue())) === 0);
+			case self::OP_NOT_EQUALS:
+				$valid = ($value !== $check_value);
 				break;
+
+			case self::OP_STARTS_WITH:
+				$valid = (strpos($value, $check_value) === 0);
+				break;
+
+			case self::OP_NOT_STARTS_WITH:
+				$valid = (strpos($value, $check_value) !== 0);
+				break;
+
+			case self::OP_ENDS_WITH:
+				$valid = (strrpos($value, $check_value) === (strlen($value) - strlen($check_value)));
+				break;
+
+			case self::OP_NOT_ENDS_WITH:
+				$valid = (strrpos($value, $check_value) !== (strlen($value) - strlen($check_value)));
+				break;
+
+			case self::OP_CONTAINS:
+				$valid = (strpos($value, $check_value) !== false);
+				break;
+
+			case self::OP_NOT_CONTAINS:
+				$valid = (strpos($value, $check_value) === false);
+				break;
+
+			case self::OP_IS_EMPTY:
+				$valid = empty($value);
+				break;
+
+			case self::OP_NOT_IS_EMPTY:
+				$valid = (!empty($value));
+				break;
+
+			case self::OP_REG_EX:
+				$valid = (preg_match($check_value, $value) === 1);
+				break;
+
 			default:
 				return false;
 		}
 
-		$b = !$this->isNegated() == $valid;
+		$b = (!$this->isNegated() === $valid);
 
 		return $b;
 	}

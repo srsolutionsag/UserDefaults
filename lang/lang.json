@@ -437,12 +437,82 @@
                 },
                 "last_used": "10.05.2017"
             },
-            "op_like": {
+            "op_starts_with": {
                 "translations": {
                     "de": "Beginnt mit",
                     "en": "Starts with"
                 },
-                "last_used": "10.05.2017"
+                "last_used": "01.02.2018"
+            },
+            "op_contains": {
+                "translations": {
+                    "de": "Enthält",
+                    "en": "Contains"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_ends_with": {
+                "translations": {
+                    "de": "Endet mit",
+                    "en": "Ends with"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_not_equals": {
+                "translations": {
+                    "de": "Ist nicht gleich",
+                    "en": "Not equals"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_not_starts_with": {
+                "translations": {
+                    "de": "Beginnt nicht mit",
+                    "en": "Not starts with"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_not_contains": {
+                "translations": {
+                    "de": "Enthält nicht",
+                    "en": "Not contains"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_not_ends_with": {
+                "translations": {
+                    "de": "Endet nicht mit",
+                    "en": "Not ends with"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_is_empty": {
+                "translations": {
+                    "de": "Ist leer",
+                    "en": "Is empty"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_not_is_empty": {
+                "translations": {
+                    "de": "Ist nicht leer",
+                    "en": "Not is empty"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_reg_ex": {
+                "translations": {
+                    "de": "RegEx",
+                    "en": "RegEx"
+                },
+                "last_used": "01.02.2018"
+            },
+            "op_reg_ex_info": {
+                "translations": {
+                    "de": "RegExp muss in / / geschrieben werden",
+                    "en": "RegExp must be written in / /"
+                },
+                "last_used": "01.02.2018"
             }
         },
         "crs": {

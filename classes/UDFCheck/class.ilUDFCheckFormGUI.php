@@ -148,13 +148,15 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 		$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 		$definition = ilUDFCheck::getDefinitionForId($udf_type);
+		require_once('./Services/User/classes/class.ilCustomUserFieldsHelper.php');
 		$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 		if ($plugin instanceof ilUDFDefinitionPlugin) {
 			$select_gui = $plugin->getFormPropertyForDefinition($definition);
-		}
-		$check_values = $this->object->getCheckValues();
-		foreach ($select_gui->getColumnDefinition() as $key => $name) {
-			$array[self::F_CHECK_VALUE_MUL . $key] = $check_values[$key];
+
+			$check_values = $this->object->getCheckValues();
+			foreach ($select_gui->getColumnDefinition() as $key => $name) {
+				$array[self::F_CHECK_VALUE_MUL . $key] = $check_values[$key];
+			}
 		}
 
 		$this->setValuesByArray($array);
@@ -175,6 +177,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 				case self::F_CHECK_TEXT:
 					$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 					$definition = ilUDFCheck::getDefinitionForId($udf_type);
+					require_once('./Services/User/classes/class.ilCustomUserFieldsHelper.php');
 					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 					if ($plugin instanceof ilUDFDefinitionPlugin) {
 						$select_gui = $plugin->getFormPropertyForDefinition($definition);

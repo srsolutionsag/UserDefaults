@@ -185,7 +185,9 @@ class ilUDFCheck extends ActiveRecord {
 	 * @param string[] $check_values
 	 */
 	public function setCheckValues(array $check_values) {
-		$this->check_value = implode(self::CHECK_SPLIT, $check_values);
+		$this->check_value = implode(self::CHECK_SPLIT, array_map(function ($check_value) {
+			return trim($check_value);
+		}, $check_values));
 	}
 
 
@@ -201,7 +203,9 @@ class ilUDFCheck extends ActiveRecord {
 	 * @return string[]
 	 */
 	public function getCheckValues() {
-		return explode(self::CHECK_SPLIT, $this->check_value);
+		return array_map(function ($check_value) {
+			return trim($check_value);
+		}, explode(self::CHECK_SPLIT, $this->check_value));
 	}
 
 
@@ -375,63 +379,68 @@ class ilUDFCheck extends ActiveRecord {
 	 */
 	public function isValid(ilObjUser $ilUser) {
 		$ilUser->readUserDefinedFields();
-		$value = trim($ilUser->user_defined_data['f_' . $this->getUdfFieldId()]);
-		$check_value = trim($this->getCheckValue());
 
-		/*if ($this->isNoCase()) {
-			$value = strtolower($value);
-			if ($this->getOperator() !== self::OP_REG_EX) {
-				$check_value = strtolower($check_value);
+		$values = array_map(function ($value) {
+			return trim($value);
+		}, explode(self::CHECK_SPLIT, $ilUser->user_defined_data['f_' . $this->getUdfFieldId()]));
+
+		$check_values = $this->getCheckValues();
+
+		foreach ($check_values as $key => $check_value) {
+			$value = $values[$key];
+
+			switch ($this->getOperator()) {
+				case self::OP_EQUALS:
+					$valid = ($value === $check_value);
+					break;
+
+				case self::OP_NOT_EQUALS:
+					$valid = ($value !== $check_value);
+					break;
+
+				case self::OP_STARTS_WITH:
+					$valid = (strpos($value, $check_value) === 0);
+					break;
+
+				case self::OP_NOT_STARTS_WITH:
+					$valid = (strpos($value, $check_value) !== 0);
+					break;
+
+				case self::OP_ENDS_WITH:
+					$valid = (strrpos($value, $check_value) === (strlen($value) - strlen($check_value)));
+					break;
+
+				case self::OP_NOT_ENDS_WITH:
+					$valid = (strrpos($value, $check_value) !== (strlen($value) - strlen($check_value)));
+					break;
+
+				case self::OP_CONTAINS:
+					$valid = (strpos($value, $check_value) !== false);
+					break;
+
+				case self::OP_NOT_CONTAINS:
+					$valid = (strpos($value, $check_value) === false);
+					break;
+
+				case self::OP_IS_EMPTY:
+					$valid = empty($value);
+					break;
+
+				case self::OP_NOT_IS_EMPTY:
+					$valid = (!empty($value));
+					break;
+
+				case self::OP_REG_EX:
+					$valid = (preg_match($check_value, $value) === 1);
+					break;
+
+				default:
+					return false;
 			}
-		}*/
 
-		switch ($this->getOperator()) {
-			case self::OP_EQUALS:
-				$valid = ($value === $check_value);
+			if (!$valid) {
 				break;
-
-			case self::OP_NOT_EQUALS:
-				$valid = ($value !== $check_value);
-				break;
-
-			case self::OP_STARTS_WITH:
-				$valid = (strpos($value, $check_value) === 0);
-				break;
-
-			case self::OP_NOT_STARTS_WITH:
-				$valid = (strpos($value, $check_value) !== 0);
-				break;
-
-			case self::OP_ENDS_WITH:
-				$valid = (strrpos($value, $check_value) === (strlen($value) - strlen($check_value)));
-				break;
-
-			case self::OP_NOT_ENDS_WITH:
-				$valid = (strrpos($value, $check_value) !== (strlen($value) - strlen($check_value)));
-				break;
-
-			case self::OP_CONTAINS:
-				$valid = (strpos($value, $check_value) !== false);
-				break;
-
-			case self::OP_NOT_CONTAINS:
-				$valid = (strpos($value, $check_value) === false);
-				break;
-
-			case self::OP_IS_EMPTY:
-				$valid = empty($value);
-				break;
-
-			case self::OP_NOT_IS_EMPTY:
-				$valid = (!empty($value));
-				break;
-
-			case self::OP_REG_EX:
-				$valid = (preg_match($check_value, $value) === 1);
-				break;
-
-			default:
-				return false;
+			}
 		}
 
 		$b = (!$this->isNegated() === $valid);

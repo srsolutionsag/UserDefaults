@@ -513,6 +513,20 @@
                     "en": "RegExp must be written in / /"
                 },
                 "last_used": "01.02.2018"
+            },
+            "text_fields": {
+                "translations": {
+                    "de": "Textfelder",
+                    "en": "Text fields"
+                },
+                "last_used": "12.02.2018"
+            },
+            "select_lists": {
+                "translations": {
+                    "de": "Auswahllisten",
+                    "en": "Select lists"
+                },
+                "last_used": "12.02.2018"
             }
         },
         "crs": {

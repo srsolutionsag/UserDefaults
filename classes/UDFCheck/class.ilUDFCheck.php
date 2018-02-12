@@ -27,6 +27,7 @@ class ilUDFCheck extends ActiveRecord {
 	const TYPE_TEXT = 1;
 	const TYPE_SELECT = 2;
 	const TYPE_WYSIWYG = 3;
+	const CHECK_SPLIT = ' → ';
 	/**
 	 * @var array
 	 */
@@ -181,10 +182,26 @@ class ilUDFCheck extends ActiveRecord {
 
 
 	/**
+	 * @param string[] $check_values
+	 */
+	public function setCheckValues(array $check_values) {
+		$this->check_value = implode(self::CHECK_SPLIT, $check_values);
+	}
+
+
+	/**
 	 * @return string
 	 */
 	public function getCheckValue() {
 		return $this->check_value;
+	}
+
+
+	/**
+	 * @return string[]
+	 */
+	public function getCheckValues() {
+		return explode(self::CHECK_SPLIT, $this->check_value);
 	}
 
 
@@ -329,7 +346,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 		}
 
-		return null;
+		return NULL;
 	}
 
 
@@ -347,7 +364,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 		}
 
-		return null;
+		return NULL;
 	}
 
 
@@ -448,6 +465,7 @@ class ilUDFCheck extends ActiveRecord {
 
 	/**
 	 * @param $id
+	 *
 	 * @return array
 	 */
 	public static function getDefinitionForId($id) {

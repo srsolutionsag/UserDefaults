@@ -11,8 +11,12 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 	const F_UDF_FIELD_ID = 'udf_field_id';
 	const F_CHECK_VALUE = 'check_value';
+	const F_CHECK_VALUE_MUL = 'check_value_mul_';
 	const F_UDF_NEGATE_ID = 'udf_negate_value';
 	const F_UDF_OPERATOR = 'udf_operator';
+	const F_CHECK_RADIO = 'check_radio';
+	const F_CHECK_TEXT = 'check_text';
+	const F_CHECK_SELECT = 'check_select';
 	/**
 	 * @var ilUserSettingsGUI
 	 */
@@ -37,7 +41,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 	/**
 	 * @param ilUDFCheckGUI $parent_gui
-	 * @param ilUDFCheck $ilUDFCheck
+	 * @param ilUDFCheck    $ilUDFCheck
 	 */
 	public function __construct(ilUDFCheckGUI $parent_gui, ilUDFCheck $ilUDFCheck) {
 		global $ilCtrl;
@@ -71,7 +75,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->addItem($te);
 
 		if (!$this->is_new) {
-			$te = new ilHiddenInputGUI($this->txt(self::F_UDF_FIELD_ID), self::F_UDF_FIELD_ID);
+			$te = new ilHiddenInputGUI($this->txt(self::F_UDF_FIELD_ID), self::F_UDF_FIELD_ID); // TODO Fix PostVar
 			$this->addItem($te);
 
 			$cb = new ilCheckboxInputGUI($this->txt(self::F_UDF_NEGATE_ID), self::F_UDF_NEGATE_ID);
@@ -103,10 +107,26 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 					require_once('./Services/User/classes/class.ilCustomUserFieldsHelper.php');
 					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 					if ($plugin instanceof ilUDFDefinitionPlugin) {
-						$input_gui = $plugin->getFormPropertyForDefinition($definition);
-						$input_gui->setPostVar(self::F_CHECK_VALUE);
-						$input_gui->setRequired(false);
-						$this->addItem($input_gui);
+						$select_gui = $plugin->getFormPropertyForDefinition($definition);
+
+						$check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);
+
+						$check_radio_text = new ilRadioOption($this->pl->txt("check_text_fields"), self::F_CHECK_TEXT);
+						$check_radio->addOption($check_radio_text);
+
+						foreach ($select_gui->getColumnDefinition() as $key => $name) {
+							$text_gui = new ilTextInputGUI($name, self::F_CHECK_VALUE_MUL . $key);
+							$check_radio_text->addSubItem($text_gui);
+						}
+
+						$check_radio_select = new ilRadioOption($this->pl->txt("check_select_lists"), self::F_CHECK_SELECT);
+						$check_radio->addOption($check_radio_select);
+
+						$select_gui->setPostVar(self::F_CHECK_VALUE);
+						$select_gui->setRequired(false);
+						$check_radio_select->addSubItem($select_gui);
+
+						$this->addItem($check_radio);
 					}
 
 					break;
@@ -119,11 +139,23 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 	public function fillForm() {
 		$array = array(
-			self::F_UDF_FIELD_ID  => $this->object->getUdfFieldId(),
-			self::F_CHECK_VALUE   => $this->object->getCheckValue(),
+			self::F_UDF_FIELD_ID => $this->object->getUdfFieldId(),
+			self::F_CHECK_VALUE => $this->object->getCheckValue(),
 			self::F_UDF_NEGATE_ID => $this->object->isNegated(),
-			self::F_UDF_OPERATOR  => $this->object->getOperator(),
+			self::F_UDF_OPERATOR => $this->object->getOperator(),
+			self::F_CHECK_RADIO => self::F_CHECK_TEXT
 		);
+
+		$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
+		$definition = ilUDFCheck::getDefinitionForId($udf_type);
+		$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+		if ($plugin instanceof ilUDFDefinitionPlugin) {
+			$select_gui = $plugin->getFormPropertyForDefinition($definition);
+		}
+		$check_values = $this->object->getCheckValues();
+		foreach ($select_gui->getColumnDefinition() as $key => $name) {
+			$array[self::F_CHECK_VALUE_MUL . $key] = $check_values[$key];
+		}
 
 		$this->setValuesByArray($array);
 	}
@@ -138,7 +170,26 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 		}
 
 		if (!$this->is_new) {
-			$this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE));
+			$check_radio = $this->getInput(self::F_CHECK_RADIO);
+			switch ($check_radio) {
+				case self::F_CHECK_TEXT:
+					$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
+					$definition = ilUDFCheck::getDefinitionForId($udf_type);
+					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+					if ($plugin instanceof ilUDFDefinitionPlugin) {
+						$select_gui = $plugin->getFormPropertyForDefinition($definition);
+						$check_values = [];
+						foreach ($select_gui->getColumnDefinition() as $key => $name) {
+							$check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);
+						}
+						$this->object->setCheckValues($check_values);
+					}
+					break;
+				case self::F_CHECK_SELECT:
+				default:
+					$this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE));
+					break;
+			}
 			$this->object->setNegated($this->getInput(self::F_UDF_NEGATE_ID));
 			$this->object->setOperator($this->getInput(self::F_UDF_OPERATOR));
 			$this->object->update();

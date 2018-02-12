@@ -85,3 +85,5 @@ check_op_is_empty#:#Is empty
 check_op_not_is_empty#:#Not is empty
 check_op_reg_ex#:#RegEx
 check_op_reg_ex_info#:#Hint: RegExp must be written in / /
+check_text_fields#:#Text fields
+check_select_lists#:#Select lists

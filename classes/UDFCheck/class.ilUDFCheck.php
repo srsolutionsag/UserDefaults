@@ -12,18 +12,37 @@ class ilUDFCheck extends ActiveRecord {
 
 	const TABLE_NAME = 'usr_def_checks';
 	const OP_EQUALS = 1;
-	const OP_LIKE = 2;
+	const OP_STARTS_WITH = 2;
+	const OP_CONTAINS = 3;
+	const OP_ENDS_WITH = 4;
+	const OP_NOT_EQUALS = 5;
+	const OP_NOT_STARTS_WITH = 6;
+	const OP_NOT_CONTAINS = 7;
+	const OP_NOT_ENDS_WITH = 8;
+	const OP_IS_EMPTY = 9;
+	const OP_NOT_IS_EMPTY = 10;
+	const OP_REG_EX = 11;
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
 	const TYPE_TEXT = 1;
 	const TYPE_SELECT = 2;
 	const TYPE_WYSIWYG = 3;
+	const CHECK_SPLIT = ' → ';
 	/**
 	 * @var array
 	 */
 	public static $operator_text_keys = array(
 		self::OP_EQUALS => 'equals',
-		self::OP_LIKE   => 'like',
+		self::OP_STARTS_WITH => 'starts_with',
+		self::OP_CONTAINS => 'contains',
+		self::OP_ENDS_WITH => 'ends_with',
+		self::OP_NOT_EQUALS => 'not_equals',
+		self::OP_NOT_STARTS_WITH => 'not_starts_with',
+		self::OP_NOT_CONTAINS => 'not_contains',
+		self::OP_NOT_ENDS_WITH => 'not_ends_with',
+		self::OP_IS_EMPTY => 'is_empty',
+		self::OP_NOT_IS_EMPTY => 'not_is_empty',
+		self::OP_REG_EX => 'reg_ex',
 	);
 	/**
 	 * @var int
@@ -163,10 +182,30 @@ class ilUDFCheck extends ActiveRecord {
 
 
 	/**
+	 * @param string[] $check_values
+	 */
+	public function setCheckValues(array $check_values) {
+		$this->check_value = implode(self::CHECK_SPLIT, array_map(function ($check_value) {
+			return trim($check_value);
+		}, $check_values));
+	}
+
+
+	/**
 	 * @return string
 	 */
 	public function getCheckValue() {
 		return $this->check_value;
+	}
+
+
+	/**
+	 * @return string[]
+	 */
+	public function getCheckValues() {
+		return array_map(function ($check_value) {
+			return trim($check_value);
+		}, explode(self::CHECK_SPLIT, $this->check_value));
 	}
 
 
@@ -311,7 +350,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 		}
 
-		return null;
+		return NULL;
 	}
 
 
@@ -329,7 +368,7 @@ class ilUDFCheck extends ActiveRecord {
 				break;
 		}
 
-		return null;
+		return NULL;
 	}
 
 
@@ -340,21 +379,71 @@ class ilUDFCheck extends ActiveRecord {
 	 */
 	public function isValid(ilObjUser $ilUser) {
 		$ilUser->readUserDefinedFields();
-		$value = $ilUser->user_defined_data['f_' . $this->getUdfFieldId()];
 
-		switch ($this->getOperator()) {
-			case self::OP_EQUALS:
-				$valid = $value == $this->getCheckValue();
-				break;
+		$values = array_map(function ($value) {
+			return trim($value);
+		}, explode(self::CHECK_SPLIT, $ilUser->user_defined_data['f_' . $this->getUdfFieldId()]));
 
-			case self::OP_LIKE:
-				$valid = (strpos(trim($value), trim($this->getCheckValue())) === 0);
+		$check_values = $this->getCheckValues();
+
+		foreach ($check_values as $key => $check_value) {
+			$value = $values[$key];
+
+			switch ($this->getOperator()) {
+				case self::OP_EQUALS:
+					$valid = ($value === $check_value);
+					break;
+
+				case self::OP_NOT_EQUALS:
+					$valid = ($value !== $check_value);
+					break;
+
+				case self::OP_STARTS_WITH:
+					$valid = (strpos($value, $check_value) === 0);
+					break;
+
+				case self::OP_NOT_STARTS_WITH:
+					$valid = (strpos($value, $check_value) !== 0);
+					break;
+
+				case self::OP_ENDS_WITH:
+					$valid = (strrpos($value, $check_value) === (strlen($value) - strlen($check_value)));
+					break;
+
+				case self::OP_NOT_ENDS_WITH:
+					$valid = (strrpos($value, $check_value) !== (strlen($value) - strlen($check_value)));
+					break;
+
+				case self::OP_CONTAINS:
+					$valid = (strpos($value, $check_value) !== false);
+					break;
+
+				case self::OP_NOT_CONTAINS:
+					$valid = (strpos($value, $check_value) === false);
+					break;
+
+				case self::OP_IS_EMPTY:
+					$valid = empty($value);
+					break;
+
+				case self::OP_NOT_IS_EMPTY:
+					$valid = (!empty($value));
+					break;
+
+				case self::OP_REG_EX:
+					$valid = (preg_match($check_value, $value) === 1);
+					break;
+
+				default:
+					return false;
+			}
+
+			if (!$valid) {
 				break;
-			default:
-				return false;
+			}
 		}
 
-		$b = !$this->isNegated() == $valid;
+		$b = (!$this->isNegated() === $valid);
 
 		return $b;
 	}
@@ -385,6 +474,7 @@ class ilUDFCheck extends ActiveRecord {
 
 	/**
 	 * @param $id
+	 *
 	 * @return array
 	 */
 	public static function getDefinitionForId($id) {

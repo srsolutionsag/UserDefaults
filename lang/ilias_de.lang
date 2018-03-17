@@ -21,7 +21,7 @@ set_activate#:#Aktivieren
 set_placeholders#:#Platzhalter
 set_deactivate#:#Deaktivieren
 set_udf_checks#:#UDF-Checks bearbeiten
-set_delete#:#LÃ¶schen
+set_delete#:#Löschen
 set_assigned_orgus#:#Organisationseinheiten Zuweisen
 set_assigned_studyprograms#:#In Studienprogramm einschreiben
 set_form_please_choose#:#-- BItte wählen --
@@ -37,28 +37,28 @@ set_application#:#Anwenden
 set_specific_settings#:#Einstellungen
 msg_entry_added#:#Eintrag gespeichert
 msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
-msg_confirm_delete#:#MÃ¶chten Sie den Datensatz wirklich lÃ¶schen?
+msg_confirm_delete#:#Möchten Sie den Datensatz wirklich löschen?
 msg_duplicate_successful#:#Erfolgreich kopiert?
 msg_no_users_selected#:#Keine Benutzer ausgewählt
 check_table_title#:#UDF-Checks
-check_add#:#UDF-Check hinzufÃ¼gen
+check_add#:#UDF-Check hinzufügen
 check_name#:#Feld
 check_operator#:#Vergleich
 check_value#:#Wert
 check_actions#:#Aktionen
 check_udf_field_id#:#UDF-Feld
 check_edit#:#Bearbeiten
-check_delete#:#LÃ¶schen
-check_back#:#<< ZurÃ¼ck
+check_delete#:#Löschen
+check_back#:#<< Zurück
 check_cancel#:#Abbrechen
 check_udf_negate_value#:#Negieren
 check_udf_negate_value_info#:#Wenn diese Option gewählt ist, wird die Regel angewendet auf alle Benutzer die NICHT dem untenstehenden Wert entsprechen.
 check_negation_gobal#:#Negation
 check_op_equals#:#Ist gleich
 check_udf_operator#:#Vergleich
-check_op_like#:#Beginnt mit
-crs_placeholder#:#Kurse wÃ¤hlen
-grp_placeholder#:#Gruppen wÃ¤hlen
+check_op_starts_with#:#Beginnt mit
+crs_placeholder#:#Kurse wählen
+grp_placeholder#:#Gruppen wählen
 orgu_placeholder#:#Organisationseinheit
 prg_placeholder#:#Studienprogramm
 tabs_settings#:#Einstellungen
@@ -72,3 +72,18 @@ usr_orgu#:#Mitarbeiter in Organisationseinheit
 common_actions#:#Aktionen
 button_select_user#:#Benutzer auswählen
 userdef_users_assigned#:#%s Benutzer aktualisiert
+msg_confirm_activate_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen aktivieren möchten:
+msg_confirm_deactivate_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen deaktiveren möchten:
+msg_confirm_delete_multiple#:#Sind Sie sicher, dass Sie folgende Einstellungen löschen möchten:
+check_op_contains#:#Enthält
+check_op_ends_with#:#Endet mit
+check_op_not_equals#:#Ist nicht gleich
+check_op_not_starts_with#:#Beginnt nicht mit
+check_op_not_contains#:#Enthält nicht
+check_op_not_ends_with#:#Endet nicht mit
+check_op_is_empty#:#Ist leer
+check_op_not_is_empty#:#Ist nicht leer
+check_op_reg_ex#:#RegEx
+check_op_reg_ex_info#:#Hinweis: RegExp muss in / / geschrieben werden
+check_text_fields#:#Textfelder
+check_select_lists#:#Auswahllisten

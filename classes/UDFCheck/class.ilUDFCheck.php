@@ -1,6 +1,4 @@
 <?php
-require_once('./Services/ActiveRecord/class.ActiveRecord.php');
-require_once('./Services/User/classes/class.ilUserDefinedFields.php');
 
 /**
  * Class ilUDFCheck
@@ -149,7 +147,8 @@ class ilUDFCheck extends ActiveRecord {
 
 
 	public function update() {
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC->user();
 		$this->setOwner($ilUser->getId());
 		$this->setUpdateDate(time());
 		parent::update();
@@ -157,7 +156,8 @@ class ilUDFCheck extends ActiveRecord {
 
 
 	public function create() {
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC->user();
 		$this->setOwner($ilUser->getId());
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());

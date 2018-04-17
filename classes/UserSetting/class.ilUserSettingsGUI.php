@@ -1,7 +1,4 @@
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSettingsFormGUI.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSettingsTableGUI.php');
-require_once('./Services/Utilities/classes/class.ilConfirmationGUI.php');
 
 /**
  * Class ilUserSettingsGUI
@@ -41,16 +38,26 @@ class ilUserSettingsGUI {
 	 * @var HTML_Template_ITX|ilTemplate
 	 */
 	protected $tpl;
+	/**
+	 * @var ilUserDefaultsPlugin
+	 */
+	protected $pl;
+	/**
+	 * @var ilDB
+	 */
+	protected $db;
 
 
 	/**
 	 * @param $parent_gui
 	 */
 	public function __construct($parent_gui) {
-		global $ilCtrl, $tpl;
-		$this->ctrl = $ilCtrl;
-		$this->tpl = $tpl;
+		global $DIC;
+
+		$this->ctrl = $DIC->ctrl();
+		$this->tpl = $DIC->ui()->mainTemplate();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
+		$this->db = $DIC->database();
 		//		$this->pl->updateLanguageFiles();
 		$this->ctrl->saveParameter($this, self::IDENTIFIER);
 	}
@@ -175,16 +182,14 @@ class ilUserSettingsGUI {
 
 
 	public function cancel() {
-		$this->ctrl->setParameter($this, self::IDENTIFIER, null);
+		$this->ctrl->setParameter($this, self::IDENTIFIER, NULL);
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 
 
 	protected function searchContainer() {
-		global $ilDB;
-		/**
-		 * @var ilDB $ilDB
-		 */
+		global $DIC;
+		$ilDB = $DIC->database();
 
 		$term = $ilDB->quote('%' . $_GET['term'] . '%', 'text');
 		$type = $ilDB->quote($_GET['container_type'], 'text');
@@ -225,11 +230,12 @@ class ilUserSettingsGUI {
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 
+
 	protected function activateMultipleConfirm() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
 			// No settings selected
-			$this->ctrl->redirect($this,self::CMD_INDEX);
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		};
 
 		$conf = new ilConfirmationGUI();
@@ -238,21 +244,22 @@ class ilUserSettingsGUI {
 		$conf->setConfirm($this->pl->txt('set_activate'), self::CMD_ACTIVATE_MULTIPLE);
 		$conf->setCancel($this->pl->txt('set_cancel'), self::CMD_INDEX);
 
-		foreach($setting_select as $setting_id) {
+		foreach ($setting_select as $setting_id) {
 			$conf->addItem("setting_select[]", $setting_id, ilUserSetting::find($setting_id)->getTitle());
 		}
 
 		$this->tpl->setContent($conf->getHTML());
 	}
 
+
 	protected function activateMultiple() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
 			// No settings selected
-			$this->ctrl->redirect($this,self::CMD_INDEX);
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		};
 
-		foreach($setting_select as $setting_id) {
+		foreach ($setting_select as $setting_id) {
 			$ilUserSetting = ilUserSetting::find($setting_id);
 			$ilUserSetting->setStatus(ilUserSetting::STATUS_ACTIVE);
 			$ilUserSetting->update();
@@ -261,11 +268,12 @@ class ilUserSettingsGUI {
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 
+
 	protected function deactivateMultipleConfirm() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
 			// No settings selected
-			$this->ctrl->redirect($this,self::CMD_INDEX);
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		};
 
 		$conf = new ilConfirmationGUI();
@@ -274,21 +282,22 @@ class ilUserSettingsGUI {
 		$conf->setConfirm($this->pl->txt('set_deactivate'), self::CMD_DEACTIVATE_MULTIPLE);
 		$conf->setCancel($this->pl->txt('set_cancel'), self::CMD_INDEX);
 
-		foreach($setting_select as $setting_id) {
+		foreach ($setting_select as $setting_id) {
 			$conf->addItem("setting_select[]", $setting_id, ilUserSetting::find($setting_id)->getTitle());
 		}
 
 		$this->tpl->setContent($conf->getHTML());
 	}
 
+
 	protected function deactivateMultiple() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
 			// No settings selected
-			$this->ctrl->redirect($this,self::CMD_INDEX);
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		};
 
-		foreach($setting_select as $setting_id) {
+		foreach ($setting_select as $setting_id) {
 			$ilUserSetting = ilUserSetting::find($setting_id);
 			$ilUserSetting->setStatus(ilUserSetting::STATUS_INACTIVE);
 			$ilUserSetting->update();
@@ -297,11 +306,12 @@ class ilUserSettingsGUI {
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 
+
 	protected function deleteMultipleConfirm() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
 			// No settings selected
-			$this->ctrl->redirect($this,self::CMD_INDEX);
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		};
 
 		$conf = new ilConfirmationGUI();
@@ -310,21 +320,22 @@ class ilUserSettingsGUI {
 		$conf->setConfirm($this->pl->txt('set_delete'), self::CMD_DELETE_MULTIPLE);
 		$conf->setCancel($this->pl->txt('set_cancel'), self::CMD_INDEX);
 
-		foreach($setting_select as $setting_id) {
+		foreach ($setting_select as $setting_id) {
 			$conf->addItem("setting_select[]", $setting_id, ilUserSetting::find($setting_id)->getTitle());
 		}
 
 		$this->tpl->setContent($conf->getHTML());
 	}
 
+
 	protected function deleteMultiple() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
 			// No settings selected
-			$this->ctrl->redirect($this,self::CMD_INDEX);
+			$this->ctrl->redirect($this, self::CMD_INDEX);
 		};
 
-		foreach($setting_select as $setting_id) {
+		foreach ($setting_select as $setting_id) {
 			$ilUserSetting = ilUserSetting::find($setting_id);
 			$ilUserSetting->delete();
 		}

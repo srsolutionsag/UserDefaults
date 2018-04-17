@@ -1,43 +1,42 @@
 <#1>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UDFCheck/class.ilUDFCheck.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
-ilUDFCheck::installDB();
-ilUserSetting::installDB();
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
+ilUDFCheck::updateDB();
+ilUserSetting::updateDB();
 ?>
 <#2>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 ilUserSetting::updateDB();
 ?>
 <#3>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 ilUserSetting::updateDB();
 ?>
 <#4>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 ilUserSetting::updateDB();
 ?>
 <#5>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UDFCheck/class.ilUDFCheck.php');
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 ilUDFCheck::updateDB();
 ?>
 <#6>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 ilUserSetting::updateDB();
 ?>
 <#7>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 ilUserSetting::updateDB();
 ?>
 <#8>
 <?php
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 /**
  * @var $ilUserSetting ilUserSetting
  */

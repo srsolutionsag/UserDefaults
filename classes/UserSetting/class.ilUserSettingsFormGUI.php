@@ -1,8 +1,4 @@
 <?php
-require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.ilContainerMultiSelectInputGUI.php');
-require_once("./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.udfMultiLineInputGUI.php");
-require_once("./Services/Form/classes/class.ilRepositorySelectorInputGUI.php");
 
 /**
  * Class ilUserSettingsFormGUI
@@ -38,18 +34,26 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	 * @var ilUserSetting
 	 */
 	protected $object;
+	/**
+	 * @var ilCtrl
+	 */
+	protected $ctrl;
+	/**
+	 * @var ilUserDefaultsPlugin
+	 */
+	protected $pl;
 
 
 	/**
 	 * @param ilUserSettingsGUI $parent_gui
-	 * @param ilUserSetting $ilUserSetting
+	 * @param ilUserSetting     $ilUserSetting
 	 */
 	public function __construct(ilUserSettingsGUI $parent_gui, ilUserSetting $ilUserSetting) {
-
-		global $ilCtrl;
+		parent::__construct();
+		global $DIC;
 		$this->parent_gui = $parent_gui;
 		$this->object = $ilUserSetting;
-		$this->ctrl = $ilCtrl;
+		$this->ctrl = $DIC->ctrl();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
 		//		$this->pl->updateLanguageFiles();
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
@@ -155,13 +159,12 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	/**
 	 * @param $existing_array
 	 * @param $filter
+	 *
 	 * @return array
 	 */
 	protected static function appendRoles(array &$existing_array, $filter) {
-		global $rbacreview;
-		/**
-		 * @var $rbacreview ilRbacReview
-		 */
+		global $DIC;
+		$rbacreview = $DIC->rbac()->review();
 		foreach ($rbacreview->getRolesByFilter($filter) as $role) {
 
 			if ($role['obj_id'] == 2) {
@@ -178,23 +181,23 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 
 	public function fillForm() {
 		$array = array(
-			self::F_TITLE                        => $this->object->getTitle(),
-			self::F_DESCRIPTION                  => $this->object->getDescription(),
+			self::F_TITLE => $this->object->getTitle(),
+			self::F_DESCRIPTION => $this->object->getDescription(),
 			//			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
-			self::F_ASSIGNED_COURSES             => implode(',', $this->object->getAssignedCourses()),
-			self::F_ASSIGNED_COURSES_DESKTOP     => implode(',', $this->object->getAssignedCoursesDesktop()),
-			self::F_ASSIGNED_GROUPS              => implode(',', $this->object->getAssignedGroupes()),
-			self::F_ASSIGNED_GROUPS_DESKTOP      => implode(',', $this->object->getAssignedGroupesDesktop()),
-			self::F_GLOBAL_ROLE                  => $this->object->getGlobalRole(),
-			self::F_PORTFOLIO_TEMPLATE_ID        => $this->object->getPortfolioTemplateId(),
+			self::F_ASSIGNED_COURSES => implode(',', $this->object->getAssignedCourses()),
+			self::F_ASSIGNED_COURSES_DESKTOP => implode(',', $this->object->getAssignedCoursesDesktop()),
+			self::F_ASSIGNED_GROUPS => implode(',', $this->object->getAssignedGroupes()),
+			self::F_ASSIGNED_GROUPS_DESKTOP => implode(',', $this->object->getAssignedGroupesDesktop()),
+			self::F_GLOBAL_ROLE => $this->object->getGlobalRole(),
+			self::F_PORTFOLIO_TEMPLATE_ID => $this->object->getPortfolioTemplateId(),
 			self::F_PORTFOLIO_ASSIGNED_TO_GROUPS => implode(',', $this->object->getPortfolioAssignedToGroups()),
-			self::F_BLOG_NAME                    => $this->object->getBlogName(),
-			self::F_PORTFOLIO_NAME               => $this->object->getPortfolioName(),
-			self::F_ASSIGNED_ORGUS               => implode(',', $this->object->getAssignedOrgus()),
-			self::F_ASSIGNED_STUDYPROGRAMS       => implode(',', $this->object->getAssignedStudyprograms()),
-			self::F_ON_CREATE                    => $this->object->isOnCreate(),
-			self::F_ON_UPDATE                    => $this->object->isOnUpdate(),
-			self::F_ON_MANUAL                    => $this->object->isOnManual(),
+			self::F_BLOG_NAME => $this->object->getBlogName(),
+			self::F_PORTFOLIO_NAME => $this->object->getPortfolioName(),
+			self::F_ASSIGNED_ORGUS => implode(',', $this->object->getAssignedOrgus()),
+			self::F_ASSIGNED_STUDYPROGRAMS => implode(',', $this->object->getAssignedStudyprograms()),
+			self::F_ON_CREATE => $this->object->isOnCreate(),
+			self::F_ON_UPDATE => $this->object->isOnUpdate(),
+			self::F_ON_MANUAL => $this->object->isOnManual(),
 		);
 		$this->setValuesByArray($array);
 	}
@@ -220,8 +223,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedGroupesDesktop(explode(',', $assigned_groups_desktop[0]));
 		$this->object->setGlobalRole($this->getInput(self::F_GLOBAL_ROLE));
 		$portfolio_template_id = $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID);
-		$this->object->setPortfolioTemplateId($portfolio_template_id
-		                                      > 0 ? $portfolio_template_id : null);
+		$this->object->setPortfolioTemplateId($portfolio_template_id > 0 ? $portfolio_template_id : NULL);
 		$portf_assigned_to_groups = $this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
 		$this->object->setPortfolioAssignedToGroups(explode(',', $portf_assigned_to_groups[0]));
 		$this->object->setBlogName($this->getInput(self::F_BLOG_NAME));

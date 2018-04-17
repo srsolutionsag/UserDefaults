@@ -1,9 +1,5 @@
 <?php
 
-require_once('./Services/Form/classes/class.ilMultiSelectInputGUI.php');
-require_once('./Services/User/classes/class.ilObjUser.php');
-require_once('./Services/UICore/classes/class.ilTemplate.php');
-
 /**
  * Class ilMultiSelectSearchInput2GUI
  *
@@ -35,6 +31,22 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	 * @var ilTemplate
 	 */
 	protected $input_template;
+	/**
+	 * @var ilLanguage
+	 */
+	protected $lng;
+	/**
+	 * @var ilUserDefaultsPlugin
+	 */
+	protected $pl;
+	/**
+	 * @var ilTemplate
+	 */
+	protected $tpl;
+	/**
+	 * @var ilObjUser
+	 */
+	protected $usr;
 
 
 	/**
@@ -42,18 +54,19 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	 * @param string $post_var
 	 */
 	public function __construct($title, $post_var) {
-		global $tpl, $ilUser, $lng;
+		global $DIC;
 		if (substr($post_var, - 2) != '[]') {
 			$post_var = $post_var . '[]';
 		}
 		parent::__construct($title, $post_var);
 
-		$this->lng = $lng;
+		$this->lng = $DIC->language();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-		$tpl->addJavaScript('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.min.js');
-		$tpl->addJavaScript('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2_locale_'
-		                    . $ilUser->getCurrentLanguage() . '.js');
-		$tpl->addCss('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/lib/select2/select2.css');
+		$this->tpl = $DIC->ui()->mainTemplate();
+		$this->usr = $DIC->user();
+		$this->tpl->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2.min.js');
+		$this->tpl->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2_locale_' . $this->usr->getCurrentLanguage() . '.js');
+		$this->tpl->addCss($this->pl->getDirectory() . '/lib/select2/select2.css');
 		$this->setInputTemplate($this->pl->getTemplate('tpl.multiple_select.html'));
 		$this->setWidth('300px');
 	}
@@ -63,10 +76,8 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	 * @return bool
 	 */
 	public function checkInput() {
-		global $lng;
-
 		if ($this->getRequired() && count($this->getValue()) == 0) {
-			$this->setAlert($lng->txt('msg_input_is_required'));
+			$this->setAlert($this->lng->txt('msg_input_is_required'));
 
 			return false;
 		}
@@ -107,46 +118,46 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	 * @return string
 	 */
 	public function render() {
-		$tpl = $this->getInputTemplate();
+		$this->tpl = $this->getInputTemplate();
 		$values = $this->getValueAsJson();
 		$options = $this->getOptions();
 
-		$tpl->setVariable('POST_VAR', $this->getPostVar());
-		$tpl->setVariable('ID', $this->stripLastStringOccurrence($this->getPostVar(), "[]"));
-		$tpl->setVariable('ESCAPED_ID', $this->escapePostVar($this->getPostVar()));
-		$tpl->setVariable('WIDTH', $this->getWidth());
-		$tpl->setVariable('PRELOAD', $values);
-		$tpl->setVariable('HEIGHT', $this->getHeight());
-		$tpl->setVariable('PLACEHOLDER', $this->pl->txt($this->getContainerType() . '_placeholder'));
-		$tpl->setVariable('MINIMUM_INPUT_LENGTH', $this->getMinimumInputLength());
-		$tpl->setVariable('CONTAINER_TYPE', $this->getContainerType());
-		$tpl->setVariable('Class', $this->getCssClass());
+		$this->tpl->setVariable('POST_VAR', $this->getPostVar());
+		$this->tpl->setVariable('ID', $this->stripLastStringOccurrence($this->getPostVar(), "[]"));
+		$this->tpl->setVariable('ESCAPED_ID', $this->escapePostVar($this->getPostVar()));
+		$this->tpl->setVariable('WIDTH', $this->getWidth());
+		$this->tpl->setVariable('PRELOAD', $values);
+		$this->tpl->setVariable('HEIGHT', $this->getHeight());
+		$this->tpl->setVariable('PLACEHOLDER', $this->pl->txt($this->getContainerType() . '_placeholder'));
+		$this->tpl->setVariable('MINIMUM_INPUT_LENGTH', $this->getMinimumInputLength());
+		$this->tpl->setVariable('CONTAINER_TYPE', $this->getContainerType());
+		$this->tpl->setVariable('Class', $this->getCssClass());
 
 		if (isset($this->ajax_link)) {
-			$tpl->setVariable('AJAX_LINK', $this->getAjaxLink());
+			$this->tpl->setVariable('AJAX_LINK', $this->getAjaxLink());
 		}
 
 		if ($this->getDisabled()) {
-			$tpl->setVariable('ALL_DISABLED', 'disabled=\'disabled\'');
+			$this->tpl->setVariable('ALL_DISABLED', 'disabled=\'disabled\'');
 		}
 
 		if ($options) {
 			foreach ($options as $option_value => $option_text) {
-				$tpl->setCurrentBlock('item');
+				$this->tpl->setCurrentBlock('item');
 				if ($this->getDisabled()) {
-					$tpl->setVariable('DISABLED', ' disabled=\'disabled\'');
+					$this->tpl->setVariable('DISABLED', ' disabled=\'disabled\'');
 				}
 				if (in_array($option_value, $values)) {
-					$tpl->setVariable('SELECTED', 'selected');
+					$this->tpl->setVariable('SELECTED', 'selected');
 				}
 
-				$tpl->setVariable('VAL', ilUtil::prepareFormOutput($option_value));
-				$tpl->setVariable('TEXT', $option_text);
-				$tpl->parseCurrentBlock();
+				$this->tpl->setVariable('VAL', ilUtil::prepareFormOutput($option_value));
+				$this->tpl->setVariable('TEXT', $option_text);
+				$this->tpl->parseCurrentBlock();
 			}
 		}
 
-		return $tpl->get();
+		return $this->tpl->get();
 	}
 
 
@@ -304,23 +315,28 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		$this->setValue($val);
 	}
 
+
 	protected function escapePostVar($postVar) {
 		$postVar = $this->stripLastStringOccurrence($postVar, "[]");
 		$postVar = str_replace("[", '\\\\[', $postVar);
 		$postVar = str_replace("]", '\\\\]', $postVar);
+
 		return $postVar;
 	}
 
+
 	/**
-	 * @param $text string
+	 * @param $text   string
 	 * @param $string string
+	 *
 	 * @return string
 	 */
 	private function stripLastStringOccurrence($text, $string) {
 		$pos = strrpos($text, $string);
-		if($pos !== false) {
+		if ($pos !== false) {
 			$text = substr_replace($text, "", $pos, strlen($string));
 		}
+
 		return $text;
 	}
 }

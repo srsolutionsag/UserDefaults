@@ -1,6 +1,6 @@
 <?php
-require_once('./Services/EventHandling/classes/class.ilEventHookPlugin.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
+
+require_once __DIR__ . "/../vendor/autoload.php";
 
 /**
  * Class ilUserDefaultsPlugin
@@ -10,11 +10,12 @@ require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/User
  */
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
+	const PLUGIN_ID = 'usrdef';
+	const PLUGIN_NAME = 'UserDefaults';
 	// Known Components
 	const SERVICES_USER = 'Services/User';
 	const SERVICES_AUTHENTICATION = 'Services/Authentication';
 	// Known Actions
-	const PLUGIN_NAME = 'UserDefaults';
 	const CREATED_1 = 'saveAsNew';
 	const CREATED_2 = 'afterCreate';
 	const UPDATED = 'afterUpdate';
@@ -27,9 +28,9 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @var array
 	 */
 	protected static $mapping = array(
-		self::CREATED_1   => 'on_create',
-		self::CREATED_2   => 'on_create',
-		self::UPDATED     => 'on_update',
+		self::CREATED_1 => 'on_create',
+		self::CREATED_2 => 'on_create',
+		self::UPDATED => 'on_update',
 		self::AFTER_LOGIN => 'on_update',
 	);
 
@@ -47,20 +48,34 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 
 	/**
+	 * @var ilDB
+	 */
+	protected $db;
+
+
+	public function __construct() {
+		parent::__construct();
+
+		global $DIC;
+
+		$this->db = $DIC->database();
+	}
+
+
+	/**
 	 * Handle the event
 	 *
 	 * @param    string        component, e.g. "Services/User"
-	 * @param    event         event, e.g. "afterUpdate"
+	 * @param    string         event, e.g. "afterUpdate"
 	 * @param    array         array of event specific parameters
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
 		$run = false;
-		$ilUser = null;
+		$ilUser = NULL;
 		switch ($a_component) {
 			case self::SERVICES_AUTHENTICATION:
 				switch ($a_event) {
 					case self::AFTER_LOGIN:
-						require_once('./Services/User/classes/class.ilObjUser.php');
 						$user_id = ilObjUser::getUserIdByLogin($a_parameter['username']);
 						$ilUser = new ilObjUser ($user_id);
 
@@ -91,7 +106,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 			 */
 			foreach (ilUserSetting::where(array(
 				'status' => ilUserSetting::STATUS_ACTIVE,
-				$sets    => true,
+				$sets => true,
 			))->get() as $ilUserSetting) {
 				$ilUserSetting->doAssignements($ilUser);
 			}
@@ -116,5 +131,18 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 */
 	public function getPluginName() {
 		return self::PLUGIN_NAME;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	protected function beforeUninstall() {
+		$this->db->dropTable(ilUDFCheck::TABLE_NAME, false);
+		$this->db->dropTable(ilUserSetting::TABLE_NAME, false);
+		//$this->db->dropTable(usrdefUser::TABLE_NAME, false);
+		//$this->db->dropTable(usrdefObj::TABLE_NAME, false);
+
+		return true;
 	}
 }

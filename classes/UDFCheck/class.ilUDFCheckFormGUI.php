@@ -1,5 +1,4 @@
 <?php
-require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 
 /**
  * Class ilUDFCheckFormGUI
@@ -44,12 +43,14 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 	 * @param ilUDFCheck    $ilUDFCheck
 	 */
 	public function __construct(ilUDFCheckGUI $parent_gui, ilUDFCheck $ilUDFCheck) {
-		global $ilCtrl;
+		parent::__construct();
+
+		global $DIC;
 
 		$this->parent_gui = $parent_gui;
 		$this->object = $ilUDFCheck;
 		$this->is_new = $ilUDFCheck->getId() == 0;
-		$this->ctrl = $ilCtrl;
+		$this->ctrl = $DIC->ctrl();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 		$this->initForm();
@@ -104,7 +105,6 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 					$this->addItem($se);
 					break;
 				default:
-					require_once('./Services/User/classes/class.ilCustomUserFieldsHelper.php');
 					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 					if ($plugin instanceof ilUDFDefinitionPlugin) {
 						$select_gui = $plugin->getFormPropertyForDefinition($definition);
@@ -148,7 +148,6 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 		$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 		$definition = ilUDFCheck::getDefinitionForId($udf_type);
-		require_once('./Services/User/classes/class.ilCustomUserFieldsHelper.php');
 		$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 		if ($plugin instanceof ilUDFDefinitionPlugin) {
 			$select_gui = $plugin->getFormPropertyForDefinition($definition);
@@ -177,7 +176,6 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 				case self::F_CHECK_TEXT:
 					$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 					$definition = ilUDFCheck::getDefinitionForId($udf_type);
-					require_once('./Services/User/classes/class.ilCustomUserFieldsHelper.php');
 					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 					if ($plugin instanceof ilUDFDefinitionPlugin) {
 						$select_gui = $plugin->getFormPropertyForDefinition($definition);

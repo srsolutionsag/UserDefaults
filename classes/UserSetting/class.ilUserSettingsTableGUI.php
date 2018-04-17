@@ -1,8 +1,4 @@
 <?php
-require_once('./Services/Table/classes/class.ilTable2GUI.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
-require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UDFCheck/class.ilUDFCheckGUI.php');
 
 /**
  * Class ilUserSettingsTableGUI
@@ -25,23 +21,27 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	 * @var array
 	 */
 	protected $ignored_cols = array();
+	/**
+	 * @var ilUserDefaultsPlugin
+	 */
+	protected $pl;
+	/**
+	 * @var ilToolbarGUI
+	 */
+	protected $toolbar;
 
 
 	/**
 	 * @param ilUserSettingsGUI $parent_obj
-	 * @param string $parent_cmd
-	 * @param string $template_context
+	 * @param string            $parent_cmd
+	 * @param string            $template_context
 	 */
 	public function __construct(ilUserSettingsGUI $parent_obj, $parent_cmd = ilUserSettingsGUI::CMD_INDEX, $template_context = "") {
-		/**
-		 * @var              $ilCtrl ilCtrl
-		 * @var ilToolbarGUI $ilToolbar
-		 */
-		global $ilCtrl, $ilToolbar;
+		global $DIC;
 
-		$this->ctrl = $ilCtrl;
+		$this->ctrl = $DIC->ctrl();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-		$this->toolbar = $ilToolbar;
+		$this->toolbar = $DIC->toolbar();
 
 		$this->setPrefix(self::USR_DEF_CONTENT);
 		$this->setFormName(self::USR_DEF_CONTENT);
@@ -55,10 +55,15 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->setDefaultOrderField('title');
 		$this->setExternalSorting(true);
 		$this->setExternalSegmentation(true);
-		$this->setRowTemplate('Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/templates/default/tpl.settings_row.html');
+		$this->setRowTemplate('tpl.settings_row.html', $this->pl->getDirectory());
 		$this->parseData();
 
-		$this->toolbar->addButton($this->pl->txt('set_add'), $this->ctrl->getLinkTarget($parent_obj, ilUserSettingsGUI::CMD_ADD), '', '', '', '', 'submit emphsubmit');
+		$button = ilLinkButton::getInstance();
+		$button->setCaption($this->pl->txt("set_add"), false);
+		$button->setUrl($this->ctrl->getLinkTarget($parent_obj, ilUserSettingsGUI::CMD_ADD));
+		$button->addCSSClass("submit");
+		$button->addCSSClass("emphsubmit");
+		$this->toolbar->addButtonInstance($button);
 
 		$this->setSelectAllCheckbox('setting_select');
 		$this->addMultiCommand(ilUserSettingsGUI::CMD_ACTIVATE_MULTIPLE_CONFIRM, $this->pl->txt('set_activate'));
@@ -72,7 +77,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$xdglRequestList = ilUserSetting::getCollection();
 		$xdglRequestList->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$xdglRequestList->leftjoin('object_data', 'global_role', 'obj_id', array( 'title' ));
+		$xdglRequestList->leftjoin(usrdefObj::TABLE_NAME, 'global_role', 'obj_id', array( 'title' ));
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {
@@ -91,8 +96,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 		$img_off = ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'));
 
 		foreach ($a_data as $k => $d) {
-			$a_data[$k]['status_image'] = ($d['status']
-			                               == ilUserSetting::STATUS_ACTIVE ? $img_on : $img_off);
+			$a_data[$k]['status_image'] = ($d['status'] == ilUserSetting::STATUS_ACTIVE ? $img_on : $img_off);
 			$a_data[$k]['on_create'] = ($d['on_create'] ? $img_on : $img_off);
 			$a_data[$k]['on_update'] = ($d['on_update'] ? $img_on : $img_off);
 			$a_data[$k]['on_manual'] = ($d['on_manual'] ? $img_on : $img_off);
@@ -167,42 +171,42 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 	 */
 	public function getSelectableColumns() {
 		$cols['status_image'] = array(
-			'txt'        => $this->pl->txt('set_status'),
-			'default'    => true,
-			'width'      => '30px',
+			'txt' => $this->pl->txt('set_status'),
+			'default' => true,
+			'width' => '30px',
 			'sort_field' => 'status',
 		);
 		$cols['title'] = array(
-			'txt'        => $this->pl->txt('set_title'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('set_title'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'title',
 		);
 		$cols['object_data_title'] = array(
-			'txt'        => $this->pl->txt('set_global_role'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('set_global_role'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'object_data_title',
 		);
 		$cols['on_create'] = array(
-			'txt'     => $this->pl->txt('set_on_create'),
+			'txt' => $this->pl->txt('set_on_create'),
 			'default' => true,
-			'width'   => 'auto',
+			'width' => 'auto',
 		);
 		$cols['on_update'] = array(
-			'txt'     => $this->pl->txt('set_on_update'),
+			'txt' => $this->pl->txt('set_on_update'),
 			'default' => true,
-			'width'   => 'auto',
+			'width' => 'auto',
 		);
 		$cols['on_manual'] = array(
-			'txt'     => $this->pl->txt('set_on_manual'),
+			'txt' => $this->pl->txt('set_on_manual'),
 			'default' => true,
-			'width'   => 'auto',
+			'width' => 'auto',
 		);
 		$cols['actions'] = array(
-			'txt'     => $this->pl->txt('set_actions'),
+			'txt' => $this->pl->txt('set_actions'),
 			'default' => true,
-			'width'   => '150px',
+			'width' => '150px',
 		);
 
 		return $cols;
@@ -235,8 +239,8 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param \ilExcel $a_worksheet
-	 * @param int $a_row
-	 * @param array $a_set
+	 * @param int      $a_row
+	 * @param array    $a_set
 	 */
 	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
 		$col = 0;
@@ -254,7 +258,7 @@ class ilUserSettingsTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param object $a_csv
-	 * @param array $a_set
+	 * @param array  $a_set
 	 */
 	protected function fillRowCSV($a_csv, $a_set) {
 		foreach ($a_set as $key => $value) {

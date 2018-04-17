@@ -2,10 +2,6 @@
 
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-include_once("./Services/UIComponent/Explorer2/classes/class.ilExplorerSelectInputGUI.php");
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.udfOrguSelectorExplorerGUI.php');
-include_once("./Services/Taxonomy/classes/class.ilObjTaxonomy.php");
-
 /**
  * Select repository nodes
  *
@@ -17,7 +13,7 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 	/**
 	 * @var callable
 	 */
-	protected $title_modifier = null;
+	protected $title_modifier = NULL;
 	/**
 	 * @var bool
 	 */
@@ -26,6 +22,10 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 	 * @var \ilRepositorySelectorExplorerGUI
 	 */
 	protected $explorer_gui;
+	/**
+	 * @var ilCtrl
+	 */
+	protected $ctrl;
 
 
 	/**
@@ -38,11 +38,12 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 		$this->multi_nodes = $a_multi;
 		$this->postvar = $a_postvar;
 
-		include_once("./Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php");
+		global $DIC;
+		$this->ctrl = $DIC->ctrl();
 		$this->explorer_gui = new udfOrguSelectorExplorerGUI(array(
-			"ilpropertyformgui",
-			"ilformpropertydispatchgui",
-			"ilrepositoryselector2inputgui",
+			ilPropertyFormGUI::class,
+			ilFormPropertyDispatchGUI::class,
+			ilRepositorySelector2InputGUI::class,
 		), $this->getExplHandleCmd(), $this, "selectRepositoryItem", "root_id", "rep_exp_sel_" . $a_postvar);
 
 		$this->explorer_gui->setSelectMode($a_postvar . "_sel", $this->multi_nodes);
@@ -59,12 +60,12 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 	 */
 	function setTitleModifier(callable $a_val) {
 		$this->title_modifier = $a_val;
-		if ($a_val != null) {
+		if ($a_val != NULL) {
 			$this->explorer_gui->setNodeContentModifier(function ($a_node) use ($a_val) {
 				return $a_val($a_node["child"]);
 			});
 		} else {
-			$this->explorer_gui->setNodeContentModifier(null);
+			$this->explorer_gui->setNodeContentModifier(NULL);
 		}
 	}
 
@@ -83,6 +84,7 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 	 * Get title for node id (needs to be overwritten, if explorer is not a tree eplorer
 	 *
 	 * @param
+	 *
 	 * @return
 	 */
 	function getTitleForNodeId($a_id) {
@@ -117,13 +119,13 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 	 * Get HTML
 	 *
 	 * @param
+	 *
 	 * @return
 	 */
 	function getHTML() {
-		global $ilCtrl;
-		$ilCtrl->setParameterByClass("ilformpropertydispatchgui", "postvar", $this->postvar);
+		$this->ctrl->setParameterByClass(ilFormPropertyDispatchGUI::class, "postvar", $this->postvar);
 		$html = parent::getHTML();
-		$ilCtrl->setParameterByClass("ilformpropertydispatchgui", "postvar", $_REQUEST["postvar"]);
+		$this->ctrl->setParameterByClass(ilFormPropertyDispatchGUI::class, "postvar", $_REQUEST["postvar"]);
 
 		return $html;
 	}
@@ -133,10 +135,9 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 	 * Render item
 	 */
 	function render($a_mode = "property_form") {
-		global $ilCtrl;
-		$ilCtrl->setParameterByClass("ilformpropertydispatchgui", "postvar", $this->postvar);
+		$this->ctrl->setParameterByClass(ilFormPropertyDispatchGUI::class, "postvar", $this->postvar);
 
 		return parent::render($a_mode);
-		$ilCtrl->setParameterByClass("ilformpropertydispatchgui", "postvar", $_REQUEST["postvar"]);
+		$ilCtrl->setParameterByClass(ilFormPropertyDispatchGUI::class, "postvar", $_REQUEST["postvar"]);
 	}
 }

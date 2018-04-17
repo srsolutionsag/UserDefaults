@@ -1,5 +1,4 @@
 <?php
-require_once('./Services/ActiveRecord/class.ActiveRecord.php');
 
 /**
  * Class usrdefObj
@@ -9,12 +8,15 @@ require_once('./Services/ActiveRecord/class.ActiveRecord.php');
  */
 class usrdefObj extends ActiveRecord {
 
+	const TABLE_NAME = "object_data";
+
+
 	/**
 	 * @return string
 	 * @deprecated
 	 */
 	static function returnDbTableName() {
-		return 'object_data';
+		return self::TABLE_NAME;
 	}
 
 
@@ -22,7 +24,7 @@ class usrdefObj extends ActiveRecord {
 	 * @return string
 	 */
 	public function getConnectorContainerName() {
-		return 'object_data';
+		return self::TABLE_NAME;
 	}
 
 

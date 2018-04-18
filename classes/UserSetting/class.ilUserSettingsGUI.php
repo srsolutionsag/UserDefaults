@@ -195,7 +195,7 @@ class ilUserSettingsGUI {
 		$type = $ilDB->quote($_GET['container_type'], 'text');
 
 		$query = "SELECT obj.obj_id, obj.title
-				FROM object_data obj
+				FROM " . usrdefObj::TABLE_NAME . " obj
 				 LEFT JOIN object_translation trans ON trans.obj_id = obj.obj_id
 				 JOIN object_reference ref ON obj.obj_id = ref.obj_id
 			 WHERE obj.type = $type AND

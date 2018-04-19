@@ -12,6 +12,7 @@ return array(
     'ilContainer' => $baseDir . '/../../../../../../../Services/Container/classes/class.ilContainer.php',
     'ilContainerMultiSelectInputGUI' => $baseDir . '/classes/Form/class.ilContainerMultiSelectInputGUI.php',
     'ilContainerSorting' => $baseDir . '/../../../../../../../Services/Container/classes/class.ilContainerSorting.php',
+    'ilCourseConstants' => $baseDir . '/../../../../../../../Modules/Course/classes/class.ilCourseConstants.php',
     'ilCourseParticipants' => $baseDir . '/../../../../../../../Modules/Course/classes/class.ilCourseParticipants.php',
     'ilCustomInputGUI' => $baseDir . '/../../../../../../../Services/Form/classes/class.ilCustomInputGUI.php',
     'ilCustomUserFieldsHelper' => $baseDir . '/../../../../../../../Services/User/classes/class.ilCustomUserFieldsHelper.php',

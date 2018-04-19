@@ -2,6 +2,7 @@
   "autoload": {
     "classmap": [
       "./classes/",
+      "../../../../../../../Modules/Course/classes/class.ilCourseConstants.php",
       "../../../../../../../Modules/Course/classes/class.ilCourseParticipants.php",
       "../../../../../../../Modules/Course/classes/class.ilObjCourse.php",
       "../../../../../../../Modules/Exercise/classes/class.ilObjExercise.php",

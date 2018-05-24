@@ -196,7 +196,7 @@ class ilUserSetting extends ActiveRecord {
 			$usr_id = $this->getUsrObject()->getId();
 			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
-			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop())) {
+			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
 				$first = array_shift(array_values($all_refs));
 				ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
@@ -217,9 +217,9 @@ class ilUserSetting extends ActiveRecord {
 			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
-			$part->add($usr_id, IL_GRP_MEMBER);
+			$added = $part->add($usr_id, IL_GRP_MEMBER);
 
-			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop())) {
+			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
 				$first = array_shift(array_values($all_refs));
 				ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');

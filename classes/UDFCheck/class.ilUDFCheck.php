@@ -469,7 +469,7 @@ class ilUDFCheck extends ActiveRecord {
 			 MST: Load all definitions!
 			      it is also possible to make rules on fields without showing at registration
 			*/
-				$return [$def['field_type']] = $def;
+				$return [$def['field_id']] = $def;
 			//}
 		}
 

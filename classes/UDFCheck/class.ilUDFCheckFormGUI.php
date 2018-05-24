@@ -16,6 +16,9 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 	const F_CHECK_RADIO = 'check_radio';
 	const F_CHECK_TEXT = 'check_text';
 	const F_CHECK_SELECT = 'check_select';
+
+	const ILIAS_VERSION_5_2 = 2;
+
 	/**
 	 * @var ilUserSettingsGUI
 	 */
@@ -52,6 +55,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->is_new = $ilUDFCheck->getId() == 0;
 		$this->ctrl = $DIC->ctrl();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
+
 		$this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 		$this->initForm();
 	}
@@ -105,30 +109,33 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 					$this->addItem($se);
 					break;
 				default:
-					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
-					if ($plugin instanceof ilUDFDefinitionPlugin) {
-						$select_gui = $plugin->getFormPropertyForDefinition($definition);
 
-						$check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);
+					//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
+					if($this->isCustomUserFieldsHelperAvailable()) {
+						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+						if ($plugin instanceof ilUDFDefinitionPlugin) {
+							$select_gui = $plugin->getFormPropertyForDefinition($definition);
 
-						$check_radio_text = new ilRadioOption($this->pl->txt("check_text_fields"), self::F_CHECK_TEXT);
-						$check_radio->addOption($check_radio_text);
+							$check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);
 
-						foreach ($select_gui->getColumnDefinition() as $key => $name) {
-							$text_gui = new ilTextInputGUI($name, self::F_CHECK_VALUE_MUL . $key);
-							$check_radio_text->addSubItem($text_gui);
+							$check_radio_text = new ilRadioOption($this->pl->txt("check_text_fields"), self::F_CHECK_TEXT);
+							$check_radio->addOption($check_radio_text);
+
+							foreach ($select_gui->getColumnDefinition() as $key => $name) {
+								$text_gui = new ilTextInputGUI($name, self::F_CHECK_VALUE_MUL . $key);
+								$check_radio_text->addSubItem($text_gui);
+							}
+
+							$check_radio_select = new ilRadioOption($this->pl->txt("check_select_lists"), self::F_CHECK_SELECT);
+							$check_radio->addOption($check_radio_select);
+
+							$select_gui->setPostVar(self::F_CHECK_VALUE);
+							$select_gui->setRequired(false);
+							$check_radio_select->addSubItem($select_gui);
+
+							$this->addItem($check_radio);
 						}
-
-						$check_radio_select = new ilRadioOption($this->pl->txt("check_select_lists"), self::F_CHECK_SELECT);
-						$check_radio->addOption($check_radio_select);
-
-						$select_gui->setPostVar(self::F_CHECK_VALUE);
-						$select_gui->setRequired(false);
-						$check_radio_select->addSubItem($select_gui);
-
-						$this->addItem($check_radio);
 					}
-
 					break;
 			}
 		}
@@ -148,14 +155,20 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 		$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 		$definition = ilUDFCheck::getDefinitionForId($udf_type);
-		$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
-		if ($plugin instanceof ilUDFDefinitionPlugin) {
-			$select_gui = $plugin->getFormPropertyForDefinition($definition);
 
-			$check_values = $this->object->getCheckValues();
-			foreach ($select_gui->getColumnDefinition() as $key => $name) {
-				$array[self::F_CHECK_VALUE_MUL . $key] = $check_values[$key];
+
+		//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
+		if($this->isCustomUserFieldsHelperAvailable()) {
+			$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+			if ($plugin instanceof ilUDFDefinitionPlugin) {
+				$select_gui = $plugin->getFormPropertyForDefinition($definition);
+
+				$check_values = $this->object->getCheckValues();
+				foreach ($select_gui->getColumnDefinition() as $key => $name) {
+					$array[self::F_CHECK_VALUE_MUL . $key] = $check_values[$key];
+				}
 			}
+
 		}
 
 		$this->setValuesByArray($array);
@@ -176,14 +189,18 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 				case self::F_CHECK_TEXT:
 					$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 					$definition = ilUDFCheck::getDefinitionForId($udf_type);
-					$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
-					if ($plugin instanceof ilUDFDefinitionPlugin) {
-						$select_gui = $plugin->getFormPropertyForDefinition($definition);
-						$check_values = [];
-						foreach ($select_gui->getColumnDefinition() as $key => $name) {
-							$check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);
+
+					//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
+					if($this->isCustomUserFieldsHelperAvailable()) {
+						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+						if ($plugin instanceof ilUDFDefinitionPlugin) {
+							$select_gui = $plugin->getFormPropertyForDefinition($definition);
+							$check_values = [];
+							foreach ($select_gui->getColumnDefinition() as $key => $name) {
+								$check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);
+							}
+							$this->object->setCheckValues($check_values);
 						}
-						$this->object->setCheckValues($check_values);
 					}
 					break;
 				case self::F_CHECK_SELECT:
@@ -211,6 +228,24 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 			$this->addCommandButton(ilUDFCheckGUI::CMD_CREATE, $this->pl->txt('form_button_create'));
 		}
 		$this->addCommandButton(ilUDFCheckGUI::CMD_CANCEL, $this->pl->txt('form_button_cancel'));
+	}
+
+
+	/**
+	 * @return bool
+	 *
+	 * CustomUserFieldsHelper is only available for ILIAS 5.3 and above!
+	 */
+	private function isCustomUserFieldsHelperAvailable() {
+		$subversion = (int)explode('.', ILIAS_VERSION_NUMERIC)[1];
+		switch ($subversion) {
+			case self::ILIAS_VERSION_5_2:
+				return false;
+				break;
+			default:
+				return true;
+				break;
+		}
 	}
 }
 

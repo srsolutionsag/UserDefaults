@@ -463,9 +463,14 @@ class ilUDFCheck extends ActiveRecord {
 		 */
 		$ilUserDefinedFields = ilUserDefinedFields::_getInstance();
 		foreach ($ilUserDefinedFields->getDefinitions() as $def) {
-			if ($def['visib_reg'] == 1) {
+			/*
+			 *
+			 if ($def['visib_reg'] == 1) {
+			 MST: Load all definitions!
+			      it is also possible to make rules on fields without showing at registration
+			*/
 				$return [$def['field_type']] = $def;
-			}
+			//}
 		}
 
 		return $return;

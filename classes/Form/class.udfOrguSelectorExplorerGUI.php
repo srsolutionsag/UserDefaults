@@ -1,8 +1,6 @@
 <?php
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-include_once("./Services/UIComponent/Explorer2/classes/class.ilTreeExplorerGUI.php");
-
 /**
  * Class udfOrguSelectorExplorerGUI
  */
@@ -10,12 +8,32 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 
 	protected $type_grps = array();
 	protected $session_materials = array();
-	protected $highlighted_node = null;
+	protected $highlighted_node = NULL;
 	protected $clickable_types = array();
 	/**
 	 * @var callable
 	 */
-	protected $nc_modifier = null;
+	protected $nc_modifier = NULL;
+	/**
+	 * @var ilTree
+	 */
+	protected $tree;
+	/**
+	 * @var ilLanguage
+	 */
+	protected $lng;
+	/**
+	 * @var ilCtrl
+	 */
+	protected $ctrl;
+	/**
+	 * @var ilAccessHandler
+	 */
+	protected $ilAccess;
+	/**
+	 * @var ilObjectDefinition
+	 */
+	protected $objDefinition;
 
 
 	/**
@@ -27,20 +45,25 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * @param string $a_selection_cmd selection command
 	 * @param string $a_selection_par selection parameter
 	 */
-	public function __construct($a_parent_obj, $a_parent_cmd, $a_selection_gui = null, $a_selection_cmd = "selectObject", $a_selection_par = "sel_ref_id", $a_id = "rep_exp_sel") {
-		global $tree, $objDefinition;
+	public function __construct($a_parent_obj, $a_parent_cmd, $a_selection_gui = NULL, $a_selection_cmd = "selectObject", $a_selection_par = "sel_ref_id", $a_id = "rep_exp_sel") {
+		global $DIC;
+		$this->tree = $DIC->repositoryTree();
+		$this->lng = $DIC->language();
+		$this->ctrl = $DIC->ctrl();
+		$this->ilAccess = $DIC->access();
+		$this->objDefinition = $DIC["objDefinition"];
 		if (is_null($a_selection_gui)) {
 			$a_selection_gui = $a_parent_obj;
 		}
 		$this->selection_gui = is_object($a_selection_gui) ? strtolower(get_class($a_selection_gui)) : strtolower($a_selection_gui);
 		$this->selection_cmd = $a_selection_cmd;
 		$this->selection_par = $a_selection_par;
-		parent::__construct($a_id, $a_parent_obj, $a_parent_cmd, $tree);
+		parent::__construct($a_id, $a_parent_obj, $a_parent_cmd, $this->tree);
 		$this->setSkipRootNode(true);
 		$this->setAjax(true);
 		$this->setOrderField("title");
 
-		$this->setTypeWhiteList(array('orgu'));
+		$this->setTypeWhiteList(array( 'orgu' ));
 		$this->setPathOpen(56);
 	}
 
@@ -69,11 +92,10 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Get node content
 	 *
 	 * @param array $a_node node data
+	 *
 	 * @return string content
 	 */
 	function getNodeContent($a_node) {
-		global $lng;
-
 		$c = $this->getNodeContentModifier();
 		if (is_callable($c)) {
 			return $c($a_node);
@@ -82,7 +104,7 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 		$title = $a_node["title"];
 		if ($a_node["child"] == $this->getNodeId($this->getRootNode())) {
 			if ($title == "ILIAS") {
-				$title = $lng->txt("repository");
+				$title = $this->lng->txt("repository");
 			}
 		}
 
@@ -94,6 +116,7 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Get node icon
 	 *
 	 * @param array $a_node node data
+	 *
 	 * @return string icon path
 	 */
 	function getNodeIcon($a_node) {
@@ -107,18 +130,17 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Get node icon alt text
 	 *
 	 * @param array $a_node node data
+	 *
 	 * @return string alt text
 	 */
 	function getNodeIconAlt($a_node) {
-		global $lng;
-
 		if ($a_node["child"] == $this->getNodeId($this->getRootNode())) {
 			$title = $a_node["title"];
 			if ($title == "ILIAS") {
-				$title = $lng->txt("repository");
+				$title = $this->lng->txt("repository");
 			}
 
-			return $lng->txt("icon") . " " . $title;
+			return $this->lng->txt("icon") . " " . $title;
 		}
 
 		return parent::getNodeIconAlt($a_node);
@@ -129,6 +151,7 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Is node highlighted?
 	 *
 	 * @param mixed $a_node node object/array
+	 *
 	 * @return boolean node visible true/false
 	 */
 	function isNodeHighlighted($a_node) {
@@ -141,8 +164,7 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 		}
 
 		if ($a_node["child"] == $_GET["ref_id"]
-		    || ($_GET["ref_id"] == "" && $a_node["child"] == $this->getNodeId($this->getRootNode()))
-		) {
+			|| ($_GET["ref_id"] == "" && $a_node["child"] == $this->getNodeId($this->getRootNode()))) {
 			return true;
 		}
 
@@ -154,15 +176,14 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Get href for node
 	 *
 	 * @param mixed $a_node node object/array
+	 *
 	 * @return string href attribute
 	 */
 	function getNodeHref($a_node) {
-		global $ilCtrl;
-
 		if ($this->select_postvar == "") {
-			$ilCtrl->setParameterByClass($this->selection_gui, $this->selection_par, $a_node["child"]);
-			$link = $ilCtrl->getLinkTargetByClass($this->selection_gui, $this->selection_cmd);
-			$ilCtrl->setParameterByClass($this->selection_gui, $this->selection_par, "");
+			$this->ctrl->setParameterByClass($this->selection_gui, $this->selection_par, $a_node["child"]);
+			$link = $this->ctrl->getLinkTargetByClass($this->selection_gui, $this->selection_cmd);
+			$this->ctrl->setParameterByClass($this->selection_gui, $this->selection_par, "");
 		} else {
 			return "#";
 		}
@@ -175,12 +196,11 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Is node visible
 	 *
 	 * @param array $a_node node data
+	 *
 	 * @return bool visible true/false
 	 */
 	function isNodeVisible($a_node) {
-		global $ilAccess, $tree, $ilSetting;
-
-		if (!$ilAccess->checkAccess('visible', '', $a_node["child"])) {
+		if (!$this->ilAccess->checkAccess('visible', '', $a_node["child"])) {
 			return false;
 		}
 
@@ -191,13 +211,12 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	/**
 	 * Sort childs
 	 *
-	 * @param array $a_childs       array of child nodes
-	 * @param int $a_parent_node_id parent node id
+	 * @param array $a_childs         array of child nodes
+	 * @param int   $a_parent_node_id parent node id
+	 *
 	 * @return array array of childs nodes
 	 */
 	function sortChilds($a_childs, $a_parent_node_id) {
-		global $objDefinition;
-
 		$parent_obj_id = ilObject::_lookupObjId($a_parent_node_id);
 
 		if ($parent_obj_id > 0) {
@@ -208,12 +227,12 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 		}
 
 		if (empty($this->type_grps[$parent_type])) {
-			$this->type_grps[$parent_type] = $objDefinition->getGroupedRepositoryObjectTypes($parent_type);
+			$this->type_grps[$parent_type] = $this->objDefinition->getGroupedRepositoryObjectTypes($parent_type);
 		}
 		$group = array();
 
 		foreach ($a_childs as $child) {
-			$g = $objDefinition->getGroupOfObj($child["type"]);
+			$g = $this->objDefinition->getGroupOfObj($child["type"]);
 			if ($g == "") {
 				$g = $child["type"];
 			}
@@ -230,8 +249,6 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 		foreach ($this->type_grps[$parent_type] as $t => $g) {
 			if (is_array($group[$t])) {
 				// do we have to sort this group??
-				include_once("./Services/Container/classes/class.ilContainer.php");
-				include_once("./Services/Container/classes/class.ilContainerSorting.php");
 				$sort = ilContainerSorting::_getInstance($parent_obj_id);
 				$group = $sort->sortItems($group);
 
@@ -253,12 +270,11 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Get childs of node
 	 *
 	 * @param int $a_parent_node_id node id
+	 *
 	 * @return array childs array
 	 */
 	function getChildsOfNode($a_parent_node_id) {
-		global $ilAccess;
-
-		if (!$ilAccess->checkAccess("read", "", $a_parent_node_id)) {
+		if (!$this->ilAccess->checkAccess("read", "", $a_parent_node_id)) {
 			return array();
 		}
 
@@ -270,16 +286,15 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Is node clickable?
 	 *
 	 * @param array $a_node node data
+	 *
 	 * @return boolean node clickable true/false
 	 */
 	function isNodeClickable($a_node) {
-		global $ilAccess;
-
 		if ($this->select_postvar != "") {
 			// return false; #14354
 		}
 
-		if (!$ilAccess->checkAccess("read", "", $a_node["child"])) {
+		if (!$this->ilAccess->checkAccess("read", "", $a_node["child"])) {
 			return false;
 		}
 
@@ -362,6 +377,7 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 	 * Is node selectable?
 	 *
 	 * @param mixed $a_node node object/array
+	 *
 	 * @return boolean node selectable true/false
 	 */
 	protected function isNodeSelectable($a_node) {

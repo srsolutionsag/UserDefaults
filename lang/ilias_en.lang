@@ -56,7 +56,7 @@ check_udf_negate_value_info#:#If you check this option, this rule is applied to 
 check_negation_gobal#:#Negation
 check_op_equals#:#Equals
 check_udf_operator#:#Operator
-check_op_like#:#Starts with
+check_op_starts_with#:#Starts with
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
 orgu_placeholder#:#Organisational unit
@@ -72,3 +72,18 @@ usr_orgu#:#Member of Org Unit
 common_actions#:#Actions
 button_select_user#:#Select Users
 userdef_users_assigned#:#%s Users updated
+msg_confirm_activate_multiple#:#Are you sure you want to activate the following settings:
+msg_confirm_deactivate_multiple#:#Are you sure you want to deactivate the following settings:
+msg_confirm_delete_multiple#:#Are you sure you want to delete the following settings:
+check_op_contains#:#Contains
+check_op_ends_with#:#Ends with
+check_op_not_equals#:#Not equals
+check_op_not_starts_with#:#Not starts with
+check_op_not_contains#:#Not contains
+check_op_not_ends_with#:#Not ends with
+check_op_is_empty#:#Is empty
+check_op_not_is_empty#:#Not is empty
+check_op_reg_ex#:#RegEx
+check_op_reg_ex_info#:#Hint: RegExp must be written in / /
+check_text_fields#:#Text fields
+check_select_lists#:#Select lists

@@ -1,6 +1,4 @@
 <?php
-require_once('class.usrdefUser.php');
-require_once('class.usrdefUserTableGUI.php');
 
 /**
  * Class usrdefUserGUI
@@ -19,22 +17,36 @@ class usrdefUserGUI {
 	const CMD_CONFIRM = 'confirmSelectUser';
 	const IDENTIFIER = 'usr_id';
 	const SESSION_ID = 'multi_assign_user_id';
+	/**
+	 * @var ilCtrl
+	 */
+	protected $ilCtrl;
+	/**
+	 * @var ilTemplate
+	 */
+	protected $tpl;
+	/**
+	 * @var ilLanguage
+	 */
+	protected $lng;
+	/**
+	 * @var ilTabsGUI
+	 */
+	protected $tabs;
+	/**
+	 * @var ilUserDefaultsPlugin
+	 */
+	protected $pl;
 
 
 	public function __construct() {
-		global $ilCtrl, $tpl, $lng, $ilTabs;
-		/**
-		 * @var $ilCtrl    ilCtrl
-		 * @var $tpl       ilTemplate
-		 * @var $lng       ilLanguage
-		 * @var $ilTabs    ilTabsGUI
-		 */
-		$this->ilCtrl = $ilCtrl;
-		$this->tpl = $tpl;
-		$this->lng = $lng;
-		$this->tabs = $ilTabs;
+		global $DIC;
+		$this->ilCtrl = $DIC->ctrl();
+		$this->tpl = $DIC->ui()->mainTemplate();
+		$this->lng = $DIC->language();
+		$this->tabs = $DIC->tabs();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-		ilSession::set(self::SESSION_ID, null);
+		ilSession::set(self::SESSION_ID, NULL);
 	}
 
 
@@ -42,7 +54,7 @@ class usrdefUserGUI {
 		$next = $this->ilCtrl->getNextClass();
 		$cmd = $this->ilCtrl->getCmd(self::CMD_INDEX);
 		switch ($next) {
-			case 'ilpropertyformgui':
+			case strtolower(ilPropertyFormGUI::class):
 				$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 				switch ($_GET['exp_cont']) {
 					case 'il_expl2_jstree_cont_rep_exp_sel_repo':
@@ -108,9 +120,8 @@ class usrdefUserGUI {
 		/**
 		 * @var $ilUserSetting ilUserSetting
 		 */
-		require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
 		foreach (ilUserSetting::where(array(
-			'status'    => ilUserSetting::STATUS_ACTIVE,
+			'status' => ilUserSetting::STATUS_ACTIVE,
 			'on_manual' => true,
 		))->get() as $ilUserSetting) {
 			$ilUserSetting->doMultipleAssignements($user_objects);

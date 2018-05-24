@@ -1,15 +1,15 @@
 <?php
 
-require_once('class.usrdefObj.php');
-
 /**
  * Class usrdefUser
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  * @version 2.0.6
+ * @deprecated
  */
 class usrdefUser extends ActiveRecord {
 
+	const TABLE_NAME = "usr_data";
 	/**
 	 * @var usrdefObj
 	 */
@@ -21,7 +21,7 @@ class usrdefUser extends ActiveRecord {
 	 * @deprecated
 	 */
 	static function returnDbTableName() {
-		return 'usr_data';
+		return self::TABLE_NAME;
 	}
 
 
@@ -29,25 +29,22 @@ class usrdefUser extends ActiveRecord {
 	 * @return string
 	 */
 	public function getConnectorContainerName() {
-		return 'usr_data';
+		return self::TABLE_NAME;
 	}
 
 
 	public function create() {
-		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to '
-		                      . __METHOD__ . ' objects');
+		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
 
 	public function update() {
-		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to '
-		                      . __METHOD__ . ' objects');
+		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
 
 	public function delete() {
-		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to '
-		                      . __METHOD__ . ' objects');
+		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
 

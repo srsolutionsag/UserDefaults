@@ -1,6 +1,4 @@
 <?php
-require_once('class.ilUDFCheckTableGUI.php');
-require_once('class.ilUDFCheckFormGUI.php');
 
 /**
  * Class ilUDFCheckGUI
@@ -37,12 +35,10 @@ class ilUDFCheckGUI {
 	 * @param $parent_gui
 	 */
 	public function __construct($parent_gui) {
-		global $ilCtrl, $tpl;
-		/**
-		 * @var $ilCtrl ilCtrl
-		 */
-		$this->ctrl = $ilCtrl;
-		$this->tpl = $tpl;
+		global $DIC;
+
+		$this->ctrl = $DIC->ctrl();
+		$this->tpl = $DIC->ui()->mainTemplate();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
 		$this->ctrl->saveParameter($this, self::IDENTIFIER);
 		$this->ctrl->setParameter($this, ilUserSettingsGUI::IDENTIFIER, $_GET[ilUserSettingsGUI::IDENTIFIER]);
@@ -131,7 +127,7 @@ class ilUDFCheckGUI {
 
 
 	public function cancel() {
-		$this->ctrl->setParameter($this, self::IDENTIFIER, null);
+		$this->ctrl->setParameter($this, self::IDENTIFIER, NULL);
 		$this->ctrl->redirect($this, self::CMD_INDEX);
 	}
 }

@@ -1,9 +1,6 @@
 <?php
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once('./Services/Form/classes/class.ilCustomInputGUI.php');
-require_once('./Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php');
-
 /**
  * Class ilMultipleTextInput3GUI
  *
@@ -26,7 +23,7 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 	 */
 	protected $disableOldFields;
 	/**
-	 * @var ilDustmanPlugin
+	 * @var ilUserDefaultsPlugin
 	 */
 	protected $pl;
 

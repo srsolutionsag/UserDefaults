@@ -1,13 +1,12 @@
 <?php
-require_once("./Services/Table/interfaces/interface.ilTableFilterItem.php");
-require_once("./Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php");
-require_once("./Services/UIComponent/Toolbar/interfaces/interface.ilToolbarItem.php");
+
 /**
  * Class ctrlmmMultiLineInputGUI
  *
  * @author Michael Herren <mh@studer-raimann.ch>
  */
 class udfMultiLineInputGUI extends ilFormPropertyGUI {
+
 	const HOOK_IS_LINE_REMOVABLE = "hook_is_line_removable";
 	const HOOK_IS_INPUT_DISABLED = "hook_is_disabled";
 	const HOOK_BEFORE_INPUT_RENDER = "hook_before_render";
@@ -68,6 +67,20 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 	 */
 	protected $show_info = false;
 	/**
+	 * @var ilLanguage
+	 */
+	protected $lng;
+	/**
+	 * @var ilTemplate
+	 */
+	protected $tpl;
+	/**
+	 * @var ilUserDefaultsPlugin
+	 */
+	protected $pl;
+
+
+	/**
 	 * Constructor
 	 *
 	 * @param    string $a_title   Title
@@ -75,10 +88,16 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 	 */
 	public function __construct($a_title = "", $a_postvar = "") {
 		parent::__construct($a_title, $a_postvar);
+		global $DIC;
+		$this->lng = $DIC->language();
+		$this->tpl = $DIC->ui()->mainTemplate();
+		$this->pl = ilUserDefaultsPlugin::getInstance();
 		$this->setType("line_select");
 		$this->setMulti(true);
 		$this->initCSSandJS();
 	}
+
+
 	/**
 	 * @return string
 	 */
@@ -86,14 +105,19 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 		if (isset($this->hooks[$key])) {
 			return $this->hooks[$key];
 		}
+
 		return false;
 	}
+
+
 	/**
 	 * @param array $options
 	 */
 	public function addHook($key, $options) {
 		$this->hooks[$key] = $options;
 	}
+
+
 	/**
 	 * @param $key
 	 *
@@ -102,10 +126,14 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 	public function removeHook($key) {
 		if (isset($this->hooks[$key])) {
 			unset($this->hooks[$key]);
+
 			return true;
 		}
+
 		return false;
 	}
+
+
 	/**
 	 * @param       $input
 	 * @param array $options
@@ -115,30 +143,40 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 		$this->input_options[$input->getPostVar()] = $options;
 		$this->counter ++;
 	}
+
+
 	/**
 	 * @return mixed
 	 */
 	public function getTemplateDir() {
 		return $this->template_dir;
 	}
+
+
 	/**
 	 * @param mixed $template_dir
 	 */
 	public function setTemplateDir($template_dir) {
 		$this->template_dir = $template_dir;
 	}
+
+
 	/**
 	 * @return boolean
 	 */
 	public function isShowLabel() {
 		return $this->show_label;
 	}
+
+
 	/**
 	 * @param boolean $show_label
 	 */
 	public function setShowLabel($show_label) {
 		$this->show_label = $show_label;
 	}
+
+
 	/**
 	 * Get Options.
 	 *
@@ -147,12 +185,16 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 	public function getInputs() {
 		return $this->inputs;
 	}
+
+
 	/**
 	 * @param bool $a_multi
 	 */
 	public function setMulti($a_multi, $a_sortable = false, $a_addremove = true) {
 		$this->multi = $a_multi;
 	}
+
+
 	/**
 	 * Set Value.
 	 *
@@ -168,6 +210,8 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 		}
 		$this->value = $a_value;
 	}
+
+
 	/**
 	 * Get Value.
 	 *
@@ -178,8 +222,11 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 		foreach ($this->inputs as $key => $item) {
 			$out[$key] = $item->getValue();
 		}
+
 		return $out;
 	}
+
+
 	/**
 	 * Set value by array
 	 *
@@ -193,13 +240,14 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 			$this->setValue($data);
 		}
 	}
+
+
 	/**
 	 * Check input, strip slashes etc. set alert, if input is not ok.
 	 *
 	 * @return    boolean        Input ok, true/false
 	 */
 	public function checkInput() {
-		global $lng;
 		$valid = true;
 		// escape data
 		$out_array = array();
@@ -221,11 +269,15 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 			}
 		}
 		if (!$valid) {
-			$this->setAlert($lng->txt("msg_input_is_required"));
+			$this->setAlert($this->lng->txt("msg_input_is_required"));
+
 			return false;
 		}
+
 		return $valid;
 	}
+
+
 	/**
 	 * @param            $key
 	 * @param            $value
@@ -238,12 +290,16 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 			$this->cust_attr[$key] = $value;
 		}
 	}
+
+
 	/**
 	 * @return array
 	 */
 	public function getCustomAttributes() {
 		return (array)$this->cust_attr;
 	}
+
+
 	/**
 	 * @param                   $iterator_id
 	 * @param ilFormPropertyGUI $input
@@ -257,6 +313,8 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 			return $this->getPostVar() . '[' . $input->getPostVar() . ']';
 		}
 	}
+
+
 	/**
 	 * Render item
 	 *
@@ -267,7 +325,7 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 	 */
 	public function render($iterator_id = 0, $clean_render = false) {
 		$first_label = true;
-		$tpl = new ilTemplate("tpl.multi_line_input.html", true, true, 'Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults');
+		$tpl = $this->pl->getTemplate("tpl.multi_line_input.html");
 		$class = 'multi_input_line';
 		$this->addCustomAttribute('class', $class, true);
 		foreach ($this->getCustomAttributes() as $key => $value) {
@@ -358,7 +416,6 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 			$tpl->parseCurrentBlock();
 		}
 		if ($this->getMulti() && !$this->getDisabled()) {
-			require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.udfGlyphGUI.php');
 			$image_plus = udfGlyphGUI::get('plus');
 			$show_remove = true;
 			$is_removeable_hook = $this->getHook(self::HOOK_IS_LINE_REMOVABLE);
@@ -378,13 +435,17 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 				$tpl->parseCurrentBlock();
 			}
 		}
+
 		return $tpl->get();
 	}
+
+
 	public function initCSSandJS() {
-		global $tpl;
-		$tpl->addCss('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/templates/default/multi_line_input.css');
-		$tpl->addJavascript('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/templates/default/multi_line_input.js');
+		$this->tpl->addCss($this->pl->getDirectory() . '/templates/default/multi_line_input.css');
+		$this->tpl->addJavascript($this->pl->getDirectory() . '/templates/default/multi_line_input.js');
 	}
+
+
 	/**
 	 * Insert property html
 	 *
@@ -411,38 +472,52 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 		$a_tpl->setVariable("PROP_GENERIC", $output);
 		$a_tpl->parseCurrentBlock();
 	}
+
+
 	/**
 	 * Get HTML for table filter
 	 */
 	public function getTableFilterHTML() {
 		$html = $this->render();
+
 		return $html;
 	}
+
+
 	/**
 	 * Get HTML for toolbar
 	 */
 	public function getToolbarHTML() {
 		$html = $this->render("toolbar");
+
 		return $html;
 	}
+
+
 	/**
 	 * @return boolean
 	 */
 	public function isPositionMovable() {
 		return $this->position_movable;
 	}
+
+
 	/**
 	 * @param boolean $position_movable
 	 */
 	public function setPositionMovable($position_movable) {
 		$this->position_movable = $position_movable;
 	}
+
+
 	/**
 	 * @return boolean
 	 */
 	public function isShowLabelOnce() {
 		return $this->show_label_once;
 	}
+
+
 	/**
 	 * @param boolean $show_label_once
 	 */
@@ -450,12 +525,16 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 		$this->setShowLabel(false);
 		$this->show_label_once = $show_label_once;
 	}
+
+
 	/**
 	 * @return boolean
 	 */
 	public function isShowInfo() {
 		return $this->show_info;
 	}
+
+
 	/**
 	 * @param boolean $show_info
 	 */

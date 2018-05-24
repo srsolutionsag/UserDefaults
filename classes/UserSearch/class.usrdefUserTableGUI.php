@@ -2,12 +2,6 @@
 
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once('class.usrdefUser.php');
-require_once('./Services/Table/classes/class.ilTable2GUI.php');
-require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
-require_once('./Services/Form/classes/class.ilMultiSelectInputGUI.php');
-require_once('./Services/Form/classes/class.ilTextInputGUI.php');
-
 /**
  * Class usrdefUserTableGUI
  *
@@ -21,25 +15,26 @@ class usrdefUserTableGUI extends ilTable2GUI {
 
 	const TABLE_ID = 'tbl_mutla_users';
 	/**
-	 * @var ilMultiAssignPlugin
+	 * @var ilUserDefaultsPlugin
 	 */
 	protected $pl;
 	/**
 	 * @var array
 	 */
 	protected $filter = array();
+	/**
+	 * @var ilCtrl
+	 */
+	protected $ctrl;
 
 
 	/**
 	 * @param usrdefUserGUI $a_parent_obj
-	 * @param string $a_parent_cmd
+	 * @param string        $a_parent_cmd
 	 */
 	public function __construct(usrdefUserGUI $a_parent_obj, $a_parent_cmd) {
-		/**
-		 * @var $ilCtrl ilCtrl
-		 */
-		global $ilCtrl;
-		$this->ctrl = $ilCtrl;
+		global $DIC;
+		$this->ctrl = $DIC->ctrl();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
 		$this->setId(self::TABLE_ID);
 		$this->setPrefix(self::TABLE_ID);
@@ -47,7 +42,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		$this->ctrl->saveParameter($a_parent_obj, $this->getNavParameter());
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 		$this->parent_obj = $a_parent_obj;
-		$this->setRowTemplate('tpl.row.html', 'Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/');
+		$this->setRowTemplate('tpl.row.html', $this->pl->getDirectory());
 		$this->setEnableNumInfo(true);
 		$this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
 		$this->addColumns();
@@ -131,8 +126,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 
 		// CRS and GRPS
 		if ($this->filter['repo'] && is_array($this->filter['repo'])
-		    && count($this->filter['repo']) > 0
-		) {
+			&& count($this->filter['repo']) > 0) {
 			$value = $this->filter['repo'];
 			$obj_ids = array();
 			foreach ($value as $ref_id) {
@@ -148,8 +142,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 
 		// ORGU
 		if ($this->filter['orgu'] && is_array($this->filter['orgu'])
-		    && count($this->filter['orgu']) > 0
-		) {
+			&& count($this->filter['orgu']) > 0) {
 			$value = $this->filter['orgu'];
 			$role_ids = array();
 			$roles = ilObjOrgUnitTree::_getInstance()->getEmployeeRoles();
@@ -180,33 +173,33 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	 */
 	public function getSelectableColumns() {
 		$cols['firstname'] = array(
-			'txt'        => $this->pl->txt('usr_firstname'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('usr_firstname'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'firstname',
 		);
 		$cols['lastname'] = array(
-			'txt'        => $this->pl->txt('usr_lastname'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('usr_lastname'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'lastname',
 		);
 		$cols['email'] = array(
-			'txt'        => $this->pl->txt('usr_email'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('usr_email'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'email',
 		);
 		$cols['login'] = array(
-			'txt'        => $this->pl->txt('usr_login'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('usr_login'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'login',
 		);
 		$cols['actions'] = array(
-			'txt'     => $this->pl->txt('common_actions'),
+			'txt' => $this->pl->txt('common_actions'),
 			'default' => true,
-			'width'   => '50px',
+			'width' => '50px',
 		);
 
 		return $cols;
@@ -216,7 +209,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	private function addColumns() {
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
-				$sort = null;
+				$sort = NULL;
 				if ($v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
@@ -281,7 +274,6 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	 */
 	public function getCrsSelectorGUI() {
 		// courses
-		require_once('./Services/Form/classes/class.ilRepositorySelector2InputGUI.php');
 		$crs = new ilRepositorySelector2InputGUI($this->pl->txt('usr_repo'), 'repo', true);
 		$crs->getExplorerGUI()->setSelectableTypes(array( 'grp', 'crs' ));
 
@@ -293,8 +285,6 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	 * @return \usrdefOrguSelectorInputGUI
 	 */
 	public function getOrguSelectorGUI() {
-		require_once('./Services/Form/classes/class.ilRepositorySelector2InputGUI.php');
-		require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.usrdefOrguSelectorInputGUI.php');
 		$crs = new usrdefOrguSelectorInputGUI($this->pl->txt('usr_orgu'), 'orgu', true);
 		$crs->getExplorerGUI()->setRootId(56);
 		$crs->getExplorerGUI()->setClickableTypes(array( 'orgu' ));

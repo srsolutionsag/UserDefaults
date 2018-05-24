@@ -1,16 +1,4 @@
 <?php
-require_once('./Services/ActiveRecord/class.ActiveRecord.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UDFCheck/class.ilUDFCheck.php');
-require_once('./Modules/Portfolio/classes/class.ilObjPortfolio.php');
-require_once('./Modules/Portfolio/classes/class.ilObjPortfolioTemplate.php');
-require_once('./Modules/Course/classes/class.ilObjCourse.php');
-require_once('./Modules/Group/classes/class.ilObjGroup.php');
-require_once('./Modules/Course/classes/class.ilCourseParticipants.php');
-require_once('./Modules/Group/classes/class.ilGroupParticipants.php');
-require_once('./Modules/Portfolio/classes/class.ilPortfolioAccessHandler.php');
-require_once('./Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php');
-require_once('./Services/Skill/classes/class.ilPersonalSkill.php');
-require_once('./Modules/OrgUnit/classes/class.ilObjOrgUnit.php');
 
 /**
  * Class ilUserSetting
@@ -120,13 +108,13 @@ class ilUserSetting extends ActiveRecord {
 
 
 	public function update() {
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC->user();
 		$this->setOwner($ilUser->getId());
 		$this->setUpdateDate(time());
 		if (!$this->hasChecks() AND $this->getStatus() == self::STATUS_ACTIVE) {
 			ilUtil::sendInfo(ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'));
-			ilUtil::sendInfo(ilUserDefaultsPlugin::getInstance()
-			                                     ->txt('msg_activation_failed'), true);
+			ilUtil::sendInfo(ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'), true);
 			$this->setStatus(self::STATUS_INACTIVE);
 		}
 		parent::update();
@@ -134,7 +122,8 @@ class ilUserSetting extends ActiveRecord {
 
 
 	public function create() {
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC->user();
 		$this->setOwner($ilUser->getId());
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());
@@ -183,10 +172,9 @@ class ilUserSetting extends ActiveRecord {
 
 
 	protected function assignToGlobalRole() {
-		/**
-		 * @var $rbacadmin ilRbacAdmin
-		 */
-		global $rbacadmin;
+		global $DIC;
+		$rbacadmin = $DIC->rbac()->admin();
+
 		$global_role = $this->getGlobalRole();
 		if (ilObject2::_lookupType($global_role) == 'role') {
 			$rbacadmin->assignUser($global_role, $this->getUsrObject()->getId());
@@ -259,6 +247,10 @@ class ilUserSetting extends ActiveRecord {
 	 * @throws ilException
 	 */
 	protected function generatePortfolio() {
+		global $DIC;
+		$ilUser = $DIC->user();
+		$ilSetting = $DIC["ilSetting"];
+
 		if ($this->getPortfolioTemplateId() < 10) {
 			return false;
 		}
@@ -271,13 +263,11 @@ class ilUserSetting extends ActiveRecord {
 			}
 		}
 
-		global $ilUser, $ilSetting;
 		$backup_user = $ilUser;
 		$ilUser = $this->getUsrObject();
 
 		$prtt_id = $this->getPortfolioTemplateId();
-		$recipe = null;
-		include_once "Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php";
+		$recipe = NULL;
 		foreach (ilPortfolioTemplatePage::getAllPortfolioPages($prtt_id) as $page) {
 			switch ($page["type"]) {
 				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
@@ -299,7 +289,6 @@ class ilUserSetting extends ActiveRecord {
 		$source = new ilObjPortfolioTemplate($prtt_id, false);
 
 		// create portfolio
-		include_once "Modules/Portfolio/classes/class.ilObjPortfolio.php";
 		$target = new ilObjPortfolio();
 		$target->setTitle($this->getReplacesPortfolioTitle());
 		$target->setOnline(true);
@@ -314,15 +303,11 @@ class ilUserSetting extends ActiveRecord {
 		$exc_ref_id = (int)$_REQUEST["exc_id"];
 		$ass_id = (int)$_REQUEST["ass_id"];
 
-		include_once "Modules/Exercise/classes/class.ilObjExercise.php";
-		include_once "Modules/Exercise/classes/class.ilExAssignment.php";
 		$exc = new ilObjExercise($exc_ref_id);
 		$ass = new ilExAssignment($ass_id);
 		if ($ass->getExerciseId() == $exc->getId()
-		    && $ass->getType() == ilExAssignment::TYPE_PORTFOLIO
-		) {
+			&& $ass->getType() == ilExAssignment::TYPE_PORTFOLIO) {
 			// #16205
-			include_once "Modules/Exercise/classes/class.ilExSubmission.php";
 			$sub = new ilExSubmission($ass, $ilUser->getId());
 			$sub->addResourceObject($target_id);
 		}
@@ -518,7 +503,7 @@ class ilUserSetting extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $portfolio_template_id = null;
+	protected $portfolio_template_id = NULL;
 	/**
 	 * @var array
 	 *
@@ -611,7 +596,7 @@ class ilUserSetting extends ActiveRecord {
 				break;
 		}
 
-		return null;
+		return NULL;
 	}
 
 
@@ -640,7 +625,7 @@ class ilUserSetting extends ActiveRecord {
 				break;
 		}
 
-		return null;
+		return NULL;
 	}
 
 
@@ -1048,8 +1033,6 @@ class ilUserSetting extends ActiveRecord {
 
 			$usr_id = $this->getUsrObject()->getId();
 
-			// require stuff here in order not to break it in ILIAS <= 5.0.x
-			require_once("./Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
 			$prg_ref_ids = ilObjStudyProgramme::_getAllReferences($studyProgramObjId);
 			$prg_ref_id = array_shift(array_values($prg_ref_ids));
 			if (!$prg_ref_id) {
@@ -1081,6 +1064,7 @@ class ilUserSetting extends ActiveRecord {
 	/**
 	 * @param $original_udf_check ilUdfCheck
 	 * @param $parent             ilUserSetting
+	 *
 	 * @return mixed
 	 */
 	protected function copyUdfCheck($original_udf_check, $parent) {

@@ -1,7 +1,5 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/Form/class.ilMultiSelectSearchInput2GUI.php');
-
 /**
  * Class ilContainerMultiSelectInputGUI
  *
@@ -14,6 +12,10 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 	 * @var string
 	 */
 	protected $container_type = 'crs';
+	/**
+	 * @var ilDB
+	 */
+	protected $db;
 
 
 	/**
@@ -22,6 +24,8 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 	 * @param        $post_var
 	 */
 	public function __construct($container_type, $title, $post_var) {
+		global $DIC;
+		$this->db = $DIC->database();
 		$this->setContainerType($container_type);
 		parent::__construct($title, $post_var);
 	}
@@ -31,12 +35,11 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 	 * @return string
 	 */
 	protected function getValueAsJson() {
-		global $ilDB;
-		$query = "SELECT obj_id, title FROM object_data WHERE type = '" . $this->getContainerType() . "' AND "
-		         . $ilDB->in("obj_id", $this->getValue(), false, "integer");
-		$res = $ilDB->query($query);
+		$query = "SELECT obj_id, title FROM " . usrdefObj::TABLE_NAME . " WHERE type = '" . $this->getContainerType() . "' AND "
+			. $this->db->in("obj_id", $this->getValue(), false, "integer");
+		$res = $this->db->query($query);
 		$result = array();
-		while ($row = $ilDB->fetchAssoc($res)) {
+		while ($row = $this->db->fetchAssoc($res)) {
 			// If the value is blacklisted we don't return it.
 			$result[] = array( "id" => $row['obj_id'], "text" => $row['title'] );
 		}

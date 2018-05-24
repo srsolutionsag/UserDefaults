@@ -1,8 +1,4 @@
 <?php
-require_once('./Services/Table/classes/class.ilTable2GUI.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UserSetting/class.ilUserSetting.php');
-require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
-require_once('./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/classes/UDFCheck/class.ilUDFCheckGUI.php');
 
 /**
  * Class ilUDFCheckTableGUI
@@ -25,23 +21,37 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	 * @var array
 	 */
 	protected $ignored_cols = array();
+	/**
+	 * @var ilUserDefaultsPlugin
+	 */
+	protected $pl;
+	/**
+	 * @var ilToolbarGUI
+	 */
+	protected $toolbar;
+	/**
+	 * @var \ILIAS\UI\Renderer
+	 */
+	protected $renderer;
+	/**
+	 * @var \ILIAS\UI\Component\Image\Factory
+	 */
+	protected $image;
 
 
 	/**
 	 * @param ilUDFCheckGUI $parent_obj
-	 * @param string $parent_cmd
-	 * @param string $template_context
+	 * @param string        $parent_cmd
+	 * @param string        $template_context
 	 */
 	public function __construct(ilUDFCheckGUI $parent_obj, $parent_cmd = ilUDFCheckGUI::CMD_INDEX, $template_context = "") {
-		/**
-		 * @var              $ilCtrl ilCtrl
-		 * @var ilToolbarGUI $ilToolbar
-		 */
-		global $ilCtrl, $ilToolbar;
+		global $DIC;
 
-		$this->ctrl = $ilCtrl;
+		$this->ctrl = $DIC->ctrl();
 		$this->pl = ilUserDefaultsPlugin::getInstance();
-		$this->toolbar = $ilToolbar;
+		$this->toolbar = $DIC->toolbar();
+		$this->renderer = $DIC->ui()->renderer();
+		$this->image = $DIC->ui()->factory()->image();
 
 		$this->setPrefix(self::USR_DEF_CONTENT);
 		$this->setFormName(self::USR_DEF_CONTENT);
@@ -55,11 +65,20 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 		$this->setDefaultOrderField('title');
 		$this->setExternalSorting(true);
 		$this->setExternalSegmentation(true);
-		$this->setRowTemplate('Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/templates/default/tpl.settings_row.html');
+		$this->setRowTemplate('tpl.settings_row.html', $this->pl->getDirectory());
 		$this->parseData();
 
-		$this->toolbar->addButton($this->pl->txt('check_back'), $this->ctrl->getLinkTargetByClass('ilUserSettingsGUI', ilUserSettingsGUI::CMD_INDEX));
-		$this->toolbar->addButton($this->pl->txt('check_add'), $this->ctrl->getLinkTarget($parent_obj, ilUDFCheckGUI::CMD_ADD), '', '', '', '', 'submit emphsubmit');
+		$button = ilLinkButton::getInstance();
+		$button->setCaption($this->pl->txt("check_back"), false);
+		$button->setUrl($this->ctrl->getLinkTargetByClass(ilUserSettingsGUI::class, ilUserSettingsGUI::CMD_INDEX));
+		$this->toolbar->addButtonInstance($button);
+
+		$button = ilLinkButton::getInstance();
+		$button->setCaption($this->pl->txt("check_add"), false);
+		$button->setUrl($this->ctrl->getLinkTarget($parent_obj, ilUDFCheckGUI::CMD_ADD));
+		$button->addCSSClass("submit");
+		$button->addCSSClass("emphsubmit");
+		$this->toolbar->addButtonInstance($button);
 	}
 
 
@@ -90,10 +109,7 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	 * @param array $a_set
 	 */
 	public function fillRow($a_set) {
-		global $DIC;
-
-		$a_set["operator"] = $this->pl->txt("check_op_"
-		                                    . ilUDFCheck::$operator_text_keys[$a_set["operator"]]);
+		$a_set["operator"] = $this->pl->txt("check_op_" . ilUDFCheck::$operator_text_keys[$a_set["operator"]]);
 
 		$ilUDFCheckGUI = new ilUDFCheckGUI($this->parent_obj);
 		foreach ($this->getSelectableColumns() as $k => $v) {
@@ -119,8 +135,7 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 					case "negated":
 						$this->tpl->setCurrentBlock('td');
 						if ($a_set[$k]) {
-							$r = $DIC->ui()->renderer()->render($DIC->ui()->factory()->image()
-							                                        ->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
+							$r = $this->renderer->render($this->image->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
 							$this->tpl->setVariable('VALUE', $r);
 						} else {
 							$this->tpl->setVariable('VALUE', '&nbsp;');
@@ -158,32 +173,32 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 	 */
 	public function getSelectableColumns() {
 		$cols['udf_definition_field_name'] = array(
-			'txt'        => $this->pl->txt('check_name'),
-			'default'    => true,
-			'width'      => '40%',
+			'txt' => $this->pl->txt('check_name'),
+			'default' => true,
+			'width' => '40%',
 			'sort_field' => 'udf_definition_field_name',
 		);
 		$cols['check_value'] = array(
-			'txt'        => $this->pl->txt('check_value'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('check_value'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'check_value',
 		);
 		$cols['negated'] = array(
-			'txt'        => $this->pl->txt('check_negation_gobal'),
-			'default'    => true,
-			'width'      => 'auto',
+			'txt' => $this->pl->txt('check_negation_gobal'),
+			'default' => true,
+			'width' => 'auto',
 			'sort_field' => 'check_negated',
 		);
 		$cols['operator'] = array(
-			'txt'     => $this->pl->txt('check_operator'),
+			'txt' => $this->pl->txt('check_operator'),
 			'default' => true,
-			'width'   => 'auto',
+			'width' => 'auto',
 		);
 		$cols['actions'] = array(
-			'txt'     => $this->pl->txt('check_actions'),
+			'txt' => $this->pl->txt('check_actions'),
 			'default' => true,
-			'width'   => '150px',
+			'width' => '150px',
 		);
 
 		return $cols;
@@ -214,8 +229,8 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param \ilExcel $a_worksheet
-	 * @param int $a_row
-	 * @param array $a_set
+	 * @param int      $a_row
+	 * @param array    $a_set
 	 */
 	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
 		$col = 0;
@@ -233,7 +248,7 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param object $a_csv
-	 * @param array $a_set
+	 * @param array  $a_set
 	 */
 	protected function fillRowCSV($a_csv, $a_set) {
 		foreach ($a_set as $key => $value) {
@@ -273,4 +288,3 @@ class ilUDFCheckTableGUI extends ilTable2GUI {
 		return $this->ignored_cols;
 	}
 }
-

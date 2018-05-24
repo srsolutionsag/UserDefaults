@@ -11,6 +11,9 @@ git clone https://github.com/studer-raimann/UserDefaults.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.
 
+ILIAS 5.2
+For ILIAS 5.2 use the following old Commit-ID c54be501647dbeb45c5b194d188619a80042bb5c
+
 ### ILIAS Plugin SLA
 
 Wir lieben und leben die Philosophie von Open Soure Software! Die meisten unserer Entwicklungen, welche wir im Kundenauftrag oder in Eigenleistung entwickeln, stellen wir öffentlich allen Interessierten kostenlos unter https://github.com/studer-raimann zur Verfügung.

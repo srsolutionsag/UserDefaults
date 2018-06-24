@@ -28,7 +28,8 @@ set_form_please_choose#:#-- Please choose --
 set_duplicate#:#Duplicate
 set_input_to_desktop#:#MISSING
 set_assigned_courses_desktop#:#Assign to course and put course on desktop
-set_assigned_groups_desktop#:#Assign to groupt and put group on desktop
+set_unsubscribe_courses#:#Unsubscribe from the above courses if the condition does not match
+set_assigned_groups_desktop#:#Assign to group and put group on desktop
 set_assigned_groups#:#Assign to Group
 set_on_create#:#On Create
 set_on_update#:#On Update

@@ -155,6 +155,11 @@ class ilUserSetting extends ActiveRecord {
 			$this->assignToGlobalRole();
 			$this->assignOrgunits();
 			$this->assignStudyprograms();
+		} else {
+			if($this->isUnsubscribeCoursesDesktop()) {
+				$this->unsubscribeCourses();
+			}
+
 		}
 	}
 
@@ -203,6 +208,27 @@ class ilUserSetting extends ActiveRecord {
 			}
 		}
 	}
+
+	protected function unsubscribeCourses() {
+		if(!$this->isUnsubscribeCoursesDesktop()) {
+			return false;
+		}
+
+		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
+		if (count($courses) == 0) {
+			return false;
+		}
+
+		foreach ($courses as $crs_obj_id) {
+			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != 'crs') {
+				continue;
+			}
+			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
+			$usr_id = $this->getUsrObject()->getId();
+			$added = $part->deleteParticipants(array($usr_id));
+		}
+	}
+
 
 
 	protected function assignGroups() {
@@ -489,6 +515,14 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	protected $assigned_courses_desktop = array();
 	/**
+	 * @var bool
+	 *
+	 * @con_has_field true
+	 * @con_fieldtype integer
+	 * @con_length    1
+	 */
+	protected $unsubscribe_courses_desktop = false;
+	/**
 	 * @var int
 	 *
 	 * @con_has_field  true
@@ -738,6 +772,22 @@ class ilUserSetting extends ActiveRecord {
 	 */
 	public function setAssignedCoursesDesktop($assigned_courses_desktop) {
 		$this->assigned_courses_desktop = $assigned_courses_desktop;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isUnsubscribeCoursesDesktop(): bool {
+		return $this->unsubscribe_courses_desktop;
+	}
+
+
+	/**
+	 * @param bool $unsubscribe_courses_desktop
+	 */
+	public function setUnsubscribeCoursesDesktop(bool $unsubscribe_courses_desktop) {
+		$this->unsubscribe_courses_desktop = $unsubscribe_courses_desktop;
 	}
 
 

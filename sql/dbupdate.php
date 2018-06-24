@@ -47,3 +47,8 @@ foreach (ilUserSetting::get() as $ilUserSetting) {
 	$ilUserSetting->update();
 }
 ?>
+<#9>
+<?php
+require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
+ilUserSetting::updateDB();
+?>

@@ -13,6 +13,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_GLOBAL_ROLE = 'global_role';
 	const F_ASSIGNED_COURSES = 'assigned_courses';
 	const F_ASSIGNED_COURSES_DESKTOP = 'assigned_courses_desktop';
+	const F_UNSUBSCRIBE_COURSES = 'unsubscribe_courses';
 	const F_ASSIGNED_GROUPS = 'assigned_groups';
 	const F_ASSIGNED_GROUPS_DESKTOP = 'assigned_groups_desktop';
 	const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
@@ -113,6 +114,9 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
+		$ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_COURSES), self::F_UNSUBSCRIBE_COURSES);
+		$this->addItem($ilCheckboxInputGUI);
+
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS), self::F_ASSIGNED_GROUPS);
 		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, ilUserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
@@ -186,6 +190,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 			//			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
 			self::F_ASSIGNED_COURSES => implode(',', $this->object->getAssignedCourses()),
 			self::F_ASSIGNED_COURSES_DESKTOP => implode(',', $this->object->getAssignedCoursesDesktop()),
+			self::F_UNSUBSCRIBE_COURSES => $this->object->isUnsubscribeCoursesDesktop(),
 			self::F_ASSIGNED_GROUPS => implode(',', $this->object->getAssignedGroupes()),
 			self::F_ASSIGNED_GROUPS_DESKTOP => implode(',', $this->object->getAssignedGroupesDesktop()),
 			self::F_GLOBAL_ROLE => $this->object->getGlobalRole(),
@@ -217,6 +222,7 @@ class ilUserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedCourses(explode(',', $assigned_courses[0]));
 		$assigned_courses_desktop = $this->getInput(self::F_ASSIGNED_COURSES_DESKTOP);
 		$this->object->setAssignedCoursesDesktop(explode(',', $assigned_courses_desktop[0]));
+		$this->object->setUnsubscribeCoursesDesktop($this->getInput(self::F_UNSUBSCRIBE_COURSES));
 		$assigned_groups = $this->getInput(self::F_ASSIGNED_GROUPS);
 		$this->object->setAssignedGroupes(explode(',', $assigned_groups[0]));
 		$assigned_groups_desktop = $this->getInput(self::F_ASSIGNED_GROUPS_DESKTOP);

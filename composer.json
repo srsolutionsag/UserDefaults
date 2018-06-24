@@ -38,8 +38,6 @@
       "../../../../../../../Services/UIComponent/Explorer2/classes/class.ilTreeExplorerGUI.php",
       "../../../../../../../Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php",
       "../../../../../../../Services/UIComponent/Toolbar/interfaces/interface.ilToolbarItem.php",
-      "../../../../../../../Services/UICore/classes/class.ilTemplate.php",
-      "../../../../../../../Services/User/classes/class.ilCustomUserFieldsHelper.php",
       "../../../../../../../Services/User/classes/class.ilObjUser.php",
       "../../../../../../../Services/User/classes/class.ilUserDefinedFields.php",
       "../../../../../../../Services/Utilities/classes/class.ilConfirmationGUI.php"

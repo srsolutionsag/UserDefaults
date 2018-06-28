@@ -53,6 +53,9 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	protected $db;
 
 
+	/**
+	 *
+	 */
 	public function __construct() {
 		parent::__construct();
 

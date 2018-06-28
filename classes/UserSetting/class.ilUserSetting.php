@@ -25,6 +25,23 @@ class ilUserSetting extends ActiveRecord {
 
 
 	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
 	 * @param $key
 	 *
 	 * @return string
@@ -80,14 +97,6 @@ class ilUserSetting extends ActiveRecord {
 
 
 	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
 	 * @param       $primary_key
 	 * @param array $add_constructor_args
 	 *
@@ -135,14 +144,6 @@ class ilUserSetting extends ActiveRecord {
 
 
 	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
 	 * @param ilObjUser $ilObjUser
 	 */
 	public function doAssignements(ilObjUser $ilObjUser) {
@@ -156,10 +157,9 @@ class ilUserSetting extends ActiveRecord {
 			$this->assignOrgunits();
 			$this->assignStudyprograms();
 		} else {
-			if($this->isUnsubscribeCoursesDesktop()) {
+			if ($this->isUnsubscribeCoursesDesktop()) {
 				$this->unsubscribeCourses();
 			}
-
 		}
 	}
 
@@ -209,8 +209,9 @@ class ilUserSetting extends ActiveRecord {
 		}
 	}
 
+
 	protected function unsubscribeCourses() {
-		if(!$this->isUnsubscribeCoursesDesktop()) {
+		if (!$this->isUnsubscribeCoursesDesktop()) {
 			return false;
 		}
 
@@ -225,10 +226,9 @@ class ilUserSetting extends ActiveRecord {
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
-			$added = $part->deleteParticipants(array($usr_id));
+			$added = $part->deleteParticipants(array( $usr_id ));
 		}
 	}
-
 
 
 	protected function assignGroups() {
@@ -778,7 +778,7 @@ class ilUserSetting extends ActiveRecord {
 	/**
 	 * @return bool
 	 */
-	public function isUnsubscribeCoursesDesktop(): bool {
+	public function isUnsubscribeCoursesDesktop() {
 		return $this->unsubscribe_courses_desktop;
 	}
 
@@ -786,7 +786,7 @@ class ilUserSetting extends ActiveRecord {
 	/**
 	 * @param bool $unsubscribe_courses_desktop
 	 */
-	public function setUnsubscribeCoursesDesktop(bool $unsubscribe_courses_desktop) {
+	public function setUnsubscribeCoursesDesktop($unsubscribe_courses_desktop) {
 		$this->unsubscribe_courses_desktop = $unsubscribe_courses_desktop;
 	}
 

@@ -42,6 +42,25 @@ class ilUDFCheck extends ActiveRecord {
 		self::OP_NOT_IS_EMPTY => 'not_is_empty',
 		self::OP_REG_EX => 'reg_ex',
 	);
+
+
+	/**
+	 * @return string
+	 */
+	public function getConnectorContainerName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
 	/**
 	 * @var int
 	 *
@@ -128,14 +147,6 @@ class ilUDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @return string
-	 */
-	static function returnDbTableName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
 	 * @param       $primary_key
 	 * @param array $add_constructor_args
 	 *
@@ -162,14 +173,6 @@ class ilUDFCheck extends ActiveRecord {
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());
 		parent::create();
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getConnectorContainerName() {
-		return self::TABLE_NAME;
 	}
 
 
@@ -469,7 +472,7 @@ class ilUDFCheck extends ActiveRecord {
 			 MST: Load all definitions!
 			      it is also possible to make rules on fields without showing at registration
 			*/
-				$return [$def['field_id']] = $def;
+			$return [$def['field_id']] = $def;
 			//}
 		}
 
@@ -554,4 +557,3 @@ class ilUDFCheck extends ActiveRecord {
 		$this->negated = $negated;
 	}
 }
-

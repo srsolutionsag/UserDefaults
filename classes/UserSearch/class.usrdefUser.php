@@ -10,19 +10,6 @@
 class usrdefUser extends ActiveRecord {
 
 	const TABLE_NAME = "usr_data";
-	/**
-	 * @var usrdefObj
-	 */
-	protected $usrdefObj;
-
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	static function returnDbTableName() {
-		return self::TABLE_NAME;
-	}
 
 
 	/**
@@ -31,6 +18,21 @@ class usrdefUser extends ActiveRecord {
 	public function getConnectorContainerName() {
 		return self::TABLE_NAME;
 	}
+
+
+	/**
+	 * @return string
+	 * @deprecated
+	 */
+	public static function returnDbTableName() {
+		return self::TABLE_NAME;
+	}
+
+
+	/**
+	 * @var usrdefObj
+	 */
+	protected $usrdefObj;
 
 
 	public function create() {

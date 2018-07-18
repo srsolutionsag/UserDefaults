@@ -14,17 +14,17 @@ class usrdefObj extends ActiveRecord {
 
 	/**
 	 * @return string
-	 * @deprecated
 	 */
-	static function returnDbTableName() {
+	public function getConnectorContainerName() {
 		return self::TABLE_NAME;
 	}
 
 
 	/**
 	 * @return string
+	 * @deprecated
 	 */
-	public function getConnectorContainerName() {
+	public static function returnDbTableName() {
 		return self::TABLE_NAME;
 	}
 
@@ -97,4 +97,132 @@ class usrdefObj extends ActiveRecord {
 	 * @con_length    50
 	 */
 	protected $import_id;
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getObjId() {
+		return $this->obj_id;
+	}
+
+
+	/**
+	 * @param mixed $obj_id
+	 */
+	public function setObjId($obj_id) {
+		$this->obj_id = $obj_id;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getType() {
+		return $this->type;
+	}
+
+
+	/**
+	 * @param mixed $type
+	 */
+	public function setType($type) {
+		$this->type = $type;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+
+	/**
+	 * @param mixed $title
+	 */
+	public function setTitle($title) {
+		$this->title = $title;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getDescription() {
+		return $this->description;
+	}
+
+
+	/**
+	 * @param mixed $description
+	 */
+	public function setDescription($description) {
+		$this->description = $description;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getOwner() {
+		return $this->owner;
+	}
+
+
+	/**
+	 * @param mixed $owner
+	 */
+	public function setOwner($owner) {
+		$this->owner = $owner;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getCreateDate() {
+		return $this->create_date;
+	}
+
+
+	/**
+	 * @param mixed $create_date
+	 */
+	public function setCreateDate($create_date) {
+		$this->create_date = $create_date;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getLastUpdate() {
+		return $this->last_update;
+	}
+
+
+	/**
+	 * @param mixed $last_update
+	 */
+	public function setLastUpdate($last_update) {
+		$this->last_update = $last_update;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getImportId() {
+		return $this->import_id;
+	}
+
+
+	/**
+	 * @param mixed $import_id
+	 */
+	public function setImportId($import_id) {
+		$this->import_id = $import_id;
+	}
 }

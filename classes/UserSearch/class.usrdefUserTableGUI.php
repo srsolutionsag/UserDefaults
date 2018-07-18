@@ -53,6 +53,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		$this->setDisableFilterHiding(true);
 		$this->parseData();
 		$this->addCommandButton('selectUser', $this->pl->txt('button_select_user'));
+
+		$this->setSelectAllCheckbox('id');
 	}
 
 
@@ -263,10 +265,10 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	/**
 	 * @param bool $a_in_determination
 	 */
-	public function resetOffset($a_in_determination = false) {
+	/*public function resetOffset($a_in_determination = false) {
 		parent::resetOffset(false);
 		$this->ctrl->setParameter($this->parent_obj, $this->getNavParameter(), $this->nav_value);
-	}
+	}*/
 
 
 	/**

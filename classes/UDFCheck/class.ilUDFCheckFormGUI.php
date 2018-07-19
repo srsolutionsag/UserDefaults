@@ -113,7 +113,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 					//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
 					if($this->isCustomUserFieldsHelperAvailable()) {
-						if(class_exists('ilCustomUserFieldsHelper')) {
+						if(file_exists("./Services/User/classes/class.ilCustomUserFieldsHelper.php") {
 							require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";
 							$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 							if ($plugin instanceof ilUDFDefinitionPlugin) {
@@ -164,7 +164,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 		//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
 		if($this->isCustomUserFieldsHelperAvailable()) {
-			if(class_exists('ilCustomUserFieldsHelper')) {
+			if(file_exists("./Services/User/classes/class.ilCustomUserFieldsHelper.php")) {
 				require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";
 				$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 				if ($plugin instanceof ilUDFDefinitionPlugin) {
@@ -200,7 +200,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 					//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
 					if($this->isCustomUserFieldsHelperAvailable()) {
-						if(class_exists('ilCustomUserFieldsHelper')) {
+						if(file_exists("./Services/User/classes/class.ilCustomUserFieldsHelper.php")) {
 							require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";
 							$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 							if ($plugin instanceof ilUDFDefinitionPlugin) {

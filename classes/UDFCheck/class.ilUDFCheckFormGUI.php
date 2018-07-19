@@ -98,6 +98,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 
 			$udf_type = ilUDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
 			$definition = ilUDFCheck::getDefinitionForId($udf_type);
+
 			switch ($udf_type) {
 				case ilUDFCheck::TYPE_TEXT:
 					$se = new ilTextInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
@@ -113,9 +114,10 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 					//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
 					if($this->isCustomUserFieldsHelperAvailable()) {
 						if(class_exists('ilCustomUserFieldsHelper')) {
-							require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.phpServices/User/classes/class.ilCustomUserFieldsHelper.php";
+							require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";
 							$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 							if ($plugin instanceof ilUDFDefinitionPlugin) {
+
 								$select_gui = $plugin->getFormPropertyForDefinition($definition);
 
 								$check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);
@@ -199,7 +201,7 @@ class ilUDFCheckFormGUI extends ilPropertyFormGUI {
 					//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
 					if($this->isCustomUserFieldsHelperAvailable()) {
 						if(class_exists('ilCustomUserFieldsHelper')) {
-							require_once "../../../../../../../Services/User/classes/class.ilCustomUserFieldsHelper.php";
+							require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";
 							$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
 							if ($plugin instanceof ilUDFDefinitionPlugin) {
 								$select_gui = $plugin->getFormPropertyForDefinition($definition);

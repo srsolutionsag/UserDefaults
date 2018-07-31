@@ -310,7 +310,7 @@ class ilUserSetting extends ActiveRecord {
 			}
 		}
 
-		// $recipe["skills"] = (array)$form->getInput("skill_ids");
+		$recipe["skills"] = array();
 
 		$source = new ilObjPortfolioTemplate($prtt_id, false);
 

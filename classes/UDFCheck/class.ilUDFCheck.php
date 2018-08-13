@@ -392,53 +392,59 @@ class ilUDFCheck extends ActiveRecord {
 		foreach ($check_values as $key => $check_value) {
 			$value = $values[$key];
 
-			switch ($this->getOperator()) {
-				case self::OP_EQUALS:
-					$valid = ($value === $check_value);
-					break;
+			if (!empty($value) && !empty($check_value)) {
+				switch ($this->getOperator()) {
+					case self::OP_EQUALS:
+						$valid = ($value === $check_value);
+						break;
 
-				case self::OP_NOT_EQUALS:
-					$valid = ($value !== $check_value);
-					break;
+					case self::OP_NOT_EQUALS:
+						$valid = ($value !== $check_value);
+						break;
 
-				case self::OP_STARTS_WITH:
-					$valid = (strpos($value, $check_value) === 0);
-					break;
+					case self::OP_STARTS_WITH:
+						$valid = (strpos($value, $check_value) === 0);
+						break;
 
-				case self::OP_NOT_STARTS_WITH:
-					$valid = (strpos($value, $check_value) !== 0);
-					break;
+					case self::OP_NOT_STARTS_WITH:
+						$valid = (strpos($value, $check_value) !== 0);
+						break;
 
-				case self::OP_ENDS_WITH:
-					$valid = (strrpos($value, $check_value) === (strlen($value) - strlen($check_value)));
-					break;
+					case self::OP_ENDS_WITH:
+						$valid = (strrpos($value, $check_value) === (strlen($value) - strlen($check_value)));
+						break;
 
-				case self::OP_NOT_ENDS_WITH:
-					$valid = (strrpos($value, $check_value) !== (strlen($value) - strlen($check_value)));
-					break;
+					case self::OP_NOT_ENDS_WITH:
+						$valid = (strrpos($value, $check_value) !== (strlen($value) - strlen($check_value)));
+						break;
 
-				case self::OP_CONTAINS:
-					$valid = (strpos($value, $check_value) !== false);
-					break;
+					case self::OP_CONTAINS:
+						$valid = (strpos($value, $check_value) !== false);
+						break;
 
-				case self::OP_NOT_CONTAINS:
-					$valid = (strpos($value, $check_value) === false);
-					break;
+					case self::OP_NOT_CONTAINS:
+						$valid = (strpos($value, $check_value) === false);
+						break;
 
-				case self::OP_IS_EMPTY:
-					$valid = empty($value);
-					break;
+					case self::OP_IS_EMPTY:
+						$valid = empty($value);
+						break;
 
-				case self::OP_NOT_IS_EMPTY:
-					$valid = (!empty($value));
-					break;
+					case self::OP_NOT_IS_EMPTY:
+						$valid = (!empty($value));
+						break;
 
-				case self::OP_REG_EX:
-					$valid = (preg_match($check_value, $value) === 1);
-					break;
+					case self::OP_REG_EX:
+						// Fix RegExp
+						if ($check_value[0] !== "/" && $check_value[strlen($check_value) - 1] !== "/") {
+							$check_value = "/$check_value/";
+						}
+						$valid = (preg_match($check_value, $value) === 1);
+						break;
 
-				default:
-					return false;
+					default:
+						return false;
+				}
 			}
 
 			if (!$valid) {

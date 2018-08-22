@@ -149,7 +149,6 @@ class ilUserSetting extends ActiveRecord {
 	public function doAssignements(ilObjUser $ilObjUser) {
 		$this->setUsrObject($ilObjUser);
 		if ($this->isValid()) {
-			$this->addSkills();
 			$this->generatePortfolio();
 			$this->assignCourses();
 			$this->assignGroups();
@@ -310,20 +309,20 @@ class ilUserSetting extends ActiveRecord {
 			}
 		}
 
-		$recipe["skills"] = array();
+        $recipe["skills"] = $this->getAllPortfolioSkills();
 
-		$source = new ilObjPortfolioTemplate($prtt_id, false);
+        $source = new ilObjPortfolioTemplate($prtt_id, false);
 
-		// create portfolio
-		$target = new ilObjPortfolio();
-		$target->setTitle($this->getReplacesPortfolioTitle());
-		$target->setOnline(true);
-		$target->setDefault(true);
-		$target->setOwner($ilUser->getId());
-		$target->create();
-		$target_id = $target->getId();
+        // create portfolio
+        $target = new ilObjPortfolio();
+        $target->setTitle($this->getReplacesPortfolioTitle());
+        $target->setOnline(true);
+        $target->setDefault(true);
+        $target->setOwner($ilUser->getId());
+        $target->create();
+        $target_id = $target->getId();
 
-		$source->clonePagesAndSettings($source, $target, $recipe);
+        $source->clonePagesAndSettings($source, $target, $recipe);
 
 		// link portfolio to exercise assignment
 		$exc_ref_id = (int)$_REQUEST["exc_id"];
@@ -371,11 +370,22 @@ class ilUserSetting extends ActiveRecord {
 	 * @return array
 	 */
 	protected function addSkills() {
+        $user = $this->getUsrObject();
+        $skill_ids = $this->getAllPortfolioSkills();
+
+		foreach ($skill_ids as $skill_id) {
+			ilPersonalSkill::addPersonalSkill($user->getId(), $skill_id);
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getAllPortfolioSkills() {
 		$user = $this->getUsrObject();
 		$pskills = array_keys(ilPersonalSkill::getSelectedUserSkills($user->getId()));
 		$skill_ids = array();
-		$recipe = array();
-		foreach (ilPortfolioTemplatePage::getAllPages('prtt', $this->getPortfolioTemplateId()) as $page) {
+		foreach (ilPortfolioTemplatePage::getAllPortfolioPages($this->getPortfolioTemplateId()) as $page) {
 			switch ($page['type']) {
 				case ilPortfolioTemplatePage::TYPE_PAGE:
 					$source_page = new ilPortfolioTemplatePage($page['id']);
@@ -399,9 +409,7 @@ class ilUserSetting extends ActiveRecord {
 			}
 		}
 
-		foreach ($skill_ids as $skill_id) {
-			ilPersonalSkill::addPersonalSkill($user->getId(), $skill_id);
-		}
+		return $skill_ids;
 	}
 
 

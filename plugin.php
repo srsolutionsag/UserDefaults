@@ -1,6 +1,6 @@
 <?php
 $id = 'usrdef';
-$version = '1.3.5';
+$version = '1.3.6';
 $ilias_min_version = '5.2';
 $ilias_max_version = '5.3.999';
 $responsible = 'studer + raimann ag';

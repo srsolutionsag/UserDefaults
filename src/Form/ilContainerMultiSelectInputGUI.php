@@ -2,6 +2,8 @@
 
 namespace srag\Plugins\UserDefaults\Form;
 
+use ilUserDefaultsPlugin;
+use srag\CustomInputGUIs\MultiSelectSearchInput2GUI;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 
 /**
@@ -9,11 +11,12 @@ use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
  *
  * @package srag\Plugins\UserDefaults\Form
  *
- * @author Oskar Truffer <ot@studer-raimann.ch>
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Oskar Truffer <ot@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
  */
-class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
+class ilContainerMultiSelectInputGUI extends MultiSelectSearchInput2GUI {
 
+	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	/**
 	 * @var string
 	 */
@@ -27,6 +30,7 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 	 */
 	public function __construct($container_type, $title, $post_var) {
 		$this->setContainerType($container_type);
+		$this->setPlaceholder(self::plugin()->translate($this->getContainerType() . '_placeholder'));
 		parent::__construct($title, $post_var);
 	}
 

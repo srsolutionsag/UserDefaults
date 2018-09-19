@@ -48,24 +48,24 @@
     },
     {
         "name": "srag/custominputguis",
-        "version": "0.1.2",
-        "version_normalized": "0.1.2.0",
+        "version": "0.2.0",
+        "version_normalized": "0.2.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/studer-raimann/CustomInputGUIs.git",
-            "reference": "edfedd7f3371caf8b50f9b2adfe8bebec0f55cb9"
+            "reference": "15effe4582dfe4ecd6ceb7b4395df47d2d7de42e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/studer-raimann/CustomInputGUIs/zipball/edfedd7f3371caf8b50f9b2adfe8bebec0f55cb9",
-            "reference": "edfedd7f3371caf8b50f9b2adfe8bebec0f55cb9",
+            "url": "https://api.github.com/repos/studer-raimann/CustomInputGUIs/zipball/15effe4582dfe4ecd6ceb7b4395df47d2d7de42e",
+            "reference": "15effe4582dfe4ecd6ceb7b4395df47d2d7de42e",
             "shasum": ""
         },
         "require": {
             "php": ">=5.6",
             "srag/dic": ">=0.1.0"
         },
-        "time": "2018-09-18T07:47:37+00:00",
+        "time": "2018-09-19T10:51:13+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -85,7 +85,7 @@
                 "role": "Developer"
             }
         ],
-        "description": "Custom ILIAS-PropertyForm-Input-GUI's",
+        "description": "Custom Input-GUI's",
         "homepage": "https://github.com/studer-raimann/CustomInputGUIs",
         "keywords": [
             "ILIAS",

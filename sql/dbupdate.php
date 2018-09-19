@@ -1,46 +1,38 @@
 <#1>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUDFCheck::updateDB();
-ilUserSetting::updateDB();
+\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::updateDB();
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#2>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUserSetting::updateDB();
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#3>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUserSetting::updateDB();
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#4>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUserSetting::updateDB();
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#5>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUDFCheck::updateDB();
+\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::updateDB();
 ?>
 <#6>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUserSetting::updateDB();
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#7>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUserSetting::updateDB();
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#8>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
 /**
- * @var $ilUserSetting ilUserSetting
+ * @var \srag\Plugins\UserDefaults\UserSetting\UserSetting $ilUserSetting
  */
-foreach (ilUserSetting::get() as $ilUserSetting) {
+foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSetting) {
 	$ilUserSetting->setOnCreate(true);
 	$ilUserSetting->setOnUpdate(false);
 	$ilUserSetting->setOnManual(true);
@@ -49,6 +41,9 @@ foreach (ilUserSetting::get() as $ilUserSetting) {
 ?>
 <#9>
 <?php
-require_once "Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/vendor/autoload.php";
-ilUserSetting::updateDB();
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>
+<#10>
+<?php
+\srag\Plugins\UserDefaults\Config\Config::updateDB();
 ?>

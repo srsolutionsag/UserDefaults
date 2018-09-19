@@ -2,6 +2,12 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
+use srag\Plugins\UserDefaults\Config\Config;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
+use srag\Plugins\UserDefaults\UserSetting\UserSetting;
+use srag\RemovePluginDataConfirm\PluginUninstallTrait;
+
+
 /**
  * Class ilUserDefaultsPlugin
  *
@@ -10,8 +16,11 @@ require_once __DIR__ . "/../vendor/autoload.php";
  */
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
+	use PluginUninstallTrait;
 	const PLUGIN_ID = 'usrdef';
 	const PLUGIN_NAME = 'UserDefaults';
+	const PLUGIN_CLASS_NAME = self::class;
+	const REMOVE_PLUGIN_DATA_CONFIRM_CLASS_NAME = usrdefRemoveDataConfirm::class;
 	// Known Components
 	const SERVICES_USER = 'Services/User';
 	const SERVICES_AUTHENTICATION = 'Services/Authentication';
@@ -48,20 +57,10 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 
 	/**
-	 * @var ilDB
-	 */
-	protected $db;
-
-
-	/**
 	 *
 	 */
 	public function __construct() {
 		parent::__construct();
-
-		global $DIC;
-
-		$this->db = $DIC->database();
 	}
 
 
@@ -105,10 +104,10 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 		if ($run === true && $sets && $ilUser instanceof ilObjUser) {
 			/**
-			 * @var $ilUserSetting ilUserSetting
+			 * @var UserSetting $ilUserSetting
 			 */
-			foreach (ilUserSetting::where(array(
-				'status' => ilUserSetting::STATUS_ACTIVE,
+			foreach (UserSetting::where(array(
+				'status' => UserSetting::STATUS_ACTIVE,
 				$sets => true,
 			))->get() as $ilUserSetting) {
 				$ilUserSetting->doAssignements($ilUser);
@@ -121,7 +120,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	//	/**
 	//	 * @param $key
 	//	 * @return mixed|string
-	//	 * @throws \ilException
+	//	 * @throws ilException
 	//	 */
 	//	public function txt($key) {
 	//		require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
@@ -138,14 +137,13 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 
 	/**
-	 * @return bool
+	 * @inheritdoc
 	 */
-	protected function beforeUninstall() {
-		$this->db->dropTable(ilUDFCheck::TABLE_NAME, false);
-		$this->db->dropTable(ilUserSetting::TABLE_NAME, false);
-		//$this->db->dropTable(usrdefUser::TABLE_NAME, false);
-		//$this->db->dropTable(usrdefObj::TABLE_NAME, false);
-
-		return true;
+	protected function deleteData() {
+		self::dic()->database()->dropTable(UDFCheck::TABLE_NAME, false);
+		self::dic()->database()->dropTable(UserSetting::TABLE_NAME, false);
+		//self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);
+		//self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);
+		self::dic()->database()->dropTable(Config::TABLE_NAME, false);
 	}
 }

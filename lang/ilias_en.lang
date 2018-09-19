@@ -26,7 +26,7 @@ set_assigned_orgus#:#Assign to organisational units
 set_assigned_studyprograms#:#Register to studyprogram
 set_form_please_choose#:#-- Please choose --
 set_duplicate#:#Duplicate
-set_input_to_desktop#:#MISSING
+set_input_to_desktop#:#MISSING set_input_to_desktop
 set_assigned_courses_desktop#:#Assign to course and put course on desktop
 set_unsubscribe_courses#:#Unsubscribe from the above courses if the condition does not match
 set_assigned_groups_desktop#:#Assign to group and put group on desktop
@@ -88,3 +88,11 @@ check_op_reg_ex#:#RegEx
 check_op_reg_ex_info#:#Hint: RegExp must be written in / /
 check_text_fields#:#Text fields
 check_select_lists#:#Select lists
+removeplugindataconfirm_cancel#:#Cancel
+removeplugindataconfirm_confirm_remove_data#:#Do you want to remove the %1$s data as well? At most, you just want to disable the %1$s plugin?
+removeplugindataconfirm_deactivate#:#Just deactivate %1$s plugin
+removeplugindataconfirm_data#:#%1$s data
+removeplugindataconfirm_keep_data#:#Keep %1$s data
+removeplugindataconfirm_msg_kept_data#:#The %1$s data was kept!
+removeplugindataconfirm_msg_removed_data#:#The %1$s data was also removed!
+removeplugindataconfirm_remove_data#:#Remove %1$s data

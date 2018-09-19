@@ -31,7 +31,6 @@ class ilContainerMultiSelectInputGUI extends MultiSelectSearchInput2GUI {
 	public function __construct($container_type, $title, $post_var) {
 		$this->setContainerType($container_type);
 		$this->setPlaceholder(self::plugin()->translate($this->getContainerType() . '_placeholder'));
-		$this->setInputTemplate(self::plugin()->template("tpl.multiple_select.html"));
 		parent::__construct($title, $post_var);
 	}
 

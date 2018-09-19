@@ -1,9 +1,6 @@
 # Changelog
 
-## [0.2.1]
-- Fix
-
-## [0.2.1]
+## [0.2.0]
 - MultiSelectSearchInput2GUI
 
 ## [0.1.2]

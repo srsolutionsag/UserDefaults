@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\UserSetting\UserSettingsFormGUI;
 use srag\Plugins\UserDefaults\UserSetting\UserSettingsTableGUI;

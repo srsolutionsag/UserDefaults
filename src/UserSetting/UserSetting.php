@@ -23,6 +23,7 @@ use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use php4DOMDocument;
+use srag\ActiveRecordConfig\ActiveRecordConfig;
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 
@@ -654,7 +655,7 @@ class UserSetting extends ActiveRecord {
 				break;
 			case 'create_date':
 			case 'update_date':
-				return date("Y-m-d H:i:s", $this->{$field_name});
+				return date(ActiveRecordConfig::SQL_DATE_FORMAT, $this->{$field_name});
 				break;
 		}
 

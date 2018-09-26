@@ -6,6 +6,7 @@ use ActiveRecord;
 use ilObjUser;
 use ilUserDefaultsPlugin;
 use ilUserDefinedFields;
+use srag\ActiveRecordConfig\ActiveRecordConfig;
 use srag\DIC\DICTrait;
 
 /**
@@ -357,7 +358,7 @@ class UDFCheck extends ActiveRecord {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':
-				return date("Y-m-d H:i:s", $this->{$field_name});
+				return date(ActiveRecordConfig::SQL_DATE_FORMAT, $this->{$field_name});
 				break;
 		}
 

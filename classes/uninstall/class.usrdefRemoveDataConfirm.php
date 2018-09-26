@@ -18,7 +18,7 @@ class usrdefRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 	/**
 	 * @inheritdoc
 	 */
-	public function getUninstallRemovesData() {
+	public function getUninstallRemovesData()/*: ?bool*/ {
 		return Config::getUninstallRemovesData();
 	}
 
@@ -26,7 +26,8 @@ class usrdefRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 	/**
 	 * @inheritdoc
 	 */
-	public function setUninstallRemovesData($uninstall_removes_data) {
+	public function setUninstallRemovesData(/*bool*/
+		$uninstall_removes_data)/*: void*/ {
 		Config::setUninstallRemovesData($uninstall_removes_data);
 	}
 
@@ -34,7 +35,7 @@ class usrdefRemoveDataConfirm extends AbstractRemovePluginDataConfirm {
 	/**
 	 * @inheritdoc
 	 */
-	public function removeUninstallRemovesData() {
+	public function removeUninstallRemovesData()/*: void*/ {
 		Config::removeUninstallRemovesData();
 	}
 }

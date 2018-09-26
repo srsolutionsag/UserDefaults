@@ -20,7 +20,7 @@ class Config extends ActiveRecordConfig {
 	/**
 	 * @return bool|null
 	 */
-	public static function getUninstallRemovesData() {
+	public static function getUninstallRemovesData()/*: ?bool*/ {
 		return self::getXValue(usrdefRemoveDataConfirm::KEY_UNINSTALL_REMOVES_DATA, usrdefRemoveDataConfirm::DEFAULT_UNINSTALL_REMOVES_DATA);
 	}
 
@@ -28,7 +28,8 @@ class Config extends ActiveRecordConfig {
 	/**
 	 * @param bool $uninstall_removes_data
 	 */
-	public static function setUninstallRemovesData(bool $uninstall_removes_data) {
+	public static function setUninstallRemovesData(/*bool*/
+		$uninstall_removes_data)/*: void*/ {
 		self::setBooleanValue(usrdefRemoveDataConfirm::KEY_UNINSTALL_REMOVES_DATA, $uninstall_removes_data);
 	}
 
@@ -36,7 +37,7 @@ class Config extends ActiveRecordConfig {
 	/**
 	 *
 	 */
-	public static function removeUninstallRemovesData() {
+	public static function removeUninstallRemovesData()/*: void*/ {
 		self::removeName(usrdefRemoveDataConfirm::KEY_UNINSTALL_REMOVES_DATA);
 	}
 }

@@ -7,7 +7,6 @@ use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\RemovePluginDataConfirm\PluginUninstallTrait;
 
-
 /**
  * Class ilUserDefaultsPlugin
  *
@@ -139,7 +138,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	/**
 	 * @inheritdoc
 	 */
-	protected function deleteData() {
+	protected function deleteData()/*: void*/ {
 		self::dic()->database()->dropTable(UDFCheck::TABLE_NAME, false);
 		self::dic()->database()->dropTable(UserSetting::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);

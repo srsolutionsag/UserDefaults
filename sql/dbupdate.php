@@ -47,3 +47,17 @@ foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSet
 <?php
 \srag\Plugins\UserDefaults\Config\Config::updateDB();
 ?>
+<#11>
+<?php
+foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::get() as $udf_check) {// TODO: @mstuder
+	/**
+	 * @var \srag\Plugins\UserDefaults\UDFCheck\UDFCheck $udf_check
+	 */
+	$udf_check->setUdfFieldId("f_" . $udf_check->getUdfFieldId());
+	$udf_check->store();
+}
+
+\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "udf_field_id", [
+	"type" => "text"
+]);
+?>

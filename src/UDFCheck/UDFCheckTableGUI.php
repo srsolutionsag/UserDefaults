@@ -87,7 +87,7 @@ class UDFCheckTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$xdglRequestList = UDFCheck::getCollection();
 		$xdglRequestList->where(array( 'parent_id' => $_GET[UserSettingsGUI::IDENTIFIER] ));
-		$xdglRequestList->innerjoin('udf_definition', 'udf_field_id', 'field_id', array( 'field_name' ));
+		$xdglRequestList->innerjoin('udf_definition', 'udf_field_id', 'field_id', array( 'field_name' )); // TODO: @mstuder
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {

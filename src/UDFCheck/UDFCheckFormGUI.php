@@ -10,11 +10,11 @@ use ilRadioGroupInputGUI;
 use ilRadioOption;
 use ilSelectInputGUI;
 use ilTextInputGUI;
-use UDFCheckGUI;
 use ilUDFDefinitionPlugin;
 use ilUserDefaultsPlugin;
-use UserSettingsGUI;
 use srag\DIC\DICTrait;
+use UDFCheckGUI;
+use UserSettingsGUI;
 
 /**
  * Class UDFCheckFormGUI
@@ -73,7 +73,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 	 * @return string
 	 */
 	protected function txt($key) {
-		return self::plugin()->translate( $key,'check');
+		return self::plugin()->translate($key, 'check');
 	}
 
 
@@ -86,8 +86,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->addItem($te);
 
 		if (!$this->is_new) {
-			$te = new ilHiddenInputGUI($this->txt(self::F_UDF_FIELD_ID), self::F_UDF_FIELD_ID); // TODO Fix PostVar
-			$this->addItem($te);
+			//$te = new ilHiddenInputGUI(self::F_UDF_FIELD_ID);
+			//$this->addItem($te);
 
 			$cb = new ilCheckboxInputGUI($this->txt(self::F_UDF_NEGATE_ID), self::F_UDF_NEGATE_ID);
 			$cb->setInfo($this->txt(self::F_UDF_NEGATE_ID . "_info"));

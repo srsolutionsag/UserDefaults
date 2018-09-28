@@ -5,7 +5,7 @@ namespace srag\Plugins\UserDefaults\UDFCheck;
 use ActiveRecord;
 use ilObjUser;
 use ilUserDefaultsPlugin;
-use ilUserDefinedFields;
+use ilUserSearchOptions;
 use srag\ActiveRecordConfig\ActiveRecordConfig;
 use srag\DIC\DICTrait;
 
@@ -98,11 +98,10 @@ class UDFCheck extends ActiveRecord {
 	 */
 	protected $parent_id = 0;
 	/**
-	 * @var int
+	 * @var string
 	 *
 	 * @con_has_field  true
-	 * @con_fieldtype  integer
-	 * @con_length     8
+	 * @con_fieldtype  text
 	 */
 	protected $udf_field_id = 1;
 	/**
@@ -226,7 +225,7 @@ class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @param int $udf_field_id
+	 * @param string $udf_field_id
 	 */
 	public function setUdfFieldId($udf_field_id) {
 		$this->udf_field_id = $udf_field_id;
@@ -234,7 +233,7 @@ class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return string
 	 */
 	public function getUdfFieldId() {
 		return $this->udf_field_id;
@@ -396,6 +395,7 @@ class UDFCheck extends ActiveRecord {
 	public function isValid(ilObjUser $ilUser) {
 		$ilUser->readUserDefinedFields();
 
+		// TODO: @mstuder
 		$values = array_map(function ($value) {
 			return trim($value);
 		}, explode(self::CHECK_SPLIT, $ilUser->user_defined_data['f_' . $this->getUdfFieldId()]));
@@ -476,18 +476,25 @@ class UDFCheck extends ActiveRecord {
 	 */
 	public static function getAllDefinitions() {
 		if (self::$all_definitions === NULL) {
-			self::$all_definitions = [];
+			self::$all_definitions = array_map(function (array $field) {
+				// TODO: Typ (Text oder Select oder Custom)
+				$field["field_type"] = UDFCheck::TYPE_TEXT;
 
-			foreach (ilUserDefinedFields::_getInstance()->getDefinitions() as $def) {
-				/*
+				return $field;
+			}, ilUserSearchOptions::getSelectableColumnInfo());
+			/*
+			 * self::$all_definitions =  [];
+
+			 * foreach (ilUserDefinedFields::_getInstance()->getDefinitions() as $def) {
+				/ *
 				 *
 				 if ($def['visib_reg'] == 1) {
 				 MST: Load all definitions!
 					  it is also possible to make rules on fields without showing at registration
-				*/
+				* /
 				self::$all_definitions[$def['field_name']] = $def;
 				//}
-			}
+			}*/
 		}
 
 		return self::$all_definitions;
@@ -510,12 +517,15 @@ class UDFCheck extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getDefinitionData() {
-		$return = array();
+		return array_map(function (array $field) {
+			return $field["txt"];
+		}, self::getAllDefinitions());
+		/*$return = array();
 		foreach (self::getAllDefinitions() as $def) {
 			$return[$def['field_id']] = $def['field_name'];
 		}
 
-		return $return;
+		return $return;*/
 	}
 
 

@@ -40,6 +40,10 @@ class UDFCheck extends ActiveRecord {
 	const TYPE_WYSIWYG = 3;
 	const CHECK_SPLIT = ' → ';
 	/**
+	 * @var array|null
+	 */
+	protected static $all_definitions = NULL;
+	/**
 	 * @var array
 	 */
 	public static $operator_text_keys = array(
@@ -471,27 +475,22 @@ class UDFCheck extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getAllDefinitions() {
-		static $return;
-		if (is_array($return)) {
-			return $return;
-		}
-		$return = array();
-		/**
-		 * @var ilUserDefinedFields $ilUserDefinedFields
-		 */
-		$ilUserDefinedFields = ilUserDefinedFields::_getInstance();
-		foreach ($ilUserDefinedFields->getDefinitions() as $def) {
-			/*
-			 *
-			 if ($def['visib_reg'] == 1) {
-			 MST: Load all definitions!
-			      it is also possible to make rules on fields without showing at registration
-			*/
-			$return [$def['field_type']] = $def;
-			//}
+		if (self::$all_definitions === NULL) {
+			self::$all_definitions = [];
+
+			foreach (ilUserDefinedFields::_getInstance()->getDefinitions() as $def) {
+				/*
+				 *
+				 if ($def['visib_reg'] == 1) {
+				 MST: Load all definitions!
+					  it is also possible to make rules on fields without showing at registration
+				*/
+				self::$all_definitions[$def['field_name']] = $def;
+				//}
+			}
 		}
 
-		return $return;
+		return self::$all_definitions;
 	}
 
 

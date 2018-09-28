@@ -1,6 +1,7 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\UserSetting;
+
 use ilCheckboxInputGUI;
 use ilFormSectionHeaderGUI;
 use ilObjPortfolioTemplate;
@@ -10,10 +11,10 @@ use ilSelectInputGUI;
 use ilTextAreaInputGUI;
 use ilTextInputGUI;
 use ilUserDefaultsPlugin;
-use UserSettingsGUI;
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\Form\ilContainerMultiSelectInputGUI;
 use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;
+use UserSettingsGUI;
 
 /**
  * Class ilUserSettingsFormGUI
@@ -76,7 +77,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	 * @return string
 	 */
 	protected function txt($key) {
-		return self::plugin()->translate( $key,'set');
+		return self::plugin()->translate($key, 'set');
 	}
 
 
@@ -105,7 +106,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 
 		$se = new ilSelectInputGUI($this->txt(self::F_GLOBAL_ROLE), self::F_GLOBAL_ROLE);
 		$se->setRequired(true);
-		$global_roles = array( "" => $this->txt("form_please_choose") );
+		$global_roles = array( "" => self::plugin()->getPluginObject()->txt("set_form_please_choose") );
+		//$global_roles = array( "" => $this->txt("form_please_choose") ); // TODO: Bug in DICTrait
 		self::appendRoles($global_roles, ilRbacReview::FILTER_ALL_GLOBAL);
 		$se->setOptions($global_roles);
 		$this->addItem($se);

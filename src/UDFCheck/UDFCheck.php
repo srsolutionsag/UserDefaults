@@ -477,11 +477,11 @@ class UDFCheck extends ActiveRecord {
 	public static function getAllDefinitions() {
 		if (self::$all_definitions === NULL) {
 			self::$all_definitions = array_map(function (array $field) {
-				// TODO: Typ (Text oder Select oder Custom)
+				// TODO: @mstuder Typ (Text oder Select oder Custom)
 				$field["field_type"] = UDFCheck::TYPE_TEXT;
 
 				return $field;
-			}, ilUserSearchOptions::getSelectableColumnInfo());
+			}, ilUserSearchOptions::getSelectableColumnInfo()); // TODO: @mstuder Alle Felder, nicht nur die suchbaren
 			/*
 			 * self::$all_definitions =  [];
 

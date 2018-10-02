@@ -49,15 +49,26 @@ foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSet
 ?>
 <#11>
 <?php
-foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::get() as $udf_check) {// TODO: @mstuder
-	/**
-	 * @var \srag\Plugins\UserDefaults\UDFCheck\UDFCheck $udf_check
-	 */
-	$udf_check->setUdfFieldId("f_" . $udf_check->getUdfFieldId());
-	$udf_check->store();
-}
 
-\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "udf_field_id", [
+?>
+<#12>
+<?php
+
+?>
+<#13>
+<?php
+/**
+ * @var \srag\Plugins\UserDefaults\UDFCheck\UDFCheck $UDFCheck
+ */
+foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::get() as $UDFCheck) {
+	$UDFCheck->setFieldCategory($UDFCheck::FIELD_CATEGORY_UDF);
+	$UDFCheck->update();
+}
+?>
+<#14>
+<?php
+\srag\DIC\DICStatic::dic()->database()->renameTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "udf_field_id", "field_key");
+\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "field_key", [
 	"type" => "text"
 ]);
 ?>

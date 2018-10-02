@@ -28,7 +28,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 
 	use DICTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-	const F_UDF_FIELD_ID = 'udf_field_id';
+	const F_UDF_FIELD_KEY = 'field_key';
+	const F_UDF_FIELD_CATEGORY = 'field_category';
 	const F_CHECK_VALUE = 'check_value';
 	const F_CHECK_VALUE_MUL = 'check_value_mul_';
 	const F_UDF_NEGATE_ID = 'udf_negate_value';
@@ -79,11 +80,13 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 
 	protected function initForm() {
 		$this->setTitle(self::plugin()->translate('form_title'));
-		$te = new ilSelectInputGUI($this->txt(self::F_UDF_FIELD_ID), self::F_UDF_FIELD_ID);
+		$te = new ilSelectInputGUI($this->txt(self::F_UDF_FIELD_KEY), self::F_UDF_FIELD_KEY);
 		$te->setDisabled(!$this->is_new);
 		$te->setRequired(true);
 		$te->setOptions(UDFCheck::getDefinitionData());
 		$this->addItem($te);
+
+
 
 		if (!$this->is_new) {
 			//$te = new ilHiddenInputGUI(self::F_UDF_FIELD_ID);
@@ -102,17 +105,20 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$op->setOptions($options);
 			$this->addItem($op);
 
-			$udf_type = UDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
+			$udf_type = UDFCheck::getDefinitionTypeForKey($this->object->getFieldKey());
 			$definition = UDFCheck::getDefinitionForId($udf_type);
 
 			switch ($udf_type) {
-				case UDFCheck::TYPE_TEXT:
+				case FIELD_TYPE_TEXT:
+				case UDF_TYPE_TEXT:
 					$se = new ilTextInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
 					$this->addItem($se);
 					break;
-				case UDFCheck::TYPE_SELECT:
+				case UDF_TYPE_SELECT:
+				case FIELD_TYPE_SELECT:
+				case FIELD_TYPE_MULTI:
 					$se = new ilSelectInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
-					$se->setOptions(UDFCheck::getDefinitionValuesForId($this->object->getUdfFieldId()));
+					$se->setOptions(UDFCheck::getDefinitionValuesForKey($this->object->getFieldKey()));
 					$this->addItem($se);
 					break;
 				default:
@@ -155,14 +161,15 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 
 	public function fillForm() {
 		$array = array(
-			self::F_UDF_FIELD_ID => $this->object->getUdfFieldId(),
+			self::F_UDF_FIELD_KEY => $this->object->getFieldKey(),
+			self::F_UDF_FIELD_CATEGORY => $this->object->getFieldCategory(),
 			self::F_CHECK_VALUE => $this->object->getCheckValue(),
 			self::F_UDF_NEGATE_ID => $this->object->isNegated(),
 			self::F_UDF_OPERATOR => $this->object->getOperator(),
 			self::F_CHECK_RADIO => self::F_CHECK_TEXT
 		);
 
-		$udf_type = UDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
+		$udf_type = UDFCheck::getDefinitionTypeForKey($this->object->getFieldKey());
 		$definition = UDFCheck::getDefinitionForId($udf_type);
 
 		//DHBW Spec
@@ -195,7 +202,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$check_radio = $this->getInput(self::F_CHECK_RADIO);
 			switch ($check_radio) {
 				case self::F_CHECK_TEXT:
-					$udf_type = UDFCheck::getDefinitionTypeForId($this->object->getUdfFieldId());
+					$udf_type = UDFCheck::getDefinitionTypeForKey($this->object->getFieldKey());
 					$definition = UDFCheck::getDefinitionForId($udf_type);
 
 					//DHBW Spec
@@ -221,7 +228,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$this->object->setOperator($this->getInput(self::F_UDF_OPERATOR));
 			$this->object->update();
 		} else {
-			$this->object->setUdfFieldId($this->getInput(self::F_UDF_FIELD_ID));
+			$this->object->setFieldKey($this->getInput(self::F_UDF_FIELD_KEY));
+			$this->object->setFieldCategory(UDFCheck::getDefinitionCategoryForKey($this->getInput(self::F_UDF_FIELD_KEY)));
 			$this->object->setParentId($_GET[UserSettingsGUI::IDENTIFIER]);
 			$this->object->create();
 		}

@@ -141,6 +141,11 @@ class UDFCheckTableGUI extends ilTable2GUI {
 						}
 						$this->tpl->parseCurrentBlock();
 						break;
+					case "field_key":
+						$this->tpl->setCurrentBlock('td');
+						$this->tpl->setVariable('VALUE', UDFCheck::getDefinitionFieldTitleForKey($a_set[$k]));
+						$this->tpl->parseCurrentBlock();
+						break;
 					default:
 						if ($a_set[$k]) {
 							$this->tpl->setCurrentBlock('td');
@@ -171,7 +176,7 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	 * @return array
 	 */
 	public function getSelectableColumns() {
-		$cols['udf_field_id'] = array(
+		$cols['field_key'] = array(
 			'txt' => self::plugin()->translate('check_name'),
 			'default' => true,
 			'width' => '40%',

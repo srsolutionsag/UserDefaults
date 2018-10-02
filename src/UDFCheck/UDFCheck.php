@@ -8,6 +8,7 @@ use ilUserDefaultsPlugin;
 use ilUserSearchOptions;
 use srag\ActiveRecordConfig\ActiveRecordConfig;
 use srag\DIC\DICTrait;
+use ilUserDefinedFields;
 
 /**
  * Class UDFCheck
@@ -35,10 +36,10 @@ class UDFCheck extends ActiveRecord {
 	const OP_REG_EX = 11;
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
-	const TYPE_TEXT = 1;
-	const TYPE_SELECT = 2;
-	const TYPE_WYSIWYG = 3;
 	const CHECK_SPLIT = ' → ';
+
+	const FIELD_CATEGORY_USR = 1;
+	const FIELD_CATEGORY_UDF = 2;
 	/**
 	 * @var array|null
 	 */
@@ -102,8 +103,19 @@ class UDFCheck extends ActiveRecord {
 	 *
 	 * @con_has_field  true
 	 * @con_fieldtype  text
+	 * @con_length     256
+	 *
 	 */
-	protected $udf_field_id = 1;
+	protected $field_key = 1;
+	/**
+	 * @var string
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  integer
+	 * @con_length     1
+	 * @db_is_notnull  true
+	 */
+	protected $field_category = self::FIELD_CATEGORY_USR;
 	/**
 	 * @var string
 	 *
@@ -225,20 +237,35 @@ class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @param string $udf_field_id
+	 * @param string $field_key
 	 */
-	public function setUdfFieldId($udf_field_id) {
-		$this->udf_field_id = $udf_field_id;
+	public function setFieldKey($field_key) {
+		$this->field_key = $field_key;
 	}
 
 
 	/**
 	 * @return string
 	 */
-	public function getUdfFieldId() {
-		return $this->udf_field_id;
+	public function getFieldKey() {
+		return $this->field_key;
 	}
 
+
+	/**
+	 * @return string
+	 */
+	public function getFieldCategory() {
+		return $this->field_category;
+	}
+
+
+	/**
+	 * @param string $field_category
+	 */
+	public function setFieldCategory($field_category) {
+		$this->field_category = $field_category;
+	}
 
 	/**
 	 * @param int $operator
@@ -393,17 +420,26 @@ class UDFCheck extends ActiveRecord {
 	 * @return bool
 	 */
 	public function isValid(ilObjUser $ilUser) {
-		$ilUser->readUserDefinedFields();
 
-		// TODO: @mstuder
-		$values = array_map(function ($value) {
-			return trim($value);
-		}, explode(self::CHECK_SPLIT, $ilUser->user_defined_data['f_' . $this->getUdfFieldId()]));
+
+		switch($this->getFieldCategory()) {
+			case self::FIELD_CATEGORY_USR:
+				$values[$this->getFieldKey()] = $this->getUserFieldValue($ilUser,$this->getFieldKey());
+				break;
+			case self::FIELD_CATEGORY_UDF:
+				$ilUser->readUserDefinedFields();
+				$values = array_map(function ($value) {
+					return trim($value);
+				}, explode(self::CHECK_SPLIT, $ilUser->user_defined_data['f_' . $this->getFieldKey()]));
+				break;
+		}
 
 		$check_values = $this->getCheckValues();
 
+		//print_r($check_values); print_r($values); exit;
+
 		foreach ($check_values as $key => $check_value) {
-			$value = $values[$key];
+			$value = reset($values); //TODO
 
 			if (!empty($value) && !empty($check_value)) {
 				switch ($this->getOperator()) {
@@ -472,30 +508,132 @@ class UDFCheck extends ActiveRecord {
 
 
 	/**
+	 * @param ilObjUser $user
+	 * @param $field_name
+	 */
+	public function getUserFieldValue($user, $field_name) {
+
+		switch($field_name) {
+			case 'gender':
+				return $user->getGender();
+				break;
+			case 'lastname':
+				return $user->getLastname();
+				break;
+			case 'firstname':
+				return $user->getFirstname();
+				break;
+			case 'login':
+				return $user->getLogin();
+				break;
+			case 'title':
+				return $user->getTitle();
+				break;
+			case 'institution':
+				return $user->getInstitution();
+				break;
+			case 'department':
+				return $user->getDepartment();
+				break;
+			case 'street':
+				return $user->getStreet();
+				break;
+			case 'zipcode':
+				return $user->getZipcode();
+				break;
+			case 'city':
+				return $user->getCity();
+				break;
+			case 'country':
+				return $user->getCountry();
+				break;
+			case 'sel_country':
+				return $user->getSelectedCountry();
+				break;
+			case 'email':
+				return $user->getEmail();
+				break;
+			case 'second_email':
+				return $user->getSecondEmail();
+				break;
+			case 'hobby':
+				return $user->getHobby();
+				break;
+			case 'org_units':
+				return $user->getOrgUnitsRepresentation();
+				break;
+			case 'matriculation':
+				return $user->getMatriculation();
+				break;
+			case 'interests_general':
+				return $user->getGeneralInterestsAsText();
+				break;
+			case 'interests_help_offered':
+				return $user->getOfferingHelpAsText();
+			break;
+			case 'interests_help_looking':
+				return $user->getLookingForHelpAsText();
+			break;
+		}
+
+		return '';
+
+	}
+
+
+	/**
 	 * @return array
 	 */
 	public static function getAllDefinitions() {
-		if (self::$all_definitions === NULL) {
-			self::$all_definitions = array_map(function (array $field) {
-				// TODO: @mstuder Typ (Text oder Select oder Custom)
-				$field["field_type"] = UDFCheck::TYPE_TEXT;
 
-				return $field;
-			}, ilUserSearchOptions::getSelectableColumnInfo()); // TODO: @mstuder Alle Felder, nicht nur die suchbaren
-			/*
-			 * self::$all_definitions =  [];
+		//require_once "./Services/User/classes/class.ilUserDefinedFields.php";
 
-			 * foreach (ilUserDefinedFields::_getInstance()->getDefinitions() as $def) {
-				/ *
-				 *
-				 if ($def['visib_reg'] == 1) {
-				 MST: Load all definitions!
-					  it is also possible to make rules on fields without showing at registration
-				* /
-				self::$all_definitions[$def['field_name']] = $def;
-				//}
-			}*/
+		if(!is_null(self::$all_definitions)) {
+			return self::$all_definitions;
 		}
+
+
+		$usr_fields = array();
+		foreach(ilUserSearchOptions::_getSearchableFieldsInfo(true) as $field) {
+			$usr_field = array();
+
+			if(!in_array($field['type'], array(FIELD_TYPE_TEXT,FIELD_TYPE_SELECT,FIELD_TYPE_MULTI))) {
+				continue;
+			}
+
+			$usr_field["txt"] =  $field["lang"];
+			$usr_field["field_category"] = self::FIELD_CATEGORY_USR;
+			$usr_field["field_key"] = $field["db"];
+			$usr_field["field_type"] = $field["type"];
+			$usr_field["field_values"] = $field["values"];
+
+
+			$usr_fields[] = $usr_field;
+		}
+
+		$udf_fields = array();
+		$user_defined_fields = ilUserDefinedFields::_getInstance();
+		foreach($user_defined_fields->getDefinitions() as $field) {
+			$udf_field = array();
+
+
+
+			if(!in_array($field['field_type'], array(UDF_TYPE_TEXT,UDF_TYPE_SELECT))) {
+				continue;
+			}
+
+			$udf_field["txt"] =  $field["field_name"];
+			$udf_field["field_category"] = self::FIELD_CATEGORY_UDF;
+			$udf_field["field_key"] = $field["field_id"];
+			$udf_field["field_type"] = $field["field_type"];
+			$udf_field["field_values"]  = $field["field_values"];
+
+
+			$udf_fields[] = $udf_field;
+		}
+
+		self::$all_definitions = array_merge($usr_fields,$udf_fields);
+
 
 		return self::$all_definitions;
 	}
@@ -517,15 +655,15 @@ class UDFCheck extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getDefinitionData() {
-		return array_map(function (array $field) {
+		/*return array_map(function (array $field) {
 			return $field["txt"];
-		}, self::getAllDefinitions());
-		/*$return = array();
+		}, self::getAllDefinitions());*/
+		$return = array();
 		foreach (self::getAllDefinitions() as $def) {
-			$return[$def['field_id']] = $def['field_name'];
+			$return[$def['field_key']] = $def['txt'];
 		}
 
-		return $return;*/
+		return $return;
 	}
 
 
@@ -534,13 +672,26 @@ class UDFCheck extends ActiveRecord {
 	 *
 	 * @return array
 	 */
-	public static function getDefinitionValuesForId($udf_field_id) {
+	public static function getDefinitionValuesForKey($field_keyd) {
 		$return = array();
+
 		foreach (self::getAllDefinitions() as $def) {
-			if ($def['field_id'] == $udf_field_id) {
-				foreach ($def['field_values'] as $val) {
-					$return[$val] = $val;
+			if ($def['field_key'] == $field_keyd) {
+
+
+				switch($def['field_category']) {
+					case self::FIELD_CATEGORY_USR:
+						foreach ($def['field_values'] as $key => $val) {
+							$return[$key] = $val;
+						}
+						break;
+					case self::FIELD_CATEGORY_UDF:
+						foreach ($def['field_values'] as $val) {
+							$return[$val] = $val;
+						}
+						break;
 				}
+
 
 				return $return;
 			}
@@ -551,19 +702,61 @@ class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @param $udf_field_id
+	 * @param $field_key
 	 *
 	 * @return int
 	 */
-	public static function getDefinitionTypeForId($udf_field_id) {
+	public static function getDefinitionTypeForKey($field_key) {
+
+
+
 		foreach (self::getAllDefinitions() as $def) {
-			if ($def['field_id'] == $udf_field_id) {
+			if ($def['field_key'] == $field_key) {
 				return $def['field_type'];
 			}
 		}
 
 		return 0;
 	}
+
+	/**
+	 * @param $field_key
+	 *
+	 * @return int
+	 */
+	public static function getDefinitionCategoryForKey($field_key) {
+
+
+		foreach (self::getAllDefinitions() as $def) {
+			if ($def['field_key'] == $field_key) {
+				return $def['field_category'];
+			}
+		}
+
+		return 0;
+	}
+
+	/**
+	 * @param $field_key
+	 * @param $field_category
+	 *
+	 * @return int
+	 */
+	public static function getDefinitionFieldTitleForKey($field_key) {
+
+
+		foreach (self::getAllDefinitions() as $def) {
+			if ($def['field_key'] == $field_key) {
+				return $def['txt'];
+			}
+		}
+
+		return 0;
+	}
+
+
+
+
 
 
 	/**

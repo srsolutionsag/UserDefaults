@@ -87,7 +87,6 @@ class UDFCheckTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$xdglRequestList = UDFCheck::getCollection();
 		$xdglRequestList->where(array( 'parent_id' => $_GET[UserSettingsGUI::IDENTIFIER] ));
-		$xdglRequestList->innerjoin('udf_definition', 'udf_field_id', 'field_id', array( 'field_name' )); // TODO: @mstuder
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {
@@ -172,7 +171,7 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	 * @return array
 	 */
 	public function getSelectableColumns() {
-		$cols['udf_definition_field_name'] = array(
+		$cols['udf_field_id'] = array(
 			'txt' => self::plugin()->translate('check_name'),
 			'default' => true,
 			'width' => '40%',

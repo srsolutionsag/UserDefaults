@@ -96,6 +96,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$cb->setInfo($this->txt(self::F_UDF_NEGATE_ID . "_info"));
 			$this->addItem($cb);
 
+			//print_r($this->object); exit;
+
 			$op = new ilSelectInputGUI($this->txt(self::F_UDF_OPERATOR), self::F_UDF_OPERATOR);
 			$op->setInfo(self::plugin()->translate('check_op_reg_ex_info'));
 			$options = array();
@@ -117,12 +119,18 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 				case UDF_TYPE_SELECT:
 				case FIELD_TYPE_SELECT:
 				case FIELD_TYPE_MULTI:
-					$se = new ilSelectInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
-					$se->setOptions(UDFCheck::getDefinitionValuesForKey($this->object->getFieldKey()));
-					$this->addItem($se);
-					break;
+					switch($this->object->getFieldKey()) {
+						case 'org_units':
+							$se = new ilTextInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
+							$this->addItem($se);
+							break;
+						default:
+							$se = new ilSelectInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
+							$se->setOptions(UDFCheck::getDefinitionValuesForKey($this->object->getFieldKey()));
+							$this->addItem($se);
+							break;
+					}
 				default:
-
 					//Do not use ilCustomUserFieldsHelper for ILIAS 5.2 - bebause it's not available
 					if ($this->isCustomUserFieldsHelperAvailable()) {
 						require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";

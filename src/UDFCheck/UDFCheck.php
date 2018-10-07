@@ -436,8 +436,6 @@ class UDFCheck extends ActiveRecord {
 
 		$check_values = $this->getCheckValues();
 
-		//print_r($check_values); print_r($values); exit;
-
 		foreach ($check_values as $key => $check_value) {
 			$value = reset($values); //TODO
 

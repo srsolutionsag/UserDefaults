@@ -73,3 +73,10 @@ foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::get() as $UDFCheck) {
 	$UDFCheck->update();
 }
 ?>
+<#15>
+<?php
+\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "field_key", [
+	"type" => "text",
+	"length" => "256"
+]);
+?>

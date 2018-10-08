@@ -96,4 +96,7 @@ removeplugindataconfirm_keep_data#:#Keep %1$s data
 removeplugindataconfirm_msg_kept_data#:#The %1$s data was kept!
 removeplugindataconfirm_msg_removed_data#:#The %1$s data was also removed!
 removeplugindataconfirm_remove_data#:#Remove %1$s data
-check_field_key#:#User Master Date Field
+check_field_key#:#Field
+check_field_category#:#Category
+check_field_category_1#:#ILIAS user master data fields
+check_field_category_2#:#User default fields

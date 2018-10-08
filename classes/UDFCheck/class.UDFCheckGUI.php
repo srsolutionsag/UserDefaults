@@ -84,6 +84,7 @@ class UDFCheckGUI {
 	 */
 	protected function add() {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
+		$ilUDFCheckFormGUI->fillForm();
 		self::dic()->template()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 
@@ -108,9 +109,9 @@ class UDFCheckGUI {
 	 *
 	 */
 	protected function edit() {
-		$ilUserSettingsFormGUI = new UDFCheckFormGUI($this, $this->getObject());
-		$ilUserSettingsFormGUI->fillForm();
-		self::dic()->template()->setContent($ilUserSettingsFormGUI->getHTML());
+		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this, $this->getObject());
+		$ilUDFCheckFormGUI->fillForm();
+		self::dic()->template()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 
 

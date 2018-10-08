@@ -58,9 +58,9 @@ abstract class UDFCheck extends ActiveRecord {
 		self::OP_REG_EX => 'reg_ex',
 	);
 	/**
-	 * @var array
+	 * @var UDFCheck[]
 	 */
-	protected static $class_names = [
+	public static $class_names = [
 		UDFCheckUser::FIELD_CATEGORY => UDFCheckUser::class,
 		UDFCheckUDF::FIELD_CATEGORY => UDFCheckUDF::class
 	];
@@ -204,10 +204,10 @@ abstract class UDFCheck extends ActiveRecord {
 	/**
 	 * @return array
 	 */
-	public static function getDefinitionOptions() {
+	public static function getDefinitionsOfCategoryOptions() {
 		$return = [];
 
-		foreach (self::getDefinitions() as $definition) {
+		foreach (static::getDefinitionsOfCategory() as $definition) {
 			$return[$definition['field_key']] = $definition['txt'];
 		}
 

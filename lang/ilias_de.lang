@@ -96,4 +96,7 @@ removeplugindataconfirm_keep_data#:#%1$s-Daten behalten
 removeplugindataconfirm_msg_kept_data#:#Die %1$s-Daten wurden behalten!
 removeplugindataconfirm_msg_removed_data#:#Die %1$s-Daten wurden auch entfernt!
 removeplugindataconfirm_remove_data#:#Entferne %1$s-Daten
-check_field_key#:#Stammdatenfeld
+check_field_key#:#Feld
+check_field_category#:#Kategorie
+check_field_category_1#:#ILIAS-Benutzerstammdatenfelder
+check_field_category_2#:#Benutzerdefinierte Felder

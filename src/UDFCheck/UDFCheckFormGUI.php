@@ -38,7 +38,6 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 	const F_CHECK_RADIO = 'check_radio';
 	const F_CHECK_TEXT = 'check_text';
 	const F_CHECK_SELECT = 'check_select';
-	const ILIAS_VERSION_5_2 = 2;
 	/**
 	 * @var UserSettingsGUI
 	 */
@@ -67,6 +66,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->is_new = ($this->object === NULL);
 
 		$this->setFormAction(self::dic()->ctrl()->getFormAction($this->parent_gui));
+
 		$this->initForm();
 	}
 
@@ -86,16 +86,24 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 	 */
 	protected function initForm() {
 		$this->setTitle(self::plugin()->translate('form_title'));
-		$te = new ilSelectInputGUI($this->txt(self::F_UDF_FIELD_KEY), self::F_UDF_FIELD_KEY);
-		$te->setDisabled(!$this->is_new);
-		$te->setRequired(true);
-		$te->setOptions(UDFCheck::getDefinitionOptions());
-		$this->addItem($te);
+
+		$categories_radio = new ilRadioGroupInputGUI($this->txt(self::F_UDF_FIELD_CATEGORY), self::F_UDF_FIELD_CATEGORY);
+		$this->addItem($categories_radio);
+
+		foreach (UDFCheck::$class_names as $key => $class) {
+			$category_radio = new ilRadioOption($this->txt(self::F_UDF_FIELD_CATEGORY . "_" . $key), $key);
+			$category_radio->setDisabled(!$this->is_new);
+
+			$te = new ilSelectInputGUI($this->txt(self::F_UDF_FIELD_KEY), self::F_UDF_FIELD_KEY . "_" . $key);
+			$te->setDisabled(!$this->is_new);
+			$te->setRequired(true);
+			$te->setOptions($class::getDefinitionsOfCategoryOptions());
+			$category_radio->addSubItem($te);
+
+			$categories_radio->addOption($category_radio);
+		}
 
 		if (!$this->is_new) {
-			//$te = new ilHiddenInputGUI(self::F_UDF_FIELD_ID);
-			//$this->addItem($te);
-
 			$cb = new ilCheckboxInputGUI($this->txt(self::F_UDF_NEGATE_ID), self::F_UDF_NEGATE_ID);
 			$cb->setInfo($this->txt(self::F_UDF_NEGATE_ID . "_info"));
 			$this->addItem($cb);
@@ -173,14 +181,14 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 	 */
 	public function fillForm() {
 		if (!$this->is_new) {
-			$array = array(
-				self::F_UDF_FIELD_KEY => $this->object->getFieldKey(),
+			$array = [
+				self::F_UDF_FIELD_KEY . "_" . $this->object->getFieldCategory() => $this->object->getFieldKey(),
 				self::F_UDF_FIELD_CATEGORY => $this->object->getFieldCategory(),
 				self::F_CHECK_VALUE => $this->object->getCheckValue(),
 				self::F_UDF_NEGATE_ID => $this->object->isNegated(),
 				self::F_UDF_OPERATOR => $this->object->getOperator(),
 				self::F_CHECK_RADIO => self::F_CHECK_TEXT
-			);
+			];
 
 			$definition = $this->object->getDefinition();
 
@@ -196,9 +204,13 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 					}
 				}
 			}
-
-			$this->setValuesByArray($array);
+		} else {
+			$array = [
+				self::F_UDF_FIELD_CATEGORY => UDFCheckUser::FIELD_CATEGORY
+			];
 		}
+
+		$this->setValuesByArray($array);
 	}
 
 
@@ -238,8 +250,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$this->object->setOperator($this->getInput(self::F_UDF_OPERATOR));
 			$this->object->update();
 		} else {
-			$this->object = UDFCheck::newInstance(UDFCheck::getCategoryForFieldKey($this->getInput(self::F_UDF_FIELD_KEY)));
-			$this->object->setFieldKey($this->getInput(self::F_UDF_FIELD_KEY));
+			$this->object = UDFCheck::newInstance($this->getInput(self::F_UDF_FIELD_CATEGORY));
+			$this->object->setFieldKey($this->getInput(self::F_UDF_FIELD_KEY . "_" . $this->object->getFieldCategory()));
 			$this->object->setParentId($_GET[UserSettingsGUI::IDENTIFIER]);
 			$this->object->create();
 		}

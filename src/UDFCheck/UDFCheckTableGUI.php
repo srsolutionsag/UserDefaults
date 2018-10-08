@@ -150,7 +150,11 @@ class UDFCheckTableGUI extends ilTable2GUI {
 						break;
 					case "field_key":
 						$this->tpl->setCurrentBlock('td');
-						$this->tpl->setVariable('VALUE', $a_set["field_key_txt"]);
+						if ($a_set["field_key_txt"]) {
+							$this->tpl->setVariable('VALUE', $a_set["field_key_txt"]);
+						} else {
+							$this->tpl->setVariable('VALUE', '&nbsp;');
+						}
 						$this->tpl->parseCurrentBlock();
 						break;
 					default:

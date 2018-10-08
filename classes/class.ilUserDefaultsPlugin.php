@@ -3,9 +3,8 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use srag\Plugins\UserDefaults\Config\Config;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
-use srag\Plugins\UserDefaults\UDFCheck\UDFCheckUDF;
-use srag\Plugins\UserDefaults\UDFCheck\UDFCheckUser;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\RemovePluginDataConfirm\PluginUninstallTrait;
 
@@ -144,8 +143,9 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 */
 	protected function deleteData()/*: void*/ {
 		self::dic()->database()->dropTable(UDFCheckOld::TABLE_NAME, false);
-		self::dic()->database()->dropTable(UDFCheckUser::TABLE_NAME, false);
-		self::dic()->database()->dropTable(UDFCheckUDF::TABLE_NAME, false);
+		foreach (UDFCheck::$class_names as $class) {
+			self::dic()->database()->dropTable($class::TABLE_NAME, false);
+		}
 		self::dic()->database()->dropTable(UserSetting::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);

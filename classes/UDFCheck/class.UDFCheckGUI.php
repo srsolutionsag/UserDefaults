@@ -36,7 +36,7 @@ class UDFCheckGUI {
 
 
 	/**
-	 * @param  $parent_gui
+	 * @param $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		self::dic()->ctrl()->saveParameter($this, self::IDENTIFIER_CATEGORY);
@@ -108,7 +108,7 @@ class UDFCheckGUI {
 	 *
 	 */
 	protected function edit() {
-		$ilUserSettingsFormGUI = new UDFCheckFormGUI($this);
+		$ilUserSettingsFormGUI = new UDFCheckFormGUI($this, $this->getObject());
 		$ilUserSettingsFormGUI->fillForm();
 		self::dic()->template()->setContent($ilUserSettingsFormGUI->getHTML());
 	}
@@ -118,7 +118,7 @@ class UDFCheckGUI {
 	 *
 	 */
 	protected function update() {
-		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
+		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this, $this->getObject());
 		$ilUDFCheckFormGUI->setValuesByPost();
 		if ($ilUDFCheckFormGUI->saveObject()) {
 			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
@@ -145,7 +145,7 @@ class UDFCheckGUI {
 	 *
 	 */
 	public function delete() {
-		$ilUDFCheck = UDFCheck::getCheckById(filter_input(INPUT_GET, self::IDENTIFIER_CATEGORY), filter_input(INPUT_GET, self::IDENTIFIER));
+		$ilUDFCheck = $this->getObject();
 		$ilUDFCheck->delete();
 		$this->cancel();
 	}
@@ -158,5 +158,13 @@ class UDFCheckGUI {
 		self::dic()->ctrl()->setParameter($this, self::IDENTIFIER_CATEGORY, NULL);
 		self::dic()->ctrl()->setParameter($this, self::IDENTIFIER, NULL);
 		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
+	}
+
+
+	/**
+	 * @return UDFCheck|null
+	 */
+	protected function getObject() {
+		return UDFCheck::getCheckById(filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY), filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER));
 	}
 }

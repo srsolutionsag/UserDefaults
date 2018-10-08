@@ -54,14 +54,15 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 
 
 	/**
-	 * @param UDFCheckGUI $parent_gui
+	 * @param UDFCheckGUI   $parent_gui
+	 * @param UDFCheck|null $object
 	 */
-	public function __construct(UDFCheckGUI $parent_gui) {
+	public function __construct(UDFCheckGUI $parent_gui, UDFCheck $object = NULL) {
 		parent::__construct();
 
 		$this->parent_gui = $parent_gui;
 
-		$this->object = UDFCheck::getCheckById(filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY), filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER));
+		$this->object = $object;
 
 		$this->is_new = ($this->object === NULL);
 

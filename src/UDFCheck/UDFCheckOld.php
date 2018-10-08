@@ -100,7 +100,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $field_category = UDFCheckUDF::FIELD_CATEGORY;
+	protected $field_category = UDFCheckUser::FIELD_CATEGORY;
 	/**
 	 * @var string
 	 *

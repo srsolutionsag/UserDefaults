@@ -89,7 +89,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		$te = new ilSelectInputGUI($this->txt(self::F_UDF_FIELD_KEY), self::F_UDF_FIELD_KEY);
 		$te->setDisabled(!$this->is_new);
 		$te->setRequired(true);
-		$te->setOptions(UDFCheck::getDefinitionData());
+		$te->setOptions(UDFCheck::getDefinitionOptions());
 		$this->addItem($te);
 
 		if (!$this->is_new) {
@@ -109,10 +109,9 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$op->setOptions($options);
 			$this->addItem($op);
 
-			$udf_type = UDFCheck::getDefinitionTypeForKey($this->object->getFieldKey());
-			$definition = UDFCheck::getDefinitionForId($udf_type);
+			$definition = $this->object->getDefinition();
 
-			switch ($udf_type) {
+			switch ($definition["field_type"]) {
 				case FIELD_TYPE_TEXT:
 				case UDF_TYPE_TEXT:
 					$se = new ilTextInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
@@ -128,7 +127,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 							break;
 						default:
 							$se = new ilSelectInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
-							$se->setOptions(UDFCheck::getDefinitionValuesForKey($this->object->getFieldKey()));
+							$se->setOptions($this->object::getDefinitionValues());
 							$this->addItem($se);
 							break;
 					}
@@ -136,7 +135,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 				default:
 					//DHBW Spec
 					if (self::isCustomUserFieldsHelperAvailable()) {
-						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
 						if ($plugin instanceof ilUDFDefinitionPlugin) {
 
 							$select_gui = $plugin->getFormPropertyForDefinition($definition);
@@ -183,12 +182,11 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 				self::F_CHECK_RADIO => self::F_CHECK_TEXT
 			);
 
-			$udf_type = UDFCheck::getDefinitionTypeForKey($this->object->getFieldKey());
-			$definition = UDFCheck::getDefinitionForId($udf_type);
+			$definition = $this->object->getDefinition();
 
 			//DHBW Spec
 			if (self::isCustomUserFieldsHelperAvailable()) {
-				$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+				$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
 				if ($plugin instanceof ilUDFDefinitionPlugin) {
 					$select_gui = $plugin->getFormPropertyForDefinition($definition);
 
@@ -216,12 +214,11 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$check_radio = $this->getInput(self::F_CHECK_RADIO);
 			switch ($check_radio) {
 				case self::F_CHECK_TEXT:
-					$udf_type = UDFCheck::getDefinitionTypeForKey($this->object->getFieldKey());
-					$definition = UDFCheck::getDefinitionForId($udf_type);
+					$definition = $this->object->getDefinition();
 
 					//DHBW Spec
 					if (self::isCustomUserFieldsHelperAvailable()) {
-						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($udf_type);
+						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
 						if ($plugin instanceof ilUDFDefinitionPlugin) {
 							$select_gui = $plugin->getFormPropertyForDefinition($definition);
 							$check_values = [];
@@ -241,7 +238,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$this->object->setOperator($this->getInput(self::F_UDF_OPERATOR));
 			$this->object->update();
 		} else {
-			$this->object = UDFCheck::newInstance(UDFCheck::getDefinitionCategoryForKey($this->getInput(self::F_UDF_FIELD_KEY)));
+			$this->object = UDFCheck::newInstance(UDFCheck::getCategoryForFieldKey($this->getInput(self::F_UDF_FIELD_KEY)));
 			$this->object->setFieldKey($this->getInput(self::F_UDF_FIELD_KEY));
 			$this->object->setParentId($_GET[UserSettingsGUI::IDENTIFIER]);
 			$this->object->create();

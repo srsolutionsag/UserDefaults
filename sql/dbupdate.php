@@ -78,7 +78,7 @@ if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaul
 	foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::where([
 		"field_category" => 0
 	])->get() as $UDFCheckOld) {
-		$UDFCheckOld->setFieldCategory(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::FIELD_CATEGORY_UDF);
+		$UDFCheckOld->setFieldCategory(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckUDF::FIELD_CATEGORY);
 		$UDFCheckOld->store();
 	}
 }

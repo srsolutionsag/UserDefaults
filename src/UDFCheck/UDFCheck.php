@@ -6,8 +6,6 @@ use ActiveRecord;
 use ActiveRecordList;
 use ilObjUser;
 use ilUserDefaultsPlugin;
-use ilUserDefinedFields;
-use ilUserSearchOptions;
 use srag\ActiveRecordConfig\ActiveRecordConfig;
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
@@ -24,12 +22,6 @@ abstract class UDFCheck extends ActiveRecord {
 
 	use DICTrait;
 	use UserDefaultsTrait;
-	/**
-	 * @var string
-	 *
-	 * @abstract
-	 */
-	const TABLE_NAME = '';
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const OP_EQUALS = 1;
 	const OP_STARTS_WITH = 2;
@@ -45,8 +37,6 @@ abstract class UDFCheck extends ActiveRecord {
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
 	const CHECK_SPLIT = ' → ';
-	const FIELD_CATEGORY_USR = 1;
-	const FIELD_CATEGORY_UDF = 2;
 	/**
 	 * @var array|null
 	 */
@@ -71,15 +61,15 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @var array
 	 */
 	protected static $class_names = [
-		self::FIELD_CATEGORY_USR => UDFCheckUser::class,
-		self::FIELD_CATEGORY_UDF => UDFCheckUDF::class
+		UDFCheckUser::FIELD_CATEGORY => UDFCheckUser::class,
+		UDFCheckUDF::FIELD_CATEGORY => UDFCheckUDF::class
 	];
 
 
 	/**
 	 * @return string
 	 */
-	public function getConnectorContainerName() {
+	public final function getConnectorContainerName() {
 		return static::TABLE_NAME;
 	}
 
@@ -89,8 +79,26 @@ abstract class UDFCheck extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public static function returnDbTableName() {
+	public final static function returnDbTableName() {
 		return static::TABLE_NAME;
+	}
+
+
+	/**
+	 * @param int $field_category
+	 *
+	 * @return static
+	 */
+	public static function newInstance($field_category) {
+		$class = self::$class_names[$field_category];
+
+		if ($class !== NULL) {
+			$check = new $class();
+		} else {
+			$check = new UDFCheckUDF();
+		}
+
+		return $check;
 	}
 
 
@@ -105,19 +113,18 @@ abstract class UDFCheck extends ActiveRecord {
 	public static function getChecksByParent($parent_id, $array = false, array $filter = [], array $limit = []) {
 		$checks = [];
 
-		foreach (self::$class_names as $class) {
-			$where = [ 'parent_id' => $parent_id ];
-
-			foreach ($filter as $field => $value) {
-				if (!empty($value)) {
-					$where[$field] = $value;
-				}
+		$where_array = [ 'parent_id' => $parent_id ];
+		foreach ($filter as $field => $value) {
+			if (!empty($value)) {
+				$where_array[$field] = $value;
 			}
+		}
 
+		foreach (self::$class_names as $class) {
 			/**
 			 * @var ActiveRecordList $where
 			 */
-			$where = $class::where($where);
+			$where = $class::where($where_array);
 
 			if (count($limit) === 2) {
 				$where = $where->limit($limit[0], $limit[1]);
@@ -131,6 +138,7 @@ abstract class UDFCheck extends ActiveRecord {
 				$check_array = get_object_vars($check);
 
 				$check_array["field_category"] = $check->getFieldCategory();
+				$check_array["field_key_txt"] = $check->getDefinition()["txt"];
 
 				return $check_array;
 			}, $checks);
@@ -176,20 +184,79 @@ abstract class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @param int $field_category
-	 *
-	 * @return static
+	 * @return array
 	 */
-	public static function newInstance($field_category) {
-		$class = self::$class_names[$field_category];
-
-		if ($class !== NULL) {
-			$check = new $class();
-		} else {
-			$check = new UDFCheckUDF();
+	public static function getDefinitions() {
+		if (self::$all_definitions !== NULL) {
+			return self::$all_definitions;
 		}
 
-		return $check;
+		self::$all_definitions = [];
+
+		foreach (self::$class_names as $class) {
+			self::$all_definitions = array_merge(self::$all_definitions, $class::getDefinitionsOfCategory());
+		}
+
+		return self::$all_definitions;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public static function getDefinitionOptions() {
+		$return = array();
+
+		foreach (self::getDefinitions() as $definition) {
+			$return[$definition['field_key']] = $definition['txt'];
+		}
+
+		return $return;
+	}
+
+
+	/**
+	 * @param string $field_key
+	 *
+	 * @return int
+	 */
+	public static function getCategoryForFieldKey($field_key) {
+		foreach (self::getDefinitions() as $definition) {
+			if ($definition['field_key'] == $field_key) {
+				return $definition['field_category'];
+			}
+		}
+
+		return 0;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getDefinition() {
+		foreach (static::getDefinitionsOfCategory() as $definition) {
+			if ($definition['field_key'] == $this->field_key) {
+				return $definition;
+			}
+		}
+
+		return [];
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getDefinitionValues() {
+		$definition = $this->getDefinition();
+		$return = [];
+
+		foreach ($definition['field_values'] as $val) {
+			$return[$val] = $val;
+		}
+
+		return $return;
 	}
 
 
@@ -280,19 +347,37 @@ abstract class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @param $field_name
+	 *
+	 * @return mixed|null|string
 	 */
-	public abstract function getFieldCategory();
+	public function sleep($field_name) {
+		switch ($field_name) {
+			case 'create_date':
+			case 'update_date':
+				return date(ActiveRecordConfig::SQL_DATE_FORMAT, $this->{$field_name});
+				break;
+		}
+
+		return NULL;
+	}
 
 
 	/**
-	 * @param int   $primary_key
-	 * @param array $add_constructor_args
+	 * @param $field_name
+	 * @param $field_value
 	 *
-	 * @return static
+	 * @return mixed|null
 	 */
-	public static function find($primary_key, array $add_constructor_args = array()) {
-		return parent::find($primary_key, $add_constructor_args);
+	public function wakeUp($field_name, $field_value) {
+		switch ($field_name) {
+			case 'create_date':
+			case 'update_date':
+				return strtotime($field_value);
+				break;
+		}
+
+		return NULL;
 	}
 
 
@@ -498,47 +583,6 @@ abstract class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @param $field_name
-	 *
-	 * @return mixed|null|string
-	 */
-	public function sleep($field_name) {
-		switch ($field_name) {
-			case 'create_date':
-			case 'update_date':
-				return date(ActiveRecordConfig::SQL_DATE_FORMAT, $this->{$field_name});
-				break;
-		}
-
-		return NULL;
-	}
-
-
-	/**
-	 * @param $field_name
-	 * @param $field_value
-	 *
-	 * @return mixed|null
-	 */
-	public function wakeUp($field_name, $field_value) {
-		switch ($field_name) {
-			case 'create_date':
-			case 'update_date':
-				return strtotime($field_value);
-				break;
-		}
-
-		return NULL;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	protected abstract function getFieldValue(ilObjUser $user);
-
-
-	/**
 	 * @param ilObjUser $user
 	 *
 	 * @return bool
@@ -620,149 +664,35 @@ abstract class UDFCheck extends ActiveRecord {
 
 
 	/**
-	 * @return array
-	 */
-	public static function getAllDefinitions() {
-		if (!is_null(self::$all_definitions)) {
-			return self::$all_definitions;
-		}
-
-		$usr_fields = array();
-		foreach (ilUserSearchOptions::_getSearchableFieldsInfo(true) as $field) {
-			$usr_field = array();
-
-			if (!in_array($field['type'], array( FIELD_TYPE_TEXT, FIELD_TYPE_SELECT, FIELD_TYPE_MULTI ))) {
-				continue;
-			}
-
-			$usr_field["txt"] = $field["lang"];
-			$usr_field["field_category"] = self::FIELD_CATEGORY_USR;
-			$usr_field["field_key"] = $field["db"];
-			$usr_field["field_type"] = $field["type"];
-			$usr_field["field_values"] = $field["values"];
-
-			$usr_fields[] = $usr_field;
-		}
-
-		$udf_fields = array();
-		$user_defined_fields = ilUserDefinedFields::_getInstance();
-		foreach ($user_defined_fields->getDefinitions() as $field) {
-			$udf_field = array();
-
-			if (!in_array($field['field_type'], array( UDF_TYPE_TEXT, UDF_TYPE_SELECT ))) {
-				continue;
-			}
-
-			$udf_field["txt"] = $field["field_name"];
-			$udf_field["field_category"] = self::FIELD_CATEGORY_UDF;
-			$udf_field["field_key"] = $field["field_id"];
-			$udf_field["field_type"] = $field["field_type"];
-			$udf_field["field_values"] = $field["field_values"];
-
-			$udf_fields[] = $udf_field;
-		}
-
-		self::$all_definitions = array_merge($usr_fields, $udf_fields);
-
-		return self::$all_definitions;
-	}
-
-
-	/**
-	 * @param int $id
-	 *
-	 * @return array
-	 */
-	public static function getDefinitionForId($id) {
-		$definitions = self::getAllDefinitions();
-
-		return $definitions[$id];
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public static function getDefinitionData() {
-		/*return array_map(function (array $field) {
-			return $field["txt"];
-		}, self::getAllDefinitions());*/
-		$return = array();
-		foreach (self::getAllDefinitions() as $def) {
-			$return[$def['field_key']] = $def['txt'];
-		}
-
-		return $return;
-	}
-
-
-	/**
-	 * @param string $field_keyd
-	 *
-	 * @return array
-	 */
-	public static function getDefinitionValuesForKey($field_keyd) {
-		$return = array();
-
-		foreach (self::getAllDefinitions() as $def) {
-			if ($def['field_key'] == $field_keyd) {
-				foreach ($def['field_values'] as $val) {
-					$return[$val] = $val;
-				}
-
-				return $return;
-			}
-		}
-
-		return array();
-	}
-
-
-	/**
-	 * @param string $field_key
-	 *
 	 * @return int
 	 */
-	public static function getDefinitionTypeForKey($field_key) {
-		foreach (self::getAllDefinitions() as $def) {
-			if ($def['field_key'] == $field_key) {
-				return $def['field_type'];
-			}
-		}
-
-		return 0;
+	public final function getFieldCategory() {
+		return static::FIELD_CATEGORY;
 	}
 
 
 	/**
-	 * @param string $field_key
+	 * @var string
 	 *
-	 * @return int
+	 * @abstract
 	 */
-	public static function getDefinitionCategoryForKey($field_key) {
-		foreach (self::getAllDefinitions() as $def) {
-			if ($def['field_key'] == $field_key) {
-				return $def['field_category'];
-			}
-		}
-
-		return 0;
-	}
+	const TABLE_NAME = '';
+	/**
+	 * @var int
+	 *
+	 * @abstract
+	 */
+	const FIELD_CATEGORY = '';
 
 
 	/**
-	 * @param string $field_key
-	 * @param string $field_category
-	 *
-	 * @return int
+	 * @return array
 	 */
-	public static function getDefinitionFieldTitleForKey($field_key) {
-		foreach (self::getAllDefinitions() as $def) {
-			if ($def['field_key'] == $field_key) {
-				return $def['txt'];
-			}
-		}
+	protected static abstract function getDefinitionsOfCategory();
 
-		return 0;
-	}
+
+	/**
+	 * @return array
+	 */
+	protected abstract function getFieldValue(ilObjUser $user);
 }

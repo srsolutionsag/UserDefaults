@@ -61,10 +61,10 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		}
 		parent::__construct($title, $post_var);
 
-		self::dic()->template()->addJavaScript(self::plugin()->directory() . '/lib/select2/select2.min.js');
-		self::dic()->template()->addJavaScript(self::plugin()->directory() . '/lib/select2/select2_locale_' . self::dic()->user()
+		self::dic()->mainTemplate()->addJavaScript(self::plugin()->directory() . '/lib/select2/select2.min.js');
+		self::dic()->mainTemplate()->addJavaScript(self::plugin()->directory() . '/lib/select2/select2_locale_' . self::dic()->user()
 				->getCurrentLanguage() . '.js');
-		self::dic()->template()->addCss(self::plugin()->directory() . '/lib/select2/select2.css');
+		self::dic()->mainTemplate()->addCss(self::plugin()->directory() . '/lib/select2/select2.css');
 		$this->setInputTemplate(self::plugin()->template('tpl.multiple_select.html'));
 		$this->setWidth('300px');
 	}

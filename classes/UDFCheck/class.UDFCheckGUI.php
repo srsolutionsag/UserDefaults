@@ -75,7 +75,7 @@ class UDFCheckGUI {
 	 */
 	protected function index() {
 		$ilUDFCheckTabeGUI = new UDFCheckTableGUI($this);
-		self::dic()->template()->setContent($ilUDFCheckTabeGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUDFCheckTabeGUI->getHTML());
 	}
 
 
@@ -85,7 +85,7 @@ class UDFCheckGUI {
 	protected function add() {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
 		$ilUDFCheckFormGUI->fillForm();
-		self::dic()->template()->setContent($ilUDFCheckFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 
 
@@ -101,7 +101,7 @@ class UDFCheckGUI {
 			self::dic()->ctrl()->setParameter($this, self::IDENTIFIER, $id);
 			self::dic()->ctrl()->redirect($this, self::CMD_EDIT);
 		}
-		self::dic()->template()->setContent($ilUDFCheckFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 
 
@@ -111,7 +111,7 @@ class UDFCheckGUI {
 	protected function edit() {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this, $this->getObject());
 		$ilUDFCheckFormGUI->fillForm();
-		self::dic()->template()->setContent($ilUDFCheckFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 
 
@@ -125,7 +125,7 @@ class UDFCheckGUI {
 			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
 			$this->cancel();
 		}
-		self::dic()->template()->setContent($ilUDFCheckFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 
 
@@ -138,7 +138,7 @@ class UDFCheckGUI {
 		$conf->setHeaderText(self::plugin()->translate('msg_confirm_delete'));
 		$conf->setConfirm(self::plugin()->translate('check_delete'), self::CMD_DELETE);
 		$conf->setCancel(self::plugin()->translate('check_cancel'), self::CMD_INDEX);
-		self::dic()->template()->setContent($conf->getHTML());
+		self::dic()->mainTemplate()->setContent($conf->getHTML());
 	}
 
 

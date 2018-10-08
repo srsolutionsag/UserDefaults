@@ -65,7 +65,7 @@ class usrdefUserGUI {
 
 	protected function index() {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
-		self::dic()->template()->setContent($usrdefUserTableGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($usrdefUserTableGUI->getHTML());
 	}
 
 

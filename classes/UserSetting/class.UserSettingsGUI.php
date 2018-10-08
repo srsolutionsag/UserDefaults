@@ -104,13 +104,13 @@ class UserSettingsGUI {
 
 	protected function index() {
 		$ilUserSettingsTableGUI = new UserSettingsTableGUI($this);
-		self::dic()->template()->setContent($ilUserSettingsTableGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUserSettingsTableGUI->getHTML());
 	}
 
 
 	protected function add() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, new UserSetting());
-		self::dic()->template()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
 	}
 
 
@@ -121,14 +121,14 @@ class UserSettingsGUI {
 			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
 			self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 		}
-		self::dic()->template()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
 	}
 
 
 	protected function edit() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, UserSetting::find($_GET[self::IDENTIFIER]));
 		$ilUserSettingsFormGUI->fillForm();
-		self::dic()->template()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
 	}
 
 
@@ -139,7 +139,7 @@ class UserSettingsGUI {
 			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
 			$this->cancel();
 		}
-		self::dic()->template()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
 	}
 
 
@@ -160,7 +160,7 @@ class UserSettingsGUI {
 		$conf->setHeaderText(self::plugin()->translate('msg_confirm_delete'));
 		$conf->setConfirm(self::plugin()->translate('set_delete'), self::CMD_DELETE);
 		$conf->setCancel(self::plugin()->translate('set_cancel'), self::CMD_INDEX);
-		self::dic()->template()->setContent($conf->getHTML());
+		self::dic()->mainTemplate()->setContent($conf->getHTML());
 	}
 
 
@@ -235,7 +235,7 @@ class UserSettingsGUI {
 			$conf->addItem("setting_select[]", $setting_id, UserSetting::find($setting_id)->getTitle());
 		}
 
-		self::dic()->template()->setContent($conf->getHTML());
+		self::dic()->mainTemplate()->setContent($conf->getHTML());
 	}
 
 
@@ -273,7 +273,7 @@ class UserSettingsGUI {
 			$conf->addItem("setting_select[]", $setting_id, UserSetting::find($setting_id)->getTitle());
 		}
 
-		self::dic()->template()->setContent($conf->getHTML());
+		self::dic()->mainTemplate()->setContent($conf->getHTML());
 	}
 
 
@@ -311,7 +311,7 @@ class UserSettingsGUI {
 			$conf->addItem("setting_select[]", $setting_id, UserSetting::find($setting_id)->getTitle());
 		}
 
-		self::dic()->template()->setContent($conf->getHTML());
+		self::dic()->mainTemplate()->setContent($conf->getHTML());
 	}
 
 

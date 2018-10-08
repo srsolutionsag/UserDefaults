@@ -108,8 +108,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 
 		$se = new ilSelectInputGUI($this->txt(self::F_GLOBAL_ROLE), self::F_GLOBAL_ROLE);
 		$se->setRequired(true);
-		$global_roles = array( "" => self::plugin()->getPluginObject()->txt("set_form_please_choose") );
-		//$global_roles = array( "" => $this->txt("form_please_choose") ); // TODO: Bug in DICTrait
+		$global_roles = array( "" => $this->txt("form_please_choose") );
 		self::appendRoles($global_roles, ilRbacReview::FILTER_ALL_GLOBAL);
 		$se->setOptions($global_roles);
 		$this->addItem($se);

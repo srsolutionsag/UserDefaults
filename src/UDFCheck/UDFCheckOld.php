@@ -23,10 +23,14 @@ class UDFCheckOld extends ActiveRecord {
 	use DICTrait;
 	use UserDefaultsTrait;
 	/**
+	 * @var string
+	 *
 	 * @deprecated
 	 */
 	const TABLE_NAME = 'usr_def_checks';
 	/**
+	 * @var string
+	 *
 	 * @deprecated
 	 */
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;

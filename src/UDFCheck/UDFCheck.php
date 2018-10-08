@@ -205,7 +205,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @return array
 	 */
 	public static function getDefinitionOptions() {
-		$return = array();
+		$return = [];
 
 		foreach (self::getDefinitions() as $definition) {
 			$return[$definition['field_key']] = $definition['txt'];
@@ -250,6 +250,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 */
 	public function getDefinitionValues() {
 		$definition = $this->getDefinition();
+
 		$return = [];
 
 		foreach ($definition['field_values'] as $val) {

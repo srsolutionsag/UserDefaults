@@ -9,8 +9,8 @@ use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
  *
  * @package srag\Plugins\UserDefaults\Form
  *
- * @author Oskar Truffer <ot@studer-raimann.ch>
- * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author  Oskar Truffer <ot@studer-raimann.ch>
+ * @author  Fabian Schmid <fs@studer-raimann.ch>
  */
 class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 

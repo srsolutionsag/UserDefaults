@@ -7,6 +7,7 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\Form\usrdefOrguSelectorInputGUI;
 use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefUserTableGUI
@@ -19,6 +20,7 @@ use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
 class usrdefUserTableGUI extends ilTable2GUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const TABLE_ID = 'tbl_mutla_users';
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	/**

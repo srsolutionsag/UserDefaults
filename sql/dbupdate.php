@@ -1,6 +1,5 @@
 <#1>
 <?php
-\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::updateDB();
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#2>
@@ -17,7 +16,7 @@
 ?>
 <#5>
 <?php
-\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::updateDB();
+//
 ?>
 <#6>
 <?php
@@ -57,26 +56,71 @@ foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSet
 ?>
 <#13>
 <?php
-\srag\DIC\DICStatic::dic()->database()->renameTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "udf_field_id", "field_key");
-\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "field_key", [
-	"type" => "text"
-]);
+if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
+
+	\srag\DIC\DICStatic::dic()->database()
+		->renameTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "udf_field_id", "field_key");
+
+	\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
+		"type" => "text"
+	]);
+}
 ?>
 <#14>
 <?php
-\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::updateDB();
-/**
- * @var \srag\Plugins\UserDefaults\UDFCheck\UDFCheck $UDFCheck
- */
-foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::get() as $UDFCheck) {
-	$UDFCheck->setFieldCategory($UDFCheck::FIELD_CATEGORY_UDF);
-	$UDFCheck->update();
+if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
+
+	/**
+	 * @var \srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld $UDFCheckOld
+	 */
+	foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::where([
+		"field_category" => 0
+	])->get() as $UDFCheckOld) {
+		$UDFCheckOld->setFieldCategory(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::FIELD_CATEGORY_UDF);
+		$UDFCheckOld->store();
+	}
 }
 ?>
 <#15>
 <?php
-\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheck::TABLE_NAME, "field_key", [
-	"type" => "text",
-	"length" => "256"
-]);
+if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
+
+	\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
+		"type" => "text",
+		"length" => "256"
+	]);
+}
+?>
+<#16>
+<?php
+\srag\Plugins\UserDefaults\UDFCheck\UDFCheckUser::updateDB();
+\srag\Plugins\UserDefaults\UDFCheck\UDFCheckUDF::updateDB();
+
+if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
+
+	/**
+	 * @var \srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld $UDFCheckOld
+	 */
+	foreach (\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::get() as $UDFCheckOld) {
+		$UDFCheck = \srag\Plugins\UserDefaults\UDFCheck\UDFCheck::newInstance($UDFCheckOld->getFieldCategory());
+
+		$UDFCheck->setParentId($UDFCheckOld->getParentId());
+		$UDFCheck->setFieldKey($UDFCheckOld->getFieldKey());
+		$UDFCheck->setCheckValue($UDFCheckOld->getCheckValue());
+		$UDFCheck->setOperator($UDFCheckOld->getOperator());
+		$UDFCheck->setNegated($UDFCheckOld->isNegated());
+		$UDFCheck->setOwner($UDFCheckOld->getOwner());
+		$UDFCheck->setStatus($UDFCheckOld->getStatus());
+		$UDFCheck->setCreateDate($UDFCheckOld->getCreateDate());
+		$UDFCheck->setUpdateDate($UDFCheckOld->getUpdateDate());
+
+		$UDFCheck->store();
+	}
+
+	\srag\DIC\DICStatic::dic()->database()->dropTable(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, false);
+}
 ?>

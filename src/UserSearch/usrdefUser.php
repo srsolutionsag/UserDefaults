@@ -1,10 +1,12 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\UserSearch;
+
 use ActiveRecord;
 use ilException;
 use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefUser
@@ -18,6 +20,7 @@ use srag\DIC\DICTrait;
 class usrdefUser extends ActiveRecord {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const TABLE_NAME = "usr_data";
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 

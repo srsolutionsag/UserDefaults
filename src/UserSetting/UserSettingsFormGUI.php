@@ -14,6 +14,7 @@ use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\Form\ilContainerMultiSelectInputGUI;
 use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserSettingsGUI;
 
 /**
@@ -27,6 +28,7 @@ use UserSettingsGUI;
 class UserSettingsFormGUI extends ilPropertyFormGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const F_TITLE = 'title';
 	const F_STATUS = 'status';

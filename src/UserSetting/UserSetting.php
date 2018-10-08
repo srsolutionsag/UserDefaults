@@ -7,7 +7,6 @@ use DOMXPath;
 use ilCourseConstants;
 use ilCourseParticipants;
 use ilExAssignment;
-use ilException;
 use ilExSubmission;
 use ilGroupParticipants;
 use ilObject2;
@@ -26,6 +25,7 @@ use php4DOMDocument;
 use srag\ActiveRecordConfig\ActiveRecordConfig;
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class ilUserSetting
@@ -38,6 +38,7 @@ use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 class UserSetting extends ActiveRecord {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const TABLE_NAME = 'usr_def_sets';
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const STATUS_INACTIVE = 1;
@@ -128,7 +129,7 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @param       $primary_key
+	 * @param int   $primary_key
 	 * @param array $add_constructor_args
 	 *
 	 * @return UserSetting
@@ -138,6 +139,9 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 *
+	 */
 	public function delete() {
 		foreach ($this->getUdfCheckObjects() as $udf_check) {
 			$udf_check->delete();
@@ -147,6 +151,9 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 *
+	 */
 	public function update() {
 		$this->setOwner(self::dic()->user()->getId());
 		$this->setUpdateDate(time());
@@ -159,6 +166,9 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 *
+	 */
 	public function create() {
 		$this->setOwner(self::dic()->user()->getId());
 		$this->setUpdateDate(time());
@@ -171,10 +181,10 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @param ilObjUser $ilObjUser
+	 * @param ilObjUser $user
 	 */
-	public function doAssignements(ilObjUser $ilObjUser) {
-		$this->setUsrObject($ilObjUser);
+	public function doAssignements(ilObjUser $user) {
+		$this->setUsrObject($user);
 		if ($this->isValid()) {
 			$this->generatePortfolio();
 			$this->assignCourses();
@@ -202,6 +212,9 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function assignToGlobalRole() {
 		$global_role = $this->getGlobalRole();
 		if (ilObject2::_lookupType($global_role) == 'role') {
@@ -210,10 +223,13 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function assignCourses() {
 		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
 		if (count($courses) == 0) {
-			return false;
+			return;
 		}
 
 		foreach ($courses as $crs_obj_id) {
@@ -233,14 +249,17 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function unsubscribeCourses() {
 		if (!$this->isUnsubscribeCoursesDesktop()) {
-			return false;
+			return;
 		}
 
 		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
 		if (count($courses) == 0) {
-			return false;
+			return;
 		}
 
 		foreach ($courses as $crs_obj_id) {
@@ -254,10 +273,13 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function assignGroups() {
 		$groups = array_merge($this->getAssignedGroupes(), $this->getAssignedGroupesDesktop());
 		if (count($groups) == 0) {
-			return false;
+			return;
 		}
 
 		foreach ($groups as $grp_obj_id) {
@@ -284,13 +306,9 @@ class UserSetting extends ActiveRecord {
 		$do_assignements = true;
 
 		foreach ($this->getUdfCheckObjects() as $udf) {
-
-
 			if (!$udf->isValid($this->getUsrObject())) {
 				$do_assignements = false;
 			}
-
-
 		}
 
 		return $do_assignements;
@@ -298,18 +316,18 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @throws ilException
+	 *
 	 */
 	protected function generatePortfolio() {
 		if ($this->getPortfolioTemplateId() < 10) {
-			return false;
+			return;
 		}
 
 		$data = ilObjPortfolio::getPortfoliosOfUser($this->getUsrObject()->getId());
 
 		foreach ($data as $p) {
 			if (trim($p['title']) == trim($this->getReplacesPortfolioTitle())) {
-				return false;
+				return;
 			}
 		}
 
@@ -381,18 +399,21 @@ class UserSetting extends ActiveRecord {
 	 * @return bool
 	 */
 	public function hasChecks() {
-		return UDFCheck::where(array( 'parent_id' => $this->getId() ))->hasSets();
+		return UDFCheck::hasChecks($this->getId());
 	}
 
 
+	/**
+	 *
+	 */
 	public function afterObjectLoad() {
-		$ilUDFChecks = UDFCheck::where(array( 'parent_id' => $this->getId() ))->get();
+		$ilUDFChecks = UDFCheck::getChecksByParent($this->getId());
 		$this->setUdfCheckObjects($ilUDFChecks);
 	}
 
 
 	/**
-	 * @return array
+	 *
 	 */
 	protected function addSkills() {
 		$user = $this->getUsrObject();

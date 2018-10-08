@@ -1,9 +1,11 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\UserSearch;
+
 use ActiveRecord;
 use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefObj
@@ -17,6 +19,7 @@ use srag\DIC\DICTrait;
 class usrdefObj extends ActiveRecord {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const TABLE_NAME = "object_data";
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 

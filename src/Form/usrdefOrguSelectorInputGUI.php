@@ -3,6 +3,7 @@
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace srag\Plugins\UserDefaults\Form;
+
 use ilExplorerSelectInputGUI;
 use ilFormPropertyDispatchGUI;
 use ilObject;
@@ -11,11 +12,12 @@ use ilRepositorySelector2InputGUI;
 use ilRepositorySelectorExplorerGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefOrguSelectorInputGUI
  *
- * @package srag\Plugins\UserDefaults\Form
+ * @package           srag\Plugins\UserDefaults\Form
  *
  * Select repository nodes
  *
@@ -25,6 +27,7 @@ use srag\DIC\DICTrait;
 class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	/**
 	 * @var callable

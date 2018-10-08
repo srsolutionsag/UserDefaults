@@ -3,7 +3,9 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use srag\Plugins\UserDefaults\Config\Config;
-use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheckUDF;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheckUser;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\RemovePluginDataConfirm\PluginUninstallTrait;
 
@@ -24,8 +26,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	const SERVICES_USER = 'Services/User';
 	const SERVICES_AUTHENTICATION = 'Services/Authentication';
 	const MODULES_ORGUNITS = 'Modules/OrgUnit';
-
-
 	// Known Actions
 	const CREATED_1 = 'saveAsNew';
 	const CREATED_2 = 'afterCreate';
@@ -33,11 +33,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	const AFTER_LOGIN = 'afterLogin';
 	const ASSIGN_USER_TO_POSITION = 'assignUserToPosition';
 	const REMOVE_USER_FROM_POSITION = 'removeUserFromPosition';
-
-
-
-
-
 	/**
 	 * @var
 	 */
@@ -84,13 +79,13 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
 		$run = false;
-		$ilUser = NULL;
+		$user = NULL;
 		switch ($a_component) {
 			case self::SERVICES_AUTHENTICATION:
 				switch ($a_event) {
 					case self::AFTER_LOGIN:
 						$user_id = ilObjUser::getUserIdByLogin($a_parameter['username']);
-						$ilUser = new ilObjUser ($user_id);
+						$user = new ilObjUser($user_id);
 
 						$run = true;
 						break;
@@ -101,7 +96,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 					case self::CREATED_1:
 					case self::CREATED_2:
 					case self::UPDATED:
-						$ilUser = $a_parameter['user_obj'];
+						$user = $a_parameter['user_obj'];
 						$run = true;
 						break;
 				}
@@ -110,9 +105,9 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 				switch ($a_event) {
 					case self::ASSIGN_USER_TO_POSITION:
 					case self::REMOVE_USER_FROM_POSITION:
-						$ilUser = new ilObjUser ($a_parameter['user_id']);
+						$user = new ilObjUser($a_parameter['user_id']);
 						$run = true;
-					break;
+						break;
 				}
 				break;
 			default:
@@ -122,7 +117,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 		$sets = self::$mapping[$a_event];
 
-		if ($run === true && $sets && $ilUser instanceof ilObjUser) {
+		if ($run === true && $sets && $user instanceof ilObjUser) {
 			/**
 			 * @var UserSetting $ilUserSetting
 			 */
@@ -130,7 +125,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 				'status' => UserSetting::STATUS_ACTIVE,
 				$sets => true,
 			))->get() as $ilUserSetting) {
-				$ilUserSetting->doAssignements($ilUser);
+				$ilUserSetting->doAssignements($user);
 			}
 		}
 	}
@@ -148,7 +143,9 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @inheritdoc
 	 */
 	protected function deleteData()/*: void*/ {
-		self::dic()->database()->dropTable(UDFCheck::TABLE_NAME, false);
+		self::dic()->database()->dropTable(UDFCheckOld::TABLE_NAME, false);
+		self::dic()->database()->dropTable(UDFCheckUser::TABLE_NAME, false);
+		self::dic()->database()->dropTable(UDFCheckUDF::TABLE_NAME, false);
 		self::dic()->database()->dropTable(UserSetting::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);

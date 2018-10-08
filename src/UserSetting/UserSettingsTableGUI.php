@@ -1,16 +1,18 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\UserSetting;
+
 use ilAdvancedSelectionListGUI;
 use ilExcel;
 use ilLinkButton;
 use ilTable2GUI;
-use UDFCheckGUI;
 use ilUserDefaultsPlugin;
-use UserSettingsGUI;
 use ilUtil;
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+use UDFCheckGUI;
+use UserSettingsGUI;
 
 /**
  * Class ilUserSettingsTableGUI
@@ -23,6 +25,7 @@ use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 class UserSettingsTableGUI extends ilTable2GUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const USR_DEF_CONTENT = 'usr_def_content';
 	/**
@@ -123,16 +126,22 @@ class UserSettingsTableGUI extends ilTable2GUI {
 				$current_selection_list->setListTitle(self::plugin()->translate('set_actions'));
 				$current_selection_list->setId('set_actions' . $ilUserSetting->getId());
 				$current_selection_list->setUseImages(false);
-				$current_selection_list->addItem(self::plugin()->translate('set_edit'), 'set_edit', self::dic()->ctrl()->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT));
+				$current_selection_list->addItem(self::plugin()->translate('set_edit'), 'set_edit', self::dic()->ctrl()
+					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT));
 
-				$current_selection_list->addItem(self::plugin()->translate('set_udf_checks'), 'set_udf_checks', self::dic()->ctrl()->getLinkTarget($ilUDFCheckGUI, UDFCheckGUI::CMD_INDEX));
+				$current_selection_list->addItem(self::plugin()->translate('set_udf_checks'), 'set_udf_checks', self::dic()->ctrl()
+					->getLinkTarget($ilUDFCheckGUI, UDFCheckGUI::CMD_INDEX));
 				if ($ilUserSetting->getStatus() == UserSetting::STATUS_ACTIVE) {
-					$current_selection_list->addItem(self::plugin()->translate('set_deactivate'), 'set_deactivate', self::dic()->ctrl()->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DEACTIVATE));
+					$current_selection_list->addItem(self::plugin()->translate('set_deactivate'), 'set_deactivate', self::dic()->ctrl()
+						->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DEACTIVATE));
 				} else {
-					$current_selection_list->addItem(self::plugin()->translate('set_activate'), 'set_activate', self::dic()->ctrl()->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_ACTIVATE));
+					$current_selection_list->addItem(self::plugin()->translate('set_activate'), 'set_activate', self::dic()->ctrl()
+						->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_ACTIVATE));
 				}
-				$current_selection_list->addItem(self::plugin()->translate('set_duplicate'), 'set_duplicate', self::dic()->ctrl()->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DUPLICATE));
-				$current_selection_list->addItem(self::plugin()->translate('set_delete'), 'set_delete', self::dic()->ctrl()->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE));
+				$current_selection_list->addItem(self::plugin()->translate('set_duplicate'), 'set_duplicate', self::dic()->ctrl()
+					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DUPLICATE));
+				$current_selection_list->addItem(self::plugin()->translate('set_delete'), 'set_delete', self::dic()->ctrl()
+					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE));
 
 				$this->tpl->setCurrentBlock('td');
 				$this->tpl->setVariable('VALUE', $current_selection_list->getHTML());
@@ -237,8 +246,8 @@ class UserSettingsTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param ilExcel $a_worksheet
-	 * @param int      $a_row
-	 * @param array    $a_set
+	 * @param int     $a_row
+	 * @param array   $a_set
 	 */
 	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
 		$col = 0;

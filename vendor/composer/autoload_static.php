@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf
+class ComposerStaticInit807071db2b900537de24dda39c12ea63
 {
     public static $prefixLengthsPsr4 = array (
         's' => 
@@ -12,7 +12,6 @@ class ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf
             'srag\\RemovePluginDataConfirm\\' => 29,
             'srag\\Plugins\\UserDefaults\\' => 26,
             'srag\\DIC\\' => 9,
-            'srag\\CustomInputGUIs\\' => 21,
             'srag\\ActiveRecordConfig\\' => 24,
         ),
     );
@@ -29,10 +28,6 @@ class ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf
         'srag\\DIC\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/dic/src',
-        ),
-        'srag\\CustomInputGUIs\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/srag/custominputguis/src',
         ),
         'srag\\ActiveRecordConfig\\' => 
         array (
@@ -88,7 +83,6 @@ class ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf
         'srag\\ActiveRecordConfig\\ActiveRecordConfigFormGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigFormGUI.php',
         'srag\\ActiveRecordConfig\\ActiveRecordConfigGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigGUI.php',
         'srag\\ActiveRecordConfig\\Exception\\ActiveRecordConfigException' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Exception/ActiveRecordConfigException.php',
-        'srag\\CustomInputGUIs\\MultiSelectSearchInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchInputGUI.php',
         'srag\\DIC\\DICStatic' => __DIR__ . '/..' . '/srag/dic/src/DICStatic.php',
         'srag\\DIC\\DICStaticInterface' => __DIR__ . '/..' . '/srag/dic/src/DICStaticInterface.php',
         'srag\\DIC\\DICTrait' => __DIR__ . '/..' . '/srag/dic/src/DICTrait.php',
@@ -109,12 +103,16 @@ class ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf
         'srag\\Plugins\\UserDefaults\\Form\\usrdefOrguSelectorInputGUI' => __DIR__ . '/../..' . '/src/Form/usrdefOrguSelectorInputGUI.php',
         'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheck' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheck.php',
         'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckFormGUI' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckFormGUI.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckOld' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckOld.php',
         'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckTableGUI' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckTableGUI.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUDF' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckUDF.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUser' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckUser.php',
         'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefObj' => __DIR__ . '/../..' . '/src/UserSearch/usrdefObj.php',
         'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefUser' => __DIR__ . '/../..' . '/src/UserSearch/usrdefUser.php',
         'srag\\Plugins\\UserDefaults\\UserSetting\\UserSetting' => __DIR__ . '/../..' . '/src/UserSetting/UserSetting.php',
         'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsFormGUI' => __DIR__ . '/../..' . '/src/UserSetting/UserSettingsFormGUI.php',
         'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsTableGUI' => __DIR__ . '/../..' . '/src/UserSetting/UserSettingsTableGUI.php',
+        'srag\\Plugins\\UserDefaults\\Utils\\UserDefaultsTrait' => __DIR__ . '/../..' . '/src/Utils/UserDefaultsTrait.php',
         'srag\\RemovePluginDataConfirm\\AbstractPluginUninstallTrait' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/AbstractPluginUninstallTrait.php',
         'srag\\RemovePluginDataConfirm\\AbstractRemovePluginDataConfirm' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/AbstractRemovePluginDataConfirm.php',
         'srag\\RemovePluginDataConfirm\\PluginUninstallTrait' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/PluginUninstallTrait.php',
@@ -128,9 +126,9 @@ class ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit386248d5bf784ae8d5ce057dc84da6cf::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit807071db2b900537de24dda39c12ea63::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit807071db2b900537de24dda39c12ea63::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit807071db2b900537de24dda39c12ea63::$classMap;
 
         }, null, ClassLoader::class);
     }

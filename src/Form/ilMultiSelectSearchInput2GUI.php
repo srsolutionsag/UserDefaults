@@ -6,6 +6,7 @@ use ilMultiSelectInputGUI;
 use ilTemplate;
 use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use srDefaultAccessChecker;
 
 /**
@@ -18,6 +19,7 @@ use srDefaultAccessChecker;
 class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	/**
 	 * @var string

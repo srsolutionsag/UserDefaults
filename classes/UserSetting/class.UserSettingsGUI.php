@@ -7,6 +7,7 @@ use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\UserSetting\UserSettingsFormGUI;
 use srag\Plugins\UserDefaults\UserSetting\UserSettingsTableGUI;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class UserSettingsGUI
@@ -20,6 +21,7 @@ use srag\Plugins\UserDefaults\UserSetting\UserSettingsTableGUI;
 class UserSettingsGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_INDEX = 'configure';
 	const CMD_SEARCH_COURSES = 'searchContainer';

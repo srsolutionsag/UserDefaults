@@ -7,6 +7,7 @@ use ilSubEnabledFormPropertyGUI;
 use ilTemplate;
 use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class ilMultipleTextInput3GUI
@@ -20,6 +21,7 @@ use srag\DIC\DICTrait;
 class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	/**
 	 * @var array

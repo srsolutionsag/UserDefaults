@@ -1,9 +1,10 @@
 <?php
 
-
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+
 /**
  * Class ilUserDefaultsConfigGUI
  *
@@ -15,6 +16,7 @@ use srag\DIC\DICTrait;
 class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const TAB_SETTINGS = "settings";
 	const TAB_USERS = "users";

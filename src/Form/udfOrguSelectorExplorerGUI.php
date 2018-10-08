@@ -2,11 +2,13 @@
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace srag\Plugins\UserDefaults\Form;
+
 use ilContainerSorting;
 use ilObject;
 use ilTreeExplorerGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class udfOrguSelectorExplorerGUI
@@ -16,6 +18,7 @@ use srag\DIC\DICTrait;
 class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	protected $type_grps = array();
 	protected $session_materials = array();

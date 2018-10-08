@@ -1,6 +1,7 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\Form;
+
 use ilDateTimeInputGUI;
 use ilException;
 use ilFormPropertyGUI;
@@ -9,17 +10,19 @@ use ilTextAreaInputGUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class udfMultiLineInputGUI
  *
  * @package srag\Plugins\UserDefaults\Form
  *
- * @author Michael Herren <mh@studer-raimann.ch>
+ * @author  Michael Herren <mh@studer-raimann.ch>
  */
 class udfMultiLineInputGUI extends ilFormPropertyGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const HOOK_IS_LINE_REMOVABLE = "hook_is_line_removable";
 	const HOOK_IS_INPUT_DISABLED = "hook_is_disabled";

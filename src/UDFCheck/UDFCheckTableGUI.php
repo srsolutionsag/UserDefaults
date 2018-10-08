@@ -1,22 +1,24 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\UDFCheck;
+
 use ilAdvancedSelectionListGUI;
 use ilExcel;
 use ILIAS\UI\Component\Image\Factory;
 use ILIAS\UI\Renderer;
 use ilLinkButton;
 use ilTable2GUI;
-use UDFCheckGUI;
 use ilUserDefaultsPlugin;
-use UserSettingsGUI;
 use ilUtil;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+use UDFCheckGUI;
+use UserSettingsGUI;
 
 /**
  * Class UDFCheckTableGUI
  *
- * @package srag\Plugins\UserDefaults\UDFChec
+ * @package srag\Plugins\UserDefaults\UDFCheck
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  * @version 1.0.0
@@ -24,6 +26,7 @@ use srag\DIC\DICTrait;
 class UDFCheckTableGUI extends ilTable2GUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const USR_DEF_CONTENT = 'usr_def_content_checks';
 	/**
@@ -51,7 +54,7 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	 */
 	public function __construct(UDFCheckGUI $parent_obj, $parent_cmd = UDFCheckGUI::CMD_INDEX, $template_context = "") {
 		$this->renderer = self::dic()->ui()->renderer();
-		$this->image =  self::dic()->ui()->factory()->image();
+		$this->image = self::dic()->ui()->factory()->image();
 
 		$this->setPrefix(self::USR_DEF_CONTENT);
 		$this->setFormName(self::USR_DEF_CONTENT);
@@ -82,25 +85,25 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function parseData() {
 		$this->determineOffsetAndOrder();
 		$this->determineLimit();
-		$xdglRequestList = UDFCheck::getCollection();
-		$xdglRequestList->where(array( 'parent_id' => $_GET[UserSettingsGUI::IDENTIFIER] ));
 
-		foreach ($this->filter as $field => $value) {
-			if ($value) {
-				$xdglRequestList->where(array( $field => $value ));
-			}
-		}
-		$this->setMaxCount($xdglRequestList->count());
-		if (!$xdglRequestList->hasSets()) {
-			//			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
-		}
-		$xdglRequestList->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
-		$a_data = $xdglRequestList->getArray();
+		$checks = UDFCheck::getChecksByParent(filter_input(INPUT_GET, UserSettingsGUI::IDENTIFIER), true, $this->filter, [
+			$this->getOffset(),
+			$this->getOffset() + $this->getLimit()
+		]);
 
-		$this->setData($a_data);
+		$this->setMaxCount(count($checks));
+
+		/*if (count($checks) === 0) {
+			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter'); // TODO: Translate
+		}*/
+
+		$this->setData($checks);
 	}
 
 
@@ -113,6 +116,8 @@ class UDFCheckTableGUI extends ilTable2GUI {
 		$ilUDFCheckGUI = new UDFCheckGUI($this->parent_obj);
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($k == 'actions') {
+				self::dic()->ctrl()->setParameter($this->parent_obj, UDFCheckGUI::IDENTIFIER_CATEGORY, $a_set["field_category"]);
+				self::dic()->ctrl()->setParameter($ilUDFCheckGUI, UDFCheckGUI::IDENTIFIER_CATEGORY, $a_set["field_category"]);
 				self::dic()->ctrl()->setParameter($this->parent_obj, UDFCheckGUI::IDENTIFIER, $a_set["id"]);
 				self::dic()->ctrl()->setParameter($ilUDFCheckGUI, UDFCheckGUI::IDENTIFIER, $a_set["id"]);
 
@@ -120,8 +125,10 @@ class UDFCheckTableGUI extends ilTable2GUI {
 				$current_selection_list->setListTitle(self::plugin()->translate('check_actions'));
 				$current_selection_list->setId('check_actions' . $a_set["id"]);
 				$current_selection_list->setUseImages(false);
-				$current_selection_list->addItem(self::plugin()->translate('check_edit'), 'check_edit', self::dic()->ctrl()->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT));
-				$current_selection_list->addItem(self::plugin()->translate('check_delete'), 'check_delete', self::dic()->ctrl()->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE));
+				$current_selection_list->addItem(self::plugin()->translate('check_edit'), 'check_edit', self::dic()->ctrl()
+					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT));
+				$current_selection_list->addItem(self::plugin()->translate('check_delete'), 'check_delete', self::dic()->ctrl()
+					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE));
 
 				$this->tpl->setCurrentBlock('td');
 				$this->tpl->setVariable('VALUE', $current_selection_list->getHTML());
@@ -233,8 +240,8 @@ class UDFCheckTableGUI extends ilTable2GUI {
 
 	/**
 	 * @param ilExcel $a_worksheet
-	 * @param int      $a_row
-	 * @param array    $a_set
+	 * @param int     $a_row
+	 * @param array   $a_set
 	 */
 	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
 		$col = 0;

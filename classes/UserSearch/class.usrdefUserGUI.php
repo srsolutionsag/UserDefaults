@@ -1,8 +1,10 @@
 <?php
 
 require_once __DIR__ . "/../../vendor/autoload.php";
+
 use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefUserGUI
@@ -15,6 +17,7 @@ use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 class usrdefUserGUI {
 
 	use DICTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_INDEX = 'index';
 	const CMD_APPLY_FILTER = 'applyFilter';

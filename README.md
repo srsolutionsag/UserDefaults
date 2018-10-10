@@ -11,6 +11,13 @@ git clone https://github.com/studer-raimann/UserDefaults.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.
 
+### Dependencies
+* PHP >=5.6
+* [composer](https://getcomposer.org)
+* [srag/activerecordconfig](https://packagist.org/packages/srag/activerecordconfig)
+* [srag/dic](https://packagist.org/packages/srag/dic)
+* [srag/removeplugindataconfirm](https://packagist.org/packages/srag/removeplugindataconfirm)
+
 ### ILIAS Plugin SLA
 
 Wir lieben und leben die Philosophie von Open Source Software! Die meisten unserer Entwicklungen, welche wir im Kundenauftrag oder in Eigenleistung entwickeln, stellen wir öffentlich allen Interessierten kostenlos unter https://github.com/studer-raimann zur Verfügung.
@@ -22,4 +29,3 @@ Bitte beachten Sie, dass wir nur Institutionen, welche ein SLA abschliessen Unte
 ### Contact
 support-custom1@studer-raimann.ch  
 https://studer-raimann.ch  
-

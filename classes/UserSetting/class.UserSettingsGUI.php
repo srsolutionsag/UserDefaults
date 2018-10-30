@@ -25,7 +25,7 @@ class UserSettingsGUI {
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_INDEX = 'configure';
-	const CMD_SEARCH_COURSES = 'searchContainer';
+	const CMD_SEARCH_COURSES = 'searchCourses';
 	const CMD_CANCEL = 'cancel';
 	const CMD_CREATE = 'create';
 	const CMD_UPDATE = 'update';
@@ -46,14 +46,17 @@ class UserSettingsGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * UserSettingsGUI constructor
 	 */
-	public function __construct($parent_gui) {
-		//		self::plugin()->getPluginObject()->updateLanguageFiles();
+	public function __construct() {
+		//self::plugin()->getPluginObject()->updateLanguageFiles();
 		self::dic()->ctrl()->saveParameter($this, self::IDENTIFIER);
 	}
 
 
+	/**
+	 *
+	 */
 	public function executeCommand() {
 		$cmd = self::dic()->ctrl()->getCmd(self::CMD_INDEX);
 		$cmdClass = self::dic()->ctrl()->getCmdClass();
@@ -82,11 +85,12 @@ class UserSettingsGUI {
 				$this->{$cmd}();
 				break;
 		}
-
-		return true;
 	}
 
 
+	/**
+	 *
+	 */
 	protected function activate() {
 		$ilUserSetting = UserSetting::find($_GET[self::IDENTIFIER]);
 		$ilUserSetting->setStatus(UserSetting::STATUS_ACTIVE);
@@ -95,6 +99,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function deactivate() {
 		$ilUserSetting = UserSetting::find($_GET[self::IDENTIFIER]);
 		$ilUserSetting->setStatus(UserSetting::STATUS_INACTIVE);
@@ -103,18 +110,27 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function index() {
 		$ilUserSettingsTableGUI = new UserSettingsTableGUI($this);
 		self::dic()->mainTemplate()->setContent($ilUserSettingsTableGUI->getHTML());
 	}
 
 
+	/**
+	 *
+	 */
 	protected function add() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, new UserSetting());
 		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
 	}
 
 
+	/**
+	 *
+	 */
 	protected function create() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, new UserSetting());
 		$ilUserSettingsFormGUI->setValuesByPost();
@@ -126,6 +142,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function edit() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, UserSetting::find($_GET[self::IDENTIFIER]));
 		$ilUserSettingsFormGUI->fillForm();
@@ -133,6 +152,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function update() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, UserSetting::find($_GET[self::IDENTIFIER]));
 		$ilUserSettingsFormGUI->setValuesByPost();
@@ -144,6 +166,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function duplicate() {
 		$original = UserSetting::find($_GET[self::IDENTIFIER]);
 		/** @var UserSetting $copy */
@@ -155,6 +180,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	public function confirmDelete() {
 		$conf = new ilConfirmationGUI();
 		$conf->setFormAction(self::dic()->ctrl()->getFormAction($this));
@@ -165,6 +193,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	public function delete() {
 		$ilUserSetting = UserSetting::find($_GET[self::IDENTIFIER]);
 		$ilUserSetting->delete();
@@ -172,6 +203,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	public function cancel() {
 		self::dic()->ctrl()->setParameter($this, self::IDENTIFIER, NULL);
 		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
@@ -181,13 +215,17 @@ class UserSettingsGUI {
 	/**
 	 *
 	 */
-	protected function searchContainer() {
+	protected function searchCourses() {
 		$term = filter_input(INPUT_GET, "term");
 		$type = filter_input(INPUT_GET, "container_type");
 
 		$category_ref_id = Config::getCategoryRefId();
 
-		// TODO: Filter by category_ref_id
+		if (!empty($category_ref_id)) {
+			$courses = self::access()->getCoursesOfCategory($category_ref_id);
+		} else {
+			$courses = [];
+		}
 
 		$query = "SELECT obj.obj_id, obj.title
 				  FROM " . usrdefObj::TABLE_NAME . " AS obj
@@ -196,6 +234,7 @@ class UserSettingsGUI {
 			      WHERE obj.type = %s
 			      AND (" . self::dic()->database()->like("obj.title", "text", "%%" . $term . "%%") . " OR " . self::dic()->database()
 				->like("trans.title", "text", $term, "%%" . $term . "%%") . ")
+				" . (!empty($courses) ? "AND " . self::dic()->database()->in("ref.ref_id", $courses, false, "integer") : "") . "
 				  AND obj.title != %s
 				  AND ref.deleted IS NULL
 			      ORDER BY obj.title";
@@ -213,6 +252,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function applyFilter() {
 		$tableGui = new UserSettingsTableGUI($this, self::CMD_INDEX);
 		$tableGui->resetOffset(true);
@@ -221,6 +263,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function resetFilter() {
 		$tableGui = new UserSettingsTableGUI($this, self::CMD_INDEX);
 		$tableGui->resetOffset();
@@ -229,6 +274,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function activateMultipleConfirm() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
@@ -250,6 +298,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function activateMultiple() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
@@ -267,6 +318,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function deactivateMultipleConfirm() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
@@ -288,6 +342,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function deactivateMultiple() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
@@ -305,6 +362,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function deleteMultipleConfirm() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {
@@ -326,6 +386,9 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function deleteMultiple() {
 		$setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		if (!is_array($setting_select) || count($setting_select) === 0) {

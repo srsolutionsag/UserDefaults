@@ -68,6 +68,7 @@ return array(
     'srag\\DIC\\Plugin\\Pluginable' => $vendorDir . '/srag/dic/src/Plugin/Pluginable.php',
     'srag\\DIC\\Version\\Version' => $vendorDir . '/srag/dic/src/Version/Version.php',
     'srag\\DIC\\Version\\VersionInterface' => $vendorDir . '/srag/dic/src/Version/VersionInterface.php',
+    'srag\\Plugins\\UserDefaults\\Access\\Access' => $baseDir . '/src/Access/Access.php',
     'srag\\Plugins\\UserDefaults\\Config\\Config' => $baseDir . '/src/Config/Config.php',
     'srag\\Plugins\\UserDefaults\\Form\\ilContainerMultiSelectInputGUI' => $baseDir . '/src/Form/ilContainerMultiSelectInputGUI.php',
     'srag\\Plugins\\UserDefaults\\Form\\ilMultiSelectSearchInput2GUI' => $baseDir . '/src/Form/ilMultiSelectSearchInput2GUI.php',

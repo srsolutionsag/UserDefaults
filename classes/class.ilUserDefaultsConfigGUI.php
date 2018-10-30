@@ -46,7 +46,7 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 		switch ($nextClass) {
 			case strtolower(UDFCheckGUI::class):
 				self::dic()->tabs()->activateTab(self::TAB_SETTINGS);
-				$gui = new UDFCheckGUI(new UserSettingsGUI($this));
+				$gui = new UDFCheckGUI(new UserSettingsGUI());
 				self::dic()->ctrl()->forwardCommand($gui);
 				break;
 			case strtolower(usrdefUserGUI::class):

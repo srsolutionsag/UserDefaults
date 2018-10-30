@@ -36,7 +36,9 @@ class UDFCheckGUI {
 
 
 	/**
-	 * @param $parent_gui
+	 * UDFCheckGUI constructor
+	 *
+	 * @param UserSettingsGUI|UDFCheckGUI $parent_gui
 	 */
 	public function __construct($parent_gui) {
 		self::dic()->ctrl()->saveParameter($this, self::IDENTIFIER_CATEGORY);

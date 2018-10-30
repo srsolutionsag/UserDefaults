@@ -28,11 +28,17 @@ class usrdefUserGUI {
 	const SESSION_ID = 'multi_assign_user_id';
 
 
+	/**
+	 * usrdefUserGUI constructor
+	 */
 	public function __construct() {
 		ilSession::set(self::SESSION_ID, NULL);
 	}
 
 
+	/**
+	 *
+	 */
 	public function executeCommand() {
 		$next = self::dic()->ctrl()->getNextClass();
 		$cmd = self::dic()->ctrl()->getCmd(self::CMD_INDEX);
@@ -63,12 +69,18 @@ class usrdefUserGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function index() {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		self::dic()->mainTemplate()->setContent($usrdefUserTableGUI->getHTML());
 	}
 
 
+	/**
+	 *
+	 */
 	protected function applyFilter() {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		$usrdefUserTableGUI->resetOffset();
@@ -77,6 +89,9 @@ class usrdefUserGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function resetFilter() {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		$usrdefUserTableGUI->resetFilter();
@@ -85,11 +100,17 @@ class usrdefUserGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function confirmSelectUser() {
 		// Optinal
 	}
 
 
+	/**
+	 *
+	 */
 	protected function selectUser() {
 		$usr_ids = $_POST['id'];
 		$user_objects = array();

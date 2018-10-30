@@ -2,12 +2,22 @@
 
 namespace srag\Plugins\UserDefaults\Utils;
 
+use srag\Plugins\UserDefaults\Access\Access;
+
 /**
  * Trait UserDefaultsTrait
  *
  * @package srag\Plugins\UserDefaults\Utils
  */
 trait UserDefaultsTrait {
+
+	/**
+	 * @return Access
+	 */
+	protected static function access() {
+		return Access::getInstance();
+	}
+
 
 	/**
 	 * CustomUserFieldsHelper is only available for DHBW Spec!

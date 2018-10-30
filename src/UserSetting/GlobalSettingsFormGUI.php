@@ -53,6 +53,7 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addCommandButton(UserDefaultsGlobalSettingsGUI::CMD_UPDATE_CONFIGURE, self::plugin()->translate("save"));
 
 		$category_ref_id = new ilNumberInputGUI(self::plugin()->translate(Config::KEY_CATEGORY_REF_ID), Config::KEY_CATEGORY_REF_ID);
+		$category_ref_id->setInfo(self::plugin()->translate(Config::KEY_CATEGORY_REF_ID . "_info"));
 		$category_ref_id->setValue(Config::getCategoryRefId());
 		$this->addItem($category_ref_id);
 	}

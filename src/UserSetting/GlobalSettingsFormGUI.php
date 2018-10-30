@@ -48,6 +48,8 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 	protected function initForm() {
 		$this->setFormAction(self::dic()->ctrl()->getFormAction($this->parent));
 
+		$this->setTitle(self::plugin()->translate("tabs_global_settings"));
+
 		$this->addCommandButton(UserDefaultsGlobalSettingsGUI::CMD_UPDATE_CONFIGURE, self::plugin()->translate("save"));
 
 		$category_ref_id = new ilNumberInputGUI(self::plugin()->translate(Config::KEY_CATEGORY_REF_ID), Config::KEY_CATEGORY_REF_ID);

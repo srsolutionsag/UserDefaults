@@ -20,52 +20,50 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const TAB_SETTINGS = "settings";
 	const TAB_USERS = "users";
+	const TAB_GLOBAL_SETTINGS = "global_settings";
 
 
-	function __construct() {
+	/**
+	 * ilUserDefaultsConfigGUI constructor
+	 */
+	public function __construct() {
 
 	}
 
 
-	public function executeCommand() {
-		// TODO: Refactoring
-		self::dic()->ctrl()->setParameterByClass(ilObjComponentSettingsGUI::class, "ctype", $_GET["ctype"]);
-		self::dic()->ctrl()->setParameterByClass(ilObjComponentSettingsGUI::class, "cname", $_GET["cname"]);
-		self::dic()->ctrl()->setParameterByClass(ilObjComponentSettingsGUI::class, "slot_id", $_GET["slot_id"]);
-		self::dic()->ctrl()->setParameterByClass(ilObjComponentSettingsGUI::class, "plugin_id", $_GET["plugin_id"]);
-		self::dic()->ctrl()->setParameterByClass(ilObjComponentSettingsGUI::class, "pname", $_GET["pname"]);
-
-		self::dic()->mainTemplate()->setTitle(self::dic()->language()->txt("cmps_plugin") . ": " . $_GET["pname"]);
-		self::dic()->mainTemplate()->setDescription("");
-
-		self::dic()->tabs()->clearTargets();
-
+	/**
+	 * @param string $cmd
+	 */
+	public function performCommand($cmd) {
 		self::dic()->tabs()->addTab(self::TAB_SETTINGS, self::plugin()->translate('tabs_settings'), self::dic()->ctrl()
 			->getLinkTargetByClass(UserSettingsGUI::class));
 		self::dic()->tabs()->addTab(self::TAB_USERS, self::plugin()->translate('tabs_users'), self::dic()->ctrl()
 			->getLinkTargetByClass(usrdefUserGUI::class));
+		self::dic()->tabs()->addTab(self::TAB_GLOBAL_SETTINGS, self::plugin()->translate('tabs_global_settings'), self::dic()->ctrl()
+			->getLinkTargetByClass(UserDefaultsGlobalSettingsGUI::class, UserDefaultsGlobalSettingsGUI::CMD_CONFIGURE));
 
 		$nextClass = self::dic()->ctrl()->getNextClass();
 		switch ($nextClass) {
 			case strtolower(UDFCheckGUI::class):
 				self::dic()->tabs()->activateTab(self::TAB_SETTINGS);
-				$ilUDFCheckGUI = new UDFCheckGUI(new UserSettingsGUI($this));
-				self::dic()->ctrl()->forwardCommand($ilUDFCheckGUI);
+				$gui = new UDFCheckGUI(new UserSettingsGUI($this));
+				self::dic()->ctrl()->forwardCommand($gui);
 				break;
 			case strtolower(usrdefUserGUI::class):
 				self::dic()->tabs()->activateTab(self::TAB_USERS);
-				$usrdefUserGUI = new usrdefUserGUI();
-				self::dic()->ctrl()->forwardCommand($usrdefUserGUI);
+				$gui = new usrdefUserGUI();
+				self::dic()->ctrl()->forwardCommand($gui);
+				break;
+			case strtolower(UserDefaultsGlobalSettingsGUI::class):
+				self::dic()->tabs()->activateTab(self::TAB_GLOBAL_SETTINGS);
+				$gui = new UserDefaultsGlobalSettingsGUI();
+				self::dic()->ctrl()->forwardCommand($gui);
 				break;
 			default;
 				self::dic()->tabs()->activateTab(self::TAB_SETTINGS);
-				$ilUserSettingsGUI = new UserSettingsGUI($this);
-				self::dic()->ctrl()->forwardCommand($ilUserSettingsGUI);
+				$gui = new UserSettingsGUI($this);
+				self::dic()->ctrl()->forwardCommand($gui);
 				break;
 		}
-	}
-
-
-	public function performCommand($cmd) {
 	}
 }

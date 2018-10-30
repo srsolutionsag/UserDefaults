@@ -100,3 +100,7 @@ check_field_key#:#Feld
 check_field_category#:#Kategorie
 check_field_category_1#:#ILIAS-Benutzerstammdatenfelder
 check_field_category_2#:#Benutzerdefinierte Felder
+tabs_global_settings#:#Globale Einstellungen
+save#:#Speichern
+saved#:#Gespeichert
+category_ref_id#:#Kategorie-Ref-ID

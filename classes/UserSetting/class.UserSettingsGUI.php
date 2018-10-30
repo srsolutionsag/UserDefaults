@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Config\Config;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\UserSetting\UserSettingsFormGUI;
@@ -177,28 +178,38 @@ class UserSettingsGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function searchContainer() {
-		$term = self::dic()->database()->quote('%' . $_GET['term'] . '%', 'text');
-		$type = self::dic()->database()->quote($_GET['container_type'], 'text');
+		$term = filter_input(INPUT_GET, "term");
+		$type = filter_input(INPUT_GET, "container_type");
+
+		$category_ref_id = Config::getCategoryRefId();
+
+		// TODO: Filter by category_ref_id
 
 		$query = "SELECT obj.obj_id, obj.title
-				FROM " . usrdefObj::TABLE_NAME . " obj
-				 LEFT JOIN object_translation trans ON trans.obj_id = obj.obj_id
-				 JOIN object_reference ref ON obj.obj_id = ref.obj_id
-			 WHERE obj.type = $type AND
-				 (obj.title LIKE $term OR trans.title LIKE $term)
-				 AND ref.deleted IS NULL
-			 ORDER BY  obj.title";
+				  FROM " . usrdefObj::TABLE_NAME . " AS obj
+				  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
+				  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
+			      WHERE obj.type = %s
+			      AND (" . self::dic()->database()->like("obj.title", "text", "%%" . $term . "%%") . " OR " . self::dic()->database()
+				->like("trans.title", "text", $term, "%%" . $term . "%%") . ")
+				  AND obj.title != %s
+				  AND ref.deleted IS NULL
+			      ORDER BY obj.title";
+		$types = [ "text", "text" ];
+		$values = [ $type, "__OrgUnitAdministration" ];
 
-		$res = self::dic()->database()->query($query);
-		$result = array();
-		while ($row = self::dic()->database()->fetchAssoc($res)) {
-			if ($row['title'] != "__OrgUnitAdministration") {
-				$result[] = array( "id" => $row['obj_id'], "text" => $row['title'] );
-			}
+		$result = self::dic()->database()->queryF($query, $types, $values);
+
+		$courses = [];
+		while (($row = $result->fetchAssoc()) !== false) {
+			$courses[] = [ "id" => $row["obj_id"], "text" => $row["title"] ];
 		}
-		echo json_encode($result);
-		exit;
+
+		self::plugin()->output($courses, false);
 	}
 
 

@@ -38,6 +38,7 @@ class ComposerStaticInit807071db2b900537de24dda39c12ea63
     public static $classMap = array (
         'ActiveRecord' => __DIR__ . '/../..' . '/../../../../../../../Services/ActiveRecord/class.ActiveRecord.php',
         'UDFCheckGUI' => __DIR__ . '/../..' . '/classes/UDFCheck/class.UDFCheckGUI.php',
+        'UserDefaultsGlobalSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserDefaultsGlobalSettingsGUI.php',
         'UserSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserSettingsGUI.php',
         'ilAdvancedSelectionListGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php',
         'ilConfirmationGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/Utilities/classes/class.ilConfirmationGUI.php',
@@ -113,6 +114,7 @@ class ComposerStaticInit807071db2b900537de24dda39c12ea63
         'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUser' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckUser.php',
         'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefObj' => __DIR__ . '/../..' . '/src/UserSearch/usrdefObj.php',
         'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefUser' => __DIR__ . '/../..' . '/src/UserSearch/usrdefUser.php',
+        'srag\\Plugins\\UserDefaults\\UserSetting\\GlobalSettingsFormGUI' => __DIR__ . '/../..' . '/src/UserSetting/GlobalSettingsFormGUI.php',
         'srag\\Plugins\\UserDefaults\\UserSetting\\UserSetting' => __DIR__ . '/../..' . '/src/UserSetting/UserSetting.php',
         'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsFormGUI' => __DIR__ . '/../..' . '/src/UserSetting/UserSettingsFormGUI.php',
         'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsTableGUI' => __DIR__ . '/../..' . '/src/UserSetting/UserSettingsTableGUI.php',

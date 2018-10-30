@@ -15,18 +15,31 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  * @version 2.0.6
- * @deprecated
+ *
+ * @deprecated TODO: Remove this class
  */
 class usrdefUser extends ActiveRecord {
 
 	use DICTrait;
 	use UserDefaultsTrait;
+	/**
+	 * @var string
+	 *
+	 * @deprecated
+	 */
 	const TABLE_NAME = "usr_data";
+	/**
+	 * @var string
+	 *
+	 * @deprecated
+	 */
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 
 
 	/**
 	 * @return string
+	 *
+	 * @deprecated
 	 */
 	public function getConnectorContainerName() {
 		return self::TABLE_NAME;
@@ -35,6 +48,7 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated
 	 */
 	public static function returnDbTableName() {
@@ -44,25 +58,39 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @var usrdefObj
+	 *
+	 * @deprecated
 	 */
 	protected $usrdefObj;
 
 
+	/**
+	 * @deprecated
+	 */
 	public function create() {
 		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
 
+	/**
+	 * @deprecated
+	 */
 	public function update() {
 		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
 
+	/**
+	 * @deprecated
+	 */
 	public function delete() {
 		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
 
+	/**
+	 * @deprecated
+	 */
 	public function afterObjectLoad() {
 		$this->setusrdefObj(usrdefObj::find($this->getUsrId()));
 	}
@@ -78,6 +106,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_is_notnull   true
 	 * @con_is_primary   true
 	 * @con_is_unique    true
+	 *
+	 * @deprecated
 	 */
 	protected $usr_id;
 	/**
@@ -86,6 +116,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    80
+	 *
+	 * @deprecated
 	 */
 	protected $login;
 	/**
@@ -94,6 +126,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    32
+	 *
+	 * @deprecated
 	 */
 	protected $passwd;
 	/**
@@ -102,6 +136,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    32
+	 *
+	 * @deprecated
 	 */
 	protected $firstname;
 	/**
@@ -110,6 +146,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    32
+	 *
+	 * @deprecated
 	 */
 	protected $lastname;
 	/**
@@ -118,6 +156,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    32
+	 *
+	 * @deprecated
 	 */
 	protected $title;
 	/**
@@ -126,6 +166,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    1
+	 *
+	 * @deprecated
 	 */
 	protected $gender;
 	/**
@@ -134,6 +176,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    80
+	 *
+	 * @deprecated
 	 */
 	protected $email;
 	/**
@@ -142,6 +186,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    80
+	 *
+	 * @deprecated
 	 */
 	protected $institution;
 	/**
@@ -150,6 +196,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $street;
 	/**
@@ -158,6 +206,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $city;
 	/**
@@ -166,6 +216,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    10
+	 *
+	 * @deprecated
 	 */
 	protected $zipcode;
 	/**
@@ -174,6 +226,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $country;
 	/**
@@ -182,6 +236,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $phone_office;
 	/**
@@ -190,6 +246,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $last_login;
 	/**
@@ -198,6 +256,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $last_update;
 	/**
@@ -206,6 +266,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $create_date;
 	/**
@@ -214,6 +276,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    4000
+	 *
+	 * @deprecated
 	 */
 	protected $hobby;
 	/**
@@ -222,6 +286,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    80
+	 *
+	 * @deprecated
 	 */
 	protected $department;
 	/**
@@ -230,6 +296,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $phone_home;
 	/**
@@ -238,6 +306,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $phone_mobile;
 	/**
@@ -246,6 +316,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $fax;
 	/**
@@ -254,6 +326,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    32
+	 *
+	 * @deprecated
 	 */
 	protected $i2passwd;
 	/**
@@ -262,6 +336,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    4
+	 *
+	 * @deprecated
 	 */
 	protected $time_limit_owner;
 	/**
@@ -270,6 +346,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    4
+	 *
+	 * @deprecated
 	 */
 	protected $time_limit_unlimited;
 	/**
@@ -278,6 +356,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    4
+	 *
+	 * @deprecated
 	 */
 	protected $time_limit_from;
 	/**
@@ -286,6 +366,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    4
+	 *
+	 * @deprecated
 	 */
 	protected $time_limit_until;
 	/**
@@ -294,6 +376,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    4
+	 *
+	 * @deprecated
 	 */
 	protected $time_limit_message;
 	/**
@@ -302,6 +386,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    250
+	 *
+	 * @deprecated
 	 */
 	protected $referral_comment;
 	/**
@@ -310,6 +396,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $matriculation;
 	/**
@@ -319,6 +407,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     4
 	 * @con_is_notnull true
+	 *
+	 * @deprecated
 	 */
 	protected $active;
 	/**
@@ -327,6 +417,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $approve_date;
 	/**
@@ -335,6 +427,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $agree_date;
 	/**
@@ -343,6 +437,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    4
+	 *
+	 * @deprecated
 	 */
 	protected $ilinc_id;
 	/**
@@ -351,6 +447,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $ilinc_login;
 	/**
@@ -359,6 +457,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $ilinc_passwd;
 	/**
@@ -367,6 +467,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    255
+	 *
+	 * @deprecated
 	 */
 	protected $client_ip;
 	/**
@@ -375,6 +477,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    10
+	 *
+	 * @deprecated
 	 */
 	protected $auth_mode;
 	/**
@@ -383,6 +487,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    4
+	 *
+	 * @deprecated
 	 */
 	protected $profile_incomplete;
 	/**
@@ -391,6 +497,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    250
+	 *
+	 * @deprecated
 	 */
 	protected $ext_account;
 	/**
@@ -399,6 +507,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $im_icq;
 	/**
@@ -407,6 +517,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $im_yahoo;
 	/**
@@ -415,6 +527,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $im_msn;
 	/**
@@ -423,6 +537,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $im_aim;
 	/**
@@ -431,6 +547,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $im_skype;
 	/**
@@ -439,6 +557,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    32
+	 *
+	 * @deprecated
 	 */
 	protected $feed_hash;
 	/**
@@ -447,6 +567,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $delicious;
 	/**
@@ -455,6 +577,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    30
+	 *
+	 * @deprecated
 	 */
 	protected $latitude;
 	/**
@@ -463,6 +587,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    30
+	 *
+	 * @deprecated
 	 */
 	protected $longitude;
 	/**
@@ -472,6 +598,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     4
 	 * @con_is_notnull true
+	 *
+	 * @deprecated
 	 */
 	protected $loc_zoom;
 	/**
@@ -481,6 +609,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     1
 	 * @con_is_notnull true
+	 *
+	 * @deprecated
 	 */
 	protected $login_attempts;
 	/**
@@ -490,6 +620,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     4
 	 * @con_is_notnull true
+	 *
+	 * @deprecated
 	 */
 	protected $last_password_change;
 	/**
@@ -498,6 +630,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $im_jabber;
 	/**
@@ -506,6 +640,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    40
+	 *
+	 * @deprecated
 	 */
 	protected $im_voip;
 	/**
@@ -514,6 +650,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    32
+	 *
+	 * @deprecated
 	 */
 	protected $reg_hash;
 	/**
@@ -522,6 +660,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $birthday;
 	/**
@@ -530,6 +670,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype text
 	 * @con_length    2
+	 *
+	 * @deprecated
 	 */
 	protected $sel_country;
 	/**
@@ -538,6 +680,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $last_visited;
 	/**
@@ -546,6 +690,8 @@ class usrdefUser extends ActiveRecord {
 	 * @con_has_field true
 	 * @con_fieldtype
 	 * @con_length
+	 *
+	 * @deprecated
 	 */
 	protected $inactivation_date;
 	/**
@@ -555,12 +701,16 @@ class usrdefUser extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     1
 	 * @con_is_notnull true
+	 *
+	 * @deprecated
 	 */
 	protected $is_self_registered;
 
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getActive() {
 		return $this->active;
@@ -569,6 +719,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $active
+	 *
+	 * @deprecated
 	 */
 	public function setActive($active) {
 		$this->active = $active;
@@ -577,6 +729,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getAgreeDate() {
 		return $this->agree_date;
@@ -585,6 +739,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $agree_date
+	 *
+	 * @deprecated
 	 */
 	public function setAgreeDate($agree_date) {
 		$this->agree_date = $agree_date;
@@ -593,6 +749,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getApproveDate() {
 		return $this->approve_date;
@@ -601,6 +759,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $approve_date
+	 *
+	 * @deprecated
 	 */
 	public function setApproveDate($approve_date) {
 		$this->approve_date = $approve_date;
@@ -609,6 +769,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return usrdefObj
+	 *
+	 * @deprecated
 	 */
 	public function getusrdefObj() {
 		return $this->usrdefObj;
@@ -617,6 +779,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param usrdefObj $usrdefObj
+	 *
+	 * @deprecated
 	 */
 	public function setusrdefObj($usrdefObj) {
 		$this->usrdefObj = $usrdefObj;
@@ -625,6 +789,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getAuthMode() {
 		return $this->auth_mode;
@@ -633,6 +799,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $auth_mode
+	 *
+	 * @deprecated
 	 */
 	public function setAuthMode($auth_mode) {
 		$this->auth_mode = $auth_mode;
@@ -641,6 +809,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getBirthday() {
 		return $this->birthday;
@@ -649,6 +819,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $birthday
+	 *
+	 * @deprecated
 	 */
 	public function setBirthday($birthday) {
 		$this->birthday = $birthday;
@@ -657,6 +829,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getCity() {
 		return $this->city;
@@ -665,6 +839,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $city
+	 *
+	 * @deprecated
 	 */
 	public function setCity($city) {
 		$this->city = $city;
@@ -673,6 +849,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getClientIp() {
 		return $this->client_ip;
@@ -681,6 +859,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $client_ip
+	 *
+	 * @deprecated
 	 */
 	public function setClientIp($client_ip) {
 		$this->client_ip = $client_ip;
@@ -689,6 +869,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getCountry() {
 		return $this->country;
@@ -697,6 +879,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $country
+	 *
+	 * @deprecated
 	 */
 	public function setCountry($country) {
 		$this->country = $country;
@@ -705,6 +889,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getCreateDate() {
 		return $this->create_date;
@@ -713,6 +899,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $create_date
+	 *
+	 * @deprecated
 	 */
 	public function setCreateDate($create_date) {
 		$this->create_date = $create_date;
@@ -721,6 +909,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getDelicious() {
 		return $this->delicious;
@@ -729,6 +919,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $delicious
+	 *
+	 * @deprecated
 	 */
 	public function setDelicious($delicious) {
 		$this->delicious = $delicious;
@@ -737,6 +929,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getDepartment() {
 		return $this->department;
@@ -745,6 +939,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $department
+	 *
+	 * @deprecated
 	 */
 	public function setDepartment($department) {
 		$this->department = $department;
@@ -753,6 +949,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getEmail() {
 		return $this->email;
@@ -761,6 +959,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $email
+	 *
+	 * @deprecated
 	 */
 	public function setEmail($email) {
 		$this->email = $email;
@@ -769,6 +969,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getExtAccount() {
 		return $this->ext_account;
@@ -777,6 +979,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $ext_account
+	 *
+	 * @deprecated
 	 */
 	public function setExtAccount($ext_account) {
 		$this->ext_account = $ext_account;
@@ -785,6 +989,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getFax() {
 		return $this->fax;
@@ -793,6 +999,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $fax
+	 *
+	 * @deprecated
 	 */
 	public function setFax($fax) {
 		$this->fax = $fax;
@@ -801,6 +1009,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getFeedHash() {
 		return $this->feed_hash;
@@ -809,6 +1019,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $feed_hash
+	 *
+	 * @deprecated
 	 */
 	public function setFeedHash($feed_hash) {
 		$this->feed_hash = $feed_hash;
@@ -817,6 +1029,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getFirstname() {
 		return $this->firstname;
@@ -825,6 +1039,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $firstname
+	 *
+	 * @deprecated
 	 */
 	public function setFirstname($firstname) {
 		$this->firstname = $firstname;
@@ -833,6 +1049,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getGender() {
 		return $this->gender;
@@ -841,6 +1059,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $gender
+	 *
+	 * @deprecated
 	 */
 	public function setGender($gender) {
 		$this->gender = $gender;
@@ -849,6 +1069,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getHobby() {
 		return $this->hobby;
@@ -857,6 +1079,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $hobby
+	 *
+	 * @deprecated
 	 */
 	public function setHobby($hobby) {
 		$this->hobby = $hobby;
@@ -865,6 +1089,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getI2passwd() {
 		return $this->i2passwd;
@@ -873,6 +1099,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $i2passwd
+	 *
+	 * @deprecated
 	 */
 	public function setI2passwd($i2passwd) {
 		$this->i2passwd = $i2passwd;
@@ -881,6 +1109,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getIlincId() {
 		return $this->ilinc_id;
@@ -889,6 +1119,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $ilinc_id
+	 *
+	 * @deprecated
 	 */
 	public function setIlincId($ilinc_id) {
 		$this->ilinc_id = $ilinc_id;
@@ -897,6 +1129,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getIlincLogin() {
 		return $this->ilinc_login;
@@ -905,6 +1139,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $ilinc_login
+	 *
+	 * @deprecated
 	 */
 	public function setIlincLogin($ilinc_login) {
 		$this->ilinc_login = $ilinc_login;
@@ -913,6 +1149,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getIlincPasswd() {
 		return $this->ilinc_passwd;
@@ -921,6 +1159,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $ilinc_passwd
+	 *
+	 * @deprecated
 	 */
 	public function setIlincPasswd($ilinc_passwd) {
 		$this->ilinc_passwd = $ilinc_passwd;
@@ -929,6 +1169,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getImAim() {
 		return $this->im_aim;
@@ -937,6 +1179,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $im_aim
+	 *
+	 * @deprecated
 	 */
 	public function setImAim($im_aim) {
 		$this->im_aim = $im_aim;
@@ -945,6 +1189,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getImIcq() {
 		return $this->im_icq;
@@ -953,6 +1199,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $im_icq
+	 *
+	 * @deprecated
 	 */
 	public function setImIcq($im_icq) {
 		$this->im_icq = $im_icq;
@@ -961,6 +1209,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getImJabber() {
 		return $this->im_jabber;
@@ -969,6 +1219,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $im_jabber
+	 *
+	 * @deprecated
 	 */
 	public function setImJabber($im_jabber) {
 		$this->im_jabber = $im_jabber;
@@ -977,6 +1229,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getImMsn() {
 		return $this->im_msn;
@@ -985,6 +1239,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $im_msn
+	 *
+	 * @deprecated
 	 */
 	public function setImMsn($im_msn) {
 		$this->im_msn = $im_msn;
@@ -993,6 +1249,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getImSkype() {
 		return $this->im_skype;
@@ -1001,6 +1259,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $im_skype
+	 *
+	 * @deprecated
 	 */
 	public function setImSkype($im_skype) {
 		$this->im_skype = $im_skype;
@@ -1009,6 +1269,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getImVoip() {
 		return $this->im_voip;
@@ -1017,6 +1279,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $im_voip
+	 *
+	 * @deprecated
 	 */
 	public function setImVoip($im_voip) {
 		$this->im_voip = $im_voip;
@@ -1025,6 +1289,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getImYahoo() {
 		return $this->im_yahoo;
@@ -1033,6 +1299,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $im_yahoo
+	 *
+	 * @deprecated
 	 */
 	public function setImYahoo($im_yahoo) {
 		$this->im_yahoo = $im_yahoo;
@@ -1041,6 +1309,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getInactivationDate() {
 		return $this->inactivation_date;
@@ -1049,6 +1319,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $inactivation_date
+	 *
+	 * @deprecated
 	 */
 	public function setInactivationDate($inactivation_date) {
 		$this->inactivation_date = $inactivation_date;
@@ -1057,6 +1329,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getInstitution() {
 		return $this->institution;
@@ -1065,6 +1339,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $institution
+	 *
+	 * @deprecated
 	 */
 	public function setInstitution($institution) {
 		$this->institution = $institution;
@@ -1073,6 +1349,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getIsSelfRegistered() {
 		return $this->is_self_registered;
@@ -1081,6 +1359,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $is_self_registered
+	 *
+	 * @deprecated
 	 */
 	public function setIsSelfRegistered($is_self_registered) {
 		$this->is_self_registered = $is_self_registered;
@@ -1089,6 +1369,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLastLogin() {
 		return $this->last_login;
@@ -1097,6 +1379,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $last_login
+	 *
+	 * @deprecated
 	 */
 	public function setLastLogin($last_login) {
 		$this->last_login = $last_login;
@@ -1105,6 +1389,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLastPasswordChange() {
 		return $this->last_password_change;
@@ -1113,6 +1399,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $last_password_change
+	 *
+	 * @deprecated
 	 */
 	public function setLastPasswordChange($last_password_change) {
 		$this->last_password_change = $last_password_change;
@@ -1121,6 +1409,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLastUpdate() {
 		return $this->last_update;
@@ -1129,6 +1419,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $last_update
+	 *
+	 * @deprecated
 	 */
 	public function setLastUpdate($last_update) {
 		$this->last_update = $last_update;
@@ -1137,6 +1429,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLastVisited() {
 		return $this->last_visited;
@@ -1145,6 +1439,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $last_visited
+	 *
+	 * @deprecated
 	 */
 	public function setLastVisited($last_visited) {
 		$this->last_visited = $last_visited;
@@ -1153,6 +1449,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLastname() {
 		return $this->lastname;
@@ -1161,6 +1459,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $lastname
+	 *
+	 * @deprecated
 	 */
 	public function setLastname($lastname) {
 		$this->lastname = $lastname;
@@ -1169,6 +1469,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLatitude() {
 		return $this->latitude;
@@ -1177,6 +1479,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $latitude
+	 *
+	 * @deprecated
 	 */
 	public function setLatitude($latitude) {
 		$this->latitude = $latitude;
@@ -1185,6 +1489,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLocZoom() {
 		return $this->loc_zoom;
@@ -1193,6 +1499,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $loc_zoom
+	 *
+	 * @deprecated
 	 */
 	public function setLocZoom($loc_zoom) {
 		$this->loc_zoom = $loc_zoom;
@@ -1201,6 +1509,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLogin() {
 		return $this->login;
@@ -1209,6 +1519,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $login
+	 *
+	 * @deprecated
 	 */
 	public function setLogin($login) {
 		$this->login = $login;
@@ -1217,6 +1529,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLoginAttempts() {
 		return $this->login_attempts;
@@ -1225,6 +1539,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $login_attempts
+	 *
+	 * @deprecated
 	 */
 	public function setLoginAttempts($login_attempts) {
 		$this->login_attempts = $login_attempts;
@@ -1233,6 +1549,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getLongitude() {
 		return $this->longitude;
@@ -1241,6 +1559,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $longitude
+	 *
+	 * @deprecated
 	 */
 	public function setLongitude($longitude) {
 		$this->longitude = $longitude;
@@ -1249,6 +1569,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getMatriculation() {
 		return $this->matriculation;
@@ -1257,6 +1579,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $matriculation
+	 *
+	 * @deprecated
 	 */
 	public function setMatriculation($matriculation) {
 		$this->matriculation = $matriculation;
@@ -1265,6 +1589,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getPasswd() {
 		return $this->passwd;
@@ -1273,6 +1599,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $passwd
+	 *
+	 * @deprecated
 	 */
 	public function setPasswd($passwd) {
 		$this->passwd = $passwd;
@@ -1281,6 +1609,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getPhoneHome() {
 		return $this->phone_home;
@@ -1289,6 +1619,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $phone_home
+	 *
+	 * @deprecated
 	 */
 	public function setPhoneHome($phone_home) {
 		$this->phone_home = $phone_home;
@@ -1297,6 +1629,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getPhoneMobile() {
 		return $this->phone_mobile;
@@ -1305,6 +1639,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $phone_mobile
+	 *
+	 * @deprecated
 	 */
 	public function setPhoneMobile($phone_mobile) {
 		$this->phone_mobile = $phone_mobile;
@@ -1313,6 +1649,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getPhoneOffice() {
 		return $this->phone_office;
@@ -1321,6 +1659,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $phone_office
+	 *
+	 * @deprecated
 	 */
 	public function setPhoneOffice($phone_office) {
 		$this->phone_office = $phone_office;
@@ -1329,6 +1669,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getProfileIncomplete() {
 		return $this->profile_incomplete;
@@ -1337,6 +1679,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $profile_incomplete
+	 *
+	 * @deprecated
 	 */
 	public function setProfileIncomplete($profile_incomplete) {
 		$this->profile_incomplete = $profile_incomplete;
@@ -1345,6 +1689,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getReferralComment() {
 		return $this->referral_comment;
@@ -1353,6 +1699,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $referral_comment
+	 *
+	 * @deprecated
 	 */
 	public function setReferralComment($referral_comment) {
 		$this->referral_comment = $referral_comment;
@@ -1361,6 +1709,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getRegHash() {
 		return $this->reg_hash;
@@ -1369,6 +1719,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $reg_hash
+	 *
+	 * @deprecated
 	 */
 	public function setRegHash($reg_hash) {
 		$this->reg_hash = $reg_hash;
@@ -1377,6 +1729,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getSelCountry() {
 		return $this->sel_country;
@@ -1385,6 +1739,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $sel_country
+	 *
+	 * @deprecated
 	 */
 	public function setSelCountry($sel_country) {
 		$this->sel_country = $sel_country;
@@ -1393,6 +1749,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getStreet() {
 		return $this->street;
@@ -1401,6 +1759,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $street
+	 *
+	 * @deprecated
 	 */
 	public function setStreet($street) {
 		$this->street = $street;
@@ -1409,6 +1769,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getTimeLimitFrom() {
 		return $this->time_limit_from;
@@ -1417,6 +1779,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $time_limit_from
+	 *
+	 * @deprecated
 	 */
 	public function setTimeLimitFrom($time_limit_from) {
 		$this->time_limit_from = $time_limit_from;
@@ -1425,6 +1789,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getTimeLimitMessage() {
 		return $this->time_limit_message;
@@ -1433,6 +1799,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $time_limit_message
+	 *
+	 * @deprecated
 	 */
 	public function setTimeLimitMessage($time_limit_message) {
 		$this->time_limit_message = $time_limit_message;
@@ -1441,6 +1809,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getTimeLimitOwner() {
 		return $this->time_limit_owner;
@@ -1449,6 +1819,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $time_limit_owner
+	 *
+	 * @deprecated
 	 */
 	public function setTimeLimitOwner($time_limit_owner) {
 		$this->time_limit_owner = $time_limit_owner;
@@ -1457,6 +1829,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getTimeLimitUnlimited() {
 		return $this->time_limit_unlimited;
@@ -1465,6 +1839,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $time_limit_unlimited
+	 *
+	 * @deprecated
 	 */
 	public function setTimeLimitUnlimited($time_limit_unlimited) {
 		$this->time_limit_unlimited = $time_limit_unlimited;
@@ -1473,6 +1849,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getTimeLimitUntil() {
 		return $this->time_limit_until;
@@ -1481,6 +1859,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $time_limit_until
+	 *
+	 * @deprecated
 	 */
 	public function setTimeLimitUntil($time_limit_until) {
 		$this->time_limit_until = $time_limit_until;
@@ -1489,6 +1869,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getTitle() {
 		return $this->title;
@@ -1497,6 +1879,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $title
+	 *
+	 * @deprecated
 	 */
 	public function setTitle($title) {
 		$this->title = $title;
@@ -1505,6 +1889,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getUsrId() {
 		return $this->usr_id;
@@ -1513,6 +1899,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $usr_id
+	 *
+	 * @deprecated
 	 */
 	public function setUsrId($usr_id) {
 		$this->usr_id = $usr_id;
@@ -1521,6 +1909,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function getZipcode() {
 		return $this->zipcode;
@@ -1529,6 +1919,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param mixed $zipcode
+	 *
+	 * @deprecated
 	 */
 	public function setZipcode($zipcode) {
 		$this->zipcode = $zipcode;
@@ -1537,6 +1929,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return boolean
+	 *
+	 * @deprecated
 	 */
 	public function isArSafeRead() {
 		return $this->ar_safe_read;
@@ -1545,6 +1939,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param boolean $ar_safe_read
+	 *
+	 * @deprecated
 	 */
 	public function setArSafeRead($ar_safe_read) {
 		$this->ar_safe_read = $ar_safe_read;
@@ -1553,6 +1949,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @return int
+	 *
+	 * @deprecated
 	 */
 	public function getKey() {
 		return $this->key;
@@ -1561,6 +1959,8 @@ class usrdefUser extends ActiveRecord {
 
 	/**
 	 * @param int $key
+	 *
+	 * @deprecated
 	 */
 	public function setKey($key) {
 		$this->key = $key;

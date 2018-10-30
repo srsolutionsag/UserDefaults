@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'ActiveRecord' => $baseDir . '/../../../../../../../Services/ActiveRecord/class.ActiveRecord.php',
     'UDFCheckGUI' => $baseDir . '/classes/UDFCheck/class.UDFCheckGUI.php',
+    'UserDefaultsGlobalSettingsGUI' => $baseDir . '/classes/UserSetting/class.UserDefaultsGlobalSettingsGUI.php',
     'UserSettingsGUI' => $baseDir . '/classes/UserSetting/class.UserSettingsGUI.php',
     'ilAdvancedSelectionListGUI' => $baseDir . '/../../../../../../../Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php',
     'ilConfirmationGUI' => $baseDir . '/../../../../../../../Services/Utilities/classes/class.ilConfirmationGUI.php',
@@ -83,6 +84,7 @@ return array(
     'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUser' => $baseDir . '/src/UDFCheck/UDFCheckUser.php',
     'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefObj' => $baseDir . '/src/UserSearch/usrdefObj.php',
     'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefUser' => $baseDir . '/src/UserSearch/usrdefUser.php',
+    'srag\\Plugins\\UserDefaults\\UserSetting\\GlobalSettingsFormGUI' => $baseDir . '/src/UserSetting/GlobalSettingsFormGUI.php',
     'srag\\Plugins\\UserDefaults\\UserSetting\\UserSetting' => $baseDir . '/src/UserSetting/UserSetting.php',
     'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsFormGUI' => $baseDir . '/src/UserSetting/UserSettingsFormGUI.php',
     'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsTableGUI' => $baseDir . '/src/UserSetting/UserSettingsTableGUI.php',

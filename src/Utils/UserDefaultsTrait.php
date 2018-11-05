@@ -15,7 +15,7 @@ trait UserDefaultsTrait {
 	/**
 	 * @return Access
 	 */
-	protected static function access() {
+	protected static function access()/*: Access*/ {
 		return Access::getInstance();
 	}
 
@@ -39,7 +39,7 @@ trait UserDefaultsTrait {
 	/**
 	 * @return Permission
 	 */
-	protected static function permission() {
+	protected static function permission()/*: Permission*/ {
 		return Permission::getInstance();
 	}
 }

@@ -3,6 +3,7 @@
 namespace srag\Plugins\UserDefaults\Utils;
 
 use srag\Plugins\UserDefaults\Access\Access;
+use srag\Plugins\UserDefaults\Access\Permission;
 
 /**
  * Trait UserDefaultsTrait
@@ -32,5 +33,13 @@ trait UserDefaultsTrait {
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * @return Permission
+	 */
+	protected static function permission() {
+		return Permission::getInstance();
 	}
 }

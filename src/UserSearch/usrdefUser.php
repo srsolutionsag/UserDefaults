@@ -11,10 +11,10 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 /**
  * Class usrdefUser
  *
- * @package srag\Plugins\UserDefaults\UserSearch
+ * @package    srag\Plugins\UserDefaults\UserSearch
  *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 2.0.6
+ * @author     Fabian Schmid <fs@studer-raimann.ch>
+ * @version    2.0.6
  *
  * @deprecated TODO: Remove this class
  */

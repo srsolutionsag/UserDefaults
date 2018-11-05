@@ -6,6 +6,7 @@ use srag\Plugins\UserDefaults\Config\Config;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use srag\RemovePluginDataConfirm\PluginUninstallTrait;
 
 /**
@@ -17,6 +18,7 @@ use srag\RemovePluginDataConfirm\PluginUninstallTrait;
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 	use PluginUninstallTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_ID = 'usrdef';
 	const PLUGIN_NAME = 'UserDefaults';
 	const PLUGIN_CLASS_NAME = self::class;

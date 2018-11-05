@@ -99,6 +99,7 @@ class ComposerStaticInit807071db2b900537de24dda39c12ea63
         'srag\\DIC\\Version\\Version' => __DIR__ . '/..' . '/srag/dic/src/Version/Version.php',
         'srag\\DIC\\Version\\VersionInterface' => __DIR__ . '/..' . '/srag/dic/src/Version/VersionInterface.php',
         'srag\\Plugins\\UserDefaults\\Access\\Access' => __DIR__ . '/../..' . '/src/Access/Access.php',
+        'srag\\Plugins\\UserDefaults\\Access\\Permission' => __DIR__ . '/../..' . '/src/Access/Permission.php',
         'srag\\Plugins\\UserDefaults\\Config\\Config' => __DIR__ . '/../..' . '/src/Config/Config.php',
         'srag\\Plugins\\UserDefaults\\Form\\ilContainerMultiSelectInputGUI' => __DIR__ . '/../..' . '/src/Form/ilContainerMultiSelectInputGUI.php',
         'srag\\Plugins\\UserDefaults\\Form\\ilMultiSelectSearchInput2GUI' => __DIR__ . '/../..' . '/src/Form/ilMultiSelectSearchInput2GUI.php',

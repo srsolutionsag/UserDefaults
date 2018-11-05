@@ -24,6 +24,7 @@ use ilUtil;
 use php4DOMDocument;
 use srag\ActiveRecordConfig\ActiveRecordConfig;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
@@ -233,7 +234,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($courses as $crs_obj_id) {
-			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != 'crs') {
+			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != Courses::TYPE_CRS) {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
@@ -243,7 +244,7 @@ class UserSetting extends ActiveRecord {
 			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
 				$first = array_shift(array_values($all_refs));
-				ilObjUser::_dropDesktopItem($usr_id, $first, 'crs');
+				ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
 			}
 		}
 	}
@@ -263,7 +264,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($courses as $crs_obj_id) {
-			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != 'crs') {
+			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != Courses::TYPE_CRS) {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);

@@ -6,6 +6,7 @@ use ilMultiSelectInputGUI;
 use ilTemplate;
 use ilUserDefaultsPlugin;
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use srDefaultAccessChecker;
 
@@ -108,7 +109,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 
 
 	public function getContainerType() {
-		return 'crs';
+		return Courses::TYPE_CRS;
 	}
 
 

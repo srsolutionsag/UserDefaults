@@ -5,6 +5,7 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use srag\DIC\DICTrait;
+use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Form\usrdefOrguSelectorInputGUI;
 use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
@@ -274,7 +275,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	public function getCrsSelectorGUI() {
 		// courses
 		$crs = new ilRepositorySelector2InputGUI(self::plugin()->translate('usr_repo'), 'repo', true);
-		$crs->getExplorerGUI()->setSelectableTypes(array( 'grp', 'crs' ));
+		$crs->getExplorerGUI()->setSelectableTypes(array( 'grp', Courses::TYPE_CRS ));
 
 		return $crs;
 	}

@@ -2,6 +2,7 @@
 
 namespace srag\Plugins\UserDefaults\Form;
 
+use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 
 /**
@@ -17,7 +18,7 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 	/**
 	 * @var string
 	 */
-	protected $container_type = 'crs';
+	protected $container_type = Courses::TYPE_CRS;
 
 
 	/**

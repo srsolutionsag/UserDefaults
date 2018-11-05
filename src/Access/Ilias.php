@@ -7,13 +7,13 @@ use srag\DIC\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
- * Class Access
+ * Class Ilias
  *
  * @package srag\Plugins\UserDefaults\Access
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
-final class Access {
+final class Ilias {
 
 	use DICTrait;
 	use UserDefaultsTrait;
@@ -37,9 +37,17 @@ final class Access {
 
 
 	/**
-	 * Access constructor
+	 * Ilias constructor
 	 */
 	private function __construct() {
 
+	}
+
+
+	/**
+	 * @return Courses
+	 */
+	public function courses()/*: Courses*/ {
+		return Courses::getInstance();
 	}
 }

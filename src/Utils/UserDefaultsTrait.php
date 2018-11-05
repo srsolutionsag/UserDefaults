@@ -3,7 +3,7 @@
 namespace srag\Plugins\UserDefaults\Utils;
 
 use srag\Plugins\UserDefaults\Access\Access;
-use srag\Plugins\UserDefaults\Access\Permission;
+use srag\Plugins\UserDefaults\Access\Ilias;
 
 /**
  * Trait UserDefaultsTrait
@@ -21,11 +21,19 @@ trait UserDefaultsTrait {
 
 
 	/**
+	 * @return Ilias
+	 */
+	protected static function ilias()/*: Ilias*/ {
+		return Ilias::getInstance();
+	}
+
+
+	/**
 	 * CustomUserFieldsHelper is only available for DHBW Spec!
 	 *
 	 * @return bool
 	 */
-	public static function isCustomUserFieldsHelperAvailable() {
+	protected static function isCustomUserFieldsHelperAvailable() {
 		if (file_exists("./Services/User/classes/class.ilCustomUserFieldsHelper.php")) {
 			require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";
 
@@ -33,13 +41,5 @@ trait UserDefaultsTrait {
 		}
 
 		return false;
-	}
-
-
-	/**
-	 * @return Permission
-	 */
-	protected static function permission()/*: Permission*/ {
-		return Permission::getInstance();
 	}
 }

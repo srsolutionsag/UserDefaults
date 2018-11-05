@@ -222,7 +222,7 @@ class UserSettingsGUI {
 		$category_ref_id = Config::getCategoryRefId();
 
 		if (!empty($category_ref_id)) {
-			$courses = self::access()->getCoursesOfCategory($category_ref_id);
+			$courses = self::ilias()->courses()->getCoursesOfCategory($category_ref_id);
 		} else {
 			$courses = [];
 		}

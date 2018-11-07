@@ -54,7 +54,7 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 
 		$category_ref_id = new ilNumberInputGUI(self::plugin()->translate(Config::KEY_CATEGORY_REF_ID), Config::KEY_CATEGORY_REF_ID);
 		$category_ref_id->setInfo(self::plugin()->translate(Config::KEY_CATEGORY_REF_ID . "_info"));
-		$category_ref_id->setValue(Config::getCategoryRefId());
+		$category_ref_id->setValue(Config::getField(Config::KEY_CATEGORY_REF_ID));
 		$this->addItem($category_ref_id);
 	}
 
@@ -64,6 +64,6 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 	 */
 	public function updateConfigure() {
 		$category_ref_id = $this->getInput(Config::KEY_CATEGORY_REF_ID);
-		Config::setCategoryRefId($category_ref_id);
+		Config::setField(Config::KEY_CATEGORY_REF_ID, $category_ref_id);
 	}
 }

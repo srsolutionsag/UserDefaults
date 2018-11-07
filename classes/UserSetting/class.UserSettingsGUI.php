@@ -219,7 +219,7 @@ class UserSettingsGUI {
 		$term = filter_input(INPUT_GET, "term");
 		$type = filter_input(INPUT_GET, "container_type");
 
-		$category_ref_id = Config::getCategoryRefId();
+		$category_ref_id = Config::getField(Config::KEY_CATEGORY_REF_ID);
 
 		if (!empty($category_ref_id)) {
 			$courses = self::ilias()->courses()->getCoursesOfCategory($category_ref_id);

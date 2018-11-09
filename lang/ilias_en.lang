@@ -55,7 +55,7 @@ check_cancel#:#Cancel
 check_udf_negate_value#:#Negate
 check_udf_negate_value_info#:#If you check this option, this rule is applied to all user that do NOT associate with the value given below.
 check_negation_gobal#:#Negation
-check_op_equals#:#Equals
+check_op_equals#:#Is equals
 check_udf_operator#:#Operator
 check_op_starts_with#:#Starts with
 crs_placeholder#:#Choose Courses

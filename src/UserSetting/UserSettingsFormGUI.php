@@ -11,7 +11,7 @@ use ilSelectInputGUI;
 use ilTextAreaInputGUI;
 use ilTextInputGUI;
 use ilUserDefaultsPlugin;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Form\ilContainerMultiSelectInputGUI;
 use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;

@@ -6,8 +6,8 @@ use ActiveRecord;
 use ActiveRecordList;
 use ilObjUser;
 use ilUserDefaultsPlugin;
-use srag\ActiveRecordConfig\ActiveRecordConfig;
-use srag\DIC\DICTrait;
+use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**

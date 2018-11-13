@@ -5,7 +5,7 @@ namespace srag\Plugins\UserDefaults\UserSetting;
 use ilNumberInputGUI;
 use ilPropertyFormGUI;
 use ilUserDefaultsPlugin;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Config\Config;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserDefaultsGlobalSettingsGUI;

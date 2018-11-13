@@ -6,7 +6,7 @@ namespace srag\Plugins\UserDefaults\Form;
 use ilSubEnabledFormPropertyGUI;
 use ilTemplate;
 use ilUserDefaultsPlugin;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**

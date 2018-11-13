@@ -8,7 +8,7 @@ use ilLinkButton;
 use ilTable2GUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;

@@ -3,7 +3,7 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use srag\RemovePluginDataConfirm\AbstractRemovePluginDataConfirm;
+use srag\RemovePluginDataConfirm\UserDefaults\AbstractRemovePluginDataConfirm;
 
 /**
  * Class usrdefRemoveDataConfirm

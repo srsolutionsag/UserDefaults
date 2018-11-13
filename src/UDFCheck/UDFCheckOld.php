@@ -4,8 +4,8 @@ namespace srag\Plugins\UserDefaults\UDFCheck;
 
 use ActiveRecord;
 use ilUserDefaultsPlugin;
-use srag\ActiveRecordConfig\ActiveRecordConfig;
-use srag\DIC\DICTrait;
+use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**

@@ -1,14 +1,14 @@
 <?php
 
-namespace srag\ActiveRecordConfig;
+namespace srag\ActiveRecordConfig\UserDefaults;
 
 use ilPropertyFormGUI;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 
 /**
  * Class ActiveRecordConfigFormGUI
  *
- * @package srag\ActiveRecordConfig
+ * @package srag\ActiveRecordConfig\UserDefaults
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */

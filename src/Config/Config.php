@@ -3,7 +3,7 @@
 namespace srag\Plugins\UserDefaults\Config;
 
 use ilUserDefaultsPlugin;
-use srag\ActiveRecordConfig\ActiveRecordConfig;
+use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
 
 /**
  * Class Config

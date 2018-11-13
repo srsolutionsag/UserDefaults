@@ -56,20 +56,20 @@ foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSet
 ?>
 <#13>
 <?php
-if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
-	\srag\DIC\DICStatic::dic()->database()
+	\srag\DIC\UserDefaults\DICStatic::dic()->database()
 		->renameTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "udf_field_id", "field_key");
 
-	\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
+	\srag\DIC\UserDefaults\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
 		"type" => "text"
 	]);
 }
 ?>
 <#14>
 <?php
-if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
 	/**
@@ -85,10 +85,10 @@ if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaul
 ?>
 <#15>
 <?php
-if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
-	\srag\DIC\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
+	\srag\DIC\UserDefaults\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
 		"type" => "text",
 		"length" => "256"
 	]);
@@ -99,7 +99,7 @@ if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaul
 \srag\Plugins\UserDefaults\UDFCheck\UDFCheckUser::updateDB();
 \srag\Plugins\UserDefaults\UDFCheck\UDFCheckUDF::updateDB();
 
-if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
 	/**
@@ -121,6 +121,6 @@ if (\srag\DIC\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaul
 		$UDFCheck->store();
 	}
 
-	\srag\DIC\DICStatic::dic()->database()->dropTable(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, false);
+	\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTable(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, false);
 }
 ?>

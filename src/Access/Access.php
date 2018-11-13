@@ -3,7 +3,7 @@
 namespace srag\Plugins\UserDefaults\Access;
 
 use ilUserDefaultsPlugin;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**

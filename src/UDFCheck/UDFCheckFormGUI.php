@@ -11,7 +11,7 @@ use ilSelectInputGUI;
 use ilTextInputGUI;
 use ilUDFDefinitionPlugin;
 use ilUserDefaultsPlugin;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;

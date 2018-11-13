@@ -5,7 +5,7 @@ namespace srag\Plugins\UserDefaults\Form;
 use ilMultiSelectInputGUI;
 use ilTemplate;
 use ilUserDefaultsPlugin;
-use srag\DIC\DICTrait;
+use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use srDefaultAccessChecker;

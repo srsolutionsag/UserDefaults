@@ -314,11 +314,11 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($categories as $cat_ref_id) {
-			if ($cat_ref_id == "" || ilObject2::_lookupType($cat_ref_id) != CATEGORIES::TYPE_CAT) {
+			if ($cat_ref_id == "" || ilObject2::_lookupType($cat_ref_id) != Categories::TYPE_CAT) {
 				continue;
 			}
 
-			$categories = $this->getUsrObject()->getDesktopItems(CATEGORIES::TYPE_CAT);
+			$categories = $this->getUsrObject()->getDesktopItems(Categories::TYPE_CAT);
 
 			foreach ($categories as $category) {
 				ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $category['ref_id'], Categories::TYPE_CAT);

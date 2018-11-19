@@ -26,6 +26,7 @@ class UserSettingsGUI {
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_INDEX = 'configure';
 	const CMD_SEARCH_COURSES = 'searchCourses';
+	const CMD_SEARCH_CATEGORIES = 'searchCategories';
 	const CMD_CANCEL = 'cancel';
 	const CMD_CREATE = 'create';
 	const CMD_UPDATE = 'update';
@@ -66,6 +67,7 @@ class UserSettingsGUI {
 				$this->index();
 				break;
 			case self::CMD_SEARCH_COURSES:
+			case self::CMD_SEARCH_CATEGORIES:
 			case self::CMD_CANCEL:
 			case self::CMD_CREATE:
 			case self::CMD_UPDATE:
@@ -249,6 +251,45 @@ class UserSettingsGUI {
 		}
 
 		self::plugin()->output($courses, false);
+	}
+
+	/**
+	 *
+	 */
+	protected function searchCategories() {
+		$term = filter_input(INPUT_GET, "term");
+		$type = filter_input(INPUT_GET, "container_type");
+
+		$category_ref_id = Config::getField(Config::KEY_CATEGORY_REF_ID);
+
+		if (!empty($category_ref_id)) {
+			$categories = self::ilias()->categories()->getCategoriesOfCategory($category_ref_id);
+		} else {
+			$categories = [];
+		}
+
+		$query = "SELECT obj.obj_id, obj.title
+				  FROM " . usrdefObj::TABLE_NAME . " AS obj
+				  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
+				  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
+			      WHERE obj.type = %s
+			      AND (" . self::dic()->database()->like("obj.title", "text", "%%" . $term . "%%") . " OR " . self::dic()->database()
+				->like("trans.title", "text", $term, "%%" . $term . "%%") . ")
+				" . (!empty($categories) ? "AND " . self::dic()->database()->in("ref.ref_id", $categories, false, "integer") : "") . "
+				  AND obj.title != %s
+				  AND ref.deleted IS NULL
+			      ORDER BY obj.title";
+		$types = [ "text", "text" ];
+		$values = [ $type, "__OrgUnitAdministration" ];
+
+		$result = self::dic()->database()->queryF($query, $types, $values);
+
+		$categories = [];
+		while (($row = $result->fetchAssoc()) !== false) {
+			$categories[] = [ "id" => $row["obj_id"], "text" => $row["title"] ];
+		}
+
+		self::plugin()->output($categories, false);
 	}
 
 

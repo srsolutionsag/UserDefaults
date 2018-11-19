@@ -118,6 +118,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 		$sets = self::$mapping[$a_event];
 
+
 		if ($run === true && $sets && $user instanceof ilObjUser) {
 			/**
 			 * @var UserSetting $ilUserSetting

@@ -13,6 +13,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
             'srag\\Plugins\\UserDefaults\\' => 26,
             'srag\\LibrariesNamespaceChanger\\' => 31,
             'srag\\DIC\\' => 9,
+            'srag\\CustomInputGUIs\\' => 21,
             'srag\\ActiveRecordConfig\\' => 24,
         ),
     );
@@ -33,6 +34,10 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\DIC\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/dic/src',
+        ),
+        'srag\\CustomInputGUIs\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/custominputguis/src',
         ),
         'srag\\ActiveRecordConfig\\' => 
         array (
@@ -90,6 +95,26 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfigGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigGUI.php',
         'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfigTableGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigTableGUI.php',
         'srag\\ActiveRecordConfig\\UserDefaults\\Exception\\ActiveRecordConfigException' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Exception/ActiveRecordConfigException.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\CheckboxInputGUI\\CheckboxInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/CheckboxInputGUI/CheckboxInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\DateDurationInputGUI\\DateDurationInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/DateDurationInputGUI/DateDurationInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\GlyphGUI\\GlyphGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/GlyphGUI/GlyphGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\MultiLineInputGUI\\MultiLineInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiLineInputGUI/MultiLineInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\MultiSelectSearchInputGUI\\MultiSelectSearchInput2GUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchInputGUI/MultiSelectSearchInput2GUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\MultiSelectSearchInputGUI\\MultiSelectSearchInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchInputGUI/MultiSelectSearchInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\NumberInputGUI\\NumberInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/NumberInputGUI/NumberInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\PropertyFormGUI\\BasePropertyFormGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/BasePropertyFormGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\PropertyFormGUI\\Exception\\PropertyFormGUIException' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/Exception/PropertyFormGUIException.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\PropertyFormGUI\\Items\\Items' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/Items/Items.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\PropertyFormGUI\\PropertyFormGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/PropertyFormGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\ScreenshotsInputGUI\\ScreenshotsInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ScreenshotsInputGUI/ScreenshotsInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\StaticHTMLPresentationInputGUI\\StaticHTMLPresentationInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/StaticHTMLPresentationInputGUI/StaticHTMLPresentationInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TableGUI\\BaseTableGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/TableGUI/BaseTableGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TableGUI\\Exception\\TableGUIException' => __DIR__ . '/..' . '/srag/custominputguis/src/TableGUI/Exception/TableGUIException.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TableGUI\\TableGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/TableGUI/TableGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\Template\\Template' => __DIR__ . '/..' . '/srag/custominputguis/src/Template/Template.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TextAreaInputGUI\\TextAreaInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/TextAreaInputGUI/TextAreaInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TextInputGUI\\TextInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/TextInputGUI/TextInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\Waiter\\Waiter' => __DIR__ . '/..' . '/srag/custominputguis/src/Waiter/Waiter.php',
         'srag\\DIC\\UserDefaults\\DICStatic' => __DIR__ . '/..' . '/srag/dic/src/DICStatic.php',
         'srag\\DIC\\UserDefaults\\DICStaticInterface' => __DIR__ . '/..' . '/srag/dic/src/DICStaticInterface.php',
         'srag\\DIC\\UserDefaults\\DICTrait' => __DIR__ . '/..' . '/srag/dic/src/DICTrait.php',
@@ -105,6 +130,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\DIC\\UserDefaults\\Version\\VersionInterface' => __DIR__ . '/..' . '/srag/dic/src/Version/VersionInterface.php',
         'srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/LibrariesNamespaceChanger.php',
         'srag\\Plugins\\UserDefaults\\Access\\Access' => __DIR__ . '/../..' . '/src/Access/Access.php',
+        'srag\\Plugins\\UserDefaults\\Access\\Categories' => __DIR__ . '/../..' . '/src/Access/Categories.php',
         'srag\\Plugins\\UserDefaults\\Access\\Courses' => __DIR__ . '/../..' . '/src/Access/Courses.php',
         'srag\\Plugins\\UserDefaults\\Access\\Ilias' => __DIR__ . '/../..' . '/src/Access/Ilias.php',
         'srag\\Plugins\\UserDefaults\\Config\\Config' => __DIR__ . '/../..' . '/src/Config/Config.php',

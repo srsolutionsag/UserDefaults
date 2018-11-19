@@ -10,5 +10,6 @@ return array(
     'srag\\Plugins\\UserDefaults\\' => array($baseDir . '/src'),
     'srag\\LibrariesNamespaceChanger\\' => array($vendorDir . '/srag/librariesnamespacechanger/src'),
     'srag\\DIC\\' => array($vendorDir . '/srag/dic/src'),
+    'srag\\CustomInputGUIs\\' => array($vendorDir . '/srag/custominputguis/src'),
     'srag\\ActiveRecordConfig\\' => array($vendorDir . '/srag/activerecordconfig/src'),
 );

@@ -4,20 +4,17 @@ namespace srag\Plugins\UserDefaults\UserSetting;
 
 use ActiveRecord;
 use DOMXPath;
-use Gettext\Languages\Category;
 use ilCourseConstants;
 use ilCourseParticipants;
 use ilExAssignment;
 use ilExSubmission;
 use ilGroupParticipants;
-use ilObjCourse;
 use ilObject2;
 use ilObjExercise;
 use ilObjOrgUnit;
 use ilObjPortfolio;
 use ilObjPortfolioTemplate;
 use ilObjStudyProgramme;
-use ilObjTypeDefinition;
 use ilObjUser;
 use ilPersonalSkill;
 use ilPortfolioAccessHandler;
@@ -255,6 +252,7 @@ class UserSetting extends ActiveRecord {
 		}
 	}
 
+
 	/**
 	 *
 	 */
@@ -265,7 +263,6 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($categories as $cat_obj_id) {
-
 
 
 			if ($cat_obj_id != "" && ilObject2::_lookupType($cat_obj_id) == Categories::TYPE_CAT) {
@@ -302,6 +299,7 @@ class UserSetting extends ActiveRecord {
 		}
 	}
 
+
 	/**
 	 *
 	 */
@@ -320,11 +318,10 @@ class UserSetting extends ActiveRecord {
 				continue;
 			}
 
-
 			$categories = $this->getUsrObject()->getDesktopItems(CATEGORIES::TYPE_CAT);
 
-			foreach($categories as $category) {
-				ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(),$category['ref_id'],'cat');
+			foreach ($categories as $category) {
+				ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $category['ref_id'], Categories::TYPE_CAT);
 			}
 		}
 	}

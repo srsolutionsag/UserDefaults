@@ -7,7 +7,7 @@ use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
- * Class Category
+ * Class Categories
  *
  * @package srag\Plugins\UserDefaults\Access
  *
@@ -38,7 +38,7 @@ final class Categories {
 
 
 	/**
-	 * Courses constructor
+	 * Categories constructor
 	 */
 	private function __construct() {
 

@@ -4,17 +4,20 @@ namespace srag\Plugins\UserDefaults\UserSetting;
 
 use ActiveRecord;
 use DOMXPath;
+use Gettext\Languages\Category;
 use ilCourseConstants;
 use ilCourseParticipants;
 use ilExAssignment;
 use ilExSubmission;
 use ilGroupParticipants;
+use ilObjCourse;
 use ilObject2;
 use ilObjExercise;
 use ilObjOrgUnit;
 use ilObjPortfolio;
 use ilObjPortfolioTemplate;
 use ilObjStudyProgramme;
+use ilObjTypeDefinition;
 use ilObjUser;
 use ilPersonalSkill;
 use ilPortfolioAccessHandler;
@@ -24,6 +27,7 @@ use ilUtil;
 use php4DOMDocument;
 use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
 use srag\DIC\UserDefaults\DICTrait;
+use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
@@ -189,13 +193,15 @@ class UserSetting extends ActiveRecord {
 		if ($this->isValid()) {
 			$this->generatePortfolio();
 			$this->assignCourses();
+			$this->assignCategoriesDesktop();
 			$this->assignGroups();
 			$this->assignToGlobalRole();
 			$this->assignOrgunits();
 			$this->assignStudyprograms();
 		} else {
-			if ($this->isUnsubscribeCoursesDesktop()) {
+			if ($this->isUnsubscrfromcrsAndcategoriesDesktop()) {
 				$this->unsubscribeCourses();
+				$this->unsubscribeCategoriesDeskop();
 			}
 		}
 	}
@@ -249,12 +255,35 @@ class UserSetting extends ActiveRecord {
 		}
 	}
 
+	/**
+	 *
+	 */
+	protected function assignCategoriesDesktop() {
+		$categories = $this->getAssignedCategoriesDesktop();
+		if (count($categories) == 0) {
+			return;
+		}
+
+		foreach ($categories as $cat_obj_id) {
+
+
+
+			if ($cat_obj_id != "" && ilObject2::_lookupType($cat_obj_id) == Categories::TYPE_CAT) {
+
+
+				$arr_ref_id = ilObject2::_getAllReferences($cat_obj_id);
+
+				$this->getUsrObject()->addDesktopItem(reset($arr_ref_id), Categories::TYPE_CAT);
+			}
+		}
+	}
+
 
 	/**
 	 *
 	 */
 	protected function unsubscribeCourses() {
-		if (!$this->isUnsubscribeCoursesDesktop()) {
+		if (!$this->isUnsubscrfromcrsAndcategoriesDesktop()) {
 			return;
 		}
 
@@ -270,6 +299,33 @@ class UserSetting extends ActiveRecord {
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 			$added = $part->deleteParticipants(array( $usr_id ));
+		}
+	}
+
+	/**
+	 *
+	 */
+	protected function unsubscribeCategoriesDeskop() {
+		if (!$this->isUnsubscrfromcrsAndcategoriesDesktop()) {
+			return;
+		}
+
+		$categories = $this->getAssignedCategoriesDesktop();
+		if (count($categories) == 0) {
+			return;
+		}
+
+		foreach ($categories as $cat_ref_id) {
+			if ($cat_ref_id == "" || ilObject2::_lookupType($cat_ref_id) != CATEGORIES::TYPE_CAT) {
+				continue;
+			}
+
+
+			$categories = $this->getUsrObject()->getDesktopItems(CATEGORIES::TYPE_CAT);
+
+			foreach($categories as $category) {
+				ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(),$category['ref_id'],'cat');
+			}
 		}
 	}
 
@@ -571,13 +627,21 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $assigned_courses_desktop = array();
 	/**
+	 * @var array
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
+	protected $assigned_categories_desktop = array();
+	/**
 	 * @var bool
 	 *
 	 * @con_has_field true
 	 * @con_fieldtype integer
 	 * @con_length    1
 	 */
-	protected $unsubscribe_courses_desktop = false;
+	protected $unsubscr_from_crs_and_cat = false;
 	/**
 	 * @var int
 	 *
@@ -673,6 +737,7 @@ class UserSetting extends ActiveRecord {
 		switch ($field_name) {
 			case 'assigned_courses':
 			case 'assigned_courses_desktop':
+			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
 			case 'assigned_groupes_desktop':
 			case 'portfolio_assigned_to_groups':
@@ -699,6 +764,7 @@ class UserSetting extends ActiveRecord {
 	public function wakeUp($field_name, $field_value) {
 		switch ($field_name) {
 			case 'assigned_courses':
+			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
@@ -800,6 +866,22 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
+	 * @return array
+	 */
+	public function getAssignedCategoriesDesktop(): array {
+		return $this->assigned_categories_desktop;
+	}
+
+
+	/**
+	 * @param array $assigned_categories_desktop
+	 */
+	public function setAssignedCategoriesDesktop(array $assigned_categories_desktop) {
+		$this->assigned_categories_desktop = $assigned_categories_desktop;
+	}
+
+
+	/**
 	 * @param array $assigned_groupes
 	 */
 	public function setAssignedGroupes($assigned_groupes) {
@@ -834,16 +916,16 @@ class UserSetting extends ActiveRecord {
 	/**
 	 * @return bool
 	 */
-	public function isUnsubscribeCoursesDesktop() {
-		return $this->unsubscribe_courses_desktop;
+	public function isUnsubscrfromcrsAndcategoriesDesktop() {
+		return $this->unsubscr_from_crs_and_cat;
 	}
 
 
 	/**
-	 * @param bool $unsubscribe_courses_desktop
+	 * @param bool $unsubscr_from_crs_and_cat
 	 */
-	public function setUnsubscribeCoursesDesktop($unsubscribe_courses_desktop) {
-		$this->unsubscribe_courses_desktop = $unsubscribe_courses_desktop;
+	public function setUnsubscrfromcrsAndcategoriesDesktop($unsubscr_from_crs_and_cat) {
+		$this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
 	}
 
 

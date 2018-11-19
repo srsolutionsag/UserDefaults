@@ -13,6 +13,7 @@ use ilTextInputGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Access\Courses;
+use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Form\ilContainerMultiSelectInputGUI;
 use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
@@ -36,7 +37,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_GLOBAL_ROLE = 'global_role';
 	const F_ASSIGNED_COURSES = 'assigned_courses';
 	const F_ASSIGNED_COURSES_DESKTOP = 'assigned_courses_desktop';
-	const F_UNSUBSCRIBE_COURSES = 'unsubscribe_courses';
+	const F_ASSIGNED_CATEGORY_DESKTOP = 'assigned_category_desktop';
+	const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
 	const F_ASSIGNED_GROUPS = 'assigned_groups';
 	const F_ASSIGNED_GROUPS_DESKTOP = 'assigned_groups_desktop';
 	const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
@@ -126,7 +128,11 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$ilCourseMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
-		$ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_COURSES), self::F_UNSUBSCRIBE_COURSES);
+		$ilCategoryMultiSelectInputGUI = new ilContainerMultiSelectInputGUI(Categories::TYPE_CAT, $this->txt(self::F_ASSIGNED_CATEGORY_DESKTOP), self::F_ASSIGNED_CATEGORY_DESKTOP);
+		$ilCategoryMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_CATEGORIES));
+		$this->addItem($ilCategoryMultiSelectInputGUI);
+
+		$ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES), self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES);
 		$this->addItem($ilCheckboxInputGUI);
 
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS), self::F_ASSIGNED_GROUPS);
@@ -200,7 +206,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 			//			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
 			self::F_ASSIGNED_COURSES => implode(',', $this->object->getAssignedCourses()),
 			self::F_ASSIGNED_COURSES_DESKTOP => implode(',', $this->object->getAssignedCoursesDesktop()),
-			self::F_UNSUBSCRIBE_COURSES => $this->object->isUnsubscribeCoursesDesktop(),
+			self::F_ASSIGNED_CATEGORY_DESKTOP => implode(',', $this->object->getAssignedCategoriesDesktop()),
+			self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES => $this->object->isUnsubscrfromcrsAndcategoriesDesktop(),
 			self::F_ASSIGNED_GROUPS => implode(',', $this->object->getAssignedGroupes()),
 			self::F_ASSIGNED_GROUPS_DESKTOP => implode(',', $this->object->getAssignedGroupesDesktop()),
 			self::F_GLOBAL_ROLE => $this->object->getGlobalRole(),
@@ -232,7 +239,9 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedCourses(explode(',', $assigned_courses[0]));
 		$assigned_courses_desktop = $this->getInput(self::F_ASSIGNED_COURSES_DESKTOP);
 		$this->object->setAssignedCoursesDesktop(explode(',', $assigned_courses_desktop[0]));
-		$this->object->setUnsubscribeCoursesDesktop($this->getInput(self::F_UNSUBSCRIBE_COURSES));
+		$assigned_categories_desktop = $this->getInput(self::F_ASSIGNED_CATEGORY_DESKTOP);
+		$this->object->setAssignedCategoriesDesktop(explode(',', $assigned_categories_desktop[0]));
+		$this->object->setUnsubscrfromcrsAndcategoriesDesktop($this->getInput(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES));
 		$assigned_groups = $this->getInput(self::F_ASSIGNED_GROUPS);
 		$this->object->setAssignedGroupes(explode(',', $assigned_groups[0]));
 		$assigned_groups_desktop = $this->getInput(self::F_ASSIGNED_GROUPS_DESKTOP);

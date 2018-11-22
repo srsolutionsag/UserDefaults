@@ -28,7 +28,8 @@ set_form_please_choose#:#-- Bitte wählen --
 set_duplicate#:#Duplizieren
 set_input_to_desktop#:#MISSING set_input_to_desktop
 set_assigned_courses_desktop#:#In Kurs einschreiben und Kurs auf den Desktop legen
-set_unsubscribe_courses#:#Aus obigen Kursen abmelden, falls Bedingung nicht zutrifft
+set_assigned_category_desktop#:#Kategorien auf den Desktop legen
+set_unsubscribe_courses_and_categories#:#Aus obigen Kursen und Kategorien abmelden, falls Bedingung nicht zutrifft
 set_assigned_groups_desktop#:#Zu Gruppe hinzufügen und Gruppe auf den Desktop legen
 set_assigned_groups#:#Zu Gruppe hinzufügen
 set_on_create#:#Erstellen

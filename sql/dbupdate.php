@@ -124,3 +124,11 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugi
 	\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTable(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, false);
 }
 ?>
+<#17>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>
+<#18>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>

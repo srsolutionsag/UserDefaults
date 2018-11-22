@@ -50,4 +50,11 @@ final class Ilias {
 	public function courses()/*: Courses*/ {
 		return Courses::getInstance();
 	}
+
+	/**
+	 * @return Categories
+	 */
+	public function categories()/*: Categories*/ {
+		return Categories::getInstance();
+	}
 }

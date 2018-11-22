@@ -135,7 +135,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 							break;
 						default:
 							$se = new ilSelectInputGUI(self::plugin()->translate(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
-							$se->setOptions($this->object::getDefinitionValues());
+							$se->setOptions($this->object->getDefinitionValues());
 							$this->addItem($se);
 							break;
 					}

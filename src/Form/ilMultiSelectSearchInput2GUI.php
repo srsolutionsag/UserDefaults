@@ -156,7 +156,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 			}
 		}
 
-		return $this->tpl->get();
+		return self::output()->getHTML($this->tpl);
 	}
 
 

@@ -4,6 +4,7 @@ namespace srag\DIC\UserDefaults;
 
 use srag\DIC\UserDefaults\DIC\DICInterface;
 use srag\DIC\UserDefaults\Exception\DICException;
+use srag\DIC\UserDefaults\Output\OutputInterface;
 use srag\DIC\UserDefaults\Plugin\PluginInterface;
 use srag\DIC\UserDefaults\Version\VersionInterface;
 
@@ -22,6 +23,15 @@ interface DICStaticInterface {
 	 * @return DICInterface DIC interface
 	 */
 	public static function dic()/*: DICInterface*/
+	;
+
+
+	/**
+	 * Get output interface
+	 *
+	 * @return OutputInterface Output interface
+	 */
+	public static function output()/*: OutputInterface*/
 	;
 
 

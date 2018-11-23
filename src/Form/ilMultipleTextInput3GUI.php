@@ -57,7 +57,7 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 
 		$this->checkInput();
 
-		return $tpl->get();
+		return self::output()->getHTML($tpl);
 	}
 
 

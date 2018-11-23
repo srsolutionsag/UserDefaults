@@ -117,7 +117,7 @@ class UserSettingsGUI {
 	 */
 	protected function index() {
 		$ilUserSettingsTableGUI = new UserSettingsTableGUI($this);
-		self::dic()->mainTemplate()->setContent($ilUserSettingsTableGUI->getHTML());
+		self::output()->output($ilUserSettingsTableGUI);
 	}
 
 
@@ -126,7 +126,7 @@ class UserSettingsGUI {
 	 */
 	protected function add() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, new UserSetting());
-		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::output()->output($ilUserSettingsFormGUI);
 	}
 
 
@@ -140,7 +140,7 @@ class UserSettingsGUI {
 			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
 			self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 		}
-		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::output()->output($ilUserSettingsFormGUI);
 	}
 
 
@@ -150,7 +150,7 @@ class UserSettingsGUI {
 	protected function edit() {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, UserSetting::find($_GET[self::IDENTIFIER]));
 		$ilUserSettingsFormGUI->fillForm();
-		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::output()->output($ilUserSettingsFormGUI);
 	}
 
 
@@ -164,7 +164,7 @@ class UserSettingsGUI {
 			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
 			$this->cancel();
 		}
-		self::dic()->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+		self::output()->output($ilUserSettingsFormGUI);
 	}
 
 
@@ -191,7 +191,7 @@ class UserSettingsGUI {
 		$conf->setHeaderText(self::plugin()->translate('msg_confirm_delete'));
 		$conf->setConfirm(self::plugin()->translate('set_delete'), self::CMD_DELETE);
 		$conf->setCancel(self::plugin()->translate('set_cancel'), self::CMD_INDEX);
-		self::dic()->mainTemplate()->setContent($conf->getHTML());
+		self::output()->output($conf);
 	}
 
 
@@ -250,8 +250,9 @@ class UserSettingsGUI {
 			$courses[] = [ "id" => $row["obj_id"], "text" => $row["title"] ];
 		}
 
-		self::plugin()->output($courses, false);
+		self::output()->outputJSON($courses);
 	}
+
 
 	/**
 	 *
@@ -289,7 +290,7 @@ class UserSettingsGUI {
 			$categories[] = [ "id" => $row["obj_id"], "text" => $row["title"] ];
 		}
 
-		self::plugin()->output($categories, false);
+		self::output()->outputJSON($categories);
 	}
 
 
@@ -335,7 +336,7 @@ class UserSettingsGUI {
 			$conf->addItem("setting_select[]", $setting_id, UserSetting::find($setting_id)->getTitle());
 		}
 
-		self::dic()->mainTemplate()->setContent($conf->getHTML());
+		self::output()->output($conf);
 	}
 
 
@@ -379,7 +380,7 @@ class UserSettingsGUI {
 			$conf->addItem("setting_select[]", $setting_id, UserSetting::find($setting_id)->getTitle());
 		}
 
-		self::dic()->mainTemplate()->setContent($conf->getHTML());
+		self::output()->output($conf);
 	}
 
 
@@ -423,7 +424,7 @@ class UserSettingsGUI {
 			$conf->addItem("setting_select[]", $setting_id, UserSetting::find($setting_id)->getTitle());
 		}
 
-		self::dic()->mainTemplate()->setContent($conf->getHTML());
+		self::output()->output($conf);
 	}
 
 

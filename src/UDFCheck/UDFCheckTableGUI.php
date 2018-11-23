@@ -141,7 +141,7 @@ class UDFCheckTableGUI extends ilTable2GUI {
 					case "negated":
 						$this->tpl->setCurrentBlock('td');
 						if ($a_set[$k]) {
-							$r = $this->renderer->render($this->image->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
+							$r = self::output()->getHTML($this->image->standard(ilUtil::getImagePath('icon_checked.svg'), 'negated'));
 							$this->tpl->setVariable('VALUE', $r);
 						} else {
 							$this->tpl->setVariable('VALUE', '&nbsp;');

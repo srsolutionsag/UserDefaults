@@ -70,7 +70,7 @@ class UserDefaultsGlobalSettingsGUI {
 	protected function configure() {
 		$form = $this->getGlobalSettingsForm();
 
-		self::plugin()->output($form);
+		self::output()->output($form);
 	}
 
 
@@ -82,7 +82,7 @@ class UserDefaultsGlobalSettingsGUI {
 		$form->setValuesByPost();
 
 		if (!$form->checkInput()) {
-			self::plugin()->output($form);
+			self::output()->output($form);
 
 			return;
 		}

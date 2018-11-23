@@ -437,7 +437,7 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 			}
 		}
 
-		return $tpl->get();
+		return self::output()->getHTML($tpl);
 	}
 
 

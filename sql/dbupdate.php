@@ -59,6 +59,11 @@ foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSet
 if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
+	if(\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"udf_field_id")
+		&& \srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"field_key")) {
+		\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"field_key");
+	}
+
 	\srag\DIC\UserDefaults\DICStatic::dic()->database()
 		->renameTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "udf_field_id", "field_key");
 

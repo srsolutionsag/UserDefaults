@@ -98,6 +98,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 			$te->setDisabled(!$this->is_new);
 			$te->setRequired(true);
 			$te->setOptions($class::getDefinitionsOfCategoryOptions());
+
 			$category_radio->addSubItem($te);
 
 			$categories_radio->addOption($category_radio);

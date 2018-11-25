@@ -621,12 +621,16 @@ abstract class UDFCheck extends ActiveRecord {
 		$values = array_map(function ($value) {
 			return trim($value);
 		}, $this->getFieldValue($user));
-		
+
 		$check_values = $this->getCheckValues();
 				$valid = false;
 				foreach ($check_values as $key => $check_value) {
 
-					$value = $values[$key];
+					if(count($values) > 1) {
+						$value = $values[$key];
+					} else {
+						$value = reset($values);
+					}
 
 					if (!empty($value) && !empty($check_value)) {
 						switch ($this->getOperator()) {

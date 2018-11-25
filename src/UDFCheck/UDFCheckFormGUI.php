@@ -147,6 +147,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
 						if ($plugin instanceof ilUDFDefinitionPlugin) {
 
+
+
 							$select_gui = $plugin->getFormPropertyForDefinition($definition);
 
 							$check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);

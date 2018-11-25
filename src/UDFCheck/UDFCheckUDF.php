@@ -59,7 +59,6 @@ class UDFCheckUDF extends UDFCheck {
 	 */
 	protected function getFieldValue(ilObjUser $user) {
 		$user->readUserDefinedFields();
-
 		return explode(self::CHECK_SPLIT, $user->user_defined_data['f_' . $this->getFieldKey()]);
 	}
 }

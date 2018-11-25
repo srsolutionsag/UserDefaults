@@ -58,6 +58,29 @@ abstract class UDFCheck extends ActiveRecord {
 		self::OP_REG_EX => 'reg_ex',
 	);
 	/**
+	 * @var array
+	 */
+	public static $operator_positive = [
+		self::OP_EQUALS,
+		self::OP_STARTS_WITH,
+		self::OP_CONTAINS,
+		self::OP_ENDS_WITH,
+		self::OP_IS_EMPTY,
+		self:: OP_REG_EX,
+	];
+	/**
+	 * @var array
+	 */
+	public static $operator_negative = [
+		self::OP_NOT_EQUALS,
+		self::OP_NOT_STARTS_WITH,
+		self::OP_NOT_CONTAINS,
+		self::OP_NOT_ENDS_WITH,
+		self::OP_NOT_IS_EMPTY,
+	];
+
+
+	/**
 	 * @var UDFCheck[]
 	 */
 	public static $class_names = [
@@ -236,6 +259,10 @@ abstract class UDFCheck extends ActiveRecord {
 	 */
 	public function getDefinition() {
 		foreach (static::getDefinitionsOfCategory() as $definition) {
+
+			$definition["field_name"] = $definition["txt"];
+			$definition["field_id"] = $definition["field_key"];
+
 			if ($definition['field_key'] == $this->field_key) {
 				return $definition;
 			}
@@ -589,74 +616,85 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @return bool
 	 */
 	public function isValid(ilObjUser $user) {
+
+		//more than one $value possible because of cascade-select plugin...
 		$values = array_map(function ($value) {
 			return trim($value);
 		}, $this->getFieldValue($user));
-
+		
 		$check_values = $this->getCheckValues();
+				$valid = false;
+				foreach ($check_values as $key => $check_value) {
 
-		foreach ($check_values as $key => $check_value) {
-			$value = reset($values); //TODO: ???
+					$value = $values[$key];
 
-			if (!empty($value) && !empty($check_value)) {
-				switch ($this->getOperator()) {
-					case self::OP_EQUALS:
-						$valid = ($value === $check_value);
-						break;
+					if (!empty($value) && !empty($check_value)) {
+						switch ($this->getOperator()) {
+							case self::OP_EQUALS:
+								$valid = (strtolower($value) === strtolower($check_value));
+								break;
 
-					case self::OP_NOT_EQUALS:
-						$valid = ($value !== $check_value);
-						break;
+							case self::OP_NOT_EQUALS:
+								$valid = (strtolower($value) !== strtolower($check_value));
+								break;
 
-					case self::OP_STARTS_WITH:
-						$valid = (strpos($value, $check_value) === 0);
-						break;
+							case self::OP_STARTS_WITH:
+								$valid = (strpos(strtolower($value),strtolower($check_value)) === 0);
+								break;
 
-					case self::OP_NOT_STARTS_WITH:
-						$valid = (strpos($value, $check_value) !== 0);
-						break;
+							case self::OP_NOT_STARTS_WITH:
+								$valid = (strpos(strtolower($value),strtolower($check_value)) !== 0);
+								break;
 
-					case self::OP_ENDS_WITH:
-						$valid = (strrpos($value, $check_value) === (strlen($value) - strlen($check_value)));
-						break;
+							case self::OP_ENDS_WITH:
+								$valid = (strpos(strtolower($value),strtolower($check_value)) === (strlen($value) - strlen($check_value)));
+								break;
 
-					case self::OP_NOT_ENDS_WITH:
-						$valid = (strrpos($value, $check_value) !== (strlen($value) - strlen($check_value)));
-						break;
+							case self::OP_NOT_ENDS_WITH:
+								$valid = (strpos(strtolower($value),strtolower($check_value)) !== (strlen($value) - strlen($check_value)));
+								break;
 
-					case self::OP_CONTAINS:
-						$valid = (strpos($value, $check_value) !== false);
-						break;
+							case self::OP_CONTAINS:
+								$valid = (strpos(strtolower($value),strtolower($check_value)) !== false);
+								break;
+							case self::OP_NOT_CONTAINS:
+								$valid = (strpos(strtolower($value),strtolower($check_value)) === false);
+								break;
+							case self::OP_IS_EMPTY:
+								$valid = empty($value);
+								break;
+							case self::OP_NOT_IS_EMPTY:
+								$valid = (!empty($value));
+								break;
 
-					case self::OP_NOT_CONTAINS:
-						$valid = (strpos($value, $check_value) === false);
-						break;
+							case self::OP_REG_EX:
+								// Fix RegExp
+								if ($check_value[0] !== "/" && $check_value[strlen($check_value) - 1] !== "/") {
+									$check_value = "/$check_value/";
+								}
+								$valid = (preg_match($check_value, $value) === 1);
+								break;
 
-					case self::OP_IS_EMPTY:
-						$valid = empty($value);
-						break;
-
-					case self::OP_NOT_IS_EMPTY:
-						$valid = (!empty($value));
-						break;
-
-					case self::OP_REG_EX:
-						// Fix RegExp
-						if ($check_value[0] !== "/" && $check_value[strlen($check_value) - 1] !== "/") {
-							$check_value = "/$check_value/";
+							default:
+								return false;
 						}
-						$valid = (preg_match($check_value, $value) === 1);
-						break;
+					}
 
-					default:
-						return false;
+					if(in_array($this->getOperator(),self::$operator_positive)) {
+						if(!$valid) {
+							return false;
+						}
+					}
+
+					if(in_array($this->getOperator(),self::$operator_negative)) {
+						if($valid) {
+							return true;
+						}
+					}
+
 				}
-			}
 
-			if (!$valid) {
-				break;
-			}
-		}
+
 
 		$b = (!$this->isNegated() === $valid);
 

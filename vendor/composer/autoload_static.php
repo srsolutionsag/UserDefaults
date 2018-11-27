@@ -4,14 +4,55 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit181886b708176c3669cdf1c6e71efe24
+class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
 {
+    public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'srag\\RemovePluginDataConfirm\\UserDefaults\\' => 42,
+            'srag\\Plugins\\UserDefaults\\' => 26,
+            'srag\\LibrariesNamespaceChanger\\' => 31,
+            'srag\\DIC\\UserDefaults\\' => 22,
+            'srag\\CustomInputGUIs\\UserDefaults\\' => 34,
+            'srag\\ActiveRecordConfig\\UserDefaults\\' => 37,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'srag\\RemovePluginDataConfirm\\UserDefaults\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src',
+        ),
+        'srag\\Plugins\\UserDefaults\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+        'srag\\LibrariesNamespaceChanger\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
+        ),
+        'srag\\DIC\\UserDefaults\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/dic/src',
+        ),
+        'srag\\CustomInputGUIs\\UserDefaults\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/custominputguis/src',
+        ),
+        'srag\\ActiveRecordConfig\\UserDefaults\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/activerecordconfig/src',
+        ),
+    );
+
     public static $classMap = array (
         'ActiveRecord' => __DIR__ . '/../..' . '/../../../../../../../Services/ActiveRecord/class.ActiveRecord.php',
+        'UDFCheckGUI' => __DIR__ . '/../..' . '/classes/UDFCheck/class.UDFCheckGUI.php',
+        'UserDefaultsGlobalSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserDefaultsGlobalSettingsGUI.php',
+        'UserSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserSettingsGUI.php',
         'ilAdvancedSelectionListGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php',
         'ilConfirmationGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/Utilities/classes/class.ilConfirmationGUI.php',
         'ilContainer' => __DIR__ . '/../..' . '/../../../../../../../Services/Container/classes/class.ilContainer.php',
-        'ilContainerMultiSelectInputGUI' => __DIR__ . '/../..' . '/classes/Form/class.ilContainerMultiSelectInputGUI.php',
         'ilContainerSorting' => __DIR__ . '/../..' . '/../../../../../../../Services/Container/classes/class.ilContainerSorting.php',
         'ilCourseConstants' => __DIR__ . '/../..' . '/../../../../../../../Modules/Course/classes/class.ilCourseConstants.php',
         'ilCourseParticipants' => __DIR__ . '/../..' . '/../../../../../../../Modules/Course/classes/class.ilCourseParticipants.php',
@@ -23,8 +64,6 @@ class ComposerStaticInit181886b708176c3669cdf1c6e71efe24
         'ilGlyphGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php',
         'ilGroupParticipants' => __DIR__ . '/../..' . '/../../../../../../../Modules/Group/classes/class.ilGroupParticipants.php',
         'ilMultiSelectInputGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/Form/classes/class.ilMultiSelectInputGUI.php',
-        'ilMultiSelectSearchInput2GUI' => __DIR__ . '/../..' . '/classes/Form/class.ilMultiSelectSearchInput2GUI.php',
-        'ilMultipleTextInput3GUI' => __DIR__ . '/../..' . '/classes/Form/class.ilMultipleTextInput3GUI.php',
         'ilObjCourse' => __DIR__ . '/../..' . '/../../../../../../../Modules/Course/classes/class.ilObjCourse.php',
         'ilObjExercise' => __DIR__ . '/../..' . '/../../../../../../../Modules/Exercise/classes/class.ilObjExercise.php',
         'ilObjGroup' => __DIR__ . '/../..' . '/../../../../../../../Modules/Group/classes/class.ilObjGroup.php',
@@ -48,23 +87,81 @@ class ComposerStaticInit181886b708176c3669cdf1c6e71efe24
         'ilTextInputGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/Form/classes/class.ilTextInputGUI.php',
         'ilToolbarItem' => __DIR__ . '/../..' . '/../../../../../../../Services/UIComponent/Toolbar/interfaces/interface.ilToolbarItem.php',
         'ilTreeExplorerGUI' => __DIR__ . '/../..' . '/../../../../../../../Services/UIComponent/Explorer2/classes/class.ilTreeExplorerGUI.php',
-        'ilUDFCheck' => __DIR__ . '/../..' . '/classes/UDFCheck/class.ilUDFCheck.php',
-        'ilUDFCheckFormGUI' => __DIR__ . '/../..' . '/classes/UDFCheck/class.ilUDFCheckFormGUI.php',
-        'ilUDFCheckGUI' => __DIR__ . '/../..' . '/classes/UDFCheck/class.ilUDFCheckGUI.php',
-        'ilUDFCheckTableGUI' => __DIR__ . '/../..' . '/classes/UDFCheck/class.ilUDFCheckTableGUI.php',
         'ilUserDefaultsConfigGUI' => __DIR__ . '/../..' . '/classes/class.ilUserDefaultsConfigGUI.php',
         'ilUserDefaultsPlugin' => __DIR__ . '/../..' . '/classes/class.ilUserDefaultsPlugin.php',
         'ilUserDefinedFields' => __DIR__ . '/../..' . '/../../../../../../../Services/User/classes/class.ilUserDefinedFields.php',
-        'ilUserSetting' => __DIR__ . '/../..' . '/classes/UserSetting/class.ilUserSetting.php',
-        'ilUserSettingsFormGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.ilUserSettingsFormGUI.php',
-        'ilUserSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.ilUserSettingsGUI.php',
-        'ilUserSettingsTableGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.ilUserSettingsTableGUI.php',
-        'udfGlyphGUI' => __DIR__ . '/../..' . '/classes/Form/class.udfGlyphGUI.php',
-        'udfMultiLineInputGUI' => __DIR__ . '/../..' . '/classes/Form/class.udfMultiLineInputGUI.php',
-        'udfOrguSelectorExplorerGUI' => __DIR__ . '/../..' . '/classes/Form/class.udfOrguSelectorExplorerGUI.php',
-        'usrdefObj' => __DIR__ . '/../..' . '/classes/UserSearch/class.usrdefObj.php',
-        'usrdefOrguSelectorInputGUI' => __DIR__ . '/../..' . '/classes/Form/class.usrdefOrguSelectorInputGUI.php',
-        'usrdefUser' => __DIR__ . '/../..' . '/classes/UserSearch/class.usrdefUser.php',
+        'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfig' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfig.php',
+        'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfigFormGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigFormGUI.php',
+        'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfigGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigGUI.php',
+        'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfigTableGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigTableGUI.php',
+        'srag\\ActiveRecordConfig\\UserDefaults\\Exception\\ActiveRecordConfigException' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Exception/ActiveRecordConfigException.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\CheckboxInputGUI\\CheckboxInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/CheckboxInputGUI/CheckboxInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\DateDurationInputGUI\\DateDurationInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/DateDurationInputGUI/DateDurationInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\GlyphGUI\\GlyphGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/GlyphGUI/GlyphGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\MultiLineInputGUI\\MultiLineInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiLineInputGUI/MultiLineInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\MultiSelectSearchInputGUI\\MultiSelectSearchInput2GUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchInputGUI/MultiSelectSearchInput2GUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\MultiSelectSearchInputGUI\\MultiSelectSearchInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchInputGUI/MultiSelectSearchInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\NumberInputGUI\\NumberInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/NumberInputGUI/NumberInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\PropertyFormGUI\\Exception\\PropertyFormGUIException' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/Exception/PropertyFormGUIException.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\PropertyFormGUI\\Items\\Items' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/Items/Items.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\PropertyFormGUI\\PropertyFormGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/PropertyFormGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\ScreenshotsInputGUI\\ScreenshotsInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ScreenshotsInputGUI/ScreenshotsInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\StaticHTMLPresentationInputGUI\\StaticHTMLPresentationInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/StaticHTMLPresentationInputGUI/StaticHTMLPresentationInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TableGUI\\Exception\\TableGUIException' => __DIR__ . '/..' . '/srag/custominputguis/src/TableGUI/Exception/TableGUIException.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TableGUI\\TableGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/TableGUI/TableGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\Template\\Template' => __DIR__ . '/..' . '/srag/custominputguis/src/Template/Template.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TextAreaInputGUI\\TextAreaInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/TextAreaInputGUI/TextAreaInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\TextInputGUI\\TextInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/TextInputGUI/TextInputGUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\Waiter\\Waiter' => __DIR__ . '/..' . '/srag/custominputguis/src/Waiter/Waiter.php',
+        'srag\\DIC\\UserDefaults\\DICStatic' => __DIR__ . '/..' . '/srag/dic/src/DICStatic.php',
+        'srag\\DIC\\UserDefaults\\DICStaticInterface' => __DIR__ . '/..' . '/srag/dic/src/DICStaticInterface.php',
+        'srag\\DIC\\UserDefaults\\DICTrait' => __DIR__ . '/..' . '/srag/dic/src/DICTrait.php',
+        'srag\\DIC\\UserDefaults\\DIC\\AbstractDIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/AbstractDIC.php',
+        'srag\\DIC\\UserDefaults\\DIC\\DICInterface' => __DIR__ . '/..' . '/srag/dic/src/DIC/DICInterface.php',
+        'srag\\DIC\\UserDefaults\\DIC\\Implementation\\ILIAS52DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS52DIC.php',
+        'srag\\DIC\\UserDefaults\\DIC\\Implementation\\ILIAS53DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS53DIC.php',
+        'srag\\DIC\\UserDefaults\\DIC\\Implementation\\ILIAS54DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS54DIC.php',
+        'srag\\DIC\\UserDefaults\\DIC\\Implementation\\LegacyDIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/LegacyDIC.php',
+        'srag\\DIC\\UserDefaults\\Exception\\DICException' => __DIR__ . '/..' . '/srag/dic/src/Exception/DICException.php',
+        'srag\\DIC\\UserDefaults\\Output\\Output' => __DIR__ . '/..' . '/srag/dic/src/Output/Output.php',
+        'srag\\DIC\\UserDefaults\\Output\\OutputInterface' => __DIR__ . '/..' . '/srag/dic/src/Output/OutputInterface.php',
+        'srag\\DIC\\UserDefaults\\Plugin\\Plugin' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Plugin.php',
+        'srag\\DIC\\UserDefaults\\Plugin\\PluginInterface' => __DIR__ . '/..' . '/srag/dic/src/Plugin/PluginInterface.php',
+        'srag\\DIC\\UserDefaults\\Plugin\\Pluginable' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Pluginable.php',
+        'srag\\DIC\\UserDefaults\\Version\\Version' => __DIR__ . '/..' . '/srag/dic/src/Version/Version.php',
+        'srag\\DIC\\UserDefaults\\Version\\VersionInterface' => __DIR__ . '/..' . '/srag/dic/src/Version/VersionInterface.php',
+        'srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/LibrariesNamespaceChanger.php',
+        'srag\\Plugins\\UserDefaults\\Access\\Access' => __DIR__ . '/../..' . '/src/Access/Access.php',
+        'srag\\Plugins\\UserDefaults\\Access\\Categories' => __DIR__ . '/../..' . '/src/Access/Categories.php',
+        'srag\\Plugins\\UserDefaults\\Access\\Courses' => __DIR__ . '/../..' . '/src/Access/Courses.php',
+        'srag\\Plugins\\UserDefaults\\Access\\Ilias' => __DIR__ . '/../..' . '/src/Access/Ilias.php',
+        'srag\\Plugins\\UserDefaults\\Config\\Config' => __DIR__ . '/../..' . '/src/Config/Config.php',
+        'srag\\Plugins\\UserDefaults\\Form\\ilContainerMultiSelectInputGUI' => __DIR__ . '/../..' . '/src/Form/ilContainerMultiSelectInputGUI.php',
+        'srag\\Plugins\\UserDefaults\\Form\\ilMultiSelectSearchInput2GUI' => __DIR__ . '/../..' . '/src/Form/ilMultiSelectSearchInput2GUI.php',
+        'srag\\Plugins\\UserDefaults\\Form\\ilMultipleTextInput3GUI' => __DIR__ . '/../..' . '/src/Form/ilMultipleTextInput3GUI.php',
+        'srag\\Plugins\\UserDefaults\\Form\\udfGlyphGUI' => __DIR__ . '/../..' . '/src/Form/udfGlyphGUI.php',
+        'srag\\Plugins\\UserDefaults\\Form\\udfMultiLineInputGUI' => __DIR__ . '/../..' . '/src/Form/udfMultiLineInputGUI.php',
+        'srag\\Plugins\\UserDefaults\\Form\\udfOrguSelectorExplorerGUI' => __DIR__ . '/../..' . '/src/Form/udfOrguSelectorExplorerGUI.php',
+        'srag\\Plugins\\UserDefaults\\Form\\usrdefOrguSelectorInputGUI' => __DIR__ . '/../..' . '/src/Form/usrdefOrguSelectorInputGUI.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheck' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheck.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckFormGUI' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckFormGUI.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckOld' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckOld.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckTableGUI' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckTableGUI.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUDF' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckUDF.php',
+        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUser' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckUser.php',
+        'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefObj' => __DIR__ . '/../..' . '/src/UserSearch/usrdefObj.php',
+        'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefUser' => __DIR__ . '/../..' . '/src/UserSearch/usrdefUser.php',
+        'srag\\Plugins\\UserDefaults\\UserSetting\\GlobalSettingsFormGUI' => __DIR__ . '/../..' . '/src/UserSetting/GlobalSettingsFormGUI.php',
+        'srag\\Plugins\\UserDefaults\\UserSetting\\UserSetting' => __DIR__ . '/../..' . '/src/UserSetting/UserSetting.php',
+        'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsFormGUI' => __DIR__ . '/../..' . '/src/UserSetting/UserSettingsFormGUI.php',
+        'srag\\Plugins\\UserDefaults\\UserSetting\\UserSettingsTableGUI' => __DIR__ . '/../..' . '/src/UserSetting/UserSettingsTableGUI.php',
+        'srag\\Plugins\\UserDefaults\\Utils\\UserDefaultsTrait' => __DIR__ . '/../..' . '/src/Utils/UserDefaultsTrait.php',
+        'srag\\RemovePluginDataConfirm\\UserDefaults\\AbstractPluginUninstallTrait' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/AbstractPluginUninstallTrait.php',
+        'srag\\RemovePluginDataConfirm\\UserDefaults\\AbstractRemovePluginDataConfirm' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/AbstractRemovePluginDataConfirm.php',
+        'srag\\RemovePluginDataConfirm\\UserDefaults\\PluginUninstallTrait' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/PluginUninstallTrait.php',
+        'srag\\RemovePluginDataConfirm\\UserDefaults\\RemovePluginDataConfirmException' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/RemovePluginDataConfirmException.php',
+        'srag\\RemovePluginDataConfirm\\UserDefaults\\RepositoryObjectPluginUninstallTrait' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/RepositoryObjectPluginUninstallTrait.php',
+        'usrdefRemoveDataConfirm' => __DIR__ . '/../..' . '/classes/uninstall/class.usrdefRemoveDataConfirm.php',
         'usrdefUserGUI' => __DIR__ . '/../..' . '/classes/UserSearch/class.usrdefUserGUI.php',
         'usrdefUserTableGUI' => __DIR__ . '/../..' . '/classes/UserSearch/class.usrdefUserTableGUI.php',
     );
@@ -72,7 +169,9 @@ class ComposerStaticInit181886b708176c3669cdf1c6e71efe24
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit181886b708176c3669cdf1c6e71efe24::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb::$classMap;
 
         }, null, ClassLoader::class);
     }

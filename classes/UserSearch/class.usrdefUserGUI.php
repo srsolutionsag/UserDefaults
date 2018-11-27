@@ -1,5 +1,11 @@
 <?php
 
+require_once __DIR__ . "/../../vendor/autoload.php";
+
+use srag\DIC\UserDefaults\DICTrait;
+use srag\Plugins\UserDefaults\UserSetting\UserSetting;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+
 /**
  * Class usrdefUserGUI
  *
@@ -10,6 +16,9 @@
  */
 class usrdefUserGUI {
 
+	use DICTrait;
+	use UserDefaultsTrait;
+	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_INDEX = 'index';
 	const CMD_APPLY_FILTER = 'applyFilter';
 	const CMD_RESET_FILTER = 'resetFilter';
@@ -17,42 +26,22 @@ class usrdefUserGUI {
 	const CMD_CONFIRM = 'confirmSelectUser';
 	const IDENTIFIER = 'usr_id';
 	const SESSION_ID = 'multi_assign_user_id';
-	/**
-	 * @var ilCtrl
-	 */
-	protected $ilCtrl;
-	/**
-	 * @var ilTemplate
-	 */
-	protected $tpl;
-	/**
-	 * @var ilLanguage
-	 */
-	protected $lng;
-	/**
-	 * @var ilTabsGUI
-	 */
-	protected $tabs;
-	/**
-	 * @var ilUserDefaultsPlugin
-	 */
-	protected $pl;
 
 
+	/**
+	 * usrdefUserGUI constructor
+	 */
 	public function __construct() {
-		global $DIC;
-		$this->ilCtrl = $DIC->ctrl();
-		$this->tpl = $DIC->ui()->mainTemplate();
-		$this->lng = $DIC->language();
-		$this->tabs = $DIC->tabs();
-		$this->pl = ilUserDefaultsPlugin::getInstance();
 		ilSession::set(self::SESSION_ID, NULL);
 	}
 
 
+	/**
+	 *
+	 */
 	public function executeCommand() {
-		$next = $this->ilCtrl->getNextClass();
-		$cmd = $this->ilCtrl->getCmd(self::CMD_INDEX);
+		$next = self::dic()->ctrl()->getNextClass();
+		$cmd = self::dic()->ctrl()->getCmd(self::CMD_INDEX);
 		switch ($next) {
 			case strtolower(ilPropertyFormGUI::class):
 				$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
@@ -80,54 +69,69 @@ class usrdefUserGUI {
 	}
 
 
+	/**
+	 *
+	 */
 	protected function index() {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
-		$this->tpl->setContent($usrdefUserTableGUI->getHTML());
+		self::output()->output($usrdefUserTableGUI);
 	}
 
 
+	/**
+	 *
+	 */
 	protected function applyFilter() {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		$usrdefUserTableGUI->resetOffset();
 		$usrdefUserTableGUI->writeFilterToSession();
-		$this->ilCtrl->redirect($this, self::CMD_INDEX);
+		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 
 
+	/**
+	 *
+	 */
 	protected function resetFilter() {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		$usrdefUserTableGUI->resetFilter();
 		$usrdefUserTableGUI->resetOffset();
-		$this->ilCtrl->redirect($this, self::CMD_INDEX);
+		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 
 
+	/**
+	 *
+	 */
 	protected function confirmSelectUser() {
 		// Optinal
 	}
 
 
+	/**
+	 *
+	 */
 	protected function selectUser() {
 		$usr_ids = $_POST['id'];
 		$user_objects = array();
 		if (count($usr_ids) == 0 || !is_array($usr_ids)) {
-			ilUtil::sendFailure($this->pl->txt('msg_no_users_selected'), true);
-			$this->ilCtrl->redirect($this, self::CMD_INDEX);
+			ilUtil::sendFailure(self::plugin()->translate('msg_no_users_selected'), true);
+			self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 		}
 		foreach ($usr_ids as $usr_id) {
 			$user_objects[] = new ilObjUser($usr_id);
 		}
 		/**
-		 * @var $ilUserSetting ilUserSetting
+		 * @var UserSetting $ilUserSetting
 		 */
-		foreach (ilUserSetting::where(array(
-			'status' => ilUserSetting::STATUS_ACTIVE,
+		foreach (UserSetting::where(array(
+			'status' => UserSetting::STATUS_ACTIVE,
 			'on_manual' => true,
 		))->get() as $ilUserSetting) {
 			$ilUserSetting->doMultipleAssignements($user_objects);
 		}
 
-		ilUtil::sendSuccess(sprintf($this->pl->txt("userdef_users_assigned"), count($usr_ids)), true);
-		$this->ilCtrl->redirect($this, self::CMD_INDEX);
+		ilUtil::sendSuccess(self::plugin()->translate("userdef_users_assigned", "", [ count($usr_ids) ]), true);
+		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 }

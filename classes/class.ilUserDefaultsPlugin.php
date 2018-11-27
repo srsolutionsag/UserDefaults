@@ -2,6 +2,13 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
+use srag\Plugins\UserDefaults\Config\Config;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
+use srag\Plugins\UserDefaults\UserSetting\UserSetting;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+use srag\RemovePluginDataConfirm\UserDefaults\PluginUninstallTrait;
+
 /**
  * Class ilUserDefaultsPlugin
  *
@@ -10,16 +17,23 @@ require_once __DIR__ . "/../vendor/autoload.php";
  */
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
+	use PluginUninstallTrait;
+	use UserDefaultsTrait;
 	const PLUGIN_ID = 'usrdef';
 	const PLUGIN_NAME = 'UserDefaults';
+	const PLUGIN_CLASS_NAME = self::class;
+	const REMOVE_PLUGIN_DATA_CONFIRM_CLASS_NAME = usrdefRemoveDataConfirm::class;
 	// Known Components
 	const SERVICES_USER = 'Services/User';
 	const SERVICES_AUTHENTICATION = 'Services/Authentication';
+	const MODULES_ORGUNITS = 'Modules/OrgUnit';
 	// Known Actions
 	const CREATED_1 = 'saveAsNew';
 	const CREATED_2 = 'afterCreate';
 	const UPDATED = 'afterUpdate';
 	const AFTER_LOGIN = 'afterLogin';
+	const ASSIGN_USER_TO_POSITION = 'assignUserToPosition';
+	const REMOVE_USER_FROM_POSITION = 'removeUserFromPosition';
 	/**
 	 * @var
 	 */
@@ -32,6 +46,8 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 		self::CREATED_2 => 'on_create',
 		self::UPDATED => 'on_update',
 		self::AFTER_LOGIN => 'on_update',
+		self::ASSIGN_USER_TO_POSITION => 'on_update',
+		self::REMOVE_USER_FROM_POSITION => 'on_update'
 	);
 
 
@@ -48,20 +64,10 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 
 	/**
-	 * @var ilDB
-	 */
-	protected $db;
-
-
-	/**
 	 *
 	 */
 	public function __construct() {
 		parent::__construct();
-
-		global $DIC;
-
-		$this->db = $DIC->database();
 	}
 
 
@@ -74,13 +80,13 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 */
 	public function handleEvent($a_component, $a_event, $a_parameter) {
 		$run = false;
-		$ilUser = NULL;
+		$user = NULL;
 		switch ($a_component) {
 			case self::SERVICES_AUTHENTICATION:
 				switch ($a_event) {
 					case self::AFTER_LOGIN:
 						$user_id = ilObjUser::getUserIdByLogin($a_parameter['username']);
-						$ilUser = new ilObjUser ($user_id);
+						$user = new ilObjUser($user_id);
 
 						$run = true;
 						break;
@@ -91,7 +97,16 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 					case self::CREATED_1:
 					case self::CREATED_2:
 					case self::UPDATED:
-						$ilUser = $a_parameter['user_obj'];
+						$user = $a_parameter['user_obj'];
+						$run = true;
+						break;
+				}
+				break;
+			case self::MODULES_ORGUNITS:
+				switch ($a_event) {
+					case self::ASSIGN_USER_TO_POSITION:
+					case self::REMOVE_USER_FROM_POSITION:
+						$user = new ilObjUser($a_parameter['user_id']);
 						$run = true;
 						break;
 				}
@@ -103,31 +118,20 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 		$sets = self::$mapping[$a_event];
 
-		if ($run === true && $sets && $ilUser instanceof ilObjUser) {
+
+		if ($run === true && $sets && $user instanceof ilObjUser) {
 			/**
-			 * @var $ilUserSetting ilUserSetting
+			 * @var UserSetting $ilUserSetting
 			 */
-			foreach (ilUserSetting::where(array(
-				'status' => ilUserSetting::STATUS_ACTIVE,
+			foreach (UserSetting::where(array(
+				'status' => UserSetting::STATUS_ACTIVE,
 				$sets => true,
 			))->get() as $ilUserSetting) {
-				$ilUserSetting->doAssignements($ilUser);
+				$ilUserSetting->doAssignements($user);
 			}
 		}
 	}
 
-
-
-	//	/**
-	//	 * @param $key
-	//	 * @return mixed|string
-	//	 * @throws \ilException
-	//	 */
-	//	public function txt($key) {
-	//		require_once('./Customizing/global/plugins/Libraries/PluginTranslator/class.sragPluginTranslator.php');
-	//
-	//		return sragPluginTranslator::getInstance($this)->active()->write()->txt($key);
-	//	}
 
 	/**
 	 * @return string
@@ -138,14 +142,16 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 
 	/**
-	 * @return bool
+	 * @inheritdoc
 	 */
-	protected function beforeUninstall() {
-		$this->db->dropTable(ilUDFCheck::TABLE_NAME, false);
-		$this->db->dropTable(ilUserSetting::TABLE_NAME, false);
-		//$this->db->dropTable(usrdefUser::TABLE_NAME, false);
-		//$this->db->dropTable(usrdefObj::TABLE_NAME, false);
-
-		return true;
+	protected function deleteData()/*: void*/ {
+		self::dic()->database()->dropTable(UDFCheckOld::TABLE_NAME, false);
+		foreach (UDFCheck::$class_names as $class) {
+			self::dic()->database()->dropTable($class::TABLE_NAME, false);
+		}
+		self::dic()->database()->dropTable(UserSetting::TABLE_NAME, false);
+		//self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);
+		//self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);
+		self::dic()->database()->dropTable(Config::TABLE_NAME, false);
 	}
 }

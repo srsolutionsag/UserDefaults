@@ -2,8 +2,11 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
+use srag\DIC\UserDefaults\DICTrait;
+use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+
 /**
- * ilUserDefaultsConfigGUI
+ * Class ilUserDefaultsConfigGUI
  *
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  *
@@ -12,72 +15,55 @@ require_once __DIR__ . "/../vendor/autoload.php";
  */
 class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 
+	use DICTrait;
+	use UserDefaultsTrait;
+	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const TAB_SETTINGS = "settings";
 	const TAB_USERS = "users";
-	/**
-	 * @var ilCtrl
-	 */
-	protected $ctrl;
-	/**
-	 * @var ilLanguage
-	 */
-	protected $lng;
-	/**
-	 * @var ilTabsGUI
-	 */
-	protected $tabs;
-	/**
-	 * @var ilTemplate
-	 */
-	protected $tpl;
+	const TAB_GLOBAL_SETTINGS = "global_settings";
 
 
-	function __construct() {
-		global $DIC;
+	/**
+	 * ilUserDefaultsConfigGUI constructor
+	 */
+	public function __construct() {
 
-		$this->ctrl = $DIC->ctrl();
-		$this->lng = $DIC->language();
-		$this->tabs = $DIC->tabs();
-		$this->tpl = $DIC->ui()->mainTemplate();
 	}
 
 
-	public function executeCommand() {
-		$this->ctrl->setParameterByClass(ilObjComponentSettingsGUI::class, "ctype", $_GET["ctype"]);
-		$this->ctrl->setParameterByClass(ilObjComponentSettingsGUI::class, "cname", $_GET["cname"]);
-		$this->ctrl->setParameterByClass(ilObjComponentSettingsGUI::class, "slot_id", $_GET["slot_id"]);
-		$this->ctrl->setParameterByClass(ilObjComponentSettingsGUI::class, "plugin_id", $_GET["plugin_id"]);
-		$this->ctrl->setParameterByClass(ilObjComponentSettingsGUI::class, "pname", $_GET["pname"]);
+	/**
+	 * @param string $cmd
+	 */
+	public function performCommand($cmd) {
+		self::dic()->tabs()->addTab(self::TAB_SETTINGS, self::plugin()->translate('tabs_settings'), self::dic()->ctrl()
+			->getLinkTargetByClass(UserSettingsGUI::class));
+		self::dic()->tabs()->addTab(self::TAB_USERS, self::plugin()->translate('tabs_users'), self::dic()->ctrl()
+			->getLinkTargetByClass(usrdefUserGUI::class));
+		self::dic()->tabs()->addTab(self::TAB_GLOBAL_SETTINGS, self::plugin()->translate('tabs_global_settings'), self::dic()->ctrl()
+			->getLinkTargetByClass(UserDefaultsGlobalSettingsGUI::class, UserDefaultsGlobalSettingsGUI::CMD_CONFIGURE));
 
-		$this->tpl->setTitle($this->lng->txt("cmps_plugin") . ": " . $_GET["pname"]);
-		$this->tpl->setDescription("");
-
-		$this->tabs->clearTargets();
-
-		$this->tabs->addTab(self::TAB_SETTINGS, $this->plugin_object->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(ilUserSettingsGUI::class));
-		$this->tabs->addTab(self::TAB_USERS, $this->plugin_object->txt('tabs_users'), $this->ctrl->getLinkTargetByClass(usrdefUserGUI::class));
-
-		$nextClass = $this->ctrl->getNextClass();
+		$nextClass = self::dic()->ctrl()->getNextClass();
 		switch ($nextClass) {
-			case strtolower(ilUDFCheckGUI::class):
-				$this->tabs->activateTab(self::TAB_SETTINGS);
-				$ilUDFCheckGUI = new ilUDFCheckGUI(new ilUserSettingsGUI($this));
-				$this->ctrl->forwardCommand($ilUDFCheckGUI);
+			case strtolower(UDFCheckGUI::class):
+				self::dic()->tabs()->activateTab(self::TAB_SETTINGS);
+				$gui = new UDFCheckGUI(new UserSettingsGUI());
+				self::dic()->ctrl()->forwardCommand($gui);
 				break;
 			case strtolower(usrdefUserGUI::class):
-				$this->tabs->activateTab(self::TAB_USERS);
-				$usrdefUserGUI = new usrdefUserGUI();
-				$this->ctrl->forwardCommand($usrdefUserGUI);
+				self::dic()->tabs()->activateTab(self::TAB_USERS);
+				$gui = new usrdefUserGUI();
+				self::dic()->ctrl()->forwardCommand($gui);
+				break;
+			case strtolower(UserDefaultsGlobalSettingsGUI::class):
+				self::dic()->tabs()->activateTab(self::TAB_GLOBAL_SETTINGS);
+				$gui = new UserDefaultsGlobalSettingsGUI();
+				self::dic()->ctrl()->forwardCommand($gui);
 				break;
 			default;
-				$this->tabs->activateTab(self::TAB_SETTINGS);
-				$ilUserSettingsGUI = new ilUserSettingsGUI($this);
-				$this->ctrl->forwardCommand($ilUserSettingsGUI);
+				self::dic()->tabs()->activateTab(self::TAB_SETTINGS);
+				$gui = new UserSettingsGUI($this);
+				self::dic()->ctrl()->forwardCommand($gui);
 				break;
 		}
-	}
-
-
-	public function performCommand($cmd) {
 	}
 }

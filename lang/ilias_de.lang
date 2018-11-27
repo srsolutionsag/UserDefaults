@@ -24,11 +24,12 @@ set_udf_checks#:#UDF-Checks bearbeiten
 set_delete#:#Löschen
 set_assigned_orgus#:#Organisationseinheiten Zuweisen
 set_assigned_studyprograms#:#In Studienprogramm einschreiben
-set_form_please_choose#:#-- BItte wählen --
+set_form_please_choose#:#-- Bitte wählen --
 set_duplicate#:#Duplizieren
-set_input_to_desktop#:#MISSING
+set_input_to_desktop#:#MISSING set_input_to_desktop
 set_assigned_courses_desktop#:#In Kurs einschreiben und Kurs auf den Desktop legen
-set_unsubscribe_courses#:#Aus obigen Kursen abmelden, falls Bedingung nicht zutrifft
+set_assigned_category_desktop#:#Kategorien auf den Desktop legen
+set_unsubscribe_courses_and_categories#:#Aus obigen Kursen und Kategorien abmelden, falls Bedingung nicht zutrifft
 set_assigned_groups_desktop#:#Zu Gruppe hinzufügen und Gruppe auf den Desktop legen
 set_assigned_groups#:#Zu Gruppe hinzufügen
 set_on_create#:#Erstellen
@@ -88,3 +89,20 @@ check_op_reg_ex#:#RegEx
 check_op_reg_ex_info#:#Hinweis: RegExp muss in / / geschrieben werden
 check_text_fields#:#Textfelder
 check_select_lists#:#Auswahllisten
+removeplugindataconfirm_cancel#:#Abbrechen
+removeplugindataconfirm_confirm_remove_data#:#Möchten Sie die %1$s-Daten auch entfernen? Allenfalls möchten Sie das %1$s-Plugin nur deaktivieren?
+removeplugindataconfirm_deactivate#:#%1$s-Plugin nur deaktivieren
+removeplugindataconfirm_data#:#%1$s-Daten
+removeplugindataconfirm_keep_data#:#%1$s-Daten behalten
+removeplugindataconfirm_msg_kept_data#:#Die %1$s-Daten wurden behalten
+removeplugindataconfirm_msg_removed_data#:#Die %1$s-Daten wurden auch entfernt
+removeplugindataconfirm_remove_data#:#Entferne %1$s-Daten
+check_field_key#:#Feld
+check_field_category#:#Kategorie
+check_field_category_1#:#ILIAS-Benutzerstammdatenfelder
+check_field_category_2#:#Benutzerdefinierte Felder
+tabs_global_settings#:#Globale Einstellungen
+save#:#Speichern
+saved#:#Gespeichert
+category_ref_id#:#Kategorie-Knotenpunkt für Kurse
+category_ref_id_info#:#Kategorie-Ref-ID

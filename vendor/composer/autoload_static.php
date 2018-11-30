@@ -9,17 +9,17 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
     public static $prefixLengthsPsr4 = array (
         's' => 
         array (
-            'srag\\RemovePluginDataConfirm\\UserDefaults\\' => 42,
+            'srag\\RemovePluginDataConfirm\\' => 29,
             'srag\\Plugins\\UserDefaults\\' => 26,
             'srag\\LibrariesNamespaceChanger\\' => 31,
-            'srag\\DIC\\UserDefaults\\' => 22,
-            'srag\\CustomInputGUIs\\UserDefaults\\' => 34,
+            'srag\\DIC\\' => 9,
+            'srag\\CustomInputGUIs\\' => 21,
             'srag\\ActiveRecordConfig\\UserDefaults\\' => 37,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'srag\\RemovePluginDataConfirm\\UserDefaults\\' => 
+        'srag\\RemovePluginDataConfirm\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src',
         ),
@@ -31,11 +31,11 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         array (
             0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
         ),
-        'srag\\DIC\\UserDefaults\\' => 
+        'srag\\DIC\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/dic/src',
         ),
-        'srag\\CustomInputGUIs\\UserDefaults\\' => 
+        'srag\\CustomInputGUIs\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/custominputguis/src',
         ),
@@ -125,6 +125,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\DIC\\UserDefaults\\Exception\\DICException' => __DIR__ . '/..' . '/srag/dic/src/Exception/DICException.php',
         'srag\\DIC\\UserDefaults\\Output\\Output' => __DIR__ . '/..' . '/srag/dic/src/Output/Output.php',
         'srag\\DIC\\UserDefaults\\Output\\OutputInterface' => __DIR__ . '/..' . '/srag/dic/src/Output/OutputInterface.php',
+        'srag\\DIC\\UserDefaults\\PHPVersionChecker' => __DIR__ . '/..' . '/srag/dic/src/PHPVersionChecker.php',
         'srag\\DIC\\UserDefaults\\Plugin\\Plugin' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Plugin.php',
         'srag\\DIC\\UserDefaults\\Plugin\\PluginInterface' => __DIR__ . '/..' . '/srag/dic/src/Plugin/PluginInterface.php',
         'srag\\DIC\\UserDefaults\\Plugin\\Pluginable' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Pluginable.php',

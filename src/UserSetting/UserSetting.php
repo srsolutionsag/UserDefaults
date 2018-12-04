@@ -885,7 +885,7 @@ class UserSetting extends ActiveRecord {
 	/**
 	 * @return array
 	 */
-	public function getAssignedCategoriesDesktop(): array {
+	public function getAssignedCategoriesDesktop() {
 		return $this->assigned_categories_desktop;
 	}
 
@@ -893,7 +893,7 @@ class UserSetting extends ActiveRecord {
 	/**
 	 * @param array $assigned_categories_desktop
 	 */
-	public function setAssignedCategoriesDesktop(array $assigned_categories_desktop) {
+	public function setAssignedCategoriesDesktop($assigned_categories_desktop) {
 		$this->assigned_categories_desktop = $assigned_categories_desktop;
 	}
 

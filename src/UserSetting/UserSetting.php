@@ -925,7 +925,7 @@ class UserSetting extends ActiveRecord {
 	/**
 	 * @param bool $assigned_groups_option_request
 	 */
-	public function setAssignedGroupsOptionRequest(bool $assigned_groups_option_request) {
+	public function setAssignedGroupsOptionRequest($assigned_groups_option_request) {
 		$this->assigned_groups_option_request = $assigned_groups_option_request;
 	}
 

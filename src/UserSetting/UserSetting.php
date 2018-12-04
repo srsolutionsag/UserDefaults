@@ -917,7 +917,7 @@ class UserSetting extends ActiveRecord {
 	/**
 	 * @return bool
 	 */
-	public function isAssignedGroupsOptionRequest(): bool {
+	public function isAssignedGroupsOptionRequest() {
 		return $this->assigned_groups_option_request;
 	}
 

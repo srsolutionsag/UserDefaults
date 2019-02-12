@@ -2,6 +2,8 @@
 
 namespace srag\Plugins\UserDefaults\UDFCheck;
 
+require_once "./Services/Search/classes/class.ilUserSearchOptions.php";
+
 use ilObjUser;
 use ilUserSearchOptions;
 

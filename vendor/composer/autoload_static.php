@@ -12,7 +12,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
             'srag\\RemovePluginDataConfirm\\UserDefaults\\' => 42,
             'srag\\Plugins\\UserDefaults\\' => 26,
             'srag\\LibrariesNamespaceChanger\\' => 31,
-            'srag\\DIC\\UserDefaults\\' => 22,
+            'srag\\DIC\\' => 9,
             'srag\\CustomInputGUIs\\UserDefaults\\' => 34,
             'srag\\ActiveRecordConfig\\UserDefaults\\' => 37,
         ),
@@ -31,7 +31,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         array (
             0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
         ),
-        'srag\\DIC\\UserDefaults\\' => 
+        'srag\\DIC\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/dic/src',
         ),
@@ -125,6 +125,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\DIC\\UserDefaults\\Exception\\DICException' => __DIR__ . '/..' . '/srag/dic/src/Exception/DICException.php',
         'srag\\DIC\\UserDefaults\\Output\\Output' => __DIR__ . '/..' . '/srag/dic/src/Output/Output.php',
         'srag\\DIC\\UserDefaults\\Output\\OutputInterface' => __DIR__ . '/..' . '/srag/dic/src/Output/OutputInterface.php',
+        'srag\\DIC\\UserDefaults\\PHPVersionChecker' => __DIR__ . '/..' . '/srag/dic/src/PHPVersionChecker.php',
         'srag\\DIC\\UserDefaults\\Plugin\\Plugin' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Plugin.php',
         'srag\\DIC\\UserDefaults\\Plugin\\PluginInterface' => __DIR__ . '/..' . '/srag/dic/src/Plugin/PluginInterface.php',
         'srag\\DIC\\UserDefaults\\Plugin\\Pluginable' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Pluginable.php',

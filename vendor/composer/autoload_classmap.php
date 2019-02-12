@@ -85,6 +85,7 @@ return array(
     'srag\\DIC\\UserDefaults\\Exception\\DICException' => $vendorDir . '/srag/dic/src/Exception/DICException.php',
     'srag\\DIC\\UserDefaults\\Output\\Output' => $vendorDir . '/srag/dic/src/Output/Output.php',
     'srag\\DIC\\UserDefaults\\Output\\OutputInterface' => $vendorDir . '/srag/dic/src/Output/OutputInterface.php',
+    'srag\\DIC\\UserDefaults\\PHPVersionChecker' => $vendorDir . '/srag/dic/src/PHPVersionChecker.php',
     'srag\\DIC\\UserDefaults\\Plugin\\Plugin' => $vendorDir . '/srag/dic/src/Plugin/Plugin.php',
     'srag\\DIC\\UserDefaults\\Plugin\\PluginInterface' => $vendorDir . '/srag/dic/src/Plugin/PluginInterface.php',
     'srag\\DIC\\UserDefaults\\Plugin\\Pluginable' => $vendorDir . '/srag/dic/src/Plugin/Pluginable.php',

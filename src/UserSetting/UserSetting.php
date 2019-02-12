@@ -342,7 +342,19 @@ class UserSetting extends ActiveRecord {
 			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
-			$added = $part->add($usr_id, IL_GRP_MEMBER);
+
+			if($this->isAssignedGroupsOptionRequest()) {
+				//ilGroupMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION_REQUEST,
+				$added = $part->addSubscriber($usr_id);
+				$part->updateSubscriptionTime($usr_id,time());
+				$part->sendNotification(
+					31,
+					$usr_id
+				);
+			} else {
+				$added = $part->add($usr_id, IL_GRP_MEMBER);
+			}
+
 
 			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
@@ -648,6 +660,14 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $assigned_groupes_desktop = array();
 	/**
+	 * @var bool
+	 *
+	 * @con_has_field true
+	 * @con_fieldtype integer
+	 * @con_length    1
+	 */
+	protected $assigned_groups_option_request = false;
+	/**
 	 * @var int
 	 *
 	 * @con_has_field  true
@@ -865,7 +885,7 @@ class UserSetting extends ActiveRecord {
 	/**
 	 * @return array
 	 */
-	public function getAssignedCategoriesDesktop(): array {
+	public function getAssignedCategoriesDesktop() {
 		return $this->assigned_categories_desktop;
 	}
 
@@ -873,7 +893,7 @@ class UserSetting extends ActiveRecord {
 	/**
 	 * @param array $assigned_categories_desktop
 	 */
-	public function setAssignedCategoriesDesktop(array $assigned_categories_desktop) {
+	public function setAssignedCategoriesDesktop($assigned_categories_desktop) {
 		$this->assigned_categories_desktop = $assigned_categories_desktop;
 	}
 
@@ -892,6 +912,24 @@ class UserSetting extends ActiveRecord {
 	public function getAssignedGroupes() {
 		return $this->assigned_groupes;
 	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isAssignedGroupsOptionRequest() {
+		return $this->assigned_groups_option_request;
+	}
+
+
+	/**
+	 * @param bool $assigned_groups_option_request
+	 */
+	public function setAssignedGroupsOptionRequest($assigned_groups_option_request) {
+		$this->assigned_groups_option_request = $assigned_groups_option_request;
+	}
+
+
 
 
 	/**

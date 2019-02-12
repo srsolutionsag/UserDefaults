@@ -41,6 +41,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
 	const F_ASSIGNED_GROUPS = 'assigned_groups';
 	const F_ASSIGNED_GROUPS_DESKTOP = 'assigned_groups_desktop';
+	const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
 	const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
 	const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
 	const F_ASSIGNED_ORGUS = 'assigned_orgus';
@@ -143,6 +144,11 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$ilCourseMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
+
+		$ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_OPTION_REQUEST), self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
+		$this->addItem($ilCheckboxInputGUI);
+
+
 		$se = new ilSelectInputGUI($this->txt(self::F_PORTFOLIO_TEMPLATE_ID), self::F_PORTFOLIO_TEMPLATE_ID);
 
 		$options = ilObjPortfolioTemplate::getAvailablePortfolioTemplates();
@@ -210,6 +216,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES => $this->object->isUnsubscrfromcrsAndcategoriesDesktop(),
 			self::F_ASSIGNED_GROUPS => implode(',', $this->object->getAssignedGroupes()),
 			self::F_ASSIGNED_GROUPS_DESKTOP => implode(',', $this->object->getAssignedGroupesDesktop()),
+			self::F_ASSIGNED_GROUPS_OPTION_REQUEST => $this->object->isAssignedGroupsOptionRequest(),
 			self::F_GLOBAL_ROLE => $this->object->getGlobalRole(),
 			self::F_PORTFOLIO_TEMPLATE_ID => $this->object->getPortfolioTemplateId(),
 			self::F_PORTFOLIO_ASSIGNED_TO_GROUPS => implode(',', $this->object->getPortfolioAssignedToGroups()),
@@ -246,6 +253,9 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedGroupes(explode(',', $assigned_groups[0]));
 		$assigned_groups_desktop = $this->getInput(self::F_ASSIGNED_GROUPS_DESKTOP);
 		$this->object->setAssignedGroupesDesktop(explode(',', $assigned_groups_desktop[0]));
+		$this->object->setAssignedGroupsOptionRequest($this->getInput(self::F_ASSIGNED_GROUPS_OPTION_REQUEST));
+		$assigned_groups_option_request = $this->getInput(self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
+
 		$this->object->setGlobalRole($this->getInput(self::F_GLOBAL_ROLE));
 		$portfolio_template_id = $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID);
 		$this->object->setPortfolioTemplateId($portfolio_template_id > 0 ? $portfolio_template_id : NULL);

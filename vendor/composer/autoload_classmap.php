@@ -50,6 +50,7 @@ return array(
     'ilUserDefaultsConfigGUI' => $baseDir . '/classes/class.ilUserDefaultsConfigGUI.php',
     'ilUserDefaultsPlugin' => $baseDir . '/classes/class.ilUserDefaultsPlugin.php',
     'ilUserDefinedFields' => $baseDir . '/../../../../../../../Services/User/classes/class.ilUserDefinedFields.php',
+    'ilUserSearchOptions' => $baseDir . '/../../../../../../../Services/Search/classes/class.ilUserSearchOptions.php',
     'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfig' => $vendorDir . '/srag/activerecordconfig/src/ActiveRecordConfig.php',
     'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfigFormGUI' => $vendorDir . '/srag/activerecordconfig/src/ActiveRecordConfigFormGUI.php',
     'srag\\ActiveRecordConfig\\UserDefaults\\ActiveRecordConfigGUI' => $vendorDir . '/srag/activerecordconfig/src/ActiveRecordConfigGUI.php',

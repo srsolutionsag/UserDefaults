@@ -60,6 +60,7 @@
       "../../../../../../../Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php",
       "../../../../../../../Services/Form/classes/class.ilTextInputGUI.php",
       "../../../../../../../Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php",
+      "../../../../../../../Services/Search/classes/class.ilUserSearchOptions.php",
       "../../../../../../../Services/Skill/classes/class.ilPersonalSkill.php",
       "../../../../../../../Services/Table/classes/class.ilTable2GUI.php",
       "../../../../../../../Services/Table/interfaces/interface.ilTableFilterItem.php",

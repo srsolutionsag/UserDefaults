@@ -9,7 +9,7 @@ return array(
     'srag\\RemovePluginDataConfirm\\UserDefaults\\' => array($vendorDir . '/srag/removeplugindataconfirm/src'),
     'srag\\Plugins\\UserDefaults\\' => array($baseDir . '/src'),
     'srag\\LibrariesNamespaceChanger\\' => array($vendorDir . '/srag/librariesnamespacechanger/src'),
-    'srag\\DIC\\' => array($vendorDir . '/srag/dic/src'),
+    'srag\\DIC\\UserDefaults\\' => array($vendorDir . '/srag/dic/src'),
     'srag\\CustomInputGUIs\\UserDefaults\\' => array($vendorDir . '/srag/custominputguis/src'),
     'srag\\ActiveRecordConfig\\UserDefaults\\' => array($vendorDir . '/srag/activerecordconfig/src'),
 );

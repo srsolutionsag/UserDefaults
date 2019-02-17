@@ -116,6 +116,7 @@ return array(
     'srag\\Plugins\\UserDefaults\\Access\\Categories' => $baseDir . '/src/Access/Categories.php',
     'srag\\Plugins\\UserDefaults\\Access\\Courses' => $baseDir . '/src/Access/Courses.php',
     'srag\\Plugins\\UserDefaults\\Access\\Ilias' => $baseDir . '/src/Access/Ilias.php',
+    'srag\\Plugins\\UserDefaults\\Access\\LocalRoles' => $baseDir . '/src/Access/LocalRoles.php',
     'srag\\Plugins\\UserDefaults\\Config\\Config' => $baseDir . '/src/Config/Config.php',
     'srag\\Plugins\\UserDefaults\\Form\\ilContainerMultiSelectInputGUI' => $baseDir . '/src/Form/ilContainerMultiSelectInputGUI.php',
     'srag\\Plugins\\UserDefaults\\Form\\ilMultiSelectSearchInput2GUI' => $baseDir . '/src/Form/ilMultiSelectSearchInput2GUI.php',

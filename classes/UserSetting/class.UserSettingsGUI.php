@@ -25,6 +25,7 @@ class UserSettingsGUI {
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_INDEX = 'configure';
+	const CMD_SEARCH_LOCAL_ROLES = 'searchLocalRoles';
 	const CMD_SEARCH_COURSES = 'searchCourses';
 	const CMD_SEARCH_CATEGORIES = 'searchCategories';
 	const CMD_CANCEL = 'cancel';
@@ -66,6 +67,7 @@ class UserSettingsGUI {
 			case self::CMD_INDEX:
 				$this->index();
 				break;
+			case self::CMD_SEARCH_LOCAL_ROLES:
 			case self::CMD_SEARCH_COURSES:
 			case self::CMD_SEARCH_CATEGORIES:
 			case self::CMD_CANCEL:
@@ -251,6 +253,33 @@ class UserSettingsGUI {
 		}
 
 		self::output()->outputJSON($courses);
+	}
+
+	/**
+	 *
+	 */
+	protected function searchLocalRoles() {
+		/*$term = filter_input(INPUT_GET, "term");
+		$type = filter_input(INPUT_GET, "container_type");
+
+		$category_ref_id = Config::getField(Config::KEY_CATEGORY_REF_ID);*/
+
+		/*
+		if (!empty($category_ref_id)) {
+			$courses = self::ilias()->courses()->getCoursesOfCategory($category_ref_id);
+		} else {
+			$courses = [];
+		}*/
+
+		$local_roles = self::dic()->rbacreview()->getRolesByFilter(ilRbacReview::FILTER_NOT_INTERNAL);
+
+		$return_local_roles = array();
+		foreach($local_roles as $local_role) {
+			$return_local_roles[] = [ "id" => $local_role["obj_id"], "text" => $local_role["title"] ];
+		}
+
+
+		self::output()->outputJSON($return_local_roles);
 	}
 
 

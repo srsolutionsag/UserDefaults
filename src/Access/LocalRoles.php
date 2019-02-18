@@ -43,14 +43,4 @@ final class LocalRoles {
 	private function __construct() {
 
 	}
-
-
-	/**
-	 * @param int $category_ref_id
-	 *
-	 * @return int[]
-	 */
-	/*public function getCoursesOfCategory($category_ref_id) {
-		return self::dic()->tree()->getSubTree(self::dic()->tree()->getNodeData($category_ref_id), false, self::TYPE_CRS);
-	}*/
 }

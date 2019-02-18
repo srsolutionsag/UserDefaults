@@ -259,23 +259,16 @@ class UserSettingsGUI {
 	 *
 	 */
 	protected function searchLocalRoles() {
-		/*$term = filter_input(INPUT_GET, "term");
-		$type = filter_input(INPUT_GET, "container_type");
-
-		$category_ref_id = Config::getField(Config::KEY_CATEGORY_REF_ID);*/
-
-		/*
-		if (!empty($category_ref_id)) {
-			$courses = self::ilias()->courses()->getCoursesOfCategory($category_ref_id);
-		} else {
-			$courses = [];
-		}*/
-
 		$local_roles = self::dic()->rbacreview()->getRolesByFilter(ilRbacReview::FILTER_NOT_INTERNAL);
 
 		$return_local_roles = array();
 		foreach($local_roles as $local_role) {
-			$return_local_roles[] = [ "id" => $local_role["obj_id"], "text" => $local_role["title"] ];
+
+			if(ilObject2::_lookupDeletedDate($local_role['parent'])) {
+				continue;
+			}
+
+			$return_local_roles[] = [ "id" => $local_role["obj_id"], "text" => self::dic()->objDataCache()->lookupTitle(self::dic()->objDataCache()->lookupObjId($local_role['parent']))." >> ".$local_role["title"] ];
 		}
 
 

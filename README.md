@@ -11,6 +11,9 @@ git clone https://github.com/studer-raimann/UserDefaults.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.
 
+### Some screenshots
+TODO
+
 ### Dependencies
 * ILIAS 5.2 or ILIAS 5.3
 * PHP >=5.6

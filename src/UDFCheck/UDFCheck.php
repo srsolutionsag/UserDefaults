@@ -78,8 +78,6 @@ abstract class UDFCheck extends ActiveRecord {
 		self::OP_NOT_ENDS_WITH,
 		self::OP_NOT_IS_EMPTY,
 	];
-
-
 	/**
 	 * @var UDFCheck[]
 	 */
@@ -623,86 +621,81 @@ abstract class UDFCheck extends ActiveRecord {
 		}, $this->getFieldValue($user));
 
 		$check_values = $this->getCheckValues();
-				$valid = false;
-				foreach ($check_values as $key => $check_value) {
+		$valid = false;
+		foreach ($check_values as $key => $check_value) {
 
-					if(count($values) > 1) {
-						$value = $values[$key];
-					} else {
-						$value = reset($values);
+			if (count($values) > 1) {
+				$value = $values[$key];
+			} else {
+				$value = reset($values);
+			}
+
+			switch ($this->getOperator()) {
+				case self::OP_EQUALS:
+					$valid = (strtolower($value) === strtolower($check_value));
+					break;
+
+				case self::OP_NOT_EQUALS:
+					$valid = (strtolower($value) !== strtolower($check_value));
+					break;
+
+				case self::OP_STARTS_WITH:
+					$valid = (strpos(strtolower($value), strtolower($check_value)) === 0);
+					break;
+
+				case self::OP_NOT_STARTS_WITH:
+					$valid = (strpos(strtolower($value), strtolower($check_value)) !== 0);
+					break;
+
+				case self::OP_ENDS_WITH:
+					$valid = (strpos(strtolower($value), strtolower($check_value)) === (strlen($value) - strlen($check_value)));
+					break;
+
+				case self::OP_NOT_ENDS_WITH:
+					$valid = (strpos(strtolower($value), strtolower($check_value)) !== (strlen($value) - strlen($check_value)));
+					break;
+
+				case self::OP_CONTAINS:
+					$valid = (strpos(strtolower($value), strtolower($check_value)) !== false);
+					break;
+				case self::OP_NOT_CONTAINS:
+					$valid = (strpos(strtolower($value), strtolower($check_value)) === false);
+					break;
+				case self::OP_IS_EMPTY:
+					$valid = empty($value);
+					break;
+				case self::OP_NOT_IS_EMPTY:
+					$valid = (!empty($value));
+					break;
+
+				case self::OP_REG_EX:
+					// Fix RegExp
+					if ($check_value[0] !== "/" && $check_value[strlen($check_value) - 1] !== "/") {
+						$check_value = "/$check_value/";
 					}
+					$valid = (preg_match($check_value, $value) === 1);
+					break;
 
-					if (!empty($value) && !empty($check_value)) {
-						switch ($this->getOperator()) {
-							case self::OP_EQUALS:
-								$valid = (strtolower($value) === strtolower($check_value));
-								break;
+				default:
+					return false;
+			}
 
-							case self::OP_NOT_EQUALS:
-								$valid = (strtolower($value) !== strtolower($check_value));
-								break;
-
-							case self::OP_STARTS_WITH:
-								$valid = (strpos(strtolower($value),strtolower($check_value)) === 0);
-								break;
-
-							case self::OP_NOT_STARTS_WITH:
-								$valid = (strpos(strtolower($value),strtolower($check_value)) !== 0);
-								break;
-
-							case self::OP_ENDS_WITH:
-								$valid = (strpos(strtolower($value),strtolower($check_value)) === (strlen($value) - strlen($check_value)));
-								break;
-
-							case self::OP_NOT_ENDS_WITH:
-								$valid = (strpos(strtolower($value),strtolower($check_value)) !== (strlen($value) - strlen($check_value)));
-								break;
-
-							case self::OP_CONTAINS:
-								$valid = (strpos(strtolower($value),strtolower($check_value)) !== false);
-								break;
-							case self::OP_NOT_CONTAINS:
-								$valid = (strpos(strtolower($value),strtolower($check_value)) === false);
-								break;
-							case self::OP_IS_EMPTY:
-								$valid = empty($value);
-								break;
-							case self::OP_NOT_IS_EMPTY:
-								$valid = (!empty($value));
-								break;
-
-							case self::OP_REG_EX:
-								// Fix RegExp
-								if ($check_value[0] !== "/" && $check_value[strlen($check_value) - 1] !== "/") {
-									$check_value = "/$check_value/";
-								}
-								$valid = (preg_match($check_value, $value) === 1);
-								break;
-
-							default:
-								return false;
-						}
-					}
-
-					if(in_array($this->getOperator(),self::$operator_positive)) {
-						if(!$valid) {
-							return false;
-						}
-					}
-
-					if(in_array($this->getOperator(),self::$operator_negative)) {
-						if($valid) {
-							return true;
-						}
-					}
-
+			if (in_array($this->getOperator(), self::$operator_positive)) {
+				if (!$valid) {
+					$valid = false;
 				}
+			}
 
+			if (in_array($this->getOperator(), self::$operator_negative)) {
+				if ($valid) {
+					$valid = true;
+				}
+			}
+		}
 
+		$valid = (!$this->isNegated() === $valid);
 
-		$b = (!$this->isNegated() === $valid);
-
-		return $b;
+		return $valid;
 	}
 
 

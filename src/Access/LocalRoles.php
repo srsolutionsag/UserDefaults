@@ -38,7 +38,7 @@ final class LocalRoles {
 
 
 	/**
-	 * Courses constructor
+	 * LocalRole constructor
 	 */
 	private function __construct() {
 

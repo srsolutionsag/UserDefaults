@@ -5,6 +5,7 @@ form_button_cancel#:#Abbrechen
 set_title#:#Titel
 set_description#:#Beschreibung
 set_global_role#:#Globale Rolle
+set_assigned_local_roles#:#Einschreiben in Lokale Rollen
 set_assigned_courses#:#Einschreiben in Kurse
 set_assigned_groupes#:#Einschreiben in Gruppen
 set_portfolio_template_id#:#Portfolio-Vorlage
@@ -59,6 +60,7 @@ check_negation_gobal#:#Negation
 check_op_equals#:#Ist gleich
 check_udf_operator#:#Vergleich
 check_op_starts_with#:#Beginnt mit
+role_placeholder#:#Rolle wählen
 crs_placeholder#:#Kurse wählen
 grp_placeholder#:#Gruppen wählen
 orgu_placeholder#:#Organisationseinheit

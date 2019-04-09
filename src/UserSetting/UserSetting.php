@@ -189,6 +189,7 @@ class UserSetting extends ActiveRecord {
 		$this->setUsrObject($user);
 		if ($this->isValid()) {
 			$this->generatePortfolio();
+			$this->assignLocalRoles();
 			$this->assignCourses();
 			$this->assignCategoriesDesktop();
 			$this->assignGroups();
@@ -225,6 +226,21 @@ class UserSetting extends ActiveRecord {
 			self::dic()->rbacadmin()->assignUser($global_role, $this->getUsrObject()->getId());
 		}
 	}
+
+	/**
+	 *
+	 */
+	protected function assignLocalRoles() {
+		$local_roles = $this->getAssignedLocalRoles();
+		if (count($local_roles) == 0) {
+			return;
+		}
+
+		foreach ($local_roles as $local_roles_obj_id) {
+			self::dic()->rbacadmin()->assignUser($local_roles_obj_id, $this->getUsrObject()->getId());
+		}
+	}
+
 
 
 	/**
@@ -618,6 +634,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     256
 	 */
+	protected $assigned_local_roles = array();
+	/**
+	 * @var array
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
 	protected $assigned_courses = array();
 	/**
 	 * @var int
@@ -752,6 +776,7 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function sleep($field_name) {
 		switch ($field_name) {
+			case 'assigned_local_roles':
 			case 'assigned_courses':
 			case 'assigned_courses_desktop':
 			case 'assigned_categories_desktop':
@@ -780,6 +805,7 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function wakeUp($field_name, $field_value) {
 		switch ($field_name) {
+			case 'assigned_local_roles':
 			case 'assigned_courses':
 			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
@@ -864,6 +890,22 @@ class UserSetting extends ActiveRecord {
 	public function getTitle() {
 		return $this->title;
 	}
+
+	/**
+	 * @param array $assigned_local_roles
+	 */
+	public function setAssignedLocalRoles($assigned_local_roles) {
+		$this->assigned_local_roles = $assigned_local_roles;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getAssignedLocalRoles() {
+		return $this->assigned_local_roles;
+	}
+
 
 
 	/**

@@ -141,3 +141,7 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugi
 <?php
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
+<#20>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>

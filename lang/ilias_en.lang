@@ -5,6 +5,7 @@ form_button_cancel#:#Cancel
 set_title#:#Title
 set_description#:#Description
 set_global_role#:#Global Role
+set_assigned_local_roles#:#Assign to Local Roles
 set_assigned_courses#:#Assign to Courses
 set_assigned_groupes#:#Assign to Groups
 set_portfolio_template_id#:#Portfolio-Template
@@ -59,6 +60,7 @@ check_negation_gobal#:#Negation
 check_op_equals#:#Is equals
 check_udf_operator#:#Operator
 check_op_starts_with#:#Starts with
+role_placeholder#:#Choose Role
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
 orgu_placeholder#:#Organisational unit

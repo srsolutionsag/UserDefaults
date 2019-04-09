@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.18.7]
+- Increase StaticHTMLPresentationInputGUI height
+
+## [0.18.6]
+- Improvments
+
 ## [0.18.5]
 - LearningProgressPie
 

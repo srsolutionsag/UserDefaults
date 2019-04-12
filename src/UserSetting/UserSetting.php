@@ -257,7 +257,7 @@ class UserSetting extends ActiveRecord {
 			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != Courses::TYPE_CRS) {
 				continue;
 			}
-			$crs = new ilObjCourse($crs_obj_id);
+			$crs = new ilObjCourse($crs_obj_id,false);
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);

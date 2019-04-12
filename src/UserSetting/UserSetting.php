@@ -9,6 +9,7 @@ use ilCourseParticipants;
 use ilExAssignment;
 use ilExSubmission;
 use ilGroupParticipants;
+use ilObjCourse;
 use ilObject2;
 use ilObjExercise;
 use ilObjOrgUnit;
@@ -227,6 +228,7 @@ class UserSetting extends ActiveRecord {
 		}
 	}
 
+
 	/**
 	 *
 	 */
@@ -242,7 +244,6 @@ class UserSetting extends ActiveRecord {
 	}
 
 
-
 	/**
 	 *
 	 */
@@ -256,9 +257,12 @@ class UserSetting extends ActiveRecord {
 			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != Courses::TYPE_CRS) {
 				continue;
 			}
+			$crs = new ilObjCourse($crs_obj_id);
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
+
+			$crs->checkLPStatusSync($usr_id);
 
 			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
@@ -359,18 +363,14 @@ class UserSetting extends ActiveRecord {
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 
-			if($this->isAssignedGroupsOptionRequest()) {
+			if ($this->isAssignedGroupsOptionRequest()) {
 				//ilGroupMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION_REQUEST,
 				$added = $part->addSubscriber($usr_id);
-				$part->updateSubscriptionTime($usr_id,time());
-				$part->sendNotification(
-					31,
-					$usr_id
-				);
+				$part->updateSubscriptionTime($usr_id, time());
+				$part->sendNotification(31, $usr_id);
 			} else {
 				$added = $part->add($usr_id, IL_GRP_MEMBER);
 			}
-
 
 			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
@@ -417,7 +417,7 @@ class UserSetting extends ActiveRecord {
 		$ilUser = $this->getUsrObject();
 
 		$prtt_id = $this->getPortfolioTemplateId();
-		$recipe = NULL;
+		$recipe = null;
 		foreach (ilPortfolioTemplatePage::getAllPortfolioPages($prtt_id) as $page) {
 			switch ($page["type"]) {
 				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
@@ -698,7 +698,7 @@ class UserSetting extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $portfolio_template_id = NULL;
+	protected $portfolio_template_id = null;
 	/**
 	 * @var array
 	 *
@@ -793,7 +793,7 @@ class UserSetting extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -824,7 +824,7 @@ class UserSetting extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -891,6 +891,7 @@ class UserSetting extends ActiveRecord {
 		return $this->title;
 	}
 
+
 	/**
 	 * @param array $assigned_local_roles
 	 */
@@ -905,7 +906,6 @@ class UserSetting extends ActiveRecord {
 	public function getAssignedLocalRoles() {
 		return $this->assigned_local_roles;
 	}
-
 
 
 	/**
@@ -970,8 +970,6 @@ class UserSetting extends ActiveRecord {
 	public function setAssignedGroupsOptionRequest($assigned_groups_option_request) {
 		$this->assigned_groups_option_request = $assigned_groups_option_request;
 	}
-
-
 
 
 	/**

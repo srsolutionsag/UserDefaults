@@ -258,16 +258,18 @@ class UserSetting extends ActiveRecord {
 				continue;
 			}
 			$crs = new ilObjCourse($crs_obj_id,false);
-			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
+
+			$part =new ilCourseParticipants($crs_obj_id);
+
 			$usr_id = $this->getUsrObject()->getId();
 			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
 			$crs->checkLPStatusSync($usr_id);
 
 			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
-				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
-				$first = array_shift(array_values($all_refs));
-				ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
+			//	$all_refs = ilObject2::_getAllReferences($crs_obj_id);
+			//	$first = array_shift(array_values($all_refs));
+			//	ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
 			}
 		}
 	}

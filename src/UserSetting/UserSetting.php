@@ -9,6 +9,7 @@ use ilCourseParticipants;
 use ilExAssignment;
 use ilExSubmission;
 use ilGroupParticipants;
+use ilObjCourse;
 use ilObject2;
 use ilObjExercise;
 use ilObjOrgUnit;
@@ -189,6 +190,7 @@ class UserSetting extends ActiveRecord {
 		$this->setUsrObject($user);
 		if ($this->isValid()) {
 			$this->generatePortfolio();
+			$this->assignLocalRoles();
 			$this->assignCourses();
 			$this->assignCategoriesDesktop();
 			$this->assignGroups();
@@ -230,6 +232,21 @@ class UserSetting extends ActiveRecord {
 	/**
 	 *
 	 */
+	protected function assignLocalRoles() {
+		$local_roles = $this->getAssignedLocalRoles();
+		if (count($local_roles) == 0) {
+			return;
+		}
+
+		foreach ($local_roles as $local_roles_obj_id) {
+			self::dic()->rbacadmin()->assignUser($local_roles_obj_id, $this->getUsrObject()->getId());
+		}
+	}
+
+
+	/**
+	 *
+	 */
 	protected function assignCourses() {
 		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
 		if (count($courses) == 0) {
@@ -240,14 +257,19 @@ class UserSetting extends ActiveRecord {
 			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != Courses::TYPE_CRS) {
 				continue;
 			}
-			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
+			$crs = new ilObjCourse($crs_obj_id,false);
+
+			$part =new ilCourseParticipants($crs_obj_id);
+
 			$usr_id = $this->getUsrObject()->getId();
 			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
+			$crs->checkLPStatusSync($usr_id);
+
 			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
-				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
-				$first = array_shift(array_values($all_refs));
-				ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
+			//	$all_refs = ilObject2::_getAllReferences($crs_obj_id);
+			//	$first = array_shift(array_values($all_refs));
+			//	ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
 			}
 		}
 	}
@@ -343,18 +365,14 @@ class UserSetting extends ActiveRecord {
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
 
-			if($this->isAssignedGroupsOptionRequest()) {
+			if ($this->isAssignedGroupsOptionRequest()) {
 				//ilGroupMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION_REQUEST,
 				$added = $part->addSubscriber($usr_id);
-				$part->updateSubscriptionTime($usr_id,time());
-				$part->sendNotification(
-					31,
-					$usr_id
-				);
+				$part->updateSubscriptionTime($usr_id, time());
+				$part->sendNotification(31, $usr_id);
 			} else {
 				$added = $part->add($usr_id, IL_GRP_MEMBER);
 			}
-
 
 			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
@@ -401,7 +419,7 @@ class UserSetting extends ActiveRecord {
 		$ilUser = $this->getUsrObject();
 
 		$prtt_id = $this->getPortfolioTemplateId();
-		$recipe = NULL;
+		$recipe = null;
 		foreach (ilPortfolioTemplatePage::getAllPortfolioPages($prtt_id) as $page) {
 			switch ($page["type"]) {
 				case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
@@ -618,6 +636,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     256
 	 */
+	protected $assigned_local_roles = array();
+	/**
+	 * @var array
+	 *
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     256
+	 */
 	protected $assigned_courses = array();
 	/**
 	 * @var int
@@ -674,7 +700,7 @@ class UserSetting extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $portfolio_template_id = NULL;
+	protected $portfolio_template_id = null;
 	/**
 	 * @var array
 	 *
@@ -752,6 +778,7 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function sleep($field_name) {
 		switch ($field_name) {
+			case 'assigned_local_roles':
 			case 'assigned_courses':
 			case 'assigned_courses_desktop':
 			case 'assigned_categories_desktop':
@@ -768,7 +795,7 @@ class UserSetting extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -780,6 +807,7 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function wakeUp($field_name, $field_value) {
 		switch ($field_name) {
+			case 'assigned_local_roles':
 			case 'assigned_courses':
 			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
@@ -798,7 +826,7 @@ class UserSetting extends ActiveRecord {
 				break;
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -867,6 +895,22 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
+	 * @param array $assigned_local_roles
+	 */
+	public function setAssignedLocalRoles($assigned_local_roles) {
+		$this->assigned_local_roles = $assigned_local_roles;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getAssignedLocalRoles() {
+		return $this->assigned_local_roles;
+	}
+
+
+	/**
 	 * @param array $assigned_courses
 	 */
 	public function setAssignedCourses($assigned_courses) {
@@ -928,8 +972,6 @@ class UserSetting extends ActiveRecord {
 	public function setAssignedGroupsOptionRequest($assigned_groups_option_request) {
 		$this->assigned_groups_option_request = $assigned_groups_option_request;
 	}
-
-
 
 
 	/**

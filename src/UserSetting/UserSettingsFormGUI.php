@@ -12,6 +12,7 @@ use ilTextAreaInputGUI;
 use ilTextInputGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\UserDefaults\DICTrait;
+use srag\Plugins\UserDefaults\Access\LocalRoles;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Form\ilContainerMultiSelectInputGUI;
@@ -35,6 +36,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_TITLE = 'title';
 	const F_STATUS = 'status';
 	const F_GLOBAL_ROLE = 'global_role';
+	const F_ASSIGNED_LOCAL_ROLES = 'assigned_local_roles';
 	const F_ASSIGNED_COURSES = 'assigned_courses';
 	const F_ASSIGNED_COURSES_DESKTOP = 'assigned_courses_desktop';
 	const F_ASSIGNED_CATEGORY_DESKTOP = 'assigned_category_desktop';
@@ -117,7 +119,12 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$se->setOptions($global_roles);
 		$this->addItem($se);
 
-		/// Assigned Courses
+		// Assign Local Role
+		$ilLocalRoleMultiSelectInputGUI = new ilContainerMultiSelectInputGUI(LocalRoles::TYPE_LOCAL_ROLE, $this->txt(self::F_ASSIGNED_LOCAL_ROLES), self::F_ASSIGNED_LOCAL_ROLES);
+		$ilLocalRoleMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_LOCAL_ROLES));
+		$this->addItem($ilLocalRoleMultiSelectInputGUI);
+
+		// Assign Courses
 		$multiSelect = new udfMultiLineInputGUI($this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), "MultiGroup");
 		$multiSelect->setShowLabel(true);
 
@@ -210,6 +217,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 			self::F_TITLE => $this->object->getTitle(),
 			self::F_DESCRIPTION => $this->object->getDescription(),
 			//			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
+			self::F_ASSIGNED_LOCAL_ROLES => implode(',', $this->object->getAssignedLocalRoles()),
 			self::F_ASSIGNED_COURSES => implode(',', $this->object->getAssignedCourses()),
 			self::F_ASSIGNED_COURSES_DESKTOP => implode(',', $this->object->getAssignedCoursesDesktop()),
 			self::F_ASSIGNED_CATEGORY_DESKTOP => implode(',', $this->object->getAssignedCategoriesDesktop()),
@@ -241,9 +249,13 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		}
 		$this->object->setTitle($this->getInput(self::F_TITLE));
 		$this->object->setDescription($this->getInput(self::F_DESCRIPTION));
-		//		$this->object->setStatus($this->getInput(self::F_STATUS));
+
+		$assigned_local_roles = $this->getInput(self::F_ASSIGNED_LOCAL_ROLES);
+		$this->object->setAssignedLocalRoles(explode(',', $assigned_local_roles[0]));
+
 		$assigned_courses = $this->getInput(self::F_ASSIGNED_COURSES);
 		$this->object->setAssignedCourses(explode(',', $assigned_courses[0]));
+
 		$assigned_courses_desktop = $this->getInput(self::F_ASSIGNED_COURSES_DESKTOP);
 		$this->object->setAssignedCoursesDesktop(explode(',', $assigned_courses_desktop[0]));
 		$assigned_categories_desktop = $this->getInput(self::F_ASSIGNED_CATEGORY_DESKTOP);

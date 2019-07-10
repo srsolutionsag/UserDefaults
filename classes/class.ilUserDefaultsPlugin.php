@@ -2,7 +2,9 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
+use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
 use srag\Plugins\UserDefaults\Config\Config;
+use srag\Plugins\UserDefaults\Menu\Menu;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
@@ -138,6 +140,14 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 */
 	public function getPluginName() {
 		return self::PLUGIN_NAME;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function promoteGlobalScreenProvider(): AbstractStaticPluginMainMenuProvider {
+		return new Menu(self::dic()->dic(), $this);
 	}
 
 

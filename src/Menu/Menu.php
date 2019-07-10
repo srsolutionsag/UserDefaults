@@ -9,7 +9,6 @@ use ilUserDefaultsConfigGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use UserDefaultsMainGUI;
 
 /**
  * Class Menu
@@ -45,14 +44,14 @@ class Menu extends AbstractStaticPluginMainMenuProvider {
 			self::dic()->globalScreen()->mainmenu()->topLinkItem(self::dic()->globalScreen()->identification()->plugin(self::plugin()
 				->getPluginObject(), $this)->identifier(ilUserDefaultsPlugin::PLUGIN_ID))->withTitle(ilUserDefaultsPlugin::PLUGIN_NAME)
 				->withAction(self::dic()->ctrl()->getLinkTargetByClass([
-						ilAdministrationGUI::class,
-						ilObjComponentSettingsGUI::class,
-						ilUserDefaultsConfigGUI::class,
-					], ""))->withAvailableCallable(function (): bool {
-				return self::plugin()->getPluginObject()->isActive();
-			})->withVisibilityCallable(function (): bool {
-				return self::dic()->rbacreview()->isAssigned(self::dic()->user()->getId(), 2); // Default admin role
-			})
+					ilAdministrationGUI::class,
+					ilObjComponentSettingsGUI::class,
+					ilUserDefaultsConfigGUI::class
+				], ""))->withAvailableCallable(function (): bool {
+					return self::plugin()->getPluginObject()->isActive();
+				})->withVisibilityCallable(function (): bool {
+					return self::dic()->rbacreview()->isAssigned(self::dic()->user()->getId(), 2); // Default admin role
+				})
 		];
 	}
 

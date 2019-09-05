@@ -1,8 +1,12 @@
 # Changelog
 
+## [1.5.0]
+- Menu entry
+- Removed PHP 5.6 support
+
 ## [1.4.0]
 - ILIAS 5.4 support
-- Remove ILIAS 5.2 support
+- Removed ILIAS 5.2 support
 
 ## [1.3.19]
 - Fix working on ILIAS 5.2

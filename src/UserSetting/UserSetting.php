@@ -267,9 +267,9 @@ class UserSetting extends ActiveRecord {
 			$crs->checkLPStatusSync($usr_id);
 
 			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
-			//	$all_refs = ilObject2::_getAllReferences($crs_obj_id);
-			//	$first = array_shift(array_values($all_refs));
-			//	ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
+				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
+				$first = array_shift(array_values($all_refs));
+				ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
 			}
 		}
 	}

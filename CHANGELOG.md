@@ -1,5 +1,8 @@
 # Changelog
 
+## [XXX]
+- Fixed add user to course without adding them to desktop
+
 ## [1.5.0]
 - Menu entry
 - Removed PHP 5.6 support

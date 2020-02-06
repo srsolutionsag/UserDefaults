@@ -26,6 +26,7 @@ class UserSettingsGUI {
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_INDEX = 'configure';
 	const CMD_SEARCH_LOCAL_ROLES = 'searchLocalRoles';
+	const CMD_SEARCH_GLOBAL_ROLES = 'searchGlobalRoles';
 	const CMD_SEARCH_COURSES = 'searchCourses';
 	const CMD_SEARCH_CATEGORIES = 'searchCategories';
 	const CMD_CANCEL = 'cancel';
@@ -67,6 +68,7 @@ class UserSettingsGUI {
 			case self::CMD_INDEX:
 				$this->index();
 				break;
+			case self::CMD_SEARCH_GLOBAL_ROLES:
 			case self::CMD_SEARCH_LOCAL_ROLES:
 			case self::CMD_SEARCH_COURSES:
 			case self::CMD_SEARCH_CATEGORIES:
@@ -273,6 +275,27 @@ class UserSettingsGUI {
 
 
 		self::output()->outputJSON($return_local_roles);
+	}
+
+
+	/**
+	 *
+	 */
+	protected function searchGlobalRoles() {
+		$global_roles = self::dic()->rbacreview()->getRolesByFilter(ilRbacReview::FILTER_ALL_GLOBAL);
+
+		$return_global_roles = array();
+		foreach($global_roles as $global_role) {
+
+			if(ilObject2::_lookupDeletedDate($global_role['parent'])) {
+				continue;
+			}
+
+			$return_global_roles[] = [ "id" => $global_role["obj_id"], "text" => $global_role["title"] ];
+		}
+
+
+		self::output()->outputJSON($return_global_roles);
 	}
 
 

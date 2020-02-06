@@ -78,7 +78,6 @@ class UserSettingsTableGUI extends ilTable2GUI {
 		$this->determineLimit();
 		$xdglRequestList = UserSetting::getCollection();
 		$xdglRequestList->orderBy($this->getOrderField(), $this->getOrderDirection());
-		$xdglRequestList->leftjoin(usrdefObj::TABLE_NAME, 'global_role', 'obj_id', array( 'title' ));
 
 		foreach ($this->filter as $field => $value) {
 			if ($value) {
@@ -188,12 +187,6 @@ class UserSettingsTableGUI extends ilTable2GUI {
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => 'title',
-		);
-		$cols['object_data_title'] = array(
-			'txt' => self::plugin()->translate('set_global_role'),
-			'default' => true,
-			'width' => 'auto',
-			'sort_field' => 'object_data_title',
 		);
 		$cols['on_create'] = array(
 			'txt' => self::plugin()->translate('set_on_create'),

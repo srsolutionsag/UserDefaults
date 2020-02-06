@@ -222,10 +222,12 @@ class UserSetting extends ActiveRecord {
 	 *
 	 */
 	protected function assignToGlobalRole() {
-		$global_role = $this->getGlobalRole();
-		if (ilObject2::_lookupType($global_role) == 'role') {
-			self::dic()->rbacadmin()->assignUser($global_role, $this->getUsrObject()->getId());
-		}
+		$global_roles = $this->getGlobalRoles();
+        foreach ($global_roles as $global_role) {
+            if (ilObject2::_lookupType($global_role) == 'role') {
+                self::dic()->rbacadmin()->assignUser($global_role, $this->getUsrObject()->getId());
+            }
+        }
 	}
 
 
@@ -598,13 +600,13 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $status = self::STATUS_INACTIVE;
 	/**
-	 * @var int
+	 * @var array
 	 *
 	 * @con_has_field  true
-	 * @con_fieldtype  integer
-	 * @con_length     8
+	 * @con_fieldtype  text
+	 * @con_length     256
 	 */
-	protected $global_role = 4;
+	protected $global_roles = [4];
 	/**
 	 * @var int
 	 *
@@ -646,7 +648,7 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $assigned_courses = array();
 	/**
-	 * @var int
+	 * @var array
 	 *
 	 * @con_has_field  true
 	 * @con_fieldtype  text
@@ -678,7 +680,7 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $unsubscr_from_crs_and_cat = false;
 	/**
-	 * @var int
+	 * @var array
 	 *
 	 * @con_has_field  true
 	 * @con_fieldtype  text
@@ -693,6 +695,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_length    1
 	 */
 	protected $assigned_groups_option_request = false;
+    /**
+     * @var array
+     *
+     * @con_has_field  true
+     * @con_fieldtype  text
+     * @con_length     256
+     */
+	protected $assigned_groups_first_available = [];
 	/**
 	 * @var int
 	 *
@@ -778,7 +788,8 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function sleep($field_name) {
 		switch ($field_name) {
-			case 'assigned_local_roles':
+            case 'global_roles':
+            case 'assigned_local_roles':
 			case 'assigned_courses':
 			case 'assigned_courses_desktop':
 			case 'assigned_categories_desktop':
@@ -807,6 +818,7 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function wakeUp($field_name, $field_value) {
 		switch ($field_name) {
+			case 'global_roles':
 			case 'assigned_local_roles':
 			case 'assigned_courses':
 			case 'assigned_categories_desktop':
@@ -990,6 +1002,24 @@ class UserSetting extends ActiveRecord {
 	}
 
 
+    /**
+     * @return array
+     */
+    public function getAssignedGroupsFirstAvailable() : array
+    {
+        return $this->assigned_groups_first_available;
+    }
+
+
+    /**
+     * @param array $assigned_groups_first_available
+     */
+    public function setAssignedGroupsFirstAvailable(array $assigned_groups_first_available)
+    {
+        $this->assigned_groups_first_available = $assigned_groups_first_available;
+    }
+
+
 	/**
 	 * @return bool
 	 */
@@ -1007,7 +1037,7 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return array
 	 */
 	public function getAssignedGroupesDesktop() {
 		return $this->assigned_groupes_desktop;
@@ -1015,7 +1045,7 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @param int $assigned_groupes_desktop
+	 * @param array $assigned_groupes_desktop
 	 */
 	public function setAssignedGroupesDesktop($assigned_groupes_desktop) {
 		$this->assigned_groupes_desktop = $assigned_groupes_desktop;
@@ -1039,18 +1069,18 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @param int $global_role
+	 * @param array $global_roles
 	 */
-	public function setGlobalRole($global_role) {
-		$this->global_role = $global_role;
+	public function setGlobalRoles($global_roles) {
+		$this->global_roles = $global_roles;
 	}
 
 
 	/**
-	 * @return int
+	 * @return array
 	 */
-	public function getGlobalRole() {
-		return $this->global_role;
+	public function getGlobalRoles() {
+		return $this->global_roles;
 	}
 
 

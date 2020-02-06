@@ -4,12 +4,12 @@ form_button_create#:#Erstellen
 form_button_cancel#:#Abbrechen
 set_title#:#Titel
 set_description#:#Beschreibung
-set_global_role#:#Globale Rolle
-set_assigned_local_roles#:#Einschreiben in Lokale Rollen
+set_global_roles#:#Einschreiben in globale Rollen
+set_assigned_local_roles#:#Einschreiben in lokale Rollen
 set_assigned_courses#:#Einschreiben in Kurse
 set_assigned_groupes#:#Einschreiben in Gruppen
 set_portfolio_template_id#:#Portfolio-Vorlage
-set_portfolio_assigned_to_groups#:#Portfolio automatisch freigegen
+set_portfolio_assigned_to_groups#:#Portfolio automatisch freigeben
 set_table_title#:#Einstellungs-Sets
 set_status#:#Aktiv
 set_cancel#:#Abbrechen
@@ -32,6 +32,8 @@ set_assigned_courses_desktop#:#In Kurs einschreiben und Kurs auf den Desktop leg
 set_assigned_category_desktop#:#Kategorien auf den Desktop legen
 set_unsubscribe_courses_and_categories#:#Aus obigen Kursen und Kategorien abmelden, falls Bedingung nicht zutrifft
 set_assigned_groups_desktop#:#Zu Gruppe hinzufügen und Gruppe auf den Desktop legen
+set_assigned_groups_first_available#:#In die erste Gruppe mit freien Plätzen einschreiben.
+set_assigned_groups_option_request#:#
 set_assigned_groups#:#Zu Gruppe hinzufügen
 set_on_create#:#Erstellen
 set_on_update#:#Updaten

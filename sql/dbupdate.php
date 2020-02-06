@@ -1,5 +1,8 @@
 <#1>
 <?php
+
+use srag\Plugins\UserDefaults\UserSetting\UserSetting;
+
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
 <#2>
@@ -144,4 +147,13 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugi
 <#20>
 <?php
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>
+<#21>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+$usr_setting_table = \srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME;
+if ($ilDB->tableColumnExists($usr_setting_table, 'global_role')) {
+	$ilDB->query('UPDATE ' . $usr_setting_table . ' SET global_roles = CONCAT("[", global_role, "]") WHERE true');
+	$ilDB->dropTableColumn($usr_setting_table, 'global_role');
+}
 ?>

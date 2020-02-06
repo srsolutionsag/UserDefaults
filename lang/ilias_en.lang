@@ -4,8 +4,8 @@ form_button_create#:#Create
 form_button_cancel#:#Cancel
 set_title#:#Title
 set_description#:#Description
-set_global_role#:#Global Role
-set_assigned_local_roles#:#Assign to Local Roles
+set_global_roles#:#Assign to global Roles
+set_assigned_local_roles#:#Assign to local Roles
 set_assigned_courses#:#Assign to Courses
 set_assigned_groupes#:#Assign to Groups
 set_portfolio_template_id#:#Portfolio-Template

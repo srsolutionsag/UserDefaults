@@ -1,7 +1,9 @@
 # Changelog
 
-## [XXX]
+## [1.6.0]
 - Fixed add user to course without adding them to desktop
+- Feature: Global Role is not required anymore
+- Feature: Multiple global roles can be configured now
 
 ## [1.5.0]
 - Menu entry

@@ -702,7 +702,7 @@ class UserSetting extends ActiveRecord {
      * @con_fieldtype  text
      * @con_length     256
      */
-	protected $assigned_groups_first_available = [];
+	protected $assigned_groups_queue = [];
 	/**
 	 * @var int
 	 *
@@ -1005,18 +1005,18 @@ class UserSetting extends ActiveRecord {
     /**
      * @return array
      */
-    public function getAssignedGroupsFirstAvailable() : array
+    public function getAssignedGroupsQueue() : array
     {
-        return $this->assigned_groups_first_available;
+        return $this->assigned_groups_queue;
     }
 
 
     /**
-     * @param array $assigned_groups_first_available
+     * @param array $assigned_groups_queue
      */
-    public function setAssignedGroupsFirstAvailable(array $assigned_groups_first_available)
+    public function setAssignedGroupsQueue(array $assigned_groups_queue)
     {
-        $this->assigned_groups_first_available = $assigned_groups_first_available;
+        $this->assigned_groups_queue = $assigned_groups_queue;
     }
 
 

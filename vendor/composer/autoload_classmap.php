@@ -142,6 +142,7 @@ return array(
     'srag\\Plugins\\UserDefaults\\Access\\Ilias' => $baseDir . '/src/Access/Ilias.php',
     'srag\\Plugins\\UserDefaults\\Access\\LocalRoles' => $baseDir . '/src/Access/LocalRoles.php',
     'srag\\Plugins\\UserDefaults\\Config\\Config' => $baseDir . '/src/Config/Config.php',
+    'srag\\Plugins\\UserDefaults\\Form\\SortableMultiSelectSearchInputGUI' => $baseDir . '/src/Form/SortableMultiSelectSearchInputGUI.php',
     'srag\\Plugins\\UserDefaults\\Form\\ilContainerMultiSelectInputGUI' => $baseDir . '/src/Form/ilContainerMultiSelectInputGUI.php',
     'srag\\Plugins\\UserDefaults\\Form\\ilMultiSelectSearchInput2GUI' => $baseDir . '/src/Form/ilMultiSelectSearchInput2GUI.php',
     'srag\\Plugins\\UserDefaults\\Form\\ilMultipleTextInput3GUI' => $baseDir . '/src/Form/ilMultipleTextInput3GUI.php',

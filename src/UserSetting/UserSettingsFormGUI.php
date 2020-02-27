@@ -3,20 +3,24 @@
 namespace srag\Plugins\UserDefaults\UserSetting;
 
 use ilCheckboxInputGUI;
+use ilDclGenericMultiInputGUI;
 use ilFormSectionHeaderGUI;
 use ilObjPortfolioTemplate;
 use ilPropertyFormGUI;
 use ilRbacReview;
 use ilSelectInputGUI;
+use ilTemplateException;
 use ilTextAreaInputGUI;
 use ilTextInputGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\UserDefaults\DICTrait;
+use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Access\GlobalRoles;
 use srag\Plugins\UserDefaults\Access\LocalRoles;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Form\ilContainerMultiSelectInputGUI;
+use srag\Plugins\UserDefaults\Form\SortableMultiSelectSearchInputGUI;
 use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserSettingsGUI;
@@ -45,7 +49,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_ASSIGNED_GROUPS = 'assigned_groups';
 	const F_ASSIGNED_GROUPS_DESKTOP = 'assigned_groups_desktop';
     const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
-    const F_ASSIGNED_GROUPS_FIRST_AVAILABLE = 'assigned_groups_first_available';
+    const F_ASSIGNED_GROUPS_QUEUE = 'assigned_groups_queue';
     const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
 	const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
 	const F_ASSIGNED_ORGUS = 'assigned_orgus';
@@ -81,16 +85,21 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	/**
-	 * @param $key
-	 *
-	 * @return string
-	 */
+    /**
+     * @param $key
+     *
+     * @return string
+     * @throws DICException
+     */
 	protected function txt($key) {
 		return self::plugin()->translate($key, 'set');
 	}
 
 
+    /**
+     * @throws ilTemplateException
+     * @throws DICException
+     */
 	protected function initForm() {
 		$this->setTitle(self::plugin()->translate('form_title'));
 		$te = new ilTextInputGUI($this->txt(self::F_TITLE), self::F_TITLE);
@@ -152,14 +161,22 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($ilGroupMultiSelectInputGUI);
 
 
-		$ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_FIRST_AVAILABLE), self::F_ASSIGNED_GROUPS_FIRST_AVAILABLE);
-		$this->addItem($ilCheckboxInputGUI);
-
-		$ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_OPTION_REQUEST), self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
-		$this->addItem($ilCheckboxInputGUI);
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_OPTION_REQUEST), self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
+        $this->addItem($ilCheckboxInputGUI);
 
 
-		$se = new ilSelectInputGUI($this->txt(self::F_PORTFOLIO_TEMPLATE_ID), self::F_PORTFOLIO_TEMPLATE_ID);
+
+        $groups_queue_input = new SortableMultiSelectSearchInputGUI($this->txt(self::F_ASSIGNED_GROUPS_QUEUE), self::F_ASSIGNED_GROUPS_QUEUE);
+        $groups_queue_input->setMulti(true, true);
+
+        $ilGroupMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS_QUEUE), 'ref_id', false);
+        $ilGroupMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+        $groups_queue_input->addInput($ilGroupMultiSelectInputGUI);
+
+        $this->addItem($groups_queue_input);
+
+
+        $se = new ilSelectInputGUI($this->txt(self::F_PORTFOLIO_TEMPLATE_ID), self::F_PORTFOLIO_TEMPLATE_ID);
 
 		$options = ilObjPortfolioTemplate::getAvailablePortfolioTemplates();
 		//		$options[0] = self::plugin()->translate('crs_no_template');
@@ -216,6 +233,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 
 
 	public function fillForm() {
+	    $assigned_groups_queue = array_map(function($e){return ['ref_id' => $e];},$this->object->getAssignedGroupsQueue());
+	    $assigned_groups_queue = array_values($assigned_groups_queue);
 		$array = array(
             self::F_TITLE => $this->object->getTitle(),
             self::F_DESCRIPTION                        => $this->object->getDescription(),
@@ -228,6 +247,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
             self::F_ASSIGNED_GROUPS                    => implode(',', $this->object->getAssignedGroupes()),
             self::F_ASSIGNED_GROUPS_DESKTOP            => implode(',', $this->object->getAssignedGroupesDesktop()),
             self::F_ASSIGNED_GROUPS_OPTION_REQUEST     => $this->object->isAssignedGroupsOptionRequest(),
+            self::F_ASSIGNED_GROUPS_QUEUE              => $assigned_groups_queue,
             self::F_GLOBAL_ROLES                       => $this->object->getGlobalRoles(),
             self::F_PORTFOLIO_TEMPLATE_ID              => $this->object->getPortfolioTemplateId(),
             self::F_PORTFOLIO_ASSIGNED_TO_GROUPS       => implode(',', $this->object->getPortfolioAssignedToGroups()),
@@ -282,6 +302,10 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setAssignedOrgus(explode(',', $assigned_orgus[0]));
 		$assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
 		$this->object->setAssignedStudyprograms(explode(',', $assigned_studyprograms[0]));
+
+		$this->object->setAssignedGroupsQueue(array_values(array_map(function ($element) {
+		    return $element['ref_id'];
+        }, $this->getInput(self::F_ASSIGNED_GROUPS_QUEUE))));
 
 		$this->object->setOnCreate($this->getInput(self::F_ON_CREATE));
 		$this->object->setOnUpdate($this->getInput(self::F_ON_UPDATE));

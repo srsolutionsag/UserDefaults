@@ -796,6 +796,7 @@ class UserSetting extends ActiveRecord {
 			case 'assigned_groupes':
 			case 'assigned_groupes_desktop':
 			case 'portfolio_assigned_to_groups':
+            case 'assigned_groups_queue':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
 				return json_encode($this->{$field_name});
@@ -823,12 +824,13 @@ class UserSetting extends ActiveRecord {
 			case 'assigned_courses':
 			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
+            case 'assigned_groups_queue':
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
 			case 'assigned_courses_desktop':
 			case 'assigned_groupes_desktop':
-				$json_decode = json_decode($field_value);
+				$json_decode = json_decode($field_value, true);
 
 				return is_array($json_decode) ? $json_decode : array();
 				break;

@@ -27,12 +27,14 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	const REMOVE_PLUGIN_DATA_CONFIRM_CLASS_NAME = usrdefRemoveDataConfirm::class;
 	// Known Components
 	const SERVICES_USER = 'Services/User';
+	const SERVICES_OBJECT = 'Services/Object';
 	const SERVICES_AUTHENTICATION = 'Services/Authentication';
 	const MODULES_ORGUNITS = 'Modules/OrgUnit';
 	// Known Actions
 	const CREATED_1 = 'saveAsNew';
 	const CREATED_2 = 'afterCreate';
 	const UPDATED = 'afterUpdate';
+	const UPDATE = 'update';
 	const AFTER_LOGIN = 'afterLogin';
 	const ASSIGN_USER_TO_POSITION = 'assignUserToPosition';
 	const REMOVE_USER_FROM_POSITION = 'removeUserFromPosition';
@@ -47,6 +49,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 		self::CREATED_1 => 'on_create',
 		self::CREATED_2 => 'on_create',
 		self::UPDATED => 'on_update',
+		self::UPDATE => 'on_update',
 		self::AFTER_LOGIN => 'on_update',
 		self::ASSIGN_USER_TO_POSITION => 'on_update',
 		self::REMOVE_USER_FROM_POSITION => 'on_update'
@@ -94,11 +97,22 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 						break;
 				}
 				break;
-			case self::SERVICES_USER:
+            case self::SERVICES_OBJECT:
+                switch ($a_event) {
+                    case self::UPDATE:
+                        if ($a_parameter['obj_type'] == 'usr') {
+                            $user = new ilObjUser($a_parameter['obj_id']);
+                            $run = true;
+                        }
+                        break;
+                }
+                break;
+            case self::SERVICES_USER:
 				switch ($a_event) {
 					case self::CREATED_1:
 					case self::CREATED_2:
 					case self::UPDATED:
+					case self::UPDATE:
 						$user = $a_parameter['user_obj'];
 						$run = true;
 						break;

@@ -46,9 +46,10 @@ class UserSettingsGUI {
 	const CMD_DELETE_MULTIPLE_CONFIRM = 'deleteMultipleConfirm';
 	const CMD_DELETE_MULTIPLE = 'deleteMultiple';
 	const IDENTIFIER = 'set_id';
+    const CMD_LINK_TO_OBJECT = 'linkToObject';
 
 
-	/**
+    /**
 	 * UserSettingsGUI constructor
 	 */
 	public function __construct() {
@@ -88,6 +89,7 @@ class UserSettingsGUI {
 			case self::CMD_DEACTIVATE_MULTIPLE:
 			case self::CMD_DELETE_MULTIPLE_CONFIRM:
 			case self::CMD_DELETE_MULTIPLE:
+			case self::CMD_LINK_TO_OBJECT:
 				$this->{$cmd}();
 				break;
 		}
@@ -355,6 +357,12 @@ class UserSettingsGUI {
 		self::output()->outputJSON($categories);
 	}
 
+	protected function linkToObject() {
+	    $obj_id = filter_input(INPUT_GET, 'obj_id', FILTER_SANITIZE_NUMBER_INT);
+	    $ref_id = array_shift(ilObject::_getAllReferences($obj_id));
+	    self::dic()->ctrl()->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $ref_id);
+	    self::dic()->ctrl()->redirectByClass(ilRepositoryGUI::class);
+    }
 
 	/**
 	 *

@@ -192,6 +192,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         self::dic()->ctrl()->setParameter($this->parent_gui, 'with_parent', 0);
         self::dic()->ctrl()->setParameter($this->parent_gui, 'with_members', 0);
         self::dic()->ctrl()->setParameter($this->parent_gui, 'with_empty', 0);
+        $ilGroupMultiSelectInputGUI->setLinkToObject(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_LINK_TO_OBJECT));
         $groups_queue_input->addInput($ilGroupMultiSelectInputGUI);
 
         $this->addItem($groups_queue_input);

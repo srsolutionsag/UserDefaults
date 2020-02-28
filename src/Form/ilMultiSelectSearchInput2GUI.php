@@ -45,6 +45,10 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	 * @var string
 	 */
 	protected $ajax_link;
+    /**
+     * @var string
+     */
+	protected $link_to_object;
 	/**
 	 * @var ilTemplate
 	 */
@@ -137,10 +141,17 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
         $this->tpl->setVariable('HEIGHT', $this->getHeight());
         $this->tpl->setVariable('POST_VAR', $this->getPostVar());
         $this->tpl->setVariable('ID', $this->stripLastStringOccurrence($this->getPostVar(), "[]"));
+        $this->tpl->setVariable('ESCAPED_ID', $this->escapePostVar($this->getPostVar()));
         $this->tpl->setVariable('CSS_CLASS', $this->getCssClass());
         $this->tpl->setVariable('PLACEHOLDER', self::plugin()->translate($this->getContainerType() . '_placeholder'));
         if ($this->getDisabled()) {
             $this->tpl->setVariable('ALL_DISABLED', 'disabled=\'disabled\'');
+        }
+
+        if ($this->multiple || !$this->getLinkToObject()) {
+            $this->tpl->setVariable('LINK_HIDDEN', 'hidden');
+        } else {
+            $this->tpl->setVariable('LINK_TO_OBJECT', $this->getLinkToObject());
         }
 
         $config = new stdClass();
@@ -181,6 +192,24 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	protected function getValueAsJson() {
 		return json_encode(array());
 	}
+
+
+    /**
+     * @return string
+     */
+    public function getLinkToObject() : string
+    {
+        return $this->link_to_object;
+    }
+
+
+    /**
+     * @param string $link_to_object
+     */
+    public function setLinkToObject(string $link_to_object)
+    {
+        $this->link_to_object = $link_to_object;
+    }
 
 
 	/**

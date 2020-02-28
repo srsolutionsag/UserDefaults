@@ -38,6 +38,7 @@ class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
         $tpl = $DIC['tpl'];
 
         $output = "";
+        // $tpl->addCss(self::plugin()->directory() . '/templates/default/multi_line_input.css');
 
         $output .= $this->render(0, true);
 

@@ -110,3 +110,14 @@ save#:#Speichern
 saved#:#Gespeichert
 category_ref_id#:#Kategorie-Knotenpunkt für Kurse
 category_ref_id_info#:#Kategorie-Ref-ID
+set_roles#:#Rollen
+set_courses_and_categories#:#Kurse und Kategorien
+set_groups#:#Gruppen
+set_groups_queue#:#Gruppenverteilung
+set_other#:#Sonstiges
+set_assigned_groups_option_request#:#Teilnahmeanfrage statt Einschreibung
+set_assigned_groups_queue#:#Verteilung auf Gruppen
+set_assigned_groups_queue_info#:#Benutzer wird in die erste Gruppe mit noch freien Plätzen eingeschrieben. Sind alle voll, so wird die letzte Gruppe 'überfüllt'.
+set_assigned_groups_queue_desktop#:#Gruppe auf den Desktop legen.
+set_assigned_groups_queue_parallel#:#Parallele Verteilung
+set_assigned_groups_queue_parallel_info#:#Gruppen werden gleichmässig aufgefüllt, d.h. es wird jeweils die Gruppe mit den wenigsten Teilnehmern gewählt.

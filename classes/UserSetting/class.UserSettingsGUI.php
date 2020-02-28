@@ -224,6 +224,9 @@ class UserSettingsGUI {
 	protected function searchCourses() {
 		$term = filter_input(INPUT_GET, "term");
 		$type = filter_input(INPUT_GET, "container_type");
+        $with_parent = (bool) filter_input(INPUT_GET, "with_parent");
+        $with_members = (bool) filter_input(INPUT_GET, "with_members");
+        $with_empty = (bool) filter_input(INPUT_GET, "with_empty");
 
 		$category_ref_id = Config::getField(Config::KEY_CATEGORY_REF_ID);
 
@@ -250,8 +253,22 @@ class UserSettingsGUI {
 		$result = self::dic()->database()->queryF($query, $types, $values);
 
 		$courses = [];
+		if ($with_empty) {
+		    $courses[] = [ "id" => 0, "text" => '-'];
+        }
+
 		while (($row = $result->fetchAssoc()) !== false) {
-			$courses[] = [ "id" => $row["obj_id"], "text" => $row["title"] ];
+		    $title = $row["title"];
+		    if ($with_parent) {
+		        $ref_id = array_shift(ilObject::_getAllReferences($row["obj_id"]));
+		        $title = ilObject::_lookupTitle(self::dic()->tree()->getParentId($ref_id)) . ' » ' . $title;
+            }
+		    if ($with_members && $type == 'grp') {
+                $group = new ilObjGroup($row['obj_id'], false);
+                $part = ilGroupParticipants::_getInstanceByObjId($row['obj_id']);
+		        $title = $title . ' (' . $part->getCountMembers() . '/' . ($group->getMaxMembers() == 0 ? '-' : $group->getMaxMembers()) . ')';
+            }
+			$courses[] = [ "id" => $row["obj_id"], "text" => $title ];
 		}
 
 		self::output()->outputJSON($courses);

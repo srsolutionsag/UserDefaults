@@ -12,6 +12,7 @@ use ilGroupParticipants;
 use ilObjCourse;
 use ilObject2;
 use ilObjExercise;
+use ilObjGroup;
 use ilObjOrgUnit;
 use ilObjPortfolio;
 use ilObjPortfolioTemplate;
@@ -355,12 +356,9 @@ class UserSetting extends ActiveRecord {
 	 *
 	 */
 	protected function assignGroups() {
-		$groups = array_merge($this->getAssignedGroupes(), $this->getAssignedGroupesDesktop());
-		if (count($groups) == 0) {
-			return;
-		}
+        $groups = array_merge($this->getAssignedGroupes(), $this->getAssignedGroupesDesktop());
 
-		foreach ($groups as $grp_obj_id) {
+        foreach ($groups as $grp_obj_id) {
 			if ($grp_obj_id == "" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
 				continue;
 			}
@@ -382,7 +380,64 @@ class UserSetting extends ActiveRecord {
 				ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
 			}
 		}
+
+        $this->assignGroupFromQueue();
 	}
+
+
+    /**
+     * @return int|null
+     */
+	protected function assignGroupFromQueue()
+    {
+        $groups_queue = $this->getAssignedGroupsQueue();
+        $part_objs = array_map(function($grp_obj_id) {
+            return ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
+        }, $groups_queue);
+        /** @var ilGroupParticipants $part_obj */
+        foreach ($part_objs as $part_obj) {
+            if ($part_obj->isMember($this->getUsrObject()->getId())) {
+                return null;
+            }
+        }
+
+        $group_to_add = null;
+        if ($this->isGroupsQueueParallel()) {
+            // take group with lowest member count & not full (or last if every group is full)
+            $min_member_count = null;
+            foreach ($groups_queue as $grp_obj_id) {
+                $ilObjGroup = new ilObjGroup($grp_obj_id, false);
+                $part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
+                if ($part->getCountMembers() >= $ilObjGroup->getMaxMembers()) {
+                    continue;
+                }
+                if (!is_int($min_member_count) || $part->getCountMembers() < $min_member_count) {
+                    $group_to_add = $grp_obj_id;
+                    $min_member_count = $part->getCountMembers();
+                }
+            }
+            $group_to_add = $group_to_add ?? end($groups_queue);
+        } else {
+            // take first group which is not full (or last group if every group is full)
+            foreach ($groups_queue as $grp_obj_id) {
+                $part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
+                $ilObjGroup = new ilObjGroup($grp_obj_id, false);
+                $group_to_add = $ilObjGroup->getId();
+                if (!$ilObjGroup->getMaxMembers() || $part->getCountMembers() < $ilObjGroup->getMaxMembers()) {
+                    break;
+                }
+            }
+        }
+
+        if (is_int($group_to_add)) {
+            $part = ilGroupParticipants::_getInstanceByObjId($group_to_add);
+            $part->add($this->getUsrObject()->getId(), IL_GRP_MEMBER);
+            if (!$this->isGroupsQueueDesktop()) {
+                $ref_id = array_shift(ilObjGroup::_getAllReferences($group_to_add));
+                ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $ref_id, 'grp');
+            }
+        }
+    }
 
 
 	/**
@@ -703,6 +758,22 @@ class UserSetting extends ActiveRecord {
      * @con_length     256
      */
 	protected $assigned_groups_queue = [];
+    /**
+     * @var bool
+     *
+     * @con_has_field  true
+     * @con_fieldtype  integer
+     * @con_length     1
+     */
+	protected $groups_queue_desktop = false;
+    /**
+     * @var bool
+     *
+     * @con_has_field  true
+     * @con_fieldtype  integer
+     * @con_length     1
+     */
+	protected $groups_queue_parallel = false;
 	/**
 	 * @var int
 	 *
@@ -842,6 +913,42 @@ class UserSetting extends ActiveRecord {
 
 		return null;
 	}
+
+
+    /**
+     * @return bool
+     */
+    public function isGroupsQueueDesktop() : bool
+    {
+        return $this->groups_queue_desktop ?? false;
+    }
+
+
+    /**
+     * @param bool $groups_queue_desktop
+     */
+    public function setGroupsQueueDesktop(bool $groups_queue_desktop)
+    {
+        $this->groups_queue_desktop = $groups_queue_desktop;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isGroupsQueueParallel() : bool
+    {
+        return $this->groups_queue_parallel ?? false;
+    }
+
+
+    /**
+     * @param bool $groups_queue_parallel
+     */
+    public function setGroupsQueueParallel(bool $groups_queue_parallel)
+    {
+        $this->groups_queue_parallel = $groups_queue_parallel;
+    }
 
 
 	/**

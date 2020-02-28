@@ -108,3 +108,14 @@ save#:#Save
 saved#:#Saved
 category_ref_id#:#Category node for courses
 category_ref_id_info#:#Category ref id
+set_roles#:#Roles
+set_courses_and_categories#:#Courses and Categories
+set_groups#:#Groups
+set_groups_queue#:#Group Queue
+set_other#:#Other
+set_assigned_groups_option_request#:#Request Membership
+set_assigned_groups_queue#:#Distribute to groups
+set_assigned_groups_queue_info#:#The user will be subscribed to the first group with available slots. If each one is full, the last group will be 'overfilled'.
+set_assigned_groups_queue_desktop#:#Put group on desktop
+set_assigned_groups_queue_parallel#:#Parallel distribution
+set_assigned_groups_queue_parallel_info#:#Members will be distributed evenly, i.e. the group with the lowest member count will be chosen.

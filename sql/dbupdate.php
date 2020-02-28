@@ -157,3 +157,7 @@ if ($ilDB->tableColumnExists($usr_setting_table, 'global_role')) {
 	$ilDB->dropTableColumn($usr_setting_table, 'global_role');
 }
 ?>
+<#22>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>

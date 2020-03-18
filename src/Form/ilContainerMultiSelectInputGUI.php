@@ -69,7 +69,7 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
                 $title = $row["title"];
                 if ($this->with_parent) {
                     $ref_id = array_shift(ilObject::_getAllReferences($row["obj_id"]));
-                    $title = ilObject::_lookupTitle(self::dic()->tree()->getParentId($ref_id)) . ' » ' . $title;
+                    $title = ilObject::_lookupTitle(ilObject::_lookupObjectId(self::dic()->tree()->getParentId($ref_id))) . ' » ' . $title;
                 }
                 $result[] = array( "id" => $row['obj_id'], "text" => $title );
             }
@@ -81,7 +81,7 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
                 $title = $row["title"];
                 if ($this->with_parent) {
                     $ref_id = array_shift(ilObject::_getAllReferences($row["obj_id"]));
-                    $title = ilObject::_lookupTitle(self::dic()->tree()->getParentId($ref_id)) . ' » ' . $title;
+                    $title = ilObject::_lookupTitle(ilObject::_lookupObjectId(self::dic()->tree()->getParentId($ref_id))) . ' » ' . $title;
                 }
                 if ($this->with_members && $this->getContainerType() == 'grp') {
                     $group = new ilObjGroup($row['obj_id'], false);

@@ -263,7 +263,7 @@ class UserSettingsGUI {
 		    $title = $row["title"];
 		    if ($with_parent) {
 		        $ref_id = array_shift(ilObject::_getAllReferences($row["obj_id"]));
-		        $title = ilObject::_lookupTitle(self::dic()->tree()->getParentId($ref_id)) . ' » ' . $title;
+		        $title = ilObject::_lookupTitle(ilObject::_lookupObjectId(self::dic()->tree()->getParentId($ref_id))) . ' » ' . $title;
             }
 		    if ($with_members && $type == 'grp') {
                 $group = new ilObjGroup($row['obj_id'], false);

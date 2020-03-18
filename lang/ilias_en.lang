@@ -115,7 +115,10 @@ set_groups_queue#:#Group Queue
 set_other#:#Other
 set_assigned_groups_option_request#:#Request Membership
 set_assigned_groups_queue#:#Distribute to groups
-set_assigned_groups_queue_info#:#The user will be subscribed to the first group with available slots. If each one is full, the last group will be 'overfilled'.
+set_assigned_groups_queue_info#:#Nomenclature: [parent container] » [group] ( [current group members] / [group members max.] )
 set_assigned_groups_queue_desktop#:#Put group on desktop
+set_assigned_groups_queue_type#:#Distribution method
 set_assigned_groups_queue_parallel#:#Parallel distribution
-set_assigned_groups_queue_parallel_info#:#Members will be distributed evenly, i.e. the group with the lowest member count will be chosen.
+set_assigned_groups_queue_parallel_info#:#Members will be distributed evenly, i.e. the group with the lowest member count will be chosen. If all groups are full, the last one will be overfilled.
+set_assigned_groups_queue_serial#:#Serial distribution
+set_assigned_groups_queue_serial_info#:#User will be assigned to the first group with available slots. If all groups are full, the last one will be overfilled.

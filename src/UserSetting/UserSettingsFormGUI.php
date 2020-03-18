@@ -6,6 +6,8 @@ use ilCheckboxInputGUI;
 use ilFormSectionHeaderGUI;
 use ilObjPortfolioTemplate;
 use ilPropertyFormGUI;
+use ilRadioGroupInputGUI;
+use ilRadioOption;
 use ilSelectInputGUI;
 use ilTemplateException;
 use ilTextAreaInputGUI;
@@ -49,7 +51,9 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
     const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
     const F_ASSIGNED_GROUPS_QUEUE = 'assigned_groups_queue';
     const F_ASSIGNED_GROUPS_QUEUE_DESKTOP = 'assigned_groups_queue_desktop';
+    const F_ASSIGNED_GROUPS_QUEUE_TYPE = 'assigned_groups_queue_type';
     const F_ASSIGNED_GROUPS_QUEUE_PARALLEL = 'assigned_groups_queue_parallel';
+    const F_ASSIGNED_GROUPS_QUEUE_SERIAL = 'assigned_groups_queue_serial';
     const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
 	const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
 	const F_ASSIGNED_ORGUS = 'assigned_orgus';
@@ -200,8 +204,15 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $queue_desktop = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_DESKTOP), self::F_ASSIGNED_GROUPS_QUEUE_DESKTOP);
         $this->addItem($queue_desktop);
 
-        $queue_parallel = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_PARALLEL), self::F_ASSIGNED_GROUPS_QUEUE_PARALLEL);
-        $queue_parallel->setInfo($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_PARALLEL . '_info'));
+        $queue_parallel = new ilRadioGroupInputGUI($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_TYPE), self::F_ASSIGNED_GROUPS_QUEUE_TYPE);
+
+        $serial = new ilRadioOption($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_SERIAL), 0);
+        $serial->setInfo($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_SERIAL . '_info'));
+        $queue_parallel->addOption($serial);
+
+        $parallel = new ilRadioOption($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_PARALLEL), 1);
+        $parallel->setInfo($this->txt(self::F_ASSIGNED_GROUPS_QUEUE_PARALLEL . '_info'));
+        $queue_parallel->addOption($parallel);
         $this->addItem($queue_parallel);
 
         // other
@@ -282,7 +293,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
             self::F_ASSIGNED_GROUPS_OPTION_REQUEST     => $this->object->isAssignedGroupsOptionRequest(),
             self::F_ASSIGNED_GROUPS_QUEUE              => $assigned_groups_queue,
             self::F_ASSIGNED_GROUPS_QUEUE_DESKTOP      => $this->object->isGroupsQueueDesktop(),
-            self::F_ASSIGNED_GROUPS_QUEUE_PARALLEL     => $this->object->isGroupsQueueParallel(),
+            self::F_ASSIGNED_GROUPS_QUEUE_TYPE         => $this->object->isGroupsQueueParallel(),
             self::F_GLOBAL_ROLES                       => $this->object->getGlobalRoles(),
             self::F_PORTFOLIO_TEMPLATE_ID              => $this->object->getPortfolioTemplateId(),
             self::F_PORTFOLIO_ASSIGNED_TO_GROUPS       => implode(',', $this->object->getPortfolioAssignedToGroups()),
@@ -343,7 +354,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         }, $this->getInput(self::F_ASSIGNED_GROUPS_QUEUE)))));
 
 		$this->object->setGroupsQueueDesktop((bool)$this->getInput(self::F_ASSIGNED_GROUPS_QUEUE_DESKTOP));
-		$this->object->setGroupsQueueParallel((bool)$this->getInput(self::F_ASSIGNED_GROUPS_QUEUE_PARALLEL));
+		$this->object->setGroupsQueueParallel((bool)$this->getInput(self::F_ASSIGNED_GROUPS_QUEUE_TYPE));
 
 		$this->object->setOnCreate($this->getInput(self::F_ON_CREATE));
 		$this->object->setOnUpdate($this->getInput(self::F_ON_UPDATE));

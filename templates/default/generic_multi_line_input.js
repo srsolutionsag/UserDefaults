@@ -68,6 +68,7 @@
 						$line.remove();
 					} else {
 						$line.find('input').val("");
+						$line.find('span.select2-chosen').text('');
 					}
 					$(element).change();
                     $(document).trigger('multi_line_remove_button', $line);

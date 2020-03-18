@@ -123,4 +123,4 @@ set_assigned_groups_queue_type#:#Verteilungsart
 set_assigned_groups_queue_parallel#:#Parallele Verteilung
 set_assigned_groups_queue_parallel_info#:#Gruppen werden gleichmässig aufgefüllt, d.h. es wird jeweils die Gruppe mit den wenigsten Teilnehmern gewählt. Sind alle voll, so wird die letzte Gruppe 'überfüllt'.
 set_assigned_groups_queue_serial#:#Serielle Verteilung
-set_assigned_groups_queue_serial_info#:#Benutzer wird in die erste Gruppe mit noch freien Plätzen eingeschrieben. Sind alle voll, so wird die letzte Gruppe 'überfüllt'.
+set_assigned_groups_queue_serial_info#:#Gruppen werden nacheinander aufgefüllt, d.h. es wird eine Gruppe bis zum Maximum gefüllt und dann mit der nächsten Gruppe fortgefahren.

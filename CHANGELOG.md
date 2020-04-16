@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.6.1]
+- Fixed check for CascadingSelect type
+
 ## [1.6.0]
 - Fixed add user to course without adding them to desktop
 - Fixed trigger event when administrating user

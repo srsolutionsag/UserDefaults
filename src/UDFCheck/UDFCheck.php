@@ -623,7 +623,7 @@ abstract class UDFCheck extends ActiveRecord {
 		$check_values = $this->getCheckValues();
 		$valid = false;
 		foreach ($check_values as $key => $check_value) {
-            if (empty($check_value)) {
+            if (empty($check_value) && !in_array($this->getOperator(), [self::OP_IS_EMPTY, self::OP_NOT_IS_EMPTY])) {
                 continue;
             }
 

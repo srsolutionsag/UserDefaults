@@ -623,14 +623,17 @@ abstract class UDFCheck extends ActiveRecord {
 		$check_values = $this->getCheckValues();
 		$valid = false;
 		foreach ($check_values as $key => $check_value) {
+            if (empty($check_value) && !in_array($this->getOperator(), [self::OP_IS_EMPTY, self::OP_NOT_IS_EMPTY])) {
+                continue;
+            }
 
-			if (count($values) > 1) {
-				$value = $values[$key];
-			} else {
-				$value = reset($values);
-			}
+            if (count($values) > 1) {
+                $value = $values[$key];
+            } else {
+                $value = reset($values);
+            }
 
-			switch ($this->getOperator()) {
+            switch ($this->getOperator()) {
 				case self::OP_EQUALS:
 					$valid = (strtolower($value) === strtolower($check_value));
 					break;
@@ -680,17 +683,10 @@ abstract class UDFCheck extends ActiveRecord {
 					return false;
 			}
 
-			if (in_array($this->getOperator(), self::$operator_positive)) {
-				if (!$valid) {
-					$valid = false;
-				}
-			}
-
-			if (in_array($this->getOperator(), self::$operator_negative)) {
-				if ($valid) {
-					$valid = true;
-				}
-			}
+            // it's an AND condition
+            if (!$valid) {
+                break;
+            }
 		}
 
 		$valid = (!$this->isNegated() === $valid);

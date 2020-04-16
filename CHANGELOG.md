@@ -3,6 +3,7 @@
 ## [1.6.0]
 - Fixed add user to course without adding them to desktop
 - Fixed trigger event when administrating user
+- Fixed check for CascadingSelect type
 - Feature: Global Role is not required anymore
 - Feature: Multiple global roles can be configured now
 - Feature: Distribution to groups queue

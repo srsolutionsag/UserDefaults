@@ -178,4 +178,13 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 		//self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);
 		self::dic()->database()->dropTable(Config::TABLE_NAME, false);
 	}
+
+
+    /**
+     * @inheritDoc
+     */
+	protected function shouldUseOneUpdateStepOnly() : bool
+    {
+        return false;
+    }
 }

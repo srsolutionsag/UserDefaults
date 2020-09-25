@@ -15,7 +15,7 @@ As ILIAS administrator go to "Administration->Plugins" and install/activate the 
 TODO
 
 ### Requirements
-* ILIAS 5.3 or ILIAS 5.4
+* ILIAS 5.4 or ILIAS 6
 * PHP >=7.0
 
 ### Adjustment suggestions

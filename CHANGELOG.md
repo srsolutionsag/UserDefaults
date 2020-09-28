@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0]
+- ILIAS 6 support
+- Remove ILIAS 5.3 support
+- Remove core autoload, incompatible since min. ILIAS 5.3
+- Fix. PHP 7.2 Backport
+- updated composer dependencies
+
 ## [1.6.0]
 - Fixed add user to course without adding them to desktop
 - Fixed trigger event when administrating user

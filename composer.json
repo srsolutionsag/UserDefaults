@@ -32,47 +32,7 @@
       "srag\\Plugins\\UserDefaults\\": "src/"
     },
     "classmap": [
-      "./classes/",
-      "../../../../../../../Modules/Course/classes/class.ilCourseConstants.php",
-      "../../../../../../../Modules/Course/classes/class.ilCourseParticipants.php",
-      "../../../../../../../Modules/Course/classes/class.ilObjCourse.php",
-      "../../../../../../../Modules/Exercise/classes/class.ilObjExercise.php",
-      "../../../../../../../Modules/Exercise/classes/class.ilExAssignment.php",
-      "../../../../../../../Modules/Exercise/classes/class.ilExSubmission.php",
-      "../../../../../../../Modules/Group/classes/class.ilGroupParticipants.php",
-      "../../../../../../../Modules/Group/classes/class.ilObjGroup.php",
-      "../../../../../../../Modules/OrgUnit/classes/class.ilObjOrgUnit.php",
-      "../../../../../../../Modules/Portfolio/classes/class.ilObjPortfolio.php",
-      "../../../../../../../Modules/Portfolio/classes/class.ilObjPortfolioTemplate.php",
-      "../../../../../../../Modules/Portfolio/classes/class.ilPortfolioAccessHandler.php",
-      "../../../../../../../Modules/Portfolio/classes/class.ilPortfolioTemplatePage.php",
-      "../../../../../../../Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php",
-      "../../../../../../../Services/ActiveRecord/class.ActiveRecord.php",
-      "../../../../../../../Services/Component/classes/class.ilPluginConfigGUI.php",
-      "../../../../../../../Services/Container/classes/class.ilContainer.php",
-      "../../../../../../../Services/Container/classes/class.ilContainerSorting.php",
-      "../../../../../../../Services/EventHandling/classes/class.ilEventHookPlugin.php",
-      "../../../../../../../Services/Form/classes/class.ilCustomInputGUI.php",
-      "../../../../../../../Services/Form/classes/class.ilMultiSelectInputGUI.php",
-      "../../../../../../../Services/Form/classes/class.ilPropertyFormGUI.php",
-      "../../../../../../../Services/Form/classes/class.ilRepositorySelectorInputGUI.php",
-      "../../../../../../../Services/Form/classes/class.ilRepositorySelector2InputGUI.php",
-      "../../../../../../../Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php",
-      "../../../../../../../Services/Form/classes/class.ilTextInputGUI.php",
-      "../../../../../../../Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php",
-      "../../../../../../../Services/Search/classes/class.ilUserSearchOptions.php",
-      "../../../../../../../Services/Skill/classes/class.ilPersonalSkill.php",
-      "../../../../../../../Services/Table/classes/class.ilTable2GUI.php",
-      "../../../../../../../Services/Table/interfaces/interface.ilTableFilterItem.php",
-      "../../../../../../../Services/Taxonomy/classes/class.ilObjTaxonomy.php",
-      "../../../../../../../Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php",
-      "../../../../../../../Services/UIComponent/Explorer2/classes/class.ilExplorerSelectInputGUI.php",
-      "../../../../../../../Services/UIComponent/Explorer2/classes/class.ilTreeExplorerGUI.php",
-      "../../../../../../../Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php",
-      "../../../../../../../Services/UIComponent/Toolbar/interfaces/interface.ilToolbarItem.php",
-      "../../../../../../../Services/User/classes/class.ilObjUser.php",
-      "../../../../../../../Services/User/classes/class.ilUserDefinedFields.php",
-      "../../../../../../../Services/Utilities/classes/class.ilConfirmationGUI.php"
+      "./classes/"
     ]
   },
   "config": {
@@ -81,6 +41,9 @@
     "classmap-authoritative": true
   },
   "scripts": {
-    "pre-autoload-dump": "srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger::rewriteLibrariesNamespaces"
+    "pre-autoload-dump": [
+      "srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger::rewriteLibrariesNamespaces",
+      "srag\\LibrariesNamespaceChanger\\PHP72Backport::PHP72Backport"
+    ]
   }
 }

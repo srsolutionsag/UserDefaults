@@ -1,6 +1,6 @@
 # Changelog
 
-## [x]
+## [1.7.0]
 - ILIAS 6 support
 - Remove ILIAS 5.3 support
 - Remove core autoload, incompatible since min. ILIAS 5.3

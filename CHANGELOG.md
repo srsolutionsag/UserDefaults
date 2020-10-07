@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.7.1]
+- Bugfix Remove from Desktop (ILIAS 6)
+- Studyprogramm in
+
 ## [1.7.0]
 - ILIAS 6 support
 - Remove ILIAS 5.3 support

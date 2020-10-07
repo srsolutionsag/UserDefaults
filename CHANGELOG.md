@@ -1,6 +1,6 @@
 # Changelog
 
-## [1,7.2]
+## [1.7.2]
 - Bugfix ILIAS 6: Bugfix for Mainmenu Entry "UserDefaults"
 
 ## [1.7.1]

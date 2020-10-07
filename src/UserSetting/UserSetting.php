@@ -30,6 +30,7 @@ use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+use ilObjCourseGUI;
 
 /**
  * Class ilUserSetting
@@ -242,7 +243,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($local_roles as $local_roles_obj_id) {
-			self::dic()->rbacadmin()->assignUser($local_roles_obj_id, $this->getUsrObject()->getId());
+			self::dic()->rbacadmin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
 		}
 	}
 
@@ -272,7 +273,13 @@ class UserSetting extends ActiveRecord {
 			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
 				$first = array_shift(array_values($all_refs));
-				ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
+
+				//ILIAS 5.4
+				if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
+                    ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
+                } else {
+                    self::dic()->favourites()->remove($usr_id, $first);
+                }
 			}
 		}
 	}
@@ -346,7 +353,11 @@ class UserSetting extends ActiveRecord {
 			$categories = $this->getUsrObject()->getDesktopItems(Categories::TYPE_CAT);
 
 			foreach ($categories as $category) {
-				ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $category['ref_id'], Categories::TYPE_CAT);
+                if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
+                    ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $category['ref_id'], Categories::TYPE_CAT);
+                } else {
+                    self::dic()->favourites()->remove($this->getUsrObject()->getId(), $category['ref_id']);
+                }
 			}
 		}
 	}
@@ -377,7 +388,15 @@ class UserSetting extends ActiveRecord {
 			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop()) && $added) {
 				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
 				$first = array_shift(array_values($all_refs));
-				ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
+
+                //ILIAS 5.4
+                if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
+                    ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
+                } else {
+                    self::dic()->favourites()->remove($usr_id, $first);
+                }
+
+
 			}
 		}
 
@@ -434,7 +453,15 @@ class UserSetting extends ActiveRecord {
             $part->add($this->getUsrObject()->getId(), IL_GRP_MEMBER);
             if (!$this->isGroupsQueueDesktop()) {
                 $ref_id = array_shift(ilObjGroup::_getAllReferences($group_to_add));
-                ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $ref_id, 'grp');
+
+                //ILIAS 5.4
+                if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
+                    ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $ref_id, 'grp');
+                } else {
+                    self::dic()->favourites()->remove($this->getUsrObject()->getId(), $ref_id);
+                }
+
+
             }
         }
     }

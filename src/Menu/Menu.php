@@ -52,7 +52,7 @@ class Menu extends AbstractStaticPluginMainMenuProvider {
 		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "ref_id", 31);
 		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "ctype", IL_COMP_SERVICE);
 		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "cname", "EventHandling");
-		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "slot_id", "evh");
+		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "slot_id", "evhk");
 		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "pname", ilUserDefaultsPlugin::PLUGIN_NAME);
 
 		return [

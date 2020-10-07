@@ -2,7 +2,7 @@
 
 ## [1.7.1]
 - Bugfix Remove from Desktop (ILIAS 6)
-- Studyprogramm in
+- Studyprogramm INT Parameter
 
 ## [1.7.0]
 - ILIAS 6 support

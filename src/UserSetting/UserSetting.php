@@ -243,7 +243,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($local_roles as $local_roles_obj_id) {
-			self::dic()->rbacadmin()->assignUser($local_roles_obj_id, $this->getUsrObject()->getId());
+			self::dic()->rbacadmin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
 		}
 	}
 

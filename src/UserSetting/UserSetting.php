@@ -327,6 +327,9 @@ class UserSetting extends ActiveRecord {
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
 			$usr_id = $this->getUsrObject()->getId();
+            if (!$part->isMember($usr_id)) {
+                continue;
+            }
 			$added = $part->deleteParticipants(array( $usr_id ));
 		}
 	}

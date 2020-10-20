@@ -1,5 +1,8 @@
 # Changelog
 
+## [x]
+- Only unsubscribe members
+
 ## [1.7.2]
 - Bugfix ILIAS 6: Bugfix for Mainmenu Entry "UserDefaults"
 

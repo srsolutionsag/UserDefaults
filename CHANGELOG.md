@@ -1,7 +1,7 @@
 # Changelog
 
-## [x]
-- Only unsubscribe members
+## [1.7.3]
+- Bugfix: Unsubscribe members - don't unsubscribe tutors / admins
 
 ## [1.7.2]
 - Bugfix ILIAS 6: Bugfix for Mainmenu Entry "UserDefaults"

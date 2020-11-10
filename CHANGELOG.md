@@ -1,6 +1,6 @@
 # Changelog
 
-## [x]
+## [1.7.4]
 - Fix get and add favorites on ILIAS 6
 
 ## [1.7.3]

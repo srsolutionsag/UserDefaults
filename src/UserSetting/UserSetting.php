@@ -302,7 +302,11 @@ class UserSetting extends ActiveRecord {
 
 				$arr_ref_id = ilObject2::_getAllReferences($cat_obj_id);
 
+                if (self::version()->is6()) {
+                    self::dic()->favourites()->add($this->getUsrObject()->getId(), reset($arr_ref_id));
+                } else {
 				$this->getUsrObject()->addDesktopItem(reset($arr_ref_id), Categories::TYPE_CAT);
+				}
 			}
 		}
 	}
@@ -353,7 +357,11 @@ class UserSetting extends ActiveRecord {
 				continue;
 			}
 
+            if (self::version()->is6()) {
+                $categories = self::dic()->favourites()->getFavouritesOfUser($this->getUsrObject()->getId(), [Categories::TYPE_CAT]);
+            } else {
 			$categories = $this->getUsrObject()->getDesktopItems(Categories::TYPE_CAT);
+			}
 
 			foreach ($categories as $category) {
                 if(method_exists(ilObjUser::class,'_dropDesktopItem')) {

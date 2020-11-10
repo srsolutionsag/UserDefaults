@@ -1,5 +1,8 @@
 # Changelog
 
+## [x]
+- Fix get and add favorites on ILIAS 6
+
 ## [1.7.3]
 - Bugfix: Unsubscribe members - don't unsubscribe tutors / admins
 

@@ -194,7 +194,6 @@ class UserSetting extends ActiveRecord {
 			$this->generatePortfolio();
 			$this->assignLocalRoles();
 			$this->assignCourses();
-			$this->assignCategoriesDesktop();
 			$this->assignGroups();
 			$this->assignToGlobalRole();
 			$this->assignOrgunits();
@@ -202,7 +201,6 @@ class UserSetting extends ActiveRecord {
 		} else {
 			if ($this->isUnsubscrfromcrsAndcategoriesDesktop()) {
 				$this->unsubscribeCourses();
-				$this->unsubscribeCategoriesDeskop();
 			}
 		}
 	}
@@ -276,33 +274,6 @@ class UserSetting extends ActiveRecord {
 	/**
 	 *
 	 */
-	protected function assignCategoriesDesktop() {
-		$categories = $this->getAssignedCategoriesDesktop();
-		if (count($categories) == 0) {
-			return;
-		}
-
-		foreach ($categories as $cat_obj_id) {
-
-
-			if ($cat_obj_id != "" && ilObject2::_lookupType($cat_obj_id) == Categories::TYPE_CAT) {
-
-
-				$arr_ref_id = ilObject2::_getAllReferences($cat_obj_id);
-
-                if (self::version()->is6()) {
-                    self::dic()->favourites()->add($this->getUsrObject()->getId(), reset($arr_ref_id));
-                } else {
-				$this->getUsrObject()->addDesktopItem(reset($arr_ref_id), Categories::TYPE_CAT);
-				}
-			}
-		}
-	}
-
-
-	/**
-	 *
-	 */
 	protected function unsubscribeCourses() {
 		if (!$this->isUnsubscrfromcrsAndcategoriesDesktop()) {
 			return;
@@ -323,41 +294,6 @@ class UserSetting extends ActiveRecord {
                 continue;
             }
 			$added = $part->deleteParticipants(array( $usr_id ));
-		}
-	}
-
-
-	/**
-	 *
-	 */
-	protected function unsubscribeCategoriesDeskop() {
-		if (!$this->isUnsubscrfromcrsAndcategoriesDesktop()) {
-			return;
-		}
-
-		$categories = $this->getAssignedCategoriesDesktop();
-		if (count($categories) == 0) {
-			return;
-		}
-
-		foreach ($categories as $cat_ref_id) {
-			if ($cat_ref_id == "" || ilObject2::_lookupType($cat_ref_id) != Categories::TYPE_CAT) {
-				continue;
-			}
-
-            if (self::version()->is6()) {
-                $categories = self::dic()->favourites()->getFavouritesOfUser($this->getUsrObject()->getId(), [Categories::TYPE_CAT]);
-            } else {
-			$categories = $this->getUsrObject()->getDesktopItems(Categories::TYPE_CAT);
-			}
-
-			foreach ($categories as $category) {
-                if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
-                    ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $category['ref_id'], Categories::TYPE_CAT);
-                } else {
-                    self::dic()->favourites()->remove($this->getUsrObject()->getId(), $category['ref_id']);
-                }
-			}
 		}
 	}
 
@@ -723,14 +659,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $assigned_groupes = array();
 	/**
-	 * @var array
-	 *
-	 * @con_has_field  true
-	 * @con_fieldtype  text
-	 * @con_length     256
-	 */
-	protected $assigned_categories_desktop = array();
-	/**
 	 * @var bool
 	 *
 	 * @con_has_field true
@@ -858,7 +786,6 @@ class UserSetting extends ActiveRecord {
             case 'global_roles':
             case 'assigned_local_roles':
 			case 'assigned_courses':
-			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
 			case 'portfolio_assigned_to_groups':
             case 'assigned_groups_queue':
@@ -887,7 +814,6 @@ class UserSetting extends ActiveRecord {
 			case 'global_roles':
 			case 'assigned_local_roles':
 			case 'assigned_courses':
-			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
             case 'assigned_groups_queue':
 			case 'portfolio_assigned_to_groups':
@@ -1036,22 +962,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function getAssignedCourses() {
 		return $this->assigned_courses;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAssignedCategoriesDesktop() {
-		return $this->assigned_categories_desktop;
-	}
-
-
-	/**
-	 * @param array $assigned_categories_desktop
-	 */
-	public function setAssignedCategoriesDesktop($assigned_categories_desktop) {
-		$this->assigned_categories_desktop = $assigned_categories_desktop;
 	}
 
 

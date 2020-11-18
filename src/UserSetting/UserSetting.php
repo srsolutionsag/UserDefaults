@@ -378,7 +378,7 @@ class UserSetting extends ActiveRecord {
 	 *
 	 */
 	protected function assignGroups() {
-        $groups = array_merge($this->getAssignedGroupes(), $this->getAssignedGroupesDesktop());
+        $groups = $this->getAssignedGroupes();
 
         foreach ($groups as $grp_obj_id) {
 			if ($grp_obj_id == "" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
@@ -394,20 +394,6 @@ class UserSetting extends ActiveRecord {
 				$part->sendNotification(31, $usr_id);
 			} else {
 				$added = $part->add($usr_id, IL_GRP_MEMBER);
-			}
-
-			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop()) && $added) {
-				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
-				$first = array_shift(array_values($all_refs));
-
-                //ILIAS 5.4
-                if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
-                    ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
-                } else {
-                    self::dic()->favourites()->remove($usr_id, $first);
-                }
-
-
 			}
 		}
 
@@ -773,14 +759,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $unsubscr_from_crs_and_cat = false;
 	/**
-	 * @var array
-	 *
-	 * @con_has_field  true
-	 * @con_fieldtype  text
-	 * @con_length     256
-	 */
-	protected $assigned_groupes_desktop = array();
-	/**
 	 * @var bool
 	 *
 	 * @con_has_field true
@@ -903,7 +881,6 @@ class UserSetting extends ActiveRecord {
 			case 'assigned_courses_desktop':
 			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
-			case 'assigned_groupes_desktop':
 			case 'portfolio_assigned_to_groups':
             case 'assigned_groups_queue':
 			case 'assigned_orgus':
@@ -938,7 +915,6 @@ class UserSetting extends ActiveRecord {
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
 			case 'assigned_courses_desktop':
-			case 'assigned_groupes_desktop':
 				$json_decode = json_decode($field_value, true);
 
 				return is_array($json_decode) ? $json_decode : array();
@@ -1180,22 +1156,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function setUnsubscrfromcrsAndcategoriesDesktop($unsubscr_from_crs_and_cat) {
 		$this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAssignedGroupesDesktop() {
-		return $this->assigned_groupes_desktop;
-	}
-
-
-	/**
-	 * @param array $assigned_groupes_desktop
-	 */
-	public function setAssignedGroupesDesktop($assigned_groupes_desktop) {
-		$this->assigned_groupes_desktop = $assigned_groupes_desktop;
 	}
 
 

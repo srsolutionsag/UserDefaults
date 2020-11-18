@@ -43,7 +43,6 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_GLOBAL_ROLES = 'global_roles';
 	const F_ASSIGNED_LOCAL_ROLES = 'assigned_local_roles';
 	const F_ASSIGNED_COURSES = 'assigned_courses';
-	const F_ASSIGNED_COURSES_DESKTOP = 'assigned_courses_desktop';
 	const F_ASSIGNED_CATEGORY_DESKTOP = 'assigned_category_desktop';
 	const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
 	const F_ASSIGNED_GROUPS = 'assigned_groups';
@@ -144,10 +143,6 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$multiSelect->setShowLabel(true);
 
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI(Courses::TYPE_CRS, $this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
-		$ilCourseMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
-		$this->addItem($ilCourseMultiSelectInputGUI);
-
-		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI(Courses::TYPE_CRS, $this->txt(self::F_ASSIGNED_COURSES_DESKTOP), self::F_ASSIGNED_COURSES_DESKTOP);
 		$ilCourseMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
@@ -279,7 +274,6 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
             //			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
             self::F_ASSIGNED_LOCAL_ROLES               => implode(',', $this->object->getAssignedLocalRoles()),
             self::F_ASSIGNED_COURSES                   => implode(',', $this->object->getAssignedCourses()),
-            self::F_ASSIGNED_COURSES_DESKTOP           => implode(',', $this->object->getAssignedCoursesDesktop()),
             self::F_ASSIGNED_CATEGORY_DESKTOP          => implode(',', $this->object->getAssignedCategoriesDesktop()),
             self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES => $this->object->isUnsubscrfromcrsAndcategoriesDesktop(),
             self::F_ASSIGNED_GROUPS                    => implode(',', $this->object->getAssignedGroupes()),
@@ -318,8 +312,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$assigned_courses = $this->getInput(self::F_ASSIGNED_COURSES);
 		$this->object->setAssignedCourses(explode(',', $assigned_courses[0]));
 
-		$assigned_courses_desktop = $this->getInput(self::F_ASSIGNED_COURSES_DESKTOP);
-		$this->object->setAssignedCoursesDesktop(explode(',', $assigned_courses_desktop[0]));
+
 		$assigned_categories_desktop = $this->getInput(self::F_ASSIGNED_CATEGORY_DESKTOP);
 		$this->object->setAssignedCategoriesDesktop(explode(',', $assigned_categories_desktop[0]));
 		$this->object->setUnsubscrfromcrsAndcategoriesDesktop($this->getInput(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES));

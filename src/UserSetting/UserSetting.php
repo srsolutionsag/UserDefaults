@@ -252,7 +252,7 @@ class UserSetting extends ActiveRecord {
 	 *
 	 */
 	protected function assignCourses() {
-		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
+		$courses = $this->getAssignedCourses();
 		if (count($courses) == 0) {
 			return;
 		}
@@ -269,18 +269,6 @@ class UserSetting extends ActiveRecord {
 			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
 			$crs->checkLPStatusSync($usr_id);
-
-			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
-				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
-				$first = array_shift(array_values($all_refs));
-
-				//ILIAS 5.4
-				if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
-                    ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
-                } else {
-                    self::dic()->favourites()->remove($usr_id, $first);
-                }
-			}
 		}
 	}
 
@@ -320,7 +308,7 @@ class UserSetting extends ActiveRecord {
 			return;
 		}
 
-		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
+		$courses = $this->getAssignedCourses();
 		if (count($courses) == 0) {
 			return;
 		}
@@ -741,14 +729,6 @@ class UserSetting extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     256
 	 */
-	protected $assigned_courses_desktop = array();
-	/**
-	 * @var array
-	 *
-	 * @con_has_field  true
-	 * @con_fieldtype  text
-	 * @con_length     256
-	 */
 	protected $assigned_categories_desktop = array();
 	/**
 	 * @var bool
@@ -878,7 +858,6 @@ class UserSetting extends ActiveRecord {
             case 'global_roles':
             case 'assigned_local_roles':
 			case 'assigned_courses':
-			case 'assigned_courses_desktop':
 			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
 			case 'portfolio_assigned_to_groups':
@@ -914,7 +893,6 @@ class UserSetting extends ActiveRecord {
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
-			case 'assigned_courses_desktop':
 				$json_decode = json_decode($field_value, true);
 
 				return is_array($json_decode) ? $json_decode : array();
@@ -1106,22 +1084,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function setAssignedGroupsOptionRequest($assigned_groups_option_request) {
 		$this->assigned_groups_option_request = $assigned_groups_option_request;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAssignedCoursesDesktop() {
-		return $this->assigned_courses_desktop;
-	}
-
-
-	/**
-	 * @param array $assigned_courses_desktop
-	 */
-	public function setAssignedCoursesDesktop($assigned_courses_desktop) {
-		$this->assigned_courses_desktop = $assigned_courses_desktop;
 	}
 
 

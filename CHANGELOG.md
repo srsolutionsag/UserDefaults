@@ -1,5 +1,10 @@
 # Changelog
 
+## [x]
+- Remove assign to group and put group on desktop
+- Remove assign to course and put course on desktop
+- Remove put category on desktop
+
 ## [1.7.4]
 - Fix get and add favorites on ILIAS 6
 

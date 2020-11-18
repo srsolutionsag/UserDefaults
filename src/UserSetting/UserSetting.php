@@ -194,7 +194,6 @@ class UserSetting extends ActiveRecord {
 			$this->generatePortfolio();
 			$this->assignLocalRoles();
 			$this->assignCourses();
-			$this->assignCategoriesDesktop();
 			$this->assignGroups();
 			$this->assignToGlobalRole();
 			$this->assignOrgunits();
@@ -202,7 +201,6 @@ class UserSetting extends ActiveRecord {
 		} else {
 			if ($this->isUnsubscrfromcrsAndcategoriesDesktop()) {
 				$this->unsubscribeCourses();
-				$this->unsubscribeCategoriesDeskop();
 			}
 		}
 	}
@@ -252,7 +250,7 @@ class UserSetting extends ActiveRecord {
 	 *
 	 */
 	protected function assignCourses() {
-		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
+		$courses = $this->getAssignedCourses();
 		if (count($courses) == 0) {
 			return;
 		}
@@ -269,45 +267,6 @@ class UserSetting extends ActiveRecord {
 			$added = $part->add($usr_id, ilCourseConstants::CRS_MEMBER);
 
 			$crs->checkLPStatusSync($usr_id);
-
-			if (!in_array($crs_obj_id, $this->getAssignedCoursesDesktop()) && $added) {
-				$all_refs = ilObject2::_getAllReferences($crs_obj_id);
-				$first = array_shift(array_values($all_refs));
-
-				//ILIAS 5.4
-				if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
-                    ilObjUser::_dropDesktopItem($usr_id, $first, Courses::TYPE_CRS);
-                } else {
-                    self::dic()->favourites()->remove($usr_id, $first);
-                }
-			}
-		}
-	}
-
-
-	/**
-	 *
-	 */
-	protected function assignCategoriesDesktop() {
-		$categories = $this->getAssignedCategoriesDesktop();
-		if (count($categories) == 0) {
-			return;
-		}
-
-		foreach ($categories as $cat_obj_id) {
-
-
-			if ($cat_obj_id != "" && ilObject2::_lookupType($cat_obj_id) == Categories::TYPE_CAT) {
-
-
-				$arr_ref_id = ilObject2::_getAllReferences($cat_obj_id);
-
-                if (self::version()->is6()) {
-                    self::dic()->favourites()->add($this->getUsrObject()->getId(), reset($arr_ref_id));
-                } else {
-				$this->getUsrObject()->addDesktopItem(reset($arr_ref_id), Categories::TYPE_CAT);
-				}
-			}
 		}
 	}
 
@@ -320,7 +279,7 @@ class UserSetting extends ActiveRecord {
 			return;
 		}
 
-		$courses = array_merge($this->getAssignedCourses(), $this->getAssignedCoursesDesktop());
+		$courses = $this->getAssignedCourses();
 		if (count($courses) == 0) {
 			return;
 		}
@@ -342,43 +301,8 @@ class UserSetting extends ActiveRecord {
 	/**
 	 *
 	 */
-	protected function unsubscribeCategoriesDeskop() {
-		if (!$this->isUnsubscrfromcrsAndcategoriesDesktop()) {
-			return;
-		}
-
-		$categories = $this->getAssignedCategoriesDesktop();
-		if (count($categories) == 0) {
-			return;
-		}
-
-		foreach ($categories as $cat_ref_id) {
-			if ($cat_ref_id == "" || ilObject2::_lookupType($cat_ref_id) != Categories::TYPE_CAT) {
-				continue;
-			}
-
-            if (self::version()->is6()) {
-                $categories = self::dic()->favourites()->getFavouritesOfUser($this->getUsrObject()->getId(), [Categories::TYPE_CAT]);
-            } else {
-			$categories = $this->getUsrObject()->getDesktopItems(Categories::TYPE_CAT);
-			}
-
-			foreach ($categories as $category) {
-                if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
-                    ilObjUser::_dropDesktopItem($this->getUsrObject()->getId(), $category['ref_id'], Categories::TYPE_CAT);
-                } else {
-                    self::dic()->favourites()->remove($this->getUsrObject()->getId(), $category['ref_id']);
-                }
-			}
-		}
-	}
-
-
-	/**
-	 *
-	 */
 	protected function assignGroups() {
-        $groups = array_merge($this->getAssignedGroupes(), $this->getAssignedGroupesDesktop());
+        $groups = $this->getAssignedGroupes();
 
         foreach ($groups as $grp_obj_id) {
 			if ($grp_obj_id == "" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
@@ -394,20 +318,6 @@ class UserSetting extends ActiveRecord {
 				$part->sendNotification(31, $usr_id);
 			} else {
 				$added = $part->add($usr_id, IL_GRP_MEMBER);
-			}
-
-			if (!in_array($grp_obj_id, $this->getAssignedGroupesDesktop()) && $added) {
-				$all_refs = ilObject2::_getAllReferences($grp_obj_id);
-				$first = array_shift(array_values($all_refs));
-
-                //ILIAS 5.4
-                if(method_exists(ilObjUser::class,'_dropDesktopItem')) {
-                    ilObjUser::_dropDesktopItem($usr_id, $first, 'grp');
-                } else {
-                    self::dic()->favourites()->remove($usr_id, $first);
-                }
-
-
 			}
 		}
 
@@ -749,22 +659,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $assigned_groupes = array();
 	/**
-	 * @var array
-	 *
-	 * @con_has_field  true
-	 * @con_fieldtype  text
-	 * @con_length     256
-	 */
-	protected $assigned_courses_desktop = array();
-	/**
-	 * @var array
-	 *
-	 * @con_has_field  true
-	 * @con_fieldtype  text
-	 * @con_length     256
-	 */
-	protected $assigned_categories_desktop = array();
-	/**
 	 * @var bool
 	 *
 	 * @con_has_field true
@@ -772,14 +666,6 @@ class UserSetting extends ActiveRecord {
 	 * @con_length    1
 	 */
 	protected $unsubscr_from_crs_and_cat = false;
-	/**
-	 * @var array
-	 *
-	 * @con_has_field  true
-	 * @con_fieldtype  text
-	 * @con_length     256
-	 */
-	protected $assigned_groupes_desktop = array();
 	/**
 	 * @var bool
 	 *
@@ -900,10 +786,7 @@ class UserSetting extends ActiveRecord {
             case 'global_roles':
             case 'assigned_local_roles':
 			case 'assigned_courses':
-			case 'assigned_courses_desktop':
-			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
-			case 'assigned_groupes_desktop':
 			case 'portfolio_assigned_to_groups':
             case 'assigned_groups_queue':
 			case 'assigned_orgus':
@@ -931,14 +814,11 @@ class UserSetting extends ActiveRecord {
 			case 'global_roles':
 			case 'assigned_local_roles':
 			case 'assigned_courses':
-			case 'assigned_categories_desktop':
 			case 'assigned_groupes':
             case 'assigned_groups_queue':
 			case 'portfolio_assigned_to_groups':
 			case 'assigned_orgus':
 			case 'assigned_studyprograms':
-			case 'assigned_courses_desktop':
-			case 'assigned_groupes_desktop':
 				$json_decode = json_decode($field_value, true);
 
 				return is_array($json_decode) ? $json_decode : array();
@@ -1086,22 +966,6 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @return array
-	 */
-	public function getAssignedCategoriesDesktop() {
-		return $this->assigned_categories_desktop;
-	}
-
-
-	/**
-	 * @param array $assigned_categories_desktop
-	 */
-	public function setAssignedCategoriesDesktop($assigned_categories_desktop) {
-		$this->assigned_categories_desktop = $assigned_categories_desktop;
-	}
-
-
-	/**
 	 * @param array $assigned_groupes
 	 */
 	public function setAssignedGroupes($assigned_groupes) {
@@ -1130,22 +994,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function setAssignedGroupsOptionRequest($assigned_groups_option_request) {
 		$this->assigned_groups_option_request = $assigned_groups_option_request;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAssignedCoursesDesktop() {
-		return $this->assigned_courses_desktop;
-	}
-
-
-	/**
-	 * @param array $assigned_courses_desktop
-	 */
-	public function setAssignedCoursesDesktop($assigned_courses_desktop) {
-		$this->assigned_courses_desktop = $assigned_courses_desktop;
 	}
 
 
@@ -1180,22 +1028,6 @@ class UserSetting extends ActiveRecord {
 	 */
 	public function setUnsubscrfromcrsAndcategoriesDesktop($unsubscr_from_crs_and_cat) {
 		$this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAssignedGroupesDesktop() {
-		return $this->assigned_groupes_desktop;
-	}
-
-
-	/**
-	 * @param array $assigned_groupes_desktop
-	 */
-	public function setAssignedGroupesDesktop($assigned_groupes_desktop) {
-		$this->assigned_groupes_desktop = $assigned_groupes_desktop;
 	}
 
 

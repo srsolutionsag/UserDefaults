@@ -1,6 +1,6 @@
 # Changelog
 
-## [x]
+## [1.7.5]
 - Remove assign to group and put group on desktop
 - Remove assign to course and put course on desktop
 - Remove put category on desktop

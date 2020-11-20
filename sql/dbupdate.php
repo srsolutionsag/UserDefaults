@@ -161,3 +161,9 @@ if ($ilDB->tableColumnExists($usr_setting_table, 'global_role')) {
 <?php
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
+<#23>
+<?php
+\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop");
+\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop");
+\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop");
+?>

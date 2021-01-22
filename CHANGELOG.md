@@ -1,4 +1,6 @@
 # Changelog
+## [1.7.6]
+- Updated Composer
 
 ## [1.7.5]
 - Remove assign to group and put group on desktop

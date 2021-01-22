@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\CustomInputGUIs\UserDefaults\CheckboxInputGUI;
+namespace srag\CustomInputGUIs\UserDefaults\AjaxCheckbox;
 
 use srag\CustomInputGUIs\UserDefaults\Template\Template;
 use srag\CustomInputGUIs\UserDefaults\Waiter\Waiter;
@@ -9,7 +9,7 @@ use srag\DIC\UserDefaults\DICTrait;
 /**
  * Class AjaxCheckbox
  *
- * @package srag\CustomInputGUIs\UserDefaults\CheckboxInputGUI
+ * @package srag\CustomInputGUIs\UserDefaults\AjaxCheckbox
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */

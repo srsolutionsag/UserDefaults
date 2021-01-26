@@ -163,7 +163,18 @@ if ($ilDB->tableColumnExists($usr_setting_table, 'global_role')) {
 ?>
 <#23>
 <?php
-\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop");
-\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop");
-\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop");
+if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop"))
+    \srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop");
+
+if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop"))
+    \srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop");
+
+if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop"))
+    \srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop");
 ?>
+<#24>
+<?php
+\srag\DIC\UserDefaults\DICStatic::dic()->database()->addTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp", ["type" => "integer"]);
+?>
+
+

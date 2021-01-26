@@ -11,6 +11,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         array (
             'srag\\RemovePluginDataConfirm\\' => 29,
             'srag\\Plugins\\UserDefaults\\' => 26,
+            'srag\\LibraryLanguageInstaller\\' => 30,
             'srag\\LibrariesNamespaceChanger\\' => 31,
             'srag\\DIC\\' => 9,
             'srag\\CustomInputGUIs\\' => 21,
@@ -26,6 +27,10 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\Plugins\\UserDefaults\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'srag\\LibraryLanguageInstaller\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srag/librarylanguageinstaller/src',
         ),
         'srag\\LibrariesNamespaceChanger\\' => 
         array (
@@ -62,7 +67,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\ActiveRecordConfig\\UserDefaults\\Config\\AbstractRepository' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/AbstractRepository.php',
         'srag\\ActiveRecordConfig\\UserDefaults\\Config\\Config' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/Config.php',
         'srag\\ActiveRecordConfig\\UserDefaults\\Exception\\ActiveRecordConfigException' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Exception/ActiveRecordConfigException.php',
-        'srag\\CustomInputGUIs\\UserDefaults\\CheckboxInputGUI\\AjaxCheckbox' => __DIR__ . '/..' . '/srag/custominputguis/src/AjaxCheckbox/AjaxCheckbox.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\AjaxCheckbox\\AjaxCheckbox' => __DIR__ . '/..' . '/srag/custominputguis/src/AjaxCheckbox/AjaxCheckbox.php',
         'srag\\CustomInputGUIs\\UserDefaults\\CheckboxInputGUI\\CheckboxInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/CheckboxInputGUI/CheckboxInputGUI.php',
         'srag\\CustomInputGUIs\\UserDefaults\\ColorPickerInputGUI\\ColorPickerInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ColorPickerInputGUI/ColorPickerInputGUI.php',
         'srag\\CustomInputGUIs\\UserDefaults\\CustomInputGUIs' => __DIR__ . '/..' . '/srag/custominputguis/src/CustomInputGUIs.php',
@@ -108,9 +113,10 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\CustomInputGUIs\\UserDefaults\\TextInputGUI\\TextInputGUIWithModernAutoComplete' => __DIR__ . '/..' . '/srag/custominputguis/src/TextInputGUI/TextInputGUIWithModernAutoComplete.php',
         'srag\\CustomInputGUIs\\UserDefaults\\UIInputComponentWrapperInputGUI\\UIInputComponentWrapperInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/UIInputComponentWrapperInputGUI/UIInputComponentWrapperInputGUI.php',
         'srag\\CustomInputGUIs\\UserDefaults\\UIInputComponentWrapperInputGUI\\UIInputComponentWrapperNameSource' => __DIR__ . '/..' . '/srag/custominputguis/src/UIInputComponentWrapperInputGUI/UIInputComponentWrapperNameSource.php',
-        'srag\\CustomInputGUIs\\UserDefaults\\ViewControlModeUI\\ViewControlModeUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ViewControlModeGUI/ViewControlModeUI.php',
+        'srag\\CustomInputGUIs\\UserDefaults\\ViewControlModeUI\\ViewControlModeUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ViewControlModeUI/ViewControlModeUI.php',
         'srag\\CustomInputGUIs\\UserDefaults\\Waiter\\Waiter' => __DIR__ . '/..' . '/srag/custominputguis/src/Waiter/Waiter.php',
         'srag\\CustomInputGUIs\\UserDefaults\\WeekdayInputGUI\\WeekdayInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/WeekdayInputGUI/WeekdayInputGUI.php',
+        'srag\\DIC\\UserDefaults\\Cron\\FixUITemplateInCronContext' => __DIR__ . '/..' . '/srag/dic/src/Cron/FixUITemplateInCronContext.php',
         'srag\\DIC\\UserDefaults\\DICStatic' => __DIR__ . '/..' . '/srag/dic/src/DICStatic.php',
         'srag\\DIC\\UserDefaults\\DICStaticInterface' => __DIR__ . '/..' . '/srag/dic/src/DICStaticInterface.php',
         'srag\\DIC\\UserDefaults\\DICTrait' => __DIR__ . '/..' . '/srag/dic/src/DICTrait.php',
@@ -124,6 +130,7 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\DIC\\UserDefaults\\Database\\PdoContextHelper' => __DIR__ . '/..' . '/srag/dic/src/Database/PdoContextHelper.php',
         'srag\\DIC\\UserDefaults\\Database\\PdoStatementContextHelper' => __DIR__ . '/..' . '/srag/dic/src/Database/PdoStatementContextHelper.php',
         'srag\\DIC\\UserDefaults\\Exception\\DICException' => __DIR__ . '/..' . '/srag/dic/src/Exception/DICException.php',
+        'srag\\DIC\\UserDefaults\\Ilias7PreWarn' => __DIR__ . '/..' . '/srag/dic/src/Ilias7PreWarn.php',
         'srag\\DIC\\UserDefaults\\Loader\\AbstractLoaderDetector' => __DIR__ . '/..' . '/srag/dic/src/Loader/AbstractLoaderDetector.php',
         'srag\\DIC\\UserDefaults\\Output\\Output' => __DIR__ . '/..' . '/srag/dic/src/Output/Output.php',
         'srag\\DIC\\UserDefaults\\Output\\OutputInterface' => __DIR__ . '/..' . '/srag/dic/src/Output/OutputInterface.php',
@@ -131,15 +138,13 @@ class ComposerStaticInit51fe849bb6940989fec4e1ae115a1ecb
         'srag\\DIC\\UserDefaults\\Plugin\\Plugin' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Plugin.php',
         'srag\\DIC\\UserDefaults\\Plugin\\PluginInterface' => __DIR__ . '/..' . '/srag/dic/src/Plugin/PluginInterface.php',
         'srag\\DIC\\UserDefaults\\Plugin\\Pluginable' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Pluginable.php',
-        'srag\\DIC\\UserDefaults\\Util\\LibraryLanguageInstaller' => __DIR__ . '/..' . '/srag/dic/src/Util/LibraryLanguageInstaller.php',
         'srag\\DIC\\UserDefaults\\Version\\Version' => __DIR__ . '/..' . '/srag/dic/src/Version/Version.php',
         'srag\\DIC\\UserDefaults\\Version\\VersionInterface' => __DIR__ . '/..' . '/srag/dic/src/Version/VersionInterface.php',
-        'srag\\LibrariesNamespaceChanger\\GeneratePluginPhpAndXml' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/GeneratePluginPhpAndXml.php',
         'srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/LibrariesNamespaceChanger.php',
         'srag\\LibrariesNamespaceChanger\\PHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP72Backport.php',
         'srag\\LibrariesNamespaceChanger\\PHP7Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP7Backport.php',
         'srag\\LibrariesNamespaceChanger\\RemovePHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/RemovePHP72Backport.php',
-        'srag\\LibrariesNamespaceChanger\\UpdatePluginReadme' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/UpdatePluginReadme.php',
+        'srag\\LibraryLanguageInstaller\\UserDefaults\\LibraryLanguageInstaller' => __DIR__ . '/..' . '/srag/librarylanguageinstaller/src/LibraryLanguageInstaller.php',
         'srag\\Plugins\\UserDefaults\\Access\\Access' => __DIR__ . '/../..' . '/src/Access/Access.php',
         'srag\\Plugins\\UserDefaults\\Access\\Categories' => __DIR__ . '/../..' . '/src/Access/Categories.php',
         'srag\\Plugins\\UserDefaults\\Access\\Courses' => __DIR__ . '/../..' . '/src/Access/Courses.php',

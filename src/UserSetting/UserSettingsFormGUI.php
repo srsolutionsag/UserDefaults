@@ -44,7 +44,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_ASSIGNED_LOCAL_ROLES = 'assigned_local_roles';
 	const F_ASSIGNED_COURSES = 'assigned_courses';
 	const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
-	const F_ASSIGNED_GROUPS = 'assigned_groups';
+    const F_UNSUBSCRIBE_GROUPS = 'unsubscribe_groups';
+    const F_ASSIGNED_GROUPS = 'assigned_groups';
     const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
     const F_ASSIGNED_GROUPS_QUEUE = 'assigned_groups_queue';
     const F_ASSIGNED_GROUPS_QUEUE_DESKTOP = 'assigned_groups_queue_desktop';
@@ -156,6 +157,9 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $ilGroupMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS), self::F_ASSIGNED_GROUPS);
 		$ilGroupMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilGroupMultiSelectInputGUI);
+
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_GROUPS), self::F_UNSUBSCRIBE_GROUPS);
+        $this->addItem($ilCheckboxInputGUI);
 
         $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_OPTION_REQUEST), self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
         $this->addItem($ilCheckboxInputGUI);
@@ -271,6 +275,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
             self::F_ASSIGNED_COURSES                   => implode(',', $this->object->getAssignedCourses()),
             self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES => $this->object->isUnsubscrfromcrsAndcategoriesDesktop(),
             self::F_ASSIGNED_GROUPS                    => implode(',', $this->object->getAssignedGroupes()),
+            self::F_UNSUBSCRIBE_GROUPS                 => $this->object->isUnsubscrfromgrp(),
             self::F_ASSIGNED_GROUPS_OPTION_REQUEST     => $this->object->isAssignedGroupsOptionRequest(),
             self::F_ASSIGNED_GROUPS_QUEUE              => $assigned_groups_queue,
             self::F_ASSIGNED_GROUPS_QUEUE_DESKTOP      => $this->object->isGroupsQueueDesktop(),
@@ -309,6 +314,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->object->setUnsubscrfromcrsAndcategoriesDesktop($this->getInput(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES));
 		$assigned_groups = $this->getInput(self::F_ASSIGNED_GROUPS);
 		$this->object->setAssignedGroupes(explode(',', $assigned_groups[0]));
+		$this->object->setUnsubscrfromgrpDesktop($this->getInput(self::F_UNSUBSCRIBE_GROUPS));
 		$this->object->setAssignedGroupsOptionRequest($this->getInput(self::F_ASSIGNED_GROUPS_OPTION_REQUEST));
 		$assigned_groups_option_request = $this->getInput(self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
 

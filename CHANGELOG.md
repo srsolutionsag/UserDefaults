@@ -1,7 +1,6 @@
 # Changelog
 ## [1.7.6]
-- Updated Composer
-
+- Feature: Unsubscribe from groups option
 ## [1.7.5]
 - Remove assign to group and put group on desktop
 - Remove assign to course and put course on desktop

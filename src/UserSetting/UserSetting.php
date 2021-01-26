@@ -24,6 +24,7 @@ use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use php4DOMDocument;
+use phpDocumentor\Reflection\Types\Object_;
 use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
 use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Access\Categories;
@@ -202,6 +203,10 @@ class UserSetting extends ActiveRecord {
 			if ($this->isUnsubscrfromcrsAndcategoriesDesktop()) {
 				$this->unsubscribeCourses();
 			}
+
+			if ($this->isUnsubscrfromgrp()) {
+                $this->unsubscribeGroups();
+            }
 		}
 	}
 
@@ -285,7 +290,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($courses as $crs_obj_id) {
-			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != Courses::TYPE_CRS) {
+			if ($crs_obj_id === "" || ilObject2::_lookupType($crs_obj_id) !== Courses::TYPE_CRS) {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
@@ -296,7 +301,6 @@ class UserSetting extends ActiveRecord {
 			$added = $part->deleteParticipants(array( $usr_id ));
 		}
 	}
-
 
 	/**
 	 *
@@ -324,6 +328,29 @@ class UserSetting extends ActiveRecord {
         $this->assignGroupFromQueue();
 	}
 
+    protected function unsubscribeGroups() {
+        if (!$this->isUnsubscrfromcrsAndcategoriesDesktop()) {
+            return;
+        }
+
+        $groups = $this->getAssignedGroupes();
+        if (count($groups) === 0) {
+            return;
+        }
+
+        foreach ($groups as $id) {
+            if ($id === "" || ilObject2::_lookupType($id) !== "grp") {
+                continue;
+            }
+
+            $part = ilGroupParticipants::_getInstanceByObjId($id);
+            $usr_id = $this->getUsrObject()->getId();
+            if (!$part->isMember($usr_id)) {
+                continue;
+            }
+            $added = $part->deleteParticipants(array( $usr_id ));
+        }
+    }
 
     /**
      * @return int|null
@@ -666,6 +693,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_length    1
 	 */
 	protected $unsubscr_from_crs_and_cat = false;
+    /**
+     * @var bool
+     *
+     * @con_has_field true
+     * @con_fieldtype integer
+     * @con_length    1
+     */
+    protected $unsubscr_from_grp = false;
 	/**
 	 * @var bool
 	 *
@@ -1022,6 +1057,12 @@ class UserSetting extends ActiveRecord {
 		return $this->unsubscr_from_crs_and_cat;
 	}
 
+    /**
+     * @return bool
+     */
+    public function isUnsubscrfromgrp() {
+        return $this->unsubscr_from_grp;
+    }
 
 	/**
 	 * @param bool $unsubscr_from_crs_and_cat
@@ -1030,6 +1071,12 @@ class UserSetting extends ActiveRecord {
 		$this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
 	}
 
+    /**
+     * @param bool $unsubscr_from_crs_and_cat
+     */
+    public function setUnsubscrfromgrpDesktop($unsubscr_from_grp) {
+        $this->unsubscr_from_grp = $unsubscr_from_grp;
+    }
 
 	/**
 	 * @param UDFCheck[] $udf_check_objects

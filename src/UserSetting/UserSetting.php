@@ -329,7 +329,7 @@ class UserSetting extends ActiveRecord {
 	}
 
     protected function unsubscribeGroups() {
-        if (!$this->isUnsubscrfromcrsAndcategoriesDesktop()) {
+        if (!$this->isUnsubscrfromgrp()) {
             return;
         }
 

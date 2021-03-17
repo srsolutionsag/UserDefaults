@@ -174,7 +174,8 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag
 ?>
 <#24>
 <?php
-\srag\DIC\UserDefaults\DICStatic::dic()->database()->addTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp", ["type" => "integer"]);
+if (!\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp"))
+    \srag\DIC\UserDefaults\DICStatic::dic()->database()->addTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp", ["type" => "integer"]);
 ?>
 
 

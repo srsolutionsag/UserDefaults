@@ -30,6 +30,11 @@ set_duplicate#:#Duplizieren
 set_input_to_desktop#:#MISSING set_input_to_desktop
 set_unsubscribe_courses_and_categories#:#Aus obigen Kursen und Kategorien abmelden, falls Bedingung nicht zutrifft
 set_unsubscribe_groups#:#Aus obigen Gruppen und Kategorien abmelden, falls Bedingung nicht zutrifft
+set_unsubscribe_local_roles#:#Von lokalen Rollen entfernen, falls Bedingung nicht zutrifft
+set_unsubscribe_global_roles#:#Von globalen Rollen entfernen, falls Bedingung nicht zutrifft
+set_unsubscribe_studyprograms#:#Aus obigen Studienprogrammen abmelden, falls Bedingung nicht zutrifft
+set_unsubscribe_orgus#:#Aus obigen Organisationseinheiten abmelden, falls Bedingung nicht zutrifft
+set_remove_portfolio#:#Portfolio entfernen, falls Bedingung nicht zutrifft
 set_assigned_groups_first_available#:#In die erste Gruppe mit freien Plätzen einschreiben.
 set_assigned_groups_option_request#:#
 set_assigned_groups#:#Zu Gruppe hinzufügen

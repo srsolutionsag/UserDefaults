@@ -207,6 +207,26 @@ class UserSetting extends ActiveRecord {
 			if ($this->isUnsubscrfromgrp()) {
                 $this->unsubscribeGroups();
             }
+
+			if ($this->isUnsignLocalRoles()) {
+			    $this->unsignLocalRoles();
+            }
+
+			if ($this->isUnsignGlobalRoles()) {
+                $this->unsignGlobalRole();
+            }
+
+			if ($this->isUnsubscrFromOrgus()) {
+                $this->unsubscribeOrgunits();
+            }
+
+            if ($this->isUnsubscrFromStudyprograms()) {
+                $this->unsubscribeStudyprograms();
+            }
+
+            if ($this->getRemovePortfolio()) {
+                $this->removePortfolio();
+            }
 		}
 	}
 
@@ -235,11 +255,27 @@ class UserSetting extends ActiveRecord {
         }
 	}
 
+    /**
+     *
+     */
+    protected function unsignGlobalRole() {
+        if (!$this->isUnsignGlobalRoles()) {
+            return;
+        }
+
+        $global_roles = $this->getGlobalRoles();
+        foreach ($global_roles as $global_role) {
+            if (ilObject2::_lookupType($global_role) == 'role') {
+                self::dic()->rbacadmin()->deassignUser($global_role, $this->getUsrObject()->getId());
+            }
+        }
+    }
 
 	/**
 	 *
 	 */
 	protected function assignLocalRoles() {
+
 		$local_roles = $this->getAssignedLocalRoles();
 		if (count($local_roles) == 0) {
 			return;
@@ -249,6 +285,25 @@ class UserSetting extends ActiveRecord {
 			self::dic()->rbacadmin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
 		}
 	}
+
+    /**
+     *
+     */
+    protected function unsignLocalRoles() {
+        if (!$this->isUnsignLocalRoles()) {
+            return;
+        }
+
+        $local_roles = $this->getAssignedLocalRoles();
+
+        if (count($local_roles) == 0) {
+            return;
+        }
+
+        foreach ($local_roles as $local_roles_obj_id) {
+            self::dic()->rbacadmin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+        }
+    }
 
 
 	/**
@@ -510,6 +565,27 @@ class UserSetting extends ActiveRecord {
 		$ilUser = $backup_user;
 	}
 
+    protected function removePortfolio()
+    {
+        $data = ilObjPortfolio::getPortfoliosOfUser($this->getUsrObject()->getId());
+        $ilUser = $this->getUsrObject();
+        $target = ilObjPortfolio::getDefaultPortfolio($ilUser->id);
+        $access_handler = new ilPortfolioAccessHandler();
+
+        foreach ($data as $p) {
+            if (trim($p['title']) == trim($this->getReplacesPortfolioTitle())) {
+                if ($p['id'] != $target) {
+                    return;
+                }
+                $access_handler->removePermission($target);
+
+                $portfolio = new ilObjPortfolio($target, false);
+                $portfolio->delete();
+                return;
+            }
+        }
+    }
+
 
 	/**
 	 * @return bool
@@ -637,6 +713,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $global_roles = [4];
+    /**
+     * @var bool
+     *
+     * @con_has_field true
+     * @con_fieldtype integer
+     * @con_length    1
+     */
+    protected $unsign_global_roles = false;
 	/**
 	 * @var int
 	 *
@@ -669,6 +753,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $assigned_local_roles = array();
+    /**
+     * @var bool
+     *
+     * @con_has_field true
+     * @con_fieldtype integer
+     * @con_length    1
+     */
+    protected $unsign_local_roles = false;
 	/**
 	 * @var array
 	 *
@@ -765,6 +857,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_length    256
 	 */
 	protected $portfolio_name = '';
+    /**
+     * @var bool
+     *
+     * @con_has_field true
+     * @con_fieldtype integer
+     * @con_length    1
+     */
+    protected $remove_from_portfolio = false;
 	/**
 	 * @var array
 	 *
@@ -773,6 +873,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $assigned_orgus = array();
+    /**
+     * @var bool
+     *
+     * @con_has_field true
+     * @con_fieldtype integer
+     * @con_length    1
+     */
+    protected $unsubscribe_from_orgus = false;
 	/**
 	 * @var array
 	 *
@@ -781,6 +889,14 @@ class UserSetting extends ActiveRecord {
 	 * @con_length     256
 	 */
 	protected $assigned_studyprograms = array();
+    /**
+     * @var bool
+     *
+     * @con_has_field true
+     * @con_fieldtype integer
+     * @con_length    1
+     */
+    protected $unsubscr_from_studyprograms = false;
 	/**
 	 * @var UDFCheck[]
 	 */
@@ -983,6 +1099,21 @@ class UserSetting extends ActiveRecord {
 		return $this->assigned_local_roles;
 	}
 
+    /**
+     * @param boolean $unsign_local_roles
+     */
+    public function setUnsignLocalRoles($unsign_local_roles) {
+        $this->unsign_local_roles = $unsign_local_roles;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function isUnsignLocalRoles() {
+        return $this->unsign_local_roles;
+    }
+
 
 	/**
 	 * @param array $assigned_courses
@@ -1109,6 +1240,19 @@ class UserSetting extends ActiveRecord {
 		return $this->global_roles;
 	}
 
+    /**
+     * @param array $unsign_global_roles
+     */
+    public function setUnsignGlobalRoles($unsign_global_roles) {
+        $this->unsign_global_roles = $unsign_global_roles;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnsignGlobalRoles() {
+        return $this->unsign_global_roles;
+    }
 
 	/**
 	 * @param array $portfolio_assigned_to_groups
@@ -1237,6 +1381,21 @@ class UserSetting extends ActiveRecord {
 		$this->portfolio_name = $portfolio_name;
 	}
 
+    /**
+     * @return string
+     */
+    public function getRemovePortfolio() {
+        return $this->portfolio_name;
+    }
+
+
+    /**
+     * @param string $val
+     */
+    public function setRemovePortfolio($val) {
+        $this->portfolio_name = $val;
+    }
+
 
 	/**
 	 * @return array
@@ -1253,6 +1412,20 @@ class UserSetting extends ActiveRecord {
 		$this->assigned_orgus = $assigned_orgus;
 	}
 
+    /**
+     * @return bool
+     */
+    public function isUnsubscrFromOrgus() {
+        return $this->unsubscr_from_grp;
+    }
+
+    /**
+     * @param bool $state
+     */
+    public function setUnsubscrFromOrgus($state) {
+        $this->unsubscr_from_crs_and_cat = $state;
+    }
+
 
 	/**
 	 * @return array
@@ -1263,12 +1436,25 @@ class UserSetting extends ActiveRecord {
 
 
 	/**
-	 * @param array $assigned_studyprogramms
+	 * @param array $state
 	 */
-	public function setAssignedStudyprograms($assigned_studyprogramms) {
-		$this->assigned_studyprograms = $assigned_studyprogramms;
+	public function setAssignedStudyprograms($state) {
+		$this->unsubscr_from_studyprograms = $state;
 	}
 
+    /**
+     * @return bool
+     */
+    public function isUnsubscrFromStudyprograms() {
+        return $this->unsubscr_from_studyprograms;
+    }
+
+    /**
+     * @param bool $unsubscr_from_grp
+     */
+    public function setUnsubscrFromstudyprograms($unsubscr_from_grp) {
+        $this->unsubscr_from_grp = $unsubscr_from_grp;
+    }
 
 	/**
 	 * @return bool
@@ -1332,7 +1518,7 @@ class UserSetting extends ActiveRecord {
 			$usr_id = $this->getUsrObject()->getId();
 			$orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
 			$orgu_ref_id = array_shift(array_values($orgu_ref_ids));
-			if (!$orgu_ref_id) {
+			if (!$orgu_r7ef_id) {
 				continue;
 			}
 			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
@@ -1342,6 +1528,31 @@ class UserSetting extends ActiveRecord {
 		return true;
 	}
 
+    /**
+     * @return bool
+     */
+    protected function unsubscribeOrgunits() {
+        if (!count($this->getAssignedOrgus())) {
+            return false;
+        }
+
+        foreach ($this->getAssignedOrgus() as $orgu_obj_id) {
+            if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
+                continue;
+            }
+            $usr_id = $this->getUsrObject()->getId();
+            $orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
+            $orgu_ref_id = array_shift(array_values($orgu_ref_ids));
+            if (!$orgu_ref_id) {
+                continue;
+            }
+
+            $orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
+            $orgUnit->deassignUserFromEmployeeRole($usr_id);
+        }
+
+        return true;
+    }
 
 	protected function assignStudyprograms() {
 		if (!count($this->getAssignedStudyprograms())) {
@@ -1366,8 +1577,36 @@ class UserSetting extends ActiveRecord {
 		return true;
 	}
 
+    protected function unsubscribeStudyprograms() {
+        if (!count($this->getAssignedStudyprograms())) {
+            return false;
+        }
+        foreach ($this->getAssignedStudyprograms() as $studyProgramObjId) {
+            if (ilObject2::_lookupType($studyProgramObjId) != 'prg') {
+                continue;
+            }
 
-	/**
+            $usr_id = $this->getUsrObject()->getId();
+
+            $prg_ref_ids = ilObjStudyProgramme::_getAllReferences($studyProgramObjId);
+            $prg_ref_id = array_shift(array_values($prg_ref_ids));
+            if (!$prg_ref_id) {
+                continue;
+            }
+            $studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
+            $assignment = $studyProgram->getAssignmentsOf($usr_id);
+
+            if ($assignment != NULL) {
+                $studyProgram->removeAssignment($assignment);
+            }
+        }
+
+        return true;
+    }
+
+
+
+    /**
 	 * @return UDFCheck[]
 	 */
 	protected function copyDependencies($copy) {

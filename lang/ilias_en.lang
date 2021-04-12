@@ -30,6 +30,11 @@ set_duplicate#:#Duplicate
 set_input_to_desktop#:#MISSING set_input_to_desktop
 set_unsubscribe_courses_and_categories#:#Unsubscribe from the above courses and categories if the condition does not match
 set_unsubscribe_groups#:#Unsubscribe from the above groups if the condition does not match
+set_unsubscribe_local_roles#:#Remove locale roles if condition does not match
+set_unsubscribe_global_roles#:#Remove global roles if condition does not match
+set_unsubscribe_studyprograms#:#Unsubscribe from the above studyprograms if the condition does not match
+set_unsubscribe_orgus#:#Unsubscribe from the above organisation units if the condition does not match
+set_remove_portfolio#:#Remove portfolio if condition does not match
 set_assigned_groups#:#Assign to Group
 set_on_create#:#On Create
 set_on_update#:#On Update

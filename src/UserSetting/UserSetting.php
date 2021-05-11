@@ -1518,7 +1518,7 @@ class UserSetting extends ActiveRecord {
 			$usr_id = $this->getUsrObject()->getId();
 			$orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
 			$orgu_ref_id = array_shift(array_values($orgu_ref_ids));
-			if (!$orgu_r7ef_id) {
+			if (!$orgu_ref_id) {
 				continue;
 			}
 			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);

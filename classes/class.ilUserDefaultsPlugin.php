@@ -134,8 +134,8 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 		$sets = self::$mapping[$a_event];
 
-
-		if ($run === true && $sets && $user instanceof ilObjUser) {
+        // adding orgunits emits an event and ends up in a loop
+		if ($run === true && $sets && $user instanceof ilObjUser && !str_contains($a_component, "Modules/OrgUnit")) {
 			/**
 			 * @var UserSetting $ilUserSetting
 			 */

@@ -181,6 +181,9 @@ if (!\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\sra
 <?php
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
-
+<#26>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>
 
 

@@ -1189,21 +1189,21 @@ class UserSetting extends ActiveRecord {
 	}
 
     /**
+     * @param bool $unsubscr_from_crs_and_cat
+     */
+    public function setUnsubscrfromcrsAndcategoriesDesktop($unsubscr_from_crs_and_cat) {
+        $this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
+    }
+
+    /**
      * @return bool
      */
     public function isUnsubscrfromgrp() {
         return $this->unsubscr_from_grp;
     }
 
-	/**
-	 * @param bool $unsubscr_from_crs_and_cat
-	 */
-	public function setUnsubscrfromcrsAndcategoriesDesktop($unsubscr_from_crs_and_cat) {
-		$this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
-	}
-
     /**
-     * @param bool $unsubscr_from_crs_and_cat
+     * @param bool $unsubscr_from_grp
      */
     public function setUnsubscrfromgrpDesktop($unsubscr_from_grp) {
         $this->unsubscr_from_grp = $unsubscr_from_grp;
@@ -1416,14 +1416,14 @@ class UserSetting extends ActiveRecord {
      * @return bool
      */
     public function isUnsubscrFromOrgus() {
-        return $this->unsubscr_from_grp;
+        return $this->unsubscribe_from_orgus;
     }
 
     /**
      * @param bool $state
      */
     public function setUnsubscrFromOrgus($state) {
-        $this->unsubscr_from_crs_and_cat = $state;
+        $this->unsubscribe_from_orgus = $state;
     }
 
 
@@ -1434,12 +1434,11 @@ class UserSetting extends ActiveRecord {
 		return $this->assigned_studyprograms;
 	}
 
-
 	/**
 	 * @param array $state
 	 */
 	public function setAssignedStudyprograms($state) {
-		$this->unsubscr_from_studyprograms = $state;
+		$this->assigned_studyprograms = $state;
 	}
 
     /**
@@ -1450,10 +1449,10 @@ class UserSetting extends ActiveRecord {
     }
 
     /**
-     * @param bool $unsubscr_from_grp
+     * @param bool $state
      */
-    public function setUnsubscrFromstudyprograms($unsubscr_from_grp) {
-        $this->unsubscr_from_grp = $unsubscr_from_grp;
+    public function setUnsubscrFromstudyprograms($state) {
+        $this->unsubscr_from_studyprograms = $state;
     }
 
 	/**

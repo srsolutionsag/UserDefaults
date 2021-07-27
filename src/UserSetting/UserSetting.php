@@ -1570,7 +1570,10 @@ class UserSetting extends ActiveRecord {
 				continue;
 			}
 			$studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
-			$studyProgram->assignUser($usr_id, 6);
+
+			if ($studyProgram->isActive()) {
+                $studyProgram->assignUser($usr_id, 6);
+            }
 		}
 
 		return true;
@@ -1593,10 +1596,13 @@ class UserSetting extends ActiveRecord {
                 continue;
             }
             $studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
-            $assignment = $studyProgram->getAssignmentsOf($usr_id);
 
-            if ($assignment != NULL) {
-                $studyProgram->removeAssignment($assignment);
+            if ($studyProgram->isActive()) {
+                $assignment = $studyProgram->getAssignmentsOf($usr_id);
+
+                if ($assignment != NULL) {
+                    $studyProgram->removeAssignment($assignment);
+                }
             }
         }
 

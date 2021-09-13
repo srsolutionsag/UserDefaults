@@ -18,6 +18,7 @@ use ilObjPortfolio;
 use ilObjPortfolioTemplate;
 use ilObjStudyProgramme;
 use ilObjUser;
+use ilOrgUnitUserAssignment;
 use ilPersonalSkill;
 use ilPortfolioAccessHandler;
 use ilPortfolioTemplatePage;
@@ -874,6 +875,14 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $assigned_orgus = array();
     /**
+     * @var int
+     *
+     * @con_has_field  true
+     * @con_fieldtype  integer
+     * @con_length     8
+     */
+    protected $assigned_orgu_position = null;
+    /**
      * @var bool
      *
      * @con_has_field true
@@ -1413,6 +1422,21 @@ class UserSetting extends ActiveRecord {
 	}
 
     /**
+     * @return int
+     */
+    public function getAssignedOrguPosition() {
+        return $this->assigned_orgu_position;
+    }
+
+
+    /**
+     * @param int $id
+     */
+    public function setAssignedOrguPosition($id) {
+        $this->assigned_orgu_position = $id;
+    }
+
+    /**
      * @return bool
      */
     public function isUnsubscrFromOrgus() {
@@ -1514,14 +1538,16 @@ class UserSetting extends ActiveRecord {
 			if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
 				continue;
 			}
+
 			$usr_id = $this->getUsrObject()->getId();
 			$orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
 			$orgu_ref_id = array_shift(array_values($orgu_ref_ids));
+			
 			if (!$orgu_ref_id) {
 				continue;
 			}
 			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-			$orgUnit->assignUsersToEmployeeRole(array( $usr_id ));
+			ilOrgUnitUserAssignment::findOrCreateAssignment($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
 		}
 
 		return true;
@@ -1539,15 +1565,18 @@ class UserSetting extends ActiveRecord {
             if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
                 continue;
             }
+
             $usr_id = $this->getUsrObject()->getId();
             $orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
             $orgu_ref_id = array_shift(array_values($orgu_ref_ids));
+
             if (!$orgu_ref_id) {
                 continue;
             }
 
             $orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-            $orgUnit->deassignUserFromEmployeeRole($usr_id);
+            $ua = ilOrgUnitUserAssignment::findOrCreateAssignment($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
+            $ua->delete();
         }
 
         return true;

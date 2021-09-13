@@ -24,6 +24,7 @@ set_deactivate#:#Deactivate
 set_udf_checks#:#Edit UDF-Checks
 set_delete#:#Delete
 set_assigned_orgus#:#Assign to organisational units
+set_assigned_orgu_position#:#organistaional unit position
 set_assigned_studyprograms#:#Register to studyprogram
 set_form_please_choose#:#-- Please choose --
 set_duplicate#:#Duplicate

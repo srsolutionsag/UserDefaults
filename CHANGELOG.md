@@ -1,8 +1,9 @@
 # Changelog
 
 ## [2.0.0]
-- Add ILIAS 7 Support
-- Remove ilias 5.4 Support
+- Add: ILIAS 7 Support
+- Change: Upgrade composer dependencies
+- Remove: ilias 5.4 Support
 
 ## [1.7.9]
 - Feature: Set position of organisation units

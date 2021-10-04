@@ -77,11 +77,15 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		}
 		parent::__construct($title, $post_var);
         $this->multiple = $multiple;
-		self::dic()->mainTemplate()->addJavaScript(self::plugin()->directory() . '/templates/default/multiple_select.js');
-		self::dic()->mainTemplate()->addJavaScript(self::plugin()->directory() . '/lib/select2/select2.min.js');
-		self::dic()->mainTemplate()->addJavaScript(self::plugin()->directory() . '/lib/select2/select2_locale_' . self::dic()->user()
+        /**
+         * @var \ilGlobalTemplateInterface $template
+         */
+        $template = self::dic()->ui()->mainTemplate();
+        $template->addJavaScript(self::plugin()->directory() . '/templates/default/multiple_select.js');
+        $template->addJavaScript(self::plugin()->directory() . '/lib/select2/select2.min.js');
+        $template->addJavaScript(self::plugin()->directory() . '/lib/select2/select2_locale_' . self::dic()->user()
 				->getCurrentLanguage() . '.js');
-		self::dic()->mainTemplate()->addCss(self::plugin()->directory() . '/lib/select2/select2.css');
+        $template->addCss(self::plugin()->directory() . '/lib/select2/select2.css');
 		$this->setWidth('300px');
 	}
 
@@ -162,7 +166,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
         $config->ajax_link = $this->getAjaxLink();
         $config->placeholder = self::plugin()->translate($this->getContainerType() . '_placeholder');
         $config->multiple = (bool) $this->multiple;
-        self::dic()->mainTemplate()->addOnLoadCode(
+        self::dic()->ui()->mainTemplate()->addOnLoadCode(
             'SrMultipleSelect.init("' . $config->id . '", ' . json_encode($config) . ');'
         );
 

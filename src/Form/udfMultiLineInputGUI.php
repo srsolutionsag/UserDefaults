@@ -442,8 +442,8 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI {
 
 
 	public function initCSSandJS() {
-		self::dic()->mainTemplate()->addCss(self::plugin()->directory() . '/templates/default/multi_line_input.css');
-		self::dic()->mainTemplate()->addJavascript(self::plugin()->directory() . '/templates/default/multi_line_input.js');
+		self::dic()->ui()->mainTemplate()->addCss(self::plugin()->directory() . '/templates/default/multi_line_input.css');
+		self::dic()->ui()->mainTemplate()->addJavascript(self::plugin()->directory() . '/templates/default/multi_line_input.js');
 	}
 
 

@@ -11,9 +11,6 @@ use srag\DIC\UserDefaults\DICTrait;
  * Class DateDurationInputGUI
  *
  * @package srag\CustomInputGUIs\UserDefaults\DateDurationInputGUI
- *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
- * @author  Theodor Truffer <tt@studer-raimann.ch>
  */
 class DateDurationInputGUI extends ilDateDurationInputGUI
 {

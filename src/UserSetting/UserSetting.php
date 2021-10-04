@@ -25,14 +25,11 @@ use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use php4DOMDocument;
-use phpDocumentor\Reflection\Types\Object_;
-use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
 use srag\DIC\UserDefaults\DICTrait;
-use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use ilObjCourseGUI;
+use srag\ActiveRecordConfig\UserDefaults\Config\Config;
 
 /**
  * Class ilUserSetting
@@ -251,7 +248,7 @@ class UserSetting extends ActiveRecord {
 		$global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
             if (ilObject2::_lookupType($global_role) == 'role') {
-                self::dic()->rbacadmin()->assignUser($global_role, $this->getUsrObject()->getId());
+                self::dic()->rbac()->admin()->assignUser($global_role, $this->getUsrObject()->getId());
             }
         }
 	}
@@ -267,7 +264,7 @@ class UserSetting extends ActiveRecord {
         $global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
             if (ilObject2::_lookupType($global_role) == 'role') {
-                self::dic()->rbacadmin()->deassignUser($global_role, $this->getUsrObject()->getId());
+                self::dic()->rbac()->admin()->deassignUser($global_role, $this->getUsrObject()->getId());
             }
         }
     }
@@ -283,7 +280,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($local_roles as $local_roles_obj_id) {
-			self::dic()->rbacadmin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+			self::dic()->rbac()->admin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
 		}
 	}
 
@@ -302,7 +299,7 @@ class UserSetting extends ActiveRecord {
         }
 
         foreach ($local_roles as $local_roles_obj_id) {
-            self::dic()->rbacadmin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+            self::dic()->rbac()->admin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
         }
     }
 
@@ -955,7 +952,7 @@ class UserSetting extends ActiveRecord {
 				break;
 			case 'create_date':
 			case 'update_date':
-				return date(ActiveRecordConfig::SQL_DATE_FORMAT, $this->{$field_name});
+				return date(Config::SQL_DATE_FORMAT, $this->{$field_name});
 				break;
 		}
 

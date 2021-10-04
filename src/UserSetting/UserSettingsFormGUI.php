@@ -288,7 +288,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	 * @return array
 	 */
 	protected static function appendRoles(array &$existing_array, $filter) {
-		foreach (self::dic()->rbacreview()->getRolesByFilter($filter) as $role) {
+		foreach (self::dic()->rbac()->review()->getRolesByFilter($filter) as $role) {
 
 			if ($role['obj_id'] == 2) {
 				continue;

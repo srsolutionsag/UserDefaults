@@ -3,7 +3,7 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
-use srag\Plugins\UserDefaults\Config\Config;
+use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\Menu\Menu;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
@@ -19,7 +19,7 @@ use srag\RemovePluginDataConfirm\UserDefaults\PluginUninstallTrait;
  */
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
-	use PluginUninstallTrait;
+    use PluginUninstallTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_ID = 'usrdef';
 	const PLUGIN_NAME = 'UserDefaults';
@@ -176,7 +176,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 		self::dic()->database()->dropTable(UserSetting::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);
-		self::dic()->database()->dropTable(Config::TABLE_NAME, false);
+		self::dic()->database()->dropTable(UserDefaultsConfig::TABLE_NAME, false);
 	}
 
 

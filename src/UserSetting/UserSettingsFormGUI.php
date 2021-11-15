@@ -382,7 +382,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $orguPosSelectVal = (int)$this->getInput(self::F_ASSIGNED_ORGU_POSITION);
         $id = substr($orguPosSelectVal, 0, strpos($orguPosSelectVal, ":"));
         $this->object->setAssignedOrguPosition($orguPosSelectVal);
-        $this->object->setUnsubscrFromOrgus((int)$this->getInput(self::F_ASSIGNED_ORGU_POSITION));
+        $this->object->setUnsubscrFromOrgus((int)$this->getInput(self::F_UNSUBSCRIBE_ORGUS));
 
         $assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
 		$this->object->setAssignedStudyprograms(explode(',', $assigned_studyprograms[0]));

@@ -1597,7 +1597,7 @@ class UserSetting extends ActiveRecord {
 			}
 			$studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
 
-			if ($studyProgram->isActive()) {
+			if ($studyProgram->isActive() && !$studyProgram->hasAssignmentOf($usr_id)) {
                 $studyProgram->assignUser($usr_id, 6);
             }
 		}
@@ -1606,6 +1606,7 @@ class UserSetting extends ActiveRecord {
 	}
 
     protected function unsubscribeStudyprograms() {
+
         if (!count($this->getAssignedStudyprograms())) {
             return false;
         }
@@ -1624,9 +1625,10 @@ class UserSetting extends ActiveRecord {
             $studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
 
             if ($studyProgram->isActive()) {
-                $assignment = $studyProgram->getAssignmentsOf($usr_id);
+                $assignments = $studyProgram->getAssignmentsOf($usr_id);
 
-                if ($assignment != NULL) {
+                if ($assignments != NULL) {
+                    foreach ($assignments as $assignment)
                     $studyProgram->removeAssignment($assignment);
                 }
             }

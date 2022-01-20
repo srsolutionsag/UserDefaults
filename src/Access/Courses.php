@@ -51,6 +51,6 @@ final class Courses {
 	 * @return int[]
 	 */
 	public function getCoursesOfCategory($category_ref_id) {
-		return self::dic()->tree()->getSubTree(self::dic()->tree()->getNodeData($category_ref_id), false, self::TYPE_CRS);
+		return self::dic()->repositoryTree()->getSubTree(self::dic()->repositoryTree()->getNodeData($category_ref_id), false, self::TYPE_CRS);
 	}
 }

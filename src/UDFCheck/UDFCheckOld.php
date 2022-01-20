@@ -4,9 +4,9 @@ namespace srag\Plugins\UserDefaults\UDFCheck;
 
 use ActiveRecord;
 use ilUserDefaultsPlugin;
-use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
 use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
+use srag\ActiveRecordConfig\LiveVoting\Config\Config;
 
 /**
  * Class UDFCheckOld
@@ -425,7 +425,7 @@ class UDFCheckOld extends ActiveRecord {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':
-				return date(ActiveRecordConfig::SQL_DATE_FORMAT, $this->{$field_name});
+				return date(Config::SQL_DATE_FORMAT, $this->{$field_name});
 				break;
 		}
 

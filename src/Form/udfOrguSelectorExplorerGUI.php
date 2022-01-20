@@ -46,7 +46,7 @@ class udfOrguSelectorExplorerGUI extends ilTreeExplorerGUI {
 		$this->selection_gui = is_object($a_selection_gui) ? strtolower(get_class($a_selection_gui)) : strtolower($a_selection_gui);
 		$this->selection_cmd = $a_selection_cmd;
 		$this->selection_par = $a_selection_par;
-		parent::__construct($a_id, $a_parent_obj, $a_parent_cmd, self::dic()->tree());
+		parent::__construct($a_id, $a_parent_obj, $a_parent_cmd, self::dic()->repositoryTree());
 		$this->setSkipRootNode(true);
 		$this->setAjax(true);
 		$this->setOrderField("title");

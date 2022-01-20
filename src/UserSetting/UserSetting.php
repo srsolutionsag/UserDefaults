@@ -18,20 +18,18 @@ use ilObjPortfolio;
 use ilObjPortfolioTemplate;
 use ilObjStudyProgramme;
 use ilObjUser;
+use ilOrgUnitUserAssignment;
 use ilPersonalSkill;
 use ilPortfolioAccessHandler;
 use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use php4DOMDocument;
-use phpDocumentor\Reflection\Types\Object_;
-use srag\ActiveRecordConfig\UserDefaults\ActiveRecordConfig;
 use srag\DIC\UserDefaults\DICTrait;
-use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use ilObjCourseGUI;
+use srag\ActiveRecordConfig\UserDefaults\Config\Config;
 
 /**
  * Class ilUserSetting
@@ -250,7 +248,7 @@ class UserSetting extends ActiveRecord {
 		$global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
             if (ilObject2::_lookupType($global_role) == 'role') {
-                self::dic()->rbacadmin()->assignUser($global_role, $this->getUsrObject()->getId());
+                self::dic()->rbac()->admin()->assignUser($global_role, $this->getUsrObject()->getId());
             }
         }
 	}
@@ -266,7 +264,7 @@ class UserSetting extends ActiveRecord {
         $global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
             if (ilObject2::_lookupType($global_role) == 'role') {
-                self::dic()->rbacadmin()->deassignUser($global_role, $this->getUsrObject()->getId());
+                self::dic()->rbac()->admin()->deassignUser($global_role, $this->getUsrObject()->getId());
             }
         }
     }
@@ -282,7 +280,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($local_roles as $local_roles_obj_id) {
-			self::dic()->rbacadmin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+			self::dic()->rbac()->admin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
 		}
 	}
 
@@ -301,7 +299,7 @@ class UserSetting extends ActiveRecord {
         }
 
         foreach ($local_roles as $local_roles_obj_id) {
-            self::dic()->rbacadmin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+            self::dic()->rbac()->admin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
         }
     }
 
@@ -874,6 +872,14 @@ class UserSetting extends ActiveRecord {
 	 */
 	protected $assigned_orgus = array();
     /**
+     * @var int
+     *
+     * @con_has_field  true
+     * @con_fieldtype  integer
+     * @con_length     8
+     */
+    protected $assigned_orgu_position = null;
+    /**
      * @var bool
      *
      * @con_has_field true
@@ -946,7 +952,7 @@ class UserSetting extends ActiveRecord {
 				break;
 			case 'create_date':
 			case 'update_date':
-				return date(ActiveRecordConfig::SQL_DATE_FORMAT, $this->{$field_name});
+				return date(Config::SQL_DATE_FORMAT, $this->{$field_name});
 				break;
 		}
 
@@ -1189,21 +1195,21 @@ class UserSetting extends ActiveRecord {
 	}
 
     /**
+     * @param bool $unsubscr_from_crs_and_cat
+     */
+    public function setUnsubscrfromcrsAndcategoriesDesktop($unsubscr_from_crs_and_cat) {
+        $this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
+    }
+
+    /**
      * @return bool
      */
     public function isUnsubscrfromgrp() {
         return $this->unsubscr_from_grp;
     }
 
-	/**
-	 * @param bool $unsubscr_from_crs_and_cat
-	 */
-	public function setUnsubscrfromcrsAndcategoriesDesktop($unsubscr_from_crs_and_cat) {
-		$this->unsubscr_from_crs_and_cat = $unsubscr_from_crs_and_cat;
-	}
-
     /**
-     * @param bool $unsubscr_from_crs_and_cat
+     * @param bool $unsubscr_from_grp
      */
     public function setUnsubscrfromgrpDesktop($unsubscr_from_grp) {
         $this->unsubscr_from_grp = $unsubscr_from_grp;
@@ -1413,17 +1419,32 @@ class UserSetting extends ActiveRecord {
 	}
 
     /**
+     * @return int
+     */
+    public function getAssignedOrguPosition() {
+        return $this->assigned_orgu_position;
+    }
+
+
+    /**
+     * @param int $id
+     */
+    public function setAssignedOrguPosition($id) {
+        $this->assigned_orgu_position = $id;
+    }
+
+    /**
      * @return bool
      */
     public function isUnsubscrFromOrgus() {
-        return $this->unsubscr_from_grp;
+        return $this->unsubscribe_from_orgus;
     }
 
     /**
      * @param bool $state
      */
     public function setUnsubscrFromOrgus($state) {
-        $this->unsubscr_from_crs_and_cat = $state;
+        $this->unsubscribe_from_orgus = $state;
     }
 
 
@@ -1434,12 +1455,11 @@ class UserSetting extends ActiveRecord {
 		return $this->assigned_studyprograms;
 	}
 
-
 	/**
 	 * @param array $state
 	 */
 	public function setAssignedStudyprograms($state) {
-		$this->unsubscr_from_studyprograms = $state;
+		$this->assigned_studyprograms = $state;
 	}
 
     /**
@@ -1450,10 +1470,10 @@ class UserSetting extends ActiveRecord {
     }
 
     /**
-     * @param bool $unsubscr_from_grp
+     * @param bool $state
      */
-    public function setUnsubscrFromstudyprograms($unsubscr_from_grp) {
-        $this->unsubscr_from_grp = $unsubscr_from_grp;
+    public function setUnsubscrFromstudyprograms($state) {
+        $this->unsubscr_from_studyprograms = $state;
     }
 
 	/**
@@ -1515,14 +1535,16 @@ class UserSetting extends ActiveRecord {
 			if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
 				continue;
 			}
+
 			$usr_id = $this->getUsrObject()->getId();
 			$orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
 			$orgu_ref_id = array_shift(array_values($orgu_ref_ids));
+			
 			if (!$orgu_ref_id) {
 				continue;
 			}
 			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-			$orgUnit->assignUsersToEmployeeRole(array( $usr_id ));
+			ilOrgUnitUserAssignment::findOrCreateAssignment($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
 		}
 
 		return true;
@@ -1540,15 +1562,18 @@ class UserSetting extends ActiveRecord {
             if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
                 continue;
             }
+
             $usr_id = $this->getUsrObject()->getId();
             $orgu_ref_ids = ilObjOrgUnit::_getAllReferences($orgu_obj_id);
             $orgu_ref_id = array_shift(array_values($orgu_ref_ids));
+
             if (!$orgu_ref_id) {
                 continue;
             }
 
             $orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-            $orgUnit->deassignUserFromEmployeeRole($usr_id);
+            $ua = ilOrgUnitUserAssignment::findOrCreateAssignment($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
+            $ua->delete();
         }
 
         return true;
@@ -1571,13 +1596,17 @@ class UserSetting extends ActiveRecord {
 				continue;
 			}
 			$studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
-			$studyProgram->assignUser($usr_id, 6);
+
+			if ($studyProgram->isActive() && !$studyProgram->hasAssignmentOf($usr_id)) {
+                $studyProgram->assignUser($usr_id, 6);
+            }
 		}
 
 		return true;
 	}
 
     protected function unsubscribeStudyprograms() {
+
         if (!count($this->getAssignedStudyprograms())) {
             return false;
         }
@@ -1594,10 +1623,14 @@ class UserSetting extends ActiveRecord {
                 continue;
             }
             $studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
-            $assignment = $studyProgram->getAssignmentsOf($usr_id);
 
-            if ($assignment != NULL) {
-                $studyProgram->removeAssignment($assignment);
+            if ($studyProgram->isActive()) {
+                $assignments = $studyProgram->getAssignmentsOf($usr_id);
+
+                if ($assignments != NULL) {
+                    foreach ($assignments as $assignment)
+                    $studyProgram->removeAssignment($assignment);
+                }
             }
         }
 

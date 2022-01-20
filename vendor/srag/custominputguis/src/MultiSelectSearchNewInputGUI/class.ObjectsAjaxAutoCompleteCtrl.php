@@ -2,14 +2,14 @@
 
 namespace srag\CustomInputGUIs\UserDefaults\MultiSelectSearchNewInputGUI;
 
+require_once __DIR__ . "/../../../../autoload.php";
+
 use ilDBConstants;
 
 /**
  * Class ObjectsAjaxAutoCompleteCtrl
  *
  * @package srag\CustomInputGUIs\UserDefaults\MultiSelectSearchNewInputGUI
- *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
 class ObjectsAjaxAutoCompleteCtrl extends AbstractAjaxAutoCompleteCtrl
 {

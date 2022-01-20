@@ -1,6 +1,26 @@
 # Changelog
+
+## [2.0.0]
+- Add: ILIAS 7 Support
+- Change: Upgrade composer dependencies
+- Remove: ilias 5.4 Support
+
+## [1.7.9]
+- Feature: Set position of organisation units
+
+## [1.7.8]
+- Bugfix: Unsubscribe from groups
+
+## [1.7.7]
+- Feature: Unsubscribe from local roles
+- Feature: Unsubscribe from global roles
+- Feature: Unsubscribe from studyprograms
+- Feature: Unsubscribe from organisation units
+- Feature: Remove protfolio
+
 ## [1.7.6]
 - Feature: Unsubscribe from groups option
+
 ## [1.7.5]
 - Remove assign to group and put group on desktop
 - Remove assign to course and put course on desktop

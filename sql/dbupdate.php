@@ -47,7 +47,7 @@ foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSet
 ?>
 <#10>
 <?php
-\srag\Plugins\UserDefaults\Config\Config::updateDB();
+\srag\Plugins\UserDefaults\Config\UserDefaultsConfig::updateDB();
 ?>
 <#11>
 <?php
@@ -181,6 +181,11 @@ if (!\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\sra
 <?php
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
-
-
-
+<#26>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>
+<#27>
+<?php
+\srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
+?>

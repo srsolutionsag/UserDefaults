@@ -3,7 +3,7 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use srag\DIC\UserDefaults\DICTrait;
-use srag\Plugins\UserDefaults\Config\Config;
+use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\UserSetting\UserSettingsFormGUI;
@@ -230,7 +230,7 @@ class UserSettingsGUI {
         $with_members = (bool) filter_input(INPUT_GET, "with_members");
         $with_empty = (bool) filter_input(INPUT_GET, "with_empty");
 
-		$category_ref_id = Config::getField(Config::KEY_CATEGORY_REF_ID);
+		$category_ref_id = UserDefaultsConfig::getField(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
 
 		if (!empty($category_ref_id)) {
 			$courses = self::ilias()->courses()->getCoursesOfCategory($category_ref_id);
@@ -263,7 +263,7 @@ class UserSettingsGUI {
 		    $title = $row["title"];
 		    if ($with_parent) {
 		        $ref_id = array_shift(ilObject::_getAllReferences($row["obj_id"]));
-		        $title = ilObject::_lookupTitle(ilObject::_lookupObjectId(self::dic()->tree()->getParentId($ref_id))) . ' » ' . $title;
+		        $title = ilObject::_lookupTitle(ilObject::_lookupObjectId(self::dic()->repositoryTree()->getParentId($ref_id))) . ' » ' . $title;
             }
 		    if ($with_members && $type == 'grp') {
                 $group = new ilObjGroup($row['obj_id'], false);
@@ -280,7 +280,7 @@ class UserSettingsGUI {
 	 *
 	 */
 	protected function searchLocalRoles() {
-		$local_roles = self::dic()->rbacreview()->getRolesByFilter(ilRbacReview::FILTER_NOT_INTERNAL);
+		$local_roles = self::dic()->rbac()->review()->getRolesByFilter(ilRbacReview::FILTER_NOT_INTERNAL);
 
 		$return_local_roles = array();
 		foreach($local_roles as $local_role) {
@@ -301,7 +301,7 @@ class UserSettingsGUI {
 	 *
 	 */
 	protected function searchGlobalRoles() {
-		$global_roles = self::dic()->rbacreview()->getRolesByFilter(ilRbacReview::FILTER_ALL_GLOBAL);
+		$global_roles = self::dic()->rbac()->review()->getRolesByFilter(ilRbacReview::FILTER_ALL_GLOBAL);
 
 		$return_global_roles = array();
 		foreach($global_roles as $global_role) {
@@ -325,7 +325,7 @@ class UserSettingsGUI {
 		$term = filter_input(INPUT_GET, "term");
 		$type = filter_input(INPUT_GET, "container_type");
 
-		$category_ref_id = Config::getField(Config::KEY_CATEGORY_REF_ID);
+		$category_ref_id = UserDefaultsConfig::getField(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
 
 		if (!empty($category_ref_id)) {
 			$categories = self::ilias()->categories()->getCategoriesOfCategory($category_ref_id);

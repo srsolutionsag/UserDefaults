@@ -5,6 +5,7 @@ namespace srag\Plugins\UserDefaults\UserSetting;
 use ilCheckboxInputGUI;
 use ilFormSectionHeaderGUI;
 use ilObjPortfolioTemplate;
+use ilOrgUnitPosition;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
@@ -57,6 +58,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
     const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
 	const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
 	const F_ASSIGNED_ORGUS = 'assigned_orgus';
+    const F_ASSIGNED_ORGU_POSITION = 'assigned_orgu_position';
     const F_UNSUBSCRIBE_ORGUS = 'unsubscribe_orgus';
     const F_ASSIGNED_STUDYPROGRAMS = 'assigned_studyprograms';
     const F_UNSUBSCRIBE_STUDYPROGRAMS = 'unsubscribe_studyprograms';
@@ -77,6 +79,10 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $object;
 
+    /**
+     * @var array
+     */
+	private $orguPositions;
 
 	/**
 	 * @param UserSettingsGUI $parent_gui
@@ -249,6 +255,18 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$ilOrgUnitMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilOrgUnitMultiSelectInputGUI);
 
+		$selectOrguPosition = new ilSelectInputGUI($this->txt(self::F_ASSIGNED_ORGU_POSITION), self::F_ASSIGNED_ORGU_POSITION);
+        $this->orguPositions = ilOrgUnitPosition::get();
+		$optionPosis = array_map(function($pos) {
+            return $pos->getId() . ": " . $pos->getTitle();
+        }, $this->orguPositions);
+
+		$selectOrguPosition->setOptions($optionPosis);
+        if (!is_null($this->object->getAssignedOrguPosition())) {
+            $selectOrguPosition->setDisabled(true);
+        }
+		$this->addItem($selectOrguPosition);
+
         $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_ORGUS), self::F_UNSUBSCRIBE_ORGUS);
         $this->addItem($ilCheckboxInputGUI);
 
@@ -270,7 +288,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	 * @return array
 	 */
 	protected static function appendRoles(array &$existing_array, $filter) {
-		foreach (self::dic()->rbacreview()->getRolesByFilter($filter) as $role) {
+		foreach (self::dic()->rbac()->review()->getRolesByFilter($filter) as $role) {
 
 			if ($role['obj_id'] == 2) {
 				continue;
@@ -287,6 +305,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	public function fillForm() {
 	    $assigned_groups_queue = array_map(function($e){return ['obj_id' => $e];},$this->object->getAssignedGroupsQueue());
 	    $assigned_groups_queue = array_values($assigned_groups_queue);
+        $assignedOrguPosition = $this->object->getAssignedOrguPosition();
+        $selectOrguPosVal = current(array_filter($this->orguPositions, function ($pos) use($assignedOrguPosition) { return $pos->getId() == $assignedOrguPosition; }));
         $array = array(
             self::F_TITLE                              => $this->object->getTitle(),
             self::F_DESCRIPTION                        => $this->object->getDescription(),
@@ -302,13 +322,14 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
             self::F_ASSIGNED_GROUPS_QUEUE_DESKTOP      => $this->object->isGroupsQueueDesktop(),
             self::F_ASSIGNED_GROUPS_QUEUE_TYPE         => $this->object->isGroupsQueueParallel(),
             self::F_GLOBAL_ROLES                       => $this->object->getGlobalRoles(),
-            self::F_UNSIGN_GLOBAL_ROLES                 => $this->object->isUnsignGlobalRoles(),
+            self::F_UNSIGN_GLOBAL_ROLES                => $this->object->isUnsignGlobalRoles(),
             self::F_PORTFOLIO_TEMPLATE_ID              => $this->object->getPortfolioTemplateId(),
             self::F_PORTFOLIO_ASSIGNED_TO_GROUPS       => implode(',', $this->object->getPortfolioAssignedToGroups()),
             self::F_BLOG_NAME                          => $this->object->getBlogName(),
             self::F_PORTFOLIO_NAME                     => $this->object->getPortfolioName(),
             self::F_REMOVE_PORTFOLIO                   => $this->object->getRemovePortfolio(),
             self::F_ASSIGNED_ORGUS                     => implode(',', $this->object->getAssignedOrgus()),
+            self::F_ASSIGNED_ORGU_POSITION             => gettype($selectOrguPosVal) === "object" ? $selectOrguPosVal->getId() : false,
             self::F_UNSUBSCRIBE_ORGUS                  => $this->object->isUnsubscrFromOrgus(),
             self::F_ASSIGNED_STUDYPROGRAMS             => implode(',', $this->object->getAssignedStudyprograms()),
             self::F_UNSUBSCRIBE_STUDYPROGRAMS          => $this->object->isUnsubscrFromStudyprograms(),
@@ -357,7 +378,11 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 
         $assigned_orgus = $this->getInput(self::F_ASSIGNED_ORGUS);
         $this->object->setAssignedOrgus(explode(',', $assigned_orgus[0]));
-        $this->object->setUnsubscrFromOrgus($this->getInput(self::F_UNSUBSCRIBE_ORGUS));
+
+        $orguPosSelectVal = (int)$this->getInput(self::F_ASSIGNED_ORGU_POSITION);
+        $id = substr($orguPosSelectVal, 0, strpos($orguPosSelectVal, ":"));
+        $this->object->setAssignedOrguPosition($orguPosSelectVal);
+        $this->object->setUnsubscrFromOrgus((int)$this->getInput(self::F_UNSUBSCRIBE_ORGUS));
 
         $assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
 		$this->object->setAssignedStudyprograms(explode(',', $assigned_studyprograms[0]));

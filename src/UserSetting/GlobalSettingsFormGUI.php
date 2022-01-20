@@ -6,7 +6,7 @@ use ilNumberInputGUI;
 use ilPropertyFormGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\UserDefaults\DICTrait;
-use srag\Plugins\UserDefaults\Config\Config;
+use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserDefaultsGlobalSettingsGUI;
 
@@ -52,9 +52,9 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 
 		$this->addCommandButton(UserDefaultsGlobalSettingsGUI::CMD_UPDATE_CONFIGURE, self::plugin()->translate("save"));
 
-		$category_ref_id = new ilNumberInputGUI(self::plugin()->translate(Config::KEY_CATEGORY_REF_ID), Config::KEY_CATEGORY_REF_ID);
-		$category_ref_id->setInfo(self::plugin()->translate(Config::KEY_CATEGORY_REF_ID . "_info"));
-		$category_ref_id->setValue(Config::getField(Config::KEY_CATEGORY_REF_ID));
+		$category_ref_id = new ilNumberInputGUI(self::plugin()->translate(UserDefaultsConfig::KEY_CATEGORY_REF_ID), UserDefaultsConfig::KEY_CATEGORY_REF_ID);
+		$category_ref_id->setInfo(self::plugin()->translate(UserDefaultsConfig::KEY_CATEGORY_REF_ID . "_info"));
+		$category_ref_id->setValue(UserDefaultsConfig::getField(UserDefaultsConfig::KEY_CATEGORY_REF_ID));
 		$this->addItem($category_ref_id);
 	}
 
@@ -63,7 +63,7 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 	 *
 	 */
 	public function updateConfigure() {
-		$category_ref_id = $this->getInput(Config::KEY_CATEGORY_REF_ID);
-		Config::setField(Config::KEY_CATEGORY_REF_ID, $category_ref_id);
+		$category_ref_id = $this->getInput(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
+		UserDefaultsConfig::setField(UserDefaultsConfig::KEY_CATEGORY_REF_ID, $category_ref_id);
 	}
 }

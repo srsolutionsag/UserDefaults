@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "694f0c508dab4c16db8217b03963b2e7",
+    "content-hash": "6507ecb9d5f00a775a993c1fa0bed0c3",
     "packages": [
         {
             "name": "srag/activerecordconfig",
@@ -37,7 +37,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "srag\\ActiveRecordConfig\\UserDefaults\\": "src/"
+                    "srag\\ActiveRecordConfig\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -59,6 +59,9 @@
                 "activerecord",
                 "config"
             ],
+            "support": {
+                "source": "https://github.com/fluxapps/ActiveRecordConfig/tree/v0.21.1"
+            },
             "time": "2021-07-20T08:32:29+00:00"
         },
         {
@@ -91,7 +94,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "srag\\CustomInputGUIs\\UserDefaults\\": "src/"
+                    "srag\\CustomInputGUIs\\": "src/"
                 },
                 "classmap": [
                     "src/MultiSelectSearchNewInputGUI/class.ObjectChildrenAjaxAutoCompleteCtrl.php",
@@ -121,20 +124,23 @@
                 "input",
                 "table"
             ],
+            "support": {
+                "source": "https://github.com/fluxapps/CustomInputGUIs/tree/v0.43.2"
+            },
             "time": "2021-08-31T08:50:12+00:00"
         },
         {
             "name": "srag/dic",
-            "version": "0.33.2",
+            "version": "0.34.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fluxapps/DIC.git",
-                "reference": "a3b217ecba4964b7dc71ed332c503d35edfc78fe"
+                "reference": "d07315f7303e82982f78cdecce5f5aa83205a9e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fluxapps/DIC/zipball/a3b217ecba4964b7dc71ed332c503d35edfc78fe",
-                "reference": "a3b217ecba4964b7dc71ed332c503d35edfc78fe",
+                "url": "https://api.github.com/repos/fluxapps/DIC/zipball/d07315f7303e82982f78cdecce5f5aa83205a9e4",
+                "reference": "d07315f7303e82982f78cdecce5f5aa83205a9e4",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +158,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "srag\\DIC\\UserDefaults\\": "src/"
+                    "srag\\DIC\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -175,7 +181,10 @@
                 "globals",
                 "trait"
             ],
-            "time": "2021-07-20T11:49:07+00:00"
+            "support": {
+                "source": "https://github.com/fluxapps/DIC/tree/v0.34.1"
+            },
+            "time": "2022-03-17T09:36:38+00:00"
         },
         {
             "name": "srag/librariesnamespacechanger",
@@ -222,6 +231,10 @@
                 "libraries",
                 "namespace"
             ],
+            "support": {
+                "source": "https://github.com/fluxapps/LibrariesNamespaceChanger/tree/v0.16.1"
+            },
+            "abandoned": "https://github.com/flux-eco/flux-namespace-changer",
             "time": "2021-07-20T08:31:26+00:00"
         },
         {
@@ -254,7 +267,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "srag\\LibraryLanguageInstaller\\UserDefaults\\": "src/"
+                    "srag\\LibraryLanguageInstaller\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -277,6 +290,9 @@
                 "language",
                 "library"
             ],
+            "support": {
+                "source": "https://github.com/fluxapps/LibraryLanguageInstaller/tree/v1.2.1"
+            },
             "time": "2021-07-20T08:31:18+00:00"
         },
         {
@@ -310,7 +326,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "srag\\RemovePluginDataConfirm\\UserDefaults\\": "src/"
+                    "srag\\RemovePluginDataConfirm\\": "src/"
                 },
                 "classmap": [
                     "src/class.RemovePluginDataConfirmCtrl.php"
@@ -337,6 +353,9 @@
                 "plugin",
                 "uninstall"
             ],
+            "support": {
+                "source": "https://github.com/fluxapps/RemovePluginDataConfirm/tree/v0.8.1"
+            },
             "time": "2021-07-20T08:30:56+00:00"
         }
     ],
@@ -347,10 +366,10 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-dom": "*",
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf1ca73e5dff97b87cd234c419013b72f
+class ComposerStaticInite4e194e8b14c7471adf365b41e191675
 {
     public static $prefixLengthsPsr4 = array (
         's' => 
@@ -51,6 +51,7 @@ class ComposerStaticInitf1ca73e5dff97b87cd234c419013b72f
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'UDFCheckGUI' => __DIR__ . '/../..' . '/classes/UDFCheck/class.UDFCheckGUI.php',
         'UserDefaultsGlobalSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserDefaultsGlobalSettingsGUI.php',
         'UserSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserSettingsGUI.php',
@@ -168,9 +169,9 @@ class ComposerStaticInitf1ca73e5dff97b87cd234c419013b72f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf1ca73e5dff97b87cd234c419013b72f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf1ca73e5dff97b87cd234c419013b72f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitf1ca73e5dff97b87cd234c419013b72f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite4e194e8b14c7471adf365b41e191675::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite4e194e8b14c7471adf365b41e191675::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInite4e194e8b14c7471adf365b41e191675::$classMap;
 
         }, null, ClassLoader::class);
     }

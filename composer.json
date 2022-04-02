@@ -1,12 +1,12 @@
 {
-  "name": "srag-plugins/userdefaults",
-  "description": "",
-  "version": "2.0.0",
-  "type": "library",
+  "name": "fluxapp/user-defaults",
+  "description": "ILIAS UserDefaults Plugin",
+  "version": "2.1.0",
+  "type": "plugin",
   "keywords": [
-    "ILIAS",
-    "Plugin",
-    "UserDefaults"
+    "ilias",
+    "fluxlabs",
+    "user-defaults"
   ],
   "license": "GPL-3.0-only",
   "authors": [
@@ -14,14 +14,14 @@
       "name": "fluxlabs ag - lab burgdorf",
       "email": "support@fluxlabs.ch",
       "homepage": "https://fluxlabs.ch",
-      "role": "Developer"
+      "role": "Developer, Maintainer"
     }
   ],
   "support": {
-    "issues": "https://plugins.studer-raimann.ch/goto.php?target=uihk_srsu_PLUSERDEFAULTS"
+    "issues": "https://git.fluxlabs.ch"
   },
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.4",
     "ext-dom": "*",
     "ext-json": "*",
     "srag/activerecordconfig": ">=0.1.0",
@@ -44,8 +44,7 @@
   },
   "scripts": {
     "pre-autoload-dump": [
-      "srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger::rewriteLibrariesNamespaces",
-      "srag\\LibrariesNamespaceChanger\\PHP72Backport::PHP72Backport"
+      "srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger::rewriteLibrariesNamespaces"
     ]
   }
 }

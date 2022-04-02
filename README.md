@@ -11,6 +11,13 @@ git clone https://github.com/fluxapps/UserDefaults.git UserDefaults
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.
 
+## ILIAS 7 core ilCtrl patch
+For make this plugin work with ilCtrl in ILIAS 7, you may need to patch the core, before you update the plugin (At your own risk)
+
+Start at the plugin directory
+
+./vendor/srag/dic/bin/ilias7_core_apply_ilctrl_patch.sh
+
 ## Contributing :purple_heart:
 Please ...
 1. ... register an account at https://git.fluxlabs.ch

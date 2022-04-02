@@ -59,20 +59,23 @@ class UserSetting extends ActiveRecord {
 		self::P_USER_EMAIL,
 	);
 
+    /**
+     * @throws \arException
+     * @deprecated
+     */
+    public static function returnDbTableName()
+    {
+        return self::TABLE_NAME;
+    }
 
-	/**
+    public static function getTableName() : string {
+        return self::TABLE_NAME;
+    }
+
+    /**
 	 * @return string
 	 */
 	public function getConnectorContainerName() {
-		return self::TABLE_NAME;
-	}
-
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	public static function returnDbTableName() {
 		return self::TABLE_NAME;
 	}
 

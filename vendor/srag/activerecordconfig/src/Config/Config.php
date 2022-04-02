@@ -49,10 +49,7 @@ class Config extends ActiveRecord
      * @var int
      */
     const TYPE_TIMESTAMP = 5;
-    /**
-     * @var string
-     */
-    protected static $table_name;
+
     /**
      * @var string
      *
@@ -85,26 +82,6 @@ class Config extends ActiveRecord
     }
 
 
-    /**
-     * @return string
-     */
-    public static function getTableName() : string
-    {
-        if (empty(self::$table_name)) {
-            throw new LogicException("table name is empty - please call repository earlier!");
-        }
-
-        return self::$table_name;
-    }
-
-
-    /**
-     * @param string $table_name
-     */
-    public static function setTableName(string $table_name) : void
-    {
-        self::$table_name = $table_name;
-    }
 
 
     /**

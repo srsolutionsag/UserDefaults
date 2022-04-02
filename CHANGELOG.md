@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.1.0]
+- Change: Upgrade composer dependencies
+- Change: Refactored UserDefaultsConfig
+- Change: Added publish-utils
+
 ## [2.0.0]
 - Add: ILIAS 7 Support
 - Change: Upgrade composer dependencies

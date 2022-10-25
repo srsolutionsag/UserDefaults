@@ -22,7 +22,7 @@ Start at the plugin directory
 
 fluxlabs ag, support@fluxlabs.ch
 
-This project needs a proof of concept.
+This project needs to be rebuilt before it can be maintained.
 
-Would you like to participate?
-Take advantage of the crowdfunding opportunity under [discussions](https://github.com/fluxapps/UserDefaults/discussions/1).
+Are you interested in a rebuild and would you like to participate?
+Take advantage of the crowdfunding opportunity under [discussions](https://github.com/fluxapps/UserDefaults/discussions/7).

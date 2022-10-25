@@ -18,7 +18,11 @@ Start at the plugin directory
 
 ./vendor/srag/dic/bin/ilias7_core_apply_ilctrl_patch.sh
 
-## Maintenance
+## Rebuild & Maintenance
+
 fluxlabs ag, support@fluxlabs.ch
 
-This project is maintained by fluxlabs. 
+This project needs a proof of concept.
+
+Would you like to participate?
+Take advantage of the crowdfunding opportunity under [discussions](https://github.com/fluxapps/UserDefaults/discussions/1).

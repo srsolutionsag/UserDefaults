@@ -1,5 +1,16 @@
 # Changelog
 
+## latest
+
+Changes:
+
+\-
+
+## v2023-02-16-1
+
+Changes:
+- fix problems with current version of CascadeSelect
+
 ## [2.1.0]
 - Change: Upgrade composer dependencies
 - Change: Refactored UserDefaultsConfig

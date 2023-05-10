@@ -30,6 +30,7 @@ use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use srag\ActiveRecordConfig\UserDefaults\Config\Config;
+use ilRbacReview;
 
 /**
  * Class ilUserSetting
@@ -388,7 +389,6 @@ class UserSetting extends ActiveRecord {
         if (!$this->isUnsubscrfromgrp()) {
             return;
         }
-
         $groups = $this->getAssignedGroupes();
         if (count($groups) === 0) {
             return;
@@ -398,12 +398,20 @@ class UserSetting extends ActiveRecord {
             if ($id === "" || ilObject2::_lookupType($id) !== "grp") {
                 continue;
             }
-
+	    $skip=false;
             $part = ilGroupParticipants::_getInstanceByObjId($id);
-            $usr_id = $this->getUsrObject()->getId();
-            if (!$part->isMember($usr_id)) {
+	    $usr_id = $this->getUsrObject()->getId();
+	    $reference=array_shift(ilObject2::_getAllReferences($id));
+	    $member_roles = (ilGroupParticipants::getMemberRoles($reference));
+	    foreach ($member_roles as $member_role) {
+	    	if (ilRbacReview::isAssigned($usr_id,$member_role)) {
+		     $skip=true;    
+	    	}
+	    }
+	    if ((!$part->isMember($usr_id)) OR ($skip)) {
                 continue;
-            }
+	    }
+	    
             $added = $part->deleteParticipants(array( $usr_id ));
         }
     }

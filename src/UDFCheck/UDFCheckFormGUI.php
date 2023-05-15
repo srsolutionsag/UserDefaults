@@ -242,7 +242,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 					if (self::isCustomUserFieldsHelperAvailable()) {
 						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
 						if ($plugin instanceof ilUDFDefinitionPlugin) {
-							$select_gui = $plugin->getFormPropertyForDefinition($definition,true,null,true);
+							$select_gui = $plugin->getFormPropertyForDefinition($definition, true, null, true);
 							$check_values = [];
 							foreach ($select_gui->getColumnDefinition() as $key => $name) {
 								$check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);

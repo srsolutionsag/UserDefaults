@@ -18,15 +18,18 @@ Start at the plugin directory
 
 ./vendor/srag/dic/bin/ilias7_core_apply_ilctrl_patch.sh
 
-## Contributing :purple_heart:
-Please ...
-1. ... register an account at https://git.fluxlabs.ch
-2. ... write us an email: support@fluxlabs.ch
-3. ... we give you access to the projects you like to contribute :fire:
+## Rebuild & Maintenance
 
+fluxlabs ag, support@fluxlabs.ch
 
-## Adjustment suggestions / bug reporting :feet:
-Please ...
-1. ... register an account at https://git.fluxlabs.ch
-2. ... ask us for a sla: support@fluxlabs.ch :kissing_heart:
-3. ... we will give you the access with the possibility to read and create issues or to discuss feature requests with us.
+This project needs to be rebuilt before it can be maintained.
+
+Are you interested in a rebuild and would you like to participate?
+Take advantage of the crowdfunding opportunity under [discussions](https://github.com/fluxapps/UserDefaults/discussions/7).
+
+## About fluxlabs plugins
+
+Please also have a look at our other key projects and their [MAINTENANCE](https://github.com/fluxapps/docs/blob/8ce4309b0ac64c039d29204c2d5b06723084c64b/assets/MAINTENANCE.png).
+
+The plugins that require a rebuild and the costs are listed here: [REBUILDS](https://github.com/fluxapps/docs/blob/8ce4309b0ac64c039d29204c2d5b06723084c64b/assets/REBUILDS.png)
+

@@ -149,7 +149,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 
 
 
-							$select_gui = $plugin->getFormPropertyForDefinition($definition);
+							$select_gui = $plugin->getFormPropertyForDefinition($definition,true,null,true);
 
 							$check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);
 
@@ -157,6 +157,10 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 							$check_radio->addOption($check_radio_text);
 
 							foreach ($select_gui->getColumnDefinition() as $key => $name) {
+								if (is_array($name)) {
+									$name=$name["name"]." ( ".$name["default"]." ) ";
+								}
+
 								$text_gui = new ilTextInputGUI($name, self::F_CHECK_VALUE_MUL . $key);
 								$check_radio_text->addSubItem($text_gui);
 							}
@@ -235,7 +239,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 					if (self::isCustomUserFieldsHelperAvailable()) {
 						$plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
 						if ($plugin instanceof ilUDFDefinitionPlugin) {
-							$select_gui = $plugin->getFormPropertyForDefinition($definition);
+							$select_gui = $plugin->getFormPropertyForDefinition($definition,true,null,true);
 							$check_values = [];
 							foreach ($select_gui->getColumnDefinition() as $key => $name) {
 								$check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);

@@ -11,6 +11,8 @@ use ilExSubmission;
 use ilGroupParticipants;
 use ilObjCourse;
 use ilObject2;
+
+//use ilObject;
 use ilObjExercise;
 use ilObjGroup;
 use ilObjOrgUnit;
@@ -398,21 +400,16 @@ class UserSetting extends ActiveRecord {
             if ($id === "" || ilObject2::_lookupType($id) !== "grp") {
                 continue;
             }
-	    $skip=false;
-            $part = ilGroupParticipants::_getInstanceByObjId($id);
 	    $usr_id = $this->getUsrObject()->getId();
 	    $reference=array_shift(ilObject2::_getAllReferences($id));
-	    $member_roles = (ilGroupParticipants::getMemberRoles($reference));
-	    foreach ($member_roles as $member_role) {
-	    	if (ilRbacReview::isAssigned($usr_id,$member_role)) {
-		     $skip=true;    
-	    	}
+	    $groupRoles = self::dic()->rbac()->review()->getRolesOfRoleFolder($reference);
+	    foreach ($groupRoles as $grouprole) {
+		    if (ilObject2::_lookupTitle($grouprole) == 'il_grp_member_'.$reference) {
+			    $memberRole = $grouprole;
+	    		    self::dic()->rbac()->admin()->deassignUser($memberRole,$usr_id);
+			    continue;
+		    }
 	    }
-	    if ((!$part->isMember($usr_id)) OR ($skip)) {
-                continue;
-	    }
-	    
-            $added = $part->deleteParticipants(array( $usr_id ));
         }
     }
 

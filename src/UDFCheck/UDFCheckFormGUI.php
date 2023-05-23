@@ -160,10 +160,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 								if (is_array($name)) {
 									$name=$name["name"]." ( ".$name["default"]." ) ";
 								}
-<<<<<<< HEAD
 
-=======
->>>>>>> 1fe7e4d45f1ad74ce26743803381cc8261435961
 								$text_gui = new ilTextInputGUI($name, self::F_CHECK_VALUE_MUL . $key);
 								$check_radio_text->addSubItem($text_gui);
 							}

@@ -6,6 +6,11 @@ Changes:
 
 \-
 
+## v2023-05-30-1
+Fixes
+- https://github.com/fluxapps/UserDefaults/issues/9
+- adjustments cascade select
+
 ## v2023-02-16-1
 
 Changes:

@@ -40,7 +40,7 @@ final class Output implements OutputInterface
             foreach ($value as $gui) {
                 $html .= $this->getHTML($gui);
             }
-        } else {
+	} else {
             switch (true) {
                 // HTML
                 case (is_string($value)):
@@ -67,7 +67,7 @@ final class Output implements OutputInterface
                     $html = $value->render();
                     break;
                 case method_exists($value, "getHTML"):
-                    $html = $value->getHTML();
+		    $html = $value->getHTML();
                     break;
 
                 // Template instance

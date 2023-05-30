@@ -11,6 +11,8 @@ use ilExSubmission;
 use ilGroupParticipants;
 use ilObjCourse;
 use ilObject2;
+
+//use ilObject;
 use ilObjExercise;
 use ilObjGroup;
 use ilObjOrgUnit;
@@ -30,6 +32,7 @@ use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use srag\ActiveRecordConfig\UserDefaults\Config\Config;
+use ilRbacReview;
 
 /**
  * Class ilUserSetting
@@ -388,7 +391,6 @@ class UserSetting extends ActiveRecord {
         if (!$this->isUnsubscrfromgrp()) {
             return;
         }
-
         $groups = $this->getAssignedGroupes();
         if (count($groups) === 0) {
             return;
@@ -398,13 +400,16 @@ class UserSetting extends ActiveRecord {
             if ($id === "" || ilObject2::_lookupType($id) !== "grp") {
                 continue;
             }
-
-            $part = ilGroupParticipants::_getInstanceByObjId($id);
-            $usr_id = $this->getUsrObject()->getId();
-            if (!$part->isMember($usr_id)) {
-                continue;
-            }
-            $added = $part->deleteParticipants(array( $usr_id ));
+	    $usr_id = $this->getUsrObject()->getId();
+	    $reference=array_shift(ilObject2::_getAllReferences($id));
+	    $groupRoles = self::dic()->rbac()->review()->getRolesOfRoleFolder($reference);
+	    foreach ($groupRoles as $grouprole) {
+		    if (ilObject2::_lookupTitle($grouprole) == 'il_grp_member_'.$reference) {
+			    $memberRole = $grouprole;
+	    		    self::dic()->rbac()->admin()->deassignUser($memberRole,$usr_id);
+			    continue;
+		    }
+	    }
         }
     }
 

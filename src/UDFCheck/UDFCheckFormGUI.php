@@ -38,18 +38,9 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 	const F_CHECK_RADIO = 'check_radio';
 	const F_CHECK_TEXT = 'check_text';
 	const F_CHECK_SELECT = 'check_select';
-	/**
-	 * @var UserSettingsGUI
-	 */
-	protected $parent_gui;
-	/**
-	 * @var UDFCheck
-	 */
-	protected $object;
-	/**
-	 * @var bool
-	 */
-	protected $is_new = true;
+	protected UserSettingsGUI|UDFCheckGUI $parent_gui;
+	protected ?UDFCheck $object;
+	protected bool $is_new = true;
 
 
 	/**
@@ -70,21 +61,13 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->initForm();
 	}
 
-
-	/**
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	protected function txt($key) {
+	protected function txt(string $key): string
+    {
 		return self::plugin()->translate($key, 'check');
 	}
 
-
-	/**
-	 *
-	 */
-	protected function initForm() {
+	protected function initForm(): void
+    {
 		$this->setTitle(self::plugin()->translate('form_title'));
 
 		$categories_radio = new ilRadioGroupInputGUI($this->txt(self::F_UDF_FIELD_CATEGORY), self::F_UDF_FIELD_CATEGORY);
@@ -182,11 +165,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->addCommandButtons();
 	}
 
-
-	/**
-	 *
-	 */
-	public function fillForm() {
+	public function fillForm(): void
+    {
 		if (!$this->is_new) {
 			$array = [
 				self::F_UDF_FIELD_KEY . "_" . $this->object->getFieldCategory() => $this->object->getFieldKey(),
@@ -220,11 +200,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->setValuesByArray($array);
 	}
 
-
-	/**
-	 * @return bool
-	 */
-	public function saveObject() {
+	public function saveObject(): bool
+    {
 		if (!$this->checkInput()) {
 			return false;
 		}
@@ -266,11 +243,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		return $this->object->getId();
 	}
 
-
-	/**
-	 *
-	 */
-	protected function addCommandButtons() {
+	protected function addCommandButtons(): void
+    {
 		if (!$this->is_new) {
 			$this->addCommandButton(UDFCheckGUI::CMD_UPDATE, self::plugin()->translate('form_button_update'));
 		} else {
@@ -279,11 +253,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI {
 		$this->addCommandButton(UDFCheckGUI::CMD_CANCEL, self::plugin()->translate('form_button_cancel'));
 	}
 
-
-	/**
-	 * @return UDFCheck
-	 */
-	public function getObject() {
+	public function getObject(): ?UDFCheck
+    {
 		return $this->object;
 	}
 }

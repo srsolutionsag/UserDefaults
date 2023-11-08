@@ -29,30 +29,12 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const USR_DEF_CONTENT = 'usr_def_content_checks';
-	/**
-	 * @var  array $filter
-	 */
-	protected $filter = array();
-	/**
-	 * @var array
-	 */
-	protected $ignored_cols = array();
-	/**
-	 * @var Renderer
-	 */
-	protected $renderer;
-	/**
-	 * @var Factory
-	 */
-	protected $image;
+	protected array $filter = array();
+	protected array $ignored_cols = array();
+	protected Renderer $renderer;
+	protected Factory $image;
 
-
-	/**
-	 * @param UDFCheckGUI $parent_obj
-	 * @param string      $parent_cmd
-	 * @param string      $template_context
-	 */
-	public function __construct(UDFCheckGUI $parent_obj, $parent_cmd = UDFCheckGUI::CMD_INDEX, $template_context = "") {
+	public function __construct(UDFCheckGUI $parent_obj, string $parent_cmd = UDFCheckGUI::CMD_INDEX, string $template_context = "") {
 		$this->renderer = self::dic()->ui()->renderer();
 		$this->image = self::dic()->ui()->factory()->image();
 
@@ -84,11 +66,8 @@ class UDFCheckTableGUI extends ilTable2GUI {
 		self::dic()->toolbar()->addButtonInstance($button);
 	}
 
-
-	/**
-	 *
-	 */
-	protected function parseData() {
+	protected function parseData(): void
+    {
 		$this->determineOffsetAndOrder();
 		$this->determineLimit();
 
@@ -106,11 +85,8 @@ class UDFCheckTableGUI extends ilTable2GUI {
 		$this->setData($checks);
 	}
 
-
-	/**
-	 * @param array $a_set
-	 */
-	public function fillRow($a_set) {
+	public function fillRow(array $a_set): void
+    {
 		$a_set["operator"] = self::plugin()->translate("check_op_" . UDFCheck::$operator_text_keys[$a_set["operator"]]);
 
 		$ilUDFCheckGUI = new UDFCheckGUI($this->parent_obj);
@@ -178,15 +154,13 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	}
 
 
-	public function initFilter() {
+	public function initFilter(): void
+    {
 		//we don't want a filter here. So we override this method.
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function getSelectableColumns() {
+	public function getSelectableColumns(): array
+    {
 		$cols['field_key'] = array(
 			'txt' => self::plugin()->translate('check_name'),
 			'default' => true,
@@ -220,7 +194,8 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	}
 
 
-	private function addColumns() {
+	private function addColumns(): void
+    {
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
 				if ($v['sort_field']) {
@@ -233,21 +208,13 @@ class UDFCheckTableGUI extends ilTable2GUI {
 		}
 	}
 
-
-	/**
-	 * @param array $formats
-	 */
-	public function setExportFormats(array $formats) {
+	public function setExportFormats(array $formats): void
+    {
 		parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
 	}
 
-
-	/**
-	 * @param ilExcel $a_worksheet
-	 * @param int     $a_row
-	 * @param array   $a_set
-	 */
-	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
+	protected function fillRowExcel(ilExcel $a_worksheet, int &$a_row, array $a_set): void
+    {
 		$col = 0;
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
@@ -260,12 +227,8 @@ class UDFCheckTableGUI extends ilTable2GUI {
 		}
 	}
 
-
-	/**
-	 * @param object $a_csv
-	 * @param array  $a_set
-	 */
-	protected function fillRowCSV($a_csv, $a_set) {
+	protected function fillRowCSV(\ilCSVWriter $a_csv, array $a_set): void
+    {
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
 				$value = implode(', ', $value);
@@ -278,28 +241,18 @@ class UDFCheckTableGUI extends ilTable2GUI {
 	}
 
 
-	/**
-	 * @param $sort_field
-	 *
-	 * @return bool
-	 */
-	public function numericOrdering($sort_field) {
+	public function numericOrdering(string $sort_field): bool
+    {
 		return in_array($sort_field, array());
 	}
 
-
-	/**
-	 * @param array $ignored_cols
-	 */
-	public function setIgnoredCols($ignored_cols) {
+	public function setIgnoredCols($ignored_cols): void
+    {
 		$this->ignored_cols = $ignored_cols;
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function getIgnoredCols() {
+	public function getIgnoredCols(): array
+    {
 		return $this->ignored_cols;
 	}
 }

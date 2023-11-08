@@ -29,7 +29,8 @@ class udfGlyphGUI extends ilGlyphGUI {
 	 *
 	 * @return string html
 	 */
-	static function get($a_glyph, $a_text = "") {
+	static function get(string $a_glyph, string $a_text = ""): string
+    {
 		if ($a_glyph == 'remove') {
 			self::$map[$a_glyph]['class'] = 'glyphicon glyphicon-' . $a_glyph;
 		}
@@ -41,12 +42,8 @@ class udfGlyphGUI extends ilGlyphGUI {
 	}
 
 
-	/**
-	 * @param $a_glyph
-	 *
-	 * @return string
-	 */
-	static function gets($a_glyph) {
+	static function gets(string $a_glyph): string
+    {
 		self::$map[$a_glyph]['class'] = 'glyphicons glyphicons-' . $a_glyph;
 
 		return parent::get($a_glyph, '') . ' ';

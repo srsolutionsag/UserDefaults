@@ -5,8 +5,10 @@ namespace srag\Plugins\UserDefaults\Form;
 
 use ilSubEnabledFormPropertyGUI;
 use ilTemplate;
+use ilTemplateException;
 use ilUserDefaultsPlugin;
 use srag\DIC\UserDefaults\DICTrait;
+use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
@@ -23,50 +25,31 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-	/**
-	 * @var array
-	 */
-	protected $values;
-	/**
-	 * @var string
-	 */
-	protected $placeholder;
-	/**
-	 * @var bool
-	 */
-	protected $disableOldFields;
+	protected array $values;
+	protected string $placeholder;
+	protected bool $disableOldFields;
 
-
-	/**
-	 * @param string $title
-	 * @param string $post_var
-	 * @param        $placeholder
-	 */
-	public function __construct($title, $post_var, $placeholder) {
+	public function __construct(string $title, string $post_var, string $placeholder) {
 		parent::__construct($title, $post_var);
 		$this->placeholder = $placeholder;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getHtml() {
+    /**
+     * @throws DICException
+     * @throws ilTemplateException
+     */
+    public function getHtml(): string
+    {
 		$tpl = self::plugin()->template("tpl.multiple_input.html");
 		$tpl = $this->buildHTML($tpl);
-
-		$this->checkInput();
 
 		return self::output()->getHTML($tpl);
 	}
 
 
-	/**
-	 * @param ilTemplate $tpl
-	 *
-	 * @return ilTemplate
-	 */
-	protected function buildHTML($tpl) {
+	protected function buildHTML(ilTemplate $tpl): ilTemplate
+    {
 		$tpl->setCurrentBlock("title");
 		$tpl->setVariable("CSS_PATH", self::plugin()->getPluginObject()->getStyleSheetLocation("content.css"));
 		$tpl->setVariable("X_IMAGE_PATH", self::plugin()->getPluginObject()->getImagePath("x_image.png"));
@@ -113,11 +96,8 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 		return $tpl;
 	}
 
-
-	/**
-	 * @param mixed $value
-	 */
-	function setValueByArray($value) {
+	function setValueByArray(mixed $value): void
+    {
 		$cleaned_values = array();
 		foreach ($value[$this->getPostVar()] as $v) {
 			if ($v) {
@@ -131,53 +111,39 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 		$this->values = is_array($cleaned_values) ? $cleaned_values : array();
 	}
 
-
-	/**
-	 * @param boolean $disableOldFields
-	 */
-	public function setDisableOldFields($disableOldFields) {
+	public function setDisableOldFields(bool $disableOldFields): void {
 		$this->disableOldFields = $disableOldFields;
 	}
 
-
-	/**
-	 * @return boolean
-	 */
-	public function getDisableOldFields() {
+	public function getDisableOldFields(): bool
+    {
 		return $this->disableOldFields;
 	}
 
 
-	/**
-	 * @param ilTemplate $template
-	 */
-	public function insert(&$template) {
+    /**
+     * @throws DICException
+     * @throws ilTemplateException
+     */
+    public function insert(ilTemplate &$template): void
+    {
 		$template->setCurrentBlock("prop_custom");
 		$template->setVariable("CUSTOM_CONTENT", $this->getHtml());
 		$template->parseCurrentBlock();
 	}
 
-
-	/**
-	 * @return bool
-	 */
-	public function checkInput() {
+	public function checkInput(): bool
+    {
 		return true;
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function getValues() {
+	public function getValues(): array
+    {
 		return $this->values;
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function getValue() {
+	public function getValue(): array
+    {
 		return $this->values;
 	}
 }

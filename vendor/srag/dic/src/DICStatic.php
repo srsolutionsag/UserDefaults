@@ -18,7 +18,7 @@ use srag\DIC\UserDefaults\Version\VersionInterface;
 /**
  * Class DICStatic
  *
- * @package srag\DIC\UserDefaults
+ * @package srag\DIC\AttendanceList
  */
 final class DICStatic implements DICStaticInterface
 {
@@ -26,19 +26,19 @@ final class DICStatic implements DICStaticInterface
     /**
      * @var DICInterface|null
      */
-    private static $dic = null;
+    private static ?DICInterface $dic = null;
     /**
      * @var OutputInterface|null
      */
-    private static $output = null;
+    private static ?OutputInterface $output = null;
     /**
      * @var PluginInterface[]
      */
-    private static $plugins = [];
+    private static array $plugins = [];
     /**
      * @var VersionInterface|null
      */
-    private static $version = null;
+    private static ?VersionInterface $version = null;
 
 
     /**
@@ -53,7 +53,7 @@ final class DICStatic implements DICStaticInterface
     /**
      * @inheritDoc
      */
-    public static function dic() : DICInterface
+    public static function dic() : DIC\DICInterface
     {
         if (self::$dic === null) {
             switch (true) {

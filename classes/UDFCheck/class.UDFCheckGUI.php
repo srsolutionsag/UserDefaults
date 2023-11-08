@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use srag\DIC\UserDefaults\DICTrait;
+use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckFormGUI;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckTableGUI;
@@ -48,10 +49,9 @@ class UDFCheckGUI {
 	}
 
 
-	/**
-	 *
-	 */
-	public function executeCommand() {
+
+	public function executeCommand(): bool
+    {
 		$cmd = self::dic()->ctrl()->getCmd(self::CMD_INDEX);
 		switch ($cmd) {
 			case self::CMD_INDEX:
@@ -72,29 +72,23 @@ class UDFCheckGUI {
 	}
 
 
-	/**
-	 *
-	 */
-	protected function index() {
+	protected function index(): void
+    {
 		$ilUDFCheckTabeGUI = new UDFCheckTableGUI($this);
 		self::output()->output($ilUDFCheckTabeGUI);
 	}
 
 
-	/**
-	 *
-	 */
-	protected function add() {
+	protected function add(): void
+    {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
 		$ilUDFCheckFormGUI->fillForm();
 		self::output()->output($ilUDFCheckFormGUI);
 	}
 
 
-	/**
-	 *
-	 */
-	protected function create() {
+	protected function create(): void
+    {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
 		$ilUDFCheckFormGUI->setValuesByPost();
 		if ($id = $ilUDFCheckFormGUI->saveObject()) {
@@ -107,20 +101,20 @@ class UDFCheckGUI {
 	}
 
 
-	/**
-	 *
-	 */
-	protected function edit() {
+    /**
+     * @throws DICException
+     * @throws ilTemplateException
+     */
+    protected function edit(): void
+    {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this, $this->getObject());
 		$ilUDFCheckFormGUI->fillForm();
 		self::output()->output($ilUDFCheckFormGUI);
 	}
 
 
-	/**
-	 *
-	 */
-	protected function update() {
+	protected function update(): void
+    {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this, $this->getObject());
 		$ilUDFCheckFormGUI->setValuesByPost();
 		if ($ilUDFCheckFormGUI->saveObject()) {
@@ -130,11 +124,8 @@ class UDFCheckGUI {
 		self::output()->output($ilUDFCheckFormGUI);
 	}
 
-
-	/**
-	 *
-	 */
-	public function confirmDelete() {
+	public function confirmDelete(): void
+    {
 		$conf = new ilConfirmationGUI();
 		$conf->setFormAction(self::dic()->ctrl()->getFormAction($this));
 		$conf->setHeaderText(self::plugin()->translate('msg_confirm_delete'));
@@ -144,30 +135,24 @@ class UDFCheckGUI {
 	}
 
 
-	/**
-	 *
-	 */
-	public function delete() {
+	public function delete(): void
+    {
 		$ilUDFCheck = $this->getObject();
 		$ilUDFCheck->delete();
 		$this->cancel();
 	}
 
 
-	/**
-	 *
-	 */
-	public function cancel() {
+	public function cancel(): void
+    {
 		self::dic()->ctrl()->setParameter($this, self::IDENTIFIER_CATEGORY, NULL);
 		self::dic()->ctrl()->setParameter($this, self::IDENTIFIER, NULL);
 		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 
 
-	/**
-	 * @return UDFCheck|null
-	 */
-	protected function getObject() {
+	protected function getObject(): ?UDFCheck
+    {
 		return UDFCheck::getCheckById(filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY), filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER));
 	}
 }

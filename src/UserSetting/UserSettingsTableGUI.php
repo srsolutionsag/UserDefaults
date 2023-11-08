@@ -28,22 +28,10 @@ class UserSettingsTableGUI extends ilTable2GUI {
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const USR_DEF_CONTENT = 'usr_def_content';
-	/**
-	 * @var  array $filter
-	 */
-	protected $filter = array();
-	/**
-	 * @var array
-	 */
-	protected $ignored_cols = array();
+	protected array $filter = array();
+	protected array $ignored_cols = array();
 
-
-	/**
-	 * @param UserSettingsGUI $parent_obj
-	 * @param string          $parent_cmd
-	 * @param string          $template_context
-	 */
-	public function __construct(UserSettingsGUI $parent_obj, $parent_cmd = UserSettingsGUI::CMD_INDEX, $template_context = "") {
+	public function __construct(UserSettingsGUI $parent_obj, string $parent_cmd = UserSettingsGUI::CMD_INDEX, string $template_context = "") {
 		$this->setPrefix(self::USR_DEF_CONTENT);
 		$this->setFormName(self::USR_DEF_CONTENT);
 		$this->setId(self::USR_DEF_CONTENT);
@@ -73,7 +61,8 @@ class UserSettingsTableGUI extends ilTable2GUI {
 	}
 
 
-	protected function parseData() {
+	protected function parseData(): void
+    {
 		$this->determineOffsetAndOrder();
 		$this->determineLimit();
 		$xdglRequestList = UserSetting::getCollection();
@@ -105,10 +94,8 @@ class UserSettingsTableGUI extends ilTable2GUI {
 	}
 
 
-	/**
-	 * @param array $a_set
-	 */
-	public function fillRow($a_set) {
+	public function fillRow(array $a_set): void
+    {
 		$ilUserSetting = UserSetting::find($a_set['id']);
 		$ilUDFCheckGUI = new UDFCheckGUI($this->parent_obj);
 
@@ -167,15 +154,14 @@ class UserSettingsTableGUI extends ilTable2GUI {
 	}
 
 
-	public function initFilter() {
+	public function initFilter(): void
+    {
 		//we don't want a filter here. So we override this method.
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public function getSelectableColumns() {
+	public function getSelectableColumns(): array
+    {
 		$cols['status_image'] = array(
 			'txt' => self::plugin()->translate('set_status'),
 			'default' => true,
@@ -218,7 +204,7 @@ class UserSettingsTableGUI extends ilTable2GUI {
 
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
-				if ($v['sort_field']) {
+				if (array_key_exists('sort_field', $v) && $v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
 					$sort = false;
@@ -228,21 +214,14 @@ class UserSettingsTableGUI extends ilTable2GUI {
 		}
 	}
 
-
-	/**
-	 * @param array $formats
-	 */
-	public function setExportFormats(array $formats) {
+	public function setExportFormats(array $formats): void
+    {
 		parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
 	}
 
 
-	/**
-	 * @param ilExcel $a_worksheet
-	 * @param int     $a_row
-	 * @param array   $a_set
-	 */
-	protected function fillRowExcel(ilExcel $a_worksheet, &$a_row, $a_set) {
+	protected function fillRowExcel(ilExcel $a_worksheet, int &$a_row, array $a_set): void
+    {
 		$col = 0;
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
@@ -255,12 +234,8 @@ class UserSettingsTableGUI extends ilTable2GUI {
 		}
 	}
 
-
-	/**
-	 * @param object $a_csv
-	 * @param array  $a_set
-	 */
-	protected function fillRowCSV($a_csv, $a_set) {
+	protected function fillRowCSV(object $a_csv, array $a_set): void
+    {
 		foreach ($a_set as $key => $value) {
 			if (is_array($value)) {
 				$value = implode(', ', $value);
@@ -272,29 +247,17 @@ class UserSettingsTableGUI extends ilTable2GUI {
 		$a_csv->addRow();
 	}
 
-
-	/**
-	 * @param $sort_field
-	 *
-	 * @return bool
-	 */
-	public function numericOrdering($sort_field) {
+	public function numericOrdering($sort_field): bool
+    {
 		return in_array($sort_field, array());
 	}
 
-
-	/**
-	 * @param array $ignored_cols
-	 */
-	public function setIgnoredCols($ignored_cols) {
+	public function setIgnoredCols(array $ignored_cols): void {
 		$this->ignored_cols = $ignored_cols;
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function getIgnoredCols() {
+	public function getIgnoredCols(): array
+    {
 		return $this->ignored_cols;
 	}
 }

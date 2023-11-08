@@ -30,10 +30,6 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	protected $filter = array();
 
 
-	/**
-	 * @param usrdefUserGUI $a_parent_obj
-	 * @param string        $a_parent_cmd
-	 */
 	public function __construct(usrdefUserGUI $a_parent_obj, $a_parent_cmd) {
 		$this->setId(self::TABLE_ID);
 		$this->setPrefix(self::TABLE_ID);
@@ -56,8 +52,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		$this->setSelectAllCheckbox('id');
 	}
 
-
-	public function executeCommand() {
+	public function executeCommand(): bool
+    {
 		switch (self::dic()->ctrl()->getNextClass($this)) {
 			case strtolower(__CLASS__):
 			case '':
@@ -73,10 +69,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	}
 
 
-	/**
-	 * @param array $a_set
-	 */
-	public function fillRow($a_set) {
+	public function fillRow(array $a_set): void
+    {
 		/**
 		 * @var usrdefUser $usrdefUser
 		 */
@@ -104,7 +98,13 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	}
 
 
-	protected function parseData() {
+    /**
+     * @throws arException
+     * @throws \srag\DIC\UserDefaults\Exception\DICException
+     * @throws Exception
+     */
+    protected function parseData(): void
+    {
 		$this->determineOffsetAndOrder();
 		$this->determineLimit();
 		$usrdefUser = usrdefUser::getCollection();
@@ -169,10 +169,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public function getSelectableColumns() {
+	public function getSelectableColumns(): array
+    {
 		$cols['firstname'] = array(
 			'txt' => self::plugin()->translate('usr_firstname'),
 			'default' => true,
@@ -207,14 +205,15 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	}
 
 
-	private function addColumns() {
+	private function addColumns(): void
+    {
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
 				$sort = NULL;
-				if ($v['sort_field']) {
+				if (array_key_exists('sort_field', $v) && $v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
-					//					$sort = $k;
+					$sort = $k;
 				}
 				$this->addColumn($v['txt'], $sort, $v['width']);
 			}
@@ -222,7 +221,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	}
 
 
-	protected function initFilters() {
+	protected function initFilters(): void
+    {
 		$this->setFilterCols(6);
 		// firstname
 		$te = new ilTextInputGUI(self::plugin()->translate('usr_firstname'), 'firstname');
@@ -241,8 +241,9 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		$this->addAndReadFilterItem($crs);
 
 		// orgu
-		$crs = $this->getOrguSelectorGUI();
-		$this->addAndReadFilterItem($crs);
+		//todo
+        //$crs = $this->getOrguSelectorGUI();
+		//$this->addAndReadFilterItem($crs);
 
 		// orgu legacy
 		//		$orgu = new ilMultiSelectInputGUI(self::plugin()->translate('usr_orgu'), 'orgu');
@@ -250,11 +251,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		//		$this->addAndReadFilterItem($orgu);
 	}
 
-
-	/**
-	 * @param $item
-	 */
-	protected function addAndReadFilterItem(ilFormPropertyGUI $item) {
+	protected function addAndReadFilterItem(ilFormPropertyGUI $item): void
+    {
 		$this->addFilterItem($item);
 		$item->readFromSession();
 		$this->filter[$item->getPostVar()] = $item->getValue();
@@ -269,10 +267,9 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		self::dic()->ctrl()->setParameter($this->parent_obj, $this->getNavParameter(), $this->nav_value);
 	}*/
 
-	/**
-	 * @return ilRepositorySelector2InputGUI
-	 */
-	public function getCrsSelectorGUI() {
+
+	public function getCrsSelectorGUI(): ilRepositorySelector2InputGUI
+    {
 		// courses
 		$crs = new ilRepositorySelector2InputGUI(self::plugin()->translate('usr_repo'), 'repo', true);
 		$crs->getExplorerGUI()->setSelectableTypes(array( 'grp', Courses::TYPE_CRS ));
@@ -280,11 +277,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		return $crs;
 	}
 
-
-	/**
-	 * @return usrdefOrguSelectorInputGUI
-	 */
-	public function getOrguSelectorGUI() {
+	public function getOrguSelectorGUI(): usrdefOrguSelectorInputGUI
+    {
 		$crs = new usrdefOrguSelectorInputGUI(self::plugin()->translate('usr_orgu'), 'orgu', true);
 		$crs->getExplorerGUI()->setRootId(56);
 		$crs->getExplorerGUI()->setClickableTypes(array( 'orgu' ));

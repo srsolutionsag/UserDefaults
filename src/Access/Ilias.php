@@ -18,16 +18,10 @@ final class Ilias {
 	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-	/**
-	 * @var self
-	 */
-	protected static $instance = NULL;
+	protected static ?Ilias $instance = NULL;
 
 
-	/**
-	 * @return self
-	 */
-	public static function getInstance()/*: self*/ {
+	public static function getInstance(): ?Ilias {
 		if (self::$instance === NULL) {
 			self::$instance = new self();
 		}
@@ -43,18 +37,11 @@ final class Ilias {
 
 	}
 
-
-	/**
-	 * @return Courses
-	 */
-	public function courses()/*: Courses*/ {
+	public function courses(): Courses {
 		return Courses::getInstance();
 	}
 
-	/**
-	 * @return Categories
-	 */
-	public function categories()/*: Categories*/ {
+	public function categories(): Categories {
 		return Categories::getInstance();
 	}
 }

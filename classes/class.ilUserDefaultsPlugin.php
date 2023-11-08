@@ -19,7 +19,6 @@ use srag\RemovePluginDataConfirm\UserDefaults\PluginUninstallTrait;
  */
 class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
-    use PluginUninstallTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_ID = 'usrdef';
 	const PLUGIN_NAME = 'UserDefaults';
@@ -45,7 +44,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	/**
 	 * @var array
 	 */
-	protected static $mapping = array(
+	protected static array $mapping = array(
 		self::CREATED_1 => 'on_create',
 		self::CREATED_2 => 'on_create',
 		self::UPDATED => 'on_update',
@@ -59,9 +58,17 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	/**
 	 * @return ilUserDefaultsPlugin
 	 */
-	public static function getInstance() {
+	public static function getInstance(): ilUserDefaultsPlugin
+    {
 		if (!isset(self::$instance)) {
-			self::$instance = new self();
+            global $DIC;
+
+            /** @var $component_factory ilComponentFactory */
+            $component_factory = $DIC['component.factory'];
+            /** @var $plugin ilUserDefaultsPlugin */
+            $plugin  = $component_factory->getPlugin(ilUserDefaultsPlugin::PLUGIN_ID);
+
+			self::$instance = $plugin;
 		}
 
 		return self::$instance;
@@ -71,19 +78,23 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	/**
 	 *
 	 */
-	public function __construct() {
-		parent::__construct();
+    public function __construct(
+        ilDBInterface $db,
+        ilComponentRepositoryWrite $component_repository,
+        string $id
+    ) {
+        parent::__construct($db, $component_repository, $id);
 	}
 
+    public function getPrefix(): string {
+        return "usrdef";
+    }
 
-	/**
-	 * Handle the event
-	 *
-	 * @param    string        component, e.g. "Services/User"
-	 * @param    string         event, e.g. "afterUpdate"
-	 * @param    array         array of event specific parameters
-	 */
-	public function handleEvent($a_component, $a_event, $a_parameter) {
+
+	public function handleEvent(string $a_component,
+                                string $a_event,
+                                array $a_parameter): void
+    {
 		$run = false;
 		$user = NULL;
 		switch ($a_component) {
@@ -148,11 +159,8 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 		}
 	}
 
-
-	/**
-	 * @return string
-	 */
-	public function getPluginName() {
+	public function getPluginName(): string
+    {
 		return self::PLUGIN_NAME;
 	}
 
@@ -165,10 +173,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
 
-	/**
-	 * @inheritdoc
-	 */
-	protected function deleteData()/*: void*/ {
+	protected function deleteData(): void {
 		self::dic()->database()->dropTable(UDFCheckOld::TABLE_NAME, false);
 		foreach (UDFCheck::$class_names as $class) {
 			self::dic()->database()->dropTable($class::TABLE_NAME, false);

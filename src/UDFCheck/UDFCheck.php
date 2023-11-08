@@ -40,11 +40,11 @@ abstract class UDFCheck extends ActiveRecord {
 	/**
 	 * @var array|null
 	 */
-	protected static $all_definitions = NULL;
+	protected static ?array $all_definitions = NULL;
 	/**
 	 * @var array
 	 */
-	public static $operator_text_keys = array(
+	public static array $operator_text_keys = array(
 		self::OP_EQUALS => 'equals',
 		self::OP_STARTS_WITH => 'starts_with',
 		self::OP_CONTAINS => 'contains',
@@ -57,10 +57,8 @@ abstract class UDFCheck extends ActiveRecord {
 		self::OP_NOT_IS_EMPTY => 'not_is_empty',
 		self::OP_REG_EX => 'reg_ex',
 	);
-	/**
-	 * @var array
-	 */
-	public static $operator_positive = [
+
+	public static array $operator_positive = [
 		self::OP_EQUALS,
 		self::OP_STARTS_WITH,
 		self::OP_CONTAINS,
@@ -68,49 +66,33 @@ abstract class UDFCheck extends ActiveRecord {
 		self::OP_IS_EMPTY,
 		self:: OP_REG_EX,
 	];
-	/**
-	 * @var array
-	 */
-	public static $operator_negative = [
+
+	public static array $operator_negative = [
 		self::OP_NOT_EQUALS,
 		self::OP_NOT_STARTS_WITH,
 		self::OP_NOT_CONTAINS,
 		self::OP_NOT_ENDS_WITH,
 		self::OP_NOT_IS_EMPTY,
 	];
-	/**
-	 * @var UDFCheck[]
-	 */
-	public static $class_names = [
+
+	public static array $class_names = [
 		UDFCheckUser::FIELD_CATEGORY => UDFCheckUser::class,
 		UDFCheckUDF::FIELD_CATEGORY => UDFCheckUDF::class
 	];
 
+	public final function getConnectorContainerName(): string
+    {
+		return static::TABLE_NAME;
+	}
 
-	/**
-	 * @return string
-	 */
-	public final function getConnectorContainerName() {
+	public final static function returnDbTableName(): string
+    {
 		return static::TABLE_NAME;
 	}
 
 
-	/**
-	 * @return string
-	 *
-	 * @deprecated
-	 */
-	public final static function returnDbTableName() {
-		return static::TABLE_NAME;
-	}
-
-
-	/**
-	 * @param int $field_category
-	 *
-	 * @return static
-	 */
-	public static function newInstance($field_category) {
+	public static function newInstance(int $field_category): UDFCheckUDF|static
+    {
 		$class = self::$class_names[$field_category];
 
 		if ($class !== NULL) {
@@ -123,15 +105,8 @@ abstract class UDFCheck extends ActiveRecord {
 	}
 
 
-	/**
-	 * @param int   $parent_id
-	 * @param bool  $array
-	 * @param array $filter
-	 * @param array $limit
-	 *
-	 * @return array
-	 */
-	public static function getChecksByParent($parent_id, $array = false, array $filter = [], array $limit = []) {
+	public static function getChecksByParent(int $parent_id, bool $array = false, array $filter = [], array $limit = []): array
+    {
 		$checks = [];
 
 		$where_array = [ 'parent_id' => $parent_id ];
@@ -168,13 +143,8 @@ abstract class UDFCheck extends ActiveRecord {
 		return $checks;
 	}
 
-
-	/**
-	 * @param int $parent_id
-	 *
-	 * @return bool
-	 */
-	public static function hasChecks($parent_id) {
+	public static function hasChecks(int $parent_id): bool
+    {
 		foreach (self::$class_names as $class) {
 			if ($class::where([ 'parent_id' => $parent_id ])->hasSets()) {
 				return true;
@@ -185,13 +155,8 @@ abstract class UDFCheck extends ActiveRecord {
 	}
 
 
-	/**
-	 * @param int $field_category
-	 * @param int $id
-	 *
-	 * @return static|null
-	 */
-	public static function getCheckById($field_category, $id) {
+	public static function getCheckById(int $field_category, int $id): ?static
+    {
 		$class = self::$class_names[$field_category];
 
 		if ($class !== NULL) {
@@ -204,10 +169,8 @@ abstract class UDFCheck extends ActiveRecord {
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public static function getDefinitions() {
+	public static function getDefinitions(): ?array
+    {
 		if (self::$all_definitions !== NULL) {
 			return self::$all_definitions;
 		}
@@ -222,10 +185,8 @@ abstract class UDFCheck extends ActiveRecord {
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public static function getDefinitionsOfCategoryOptions() {
+	public static function getDefinitionsOfCategoryOptions(): array
+    {
 		$return = [];
 
 		foreach (static::getDefinitionsOfCategory() as $definition) {
@@ -235,13 +196,8 @@ abstract class UDFCheck extends ActiveRecord {
 		return $return;
 	}
 
-
-	/**
-	 * @param string $field_key
-	 *
-	 * @return int
-	 */
-	public static function getCategoryForFieldKey($field_key) {
+	public static function getCategoryForFieldKey(string $field_key): int
+    {
 		foreach (self::getDefinitions() as $definition) {
 			if ($definition['field_key'] == $field_key) {
 				return $definition['field_category'];
@@ -251,11 +207,8 @@ abstract class UDFCheck extends ActiveRecord {
 		return 0;
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function getDefinition() {
+	public function getDefinition(): array
+    {
 		foreach (static::getDefinitionsOfCategory() as $definition) {
 
 			$definition["field_name"] = $definition["txt"];
@@ -269,11 +222,8 @@ abstract class UDFCheck extends ActiveRecord {
 		return [];
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function getDefinitionValues() {
+	public function getDefinitionValues(): array
+    {
 		$definition = $this->getDefinition();
 
 		$return = [];
@@ -296,7 +246,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $id = 0;
+	protected ?int $id = 0;
 	/**
 	 * @var int
 	 *
@@ -304,7 +254,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $parent_id = 0;
+	protected int $parent_id = 0;
 	/**
 	 * @var string
 	 *
@@ -313,7 +263,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_length     256
 	 *
 	 */
-	protected $field_key = 1;
+	protected string|int $field_key = 1;
 	/**
 	 * @var string
 	 *
@@ -321,7 +271,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     256
 	 */
-	protected $check_value = '';
+	protected string $check_value = '';
 	/**
 	 * @var int
 	 *
@@ -329,7 +279,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     1
 	 */
-	protected $operator = self::OP_EQUALS;
+	protected int $operator = self::OP_EQUALS;
 	/**
 	 * @var bool
 	 *
@@ -337,7 +287,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     1
 	 */
-	protected $negated = false;
+	protected bool $negated = false;
 	/**
 	 * @var int
 	 *
@@ -345,7 +295,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $owner = 6;
+	protected int $owner = 6;
 	/**
 	 * @var int
 	 *
@@ -353,7 +303,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $status = self::STATUS_ACTIVE;
+	protected int $status = self::STATUS_ACTIVE;
 	/**
 	 * @var int
 	 *
@@ -361,7 +311,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @db_fieldtype        timestamp
 	 * @db_is_notnull       true
 	 */
-	protected $create_date;
+	protected int $create_date;
 	/**
 	 * @var int
 	 *
@@ -369,7 +319,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @db_fieldtype        timestamp
 	 * @db_is_notnull       true
 	 */
-	protected $update_date;
+	protected int $update_date;
 
 
 	/**
@@ -393,9 +343,10 @@ abstract class UDFCheck extends ActiveRecord {
 	 * @param $field_name
 	 * @param $field_value
 	 *
-	 * @return mixed|null
-	 */
-	public function wakeUp($field_name, $field_value) {
+	 * @return int|bool|null
+     */
+	public function wakeUp($field_name, $field_value): int|bool|null
+    {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':
@@ -406,50 +357,36 @@ abstract class UDFCheck extends ActiveRecord {
 		return NULL;
 	}
 
-
-	/**
-	 *
-	 */
-	public function update() {
+	public function update(): void
+    {
 		$this->setOwner(self::dic()->user()->getId());
 		$this->setUpdateDate(time());
 		parent::update();
 	}
 
-
-	/**
-	 *
-	 */
-	public function create() {
+	public function create(): void
+    {
 		$this->setOwner(self::dic()->user()->getId());
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());
 		parent::create();
 	}
 
-
-	/**
-	 * @param string $check_value
-	 */
-	public function setCheckValue($check_value) {
+	public function setCheckValue(string $check_value): void
+    {
 		$this->check_value = $check_value;
 	}
 
-
-	/**
-	 * @param string[] $check_values
-	 */
-	public function setCheckValues(array $check_values) {
+	public function setCheckValues(array $check_values): void
+    {
 		$this->check_value = implode(self::CHECK_SPLIT, array_map(function ($check_value) {
 			return trim($check_value);
 		}, $check_values));
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getCheckValue() {
+	public function getCheckValue(): string
+    {
 		return $this->check_value;
 	}
 
@@ -457,163 +394,108 @@ abstract class UDFCheck extends ActiveRecord {
 	/**
 	 * @return string[]
 	 */
-	public function getCheckValues() {
+	public function getCheckValues(): array
+    {
 		return array_map(function ($check_value) {
 			return trim($check_value);
 		}, explode(self::CHECK_SPLIT, $this->check_value));
 	}
 
-
-	/**
-	 * @param string $field_key
-	 */
-	public function setFieldKey($field_key) {
+	public function setFieldKey(string $field_key): void
+    {
 		$this->field_key = $field_key;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getFieldKey() {
+	public function getFieldKey(): int|string
+    {
 		return $this->field_key;
 	}
 
-
-	/**
-	 * @param int $operator
-	 */
-	public function setOperator($operator) {
+	public function setOperator(int $operator): void
+    {
 		$this->operator = $operator;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public function getOperator() {
+	public function getOperator(): int
+    {
 		return $this->operator;
 	}
 
-
-	/**
-	 * @param int $create_date
-	 */
-	public function setCreateDate($create_date) {
+	public function setCreateDate(int $create_date): void
+    {
 		$this->create_date = $create_date;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public function getCreateDate() {
+	public function getCreateDate(): int
+    {
 		return $this->create_date;
 	}
 
 
-	/**
-	 * @param int $id
-	 */
-	public function setId($id) {
+	public function setId(int $id): void
+    {
 		$this->id = $id;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public function getId() {
+	public function getId(): int
+    {
 		return $this->id;
 	}
 
-
-	/**
-	 * @param int $owner
-	 */
-	public function setOwner($owner) {
+	public function setOwner(int $owner): void
+    {
 		$this->owner = $owner;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public function getOwner() {
+	public function getOwner(): int
+    {
 		return $this->owner;
 	}
 
-
-	/**
-	 * @param int $update_date
-	 */
-	public function setUpdateDate($update_date) {
+	public function setUpdateDate(int $update_date): void
+    {
 		$this->update_date = $update_date;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public function getUpdateDate() {
+	public function getUpdateDate(): int
+    {
 		return $this->update_date;
 	}
 
-
-	/**
-	 * @param int $status
-	 */
-	public function setStatus($status) {
+	public function setStatus(int $status): void
+    {
 		$this->status = $status;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public function getStatus() {
+	public function getStatus(): int
+    {
 		return $this->status;
 	}
 
-
-	/**
-	 * @param int $parent_id
-	 */
-	public function setParentId($parent_id) {
+	public function setParentId(int $parent_id): void
+    {
 		$this->parent_id = $parent_id;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public function getParentId() {
+	public function getParentId(): int
+    {
 		return $this->parent_id;
 	}
 
-
-	/**
-	 * @return boolean
-	 */
-	public function isNegated() {
+	public function isNegated(): bool
+    {
 		return $this->negated;
 	}
 
-
-	/**
-	 * @param boolean $negated
-	 */
-	public function setNegated($negated) {
+	public function setNegated(bool $negated): void
+    {
 		$this->negated = $negated;
 	}
 
 
-	/**
-	 * @param ilObjUser $user
-	 *
-	 * @return bool
-	 */
-	public function isValid(ilObjUser $user) {
+	public function isValid(ilObjUser $user): bool
+    {
 
 		//more than one $value possible because of cascade-select plugin...
 		$values = array_map(function ($value) {
@@ -694,11 +576,8 @@ abstract class UDFCheck extends ActiveRecord {
 		return $valid;
 	}
 
-
-	/**
-	 * @return int
-	 */
-	public final function getFieldCategory() {
+	public final function getFieldCategory(): int|string
+    {
 		return static::FIELD_CATEGORY;
 	}
 
@@ -716,15 +595,7 @@ abstract class UDFCheck extends ActiveRecord {
 	 */
 	const FIELD_CATEGORY = '';
 
+	protected static abstract function getDefinitionsOfCategory(): array;
 
-	/**
-	 * @return array
-	 */
-	protected static abstract function getDefinitionsOfCategory();
-
-
-	/**
-	 * @return array
-	 */
-	protected abstract function getFieldValue(ilObjUser $user);
+	protected abstract function getFieldValue(ilObjUser $user): array;
 }

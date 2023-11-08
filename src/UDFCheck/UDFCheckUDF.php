@@ -17,13 +17,10 @@ class UDFCheckUDF extends UDFCheck {
 	/**
 	 * @var array|null
 	 */
-	protected static $all_definitions_of_category = NULL;
+	protected static ?array $all_definitions_of_category = NULL;
 
-
-	/**
-	 * @inheritdoc
-	 */
-	protected static function getDefinitionsOfCategory() {
+	protected static function getDefinitionsOfCategory(): array
+    {
 		if (self::$all_definitions_of_category !== NULL) {
 			return self::$all_definitions_of_category;
 		}
@@ -53,11 +50,8 @@ class UDFCheckUDF extends UDFCheck {
 		return self::$all_definitions_of_category;
 	}
 
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function getFieldValue(ilObjUser $user) {
+	protected function getFieldValue(ilObjUser $user): array
+    {
 		$user->readUserDefinedFields();
 		return explode(self::CHECK_SPLIT, $user->user_defined_data['f_' . $this->getFieldKey()]);
 	}

@@ -19,16 +19,13 @@ final class GlobalRoles
     use UserDefaultsTrait;
     const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     const TYPE_GLOBAL_ROLE = "role";
-    /**
-     * @var self
-     */
-    protected static $instance = NULL;
+    protected static ?GlobalRoles $instance = NULL;
 
 
     /**
      * @return self
      */
-    public static function getInstance()/*: self*/ {
+    public static function getInstance(): ?GlobalRoles {
         if (self::$instance === NULL) {
             self::$instance = new self();
         }

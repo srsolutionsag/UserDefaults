@@ -70,19 +70,9 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	const F_ON_UPDATE = 'on_update';
 	const F_ON_MANUAL = 'on_manual';
 	const F_APPLICATION = 'application';
-	/**
-	 * @var UserSettingsGUI
-	 */
-	protected $parent_gui;
-	/**
-	 * @var UserSetting
-	 */
-	protected $object;
-
-    /**
-     * @var array
-     */
-	private $orguPositions;
+	protected UserSettingsGUI $parent_gui;
+	protected UserSetting $object;
+	private array $orguPositions;
 
 	/**
 	 * @param UserSettingsGUI $parent_gui
@@ -99,21 +89,21 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 
 
     /**
-     * @param $key
-     *
-     * @return string
      * @throws DICException
      */
-	protected function txt($key) {
+	protected function txt(string $key): string
+    {
 		return self::plugin()->translate($key, 'set');
 	}
 
 
     /**
-     * @throws ilTemplateException
      * @throws DICException
+     * @throws \ilCtrlException
+     * @throws ilTemplateException
      */
-	protected function initForm() {
+    protected function initForm(): void
+    {
 		$this->setTitle(self::plugin()->translate('form_title'));
 		$te = new ilTextInputGUI($this->txt(self::F_TITLE), self::F_TITLE);
 		$te->setRequired(true);
@@ -193,7 +183,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $groups_queue_input->setAllowEmptyFields(true);
 
         $ilGroupMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS_QUEUE), 'obj_id', false, true, true);
-        $ilGroupMultiSelectInputGUI->setWidth("600px");
+        $ilGroupMultiSelectInputGUI->setWidth(600);
         self::dic()->ctrl()->setParameter($this->parent_gui, 'with_parent', 1);
         self::dic()->ctrl()->setParameter($this->parent_gui, 'with_members', 1);
         self::dic()->ctrl()->setParameter($this->parent_gui, 'with_empty', 1);
@@ -281,13 +271,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	/**
-	 * @param $existing_array
-	 * @param $filter
-	 *
-	 * @return array
-	 */
-	protected static function appendRoles(array &$existing_array, $filter) {
+	protected static function appendRoles(array &$existing_array, $filter): array
+    {
 		foreach (self::dic()->rbac()->review()->getRolesByFilter($filter) as $role) {
 
 			if ($role['obj_id'] == 2) {
@@ -302,7 +287,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	public function fillForm() {
+	public function fillForm(): void
+    {
 	    $assigned_groups_queue = array_map(function($e){return ['obj_id' => $e];},$this->object->getAssignedGroupsQueue());
 	    $assigned_groups_queue = array_values($assigned_groups_queue);
         $assignedOrguPosition = $this->object->getAssignedOrguPosition();
@@ -340,11 +326,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $this->setValuesByArray($array);
 	}
 
-
-	/**
-	 * @return bool
-	 */
-	public function saveObject() {
+	public function saveObject(): bool
+    {
 		if (!$this->checkInput()) {
 			return false;
 		}
@@ -408,8 +391,8 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		return true;
 	}
 
-
-	protected function addCommandButtons() {
+	protected function addCommandButtons(): void
+    {
 		if ($this->object->getId() > 0) {
 			$this->addCommandButton(UserSettingsGUI::CMD_UPDATE, self::plugin()->translate('form_button_update'));
 		} else {

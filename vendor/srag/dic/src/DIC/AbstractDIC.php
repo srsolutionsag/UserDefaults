@@ -9,7 +9,7 @@ use srag\DIC\UserDefaults\Database\DatabaseInterface;
 /**
  * Class AbstractDIC
  *
- * @package srag\DIC\UserDefaults\DIC
+ * @package srag\DIC\AttendanceList\DIC
  */
 abstract class AbstractDIC implements DICInterface
 {

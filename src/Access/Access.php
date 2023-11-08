@@ -18,16 +18,13 @@ final class Access {
 	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-	/**
-	 * @var self
-	 */
-	protected static $instance = NULL;
+	protected static ?Access $instance = NULL;
 
 
 	/**
 	 * @return self
 	 */
-	public static function getInstance()/*: self*/ {
+	public static function getInstance(): ?Access {
 		if (self::$instance === NULL) {
 			self::$instance = new self();
 		}
@@ -35,10 +32,6 @@ final class Access {
 		return self::$instance;
 	}
 
-
-	/**
-	 * Access constructor
-	 */
 	private function __construct() {
 
 	}

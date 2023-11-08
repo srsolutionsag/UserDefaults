@@ -20,18 +20,9 @@ use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
  */
 class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 
-	/**
-	 * @var string
-	 */
-	protected $container_type = Courses::TYPE_CRS;
-    /**
-     * @var bool
-     */
-	protected $with_parent = false;
-    /**
-     * @var bool
-     */
-    protected $with_members = false;
+	protected string $container_type = Courses::TYPE_CRS;
+	protected bool $with_parent = false;
+    protected bool $with_members = false;
 
 
     /**
@@ -59,7 +50,8 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
      * @return string
      * @throws DICException
      */
-	protected function getValueAsJson() {
+	protected function getValueAsJson(): string
+    {
         $result = array();
         if ($this->multiple) {
             $query = "SELECT obj_id, title FROM " . usrdefObj::TABLE_NAME . " WHERE type = '" . $this->getContainerType() . "' AND " .
@@ -95,27 +87,19 @@ class ilContainerMultiSelectInputGUI extends ilMultiSelectSearchInput2GUI {
 		return json_encode($result);
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function getValues() {
+	public function getValues(): mixed
+    {
 		return $this->value;
 	}
 
 
-	/**
-	 * @param string $container_type
-	 */
-	public function setContainerType($container_type) {
+	public function setContainerType(string $container_type): void
+    {
 		$this->container_type = $container_type;
 	}
 
-
-	/**
-	 * @return string
-	 */
-	public function getContainerType() {
+	public function getContainerType(): string
+    {
 		return $this->container_type;
 	}
 }

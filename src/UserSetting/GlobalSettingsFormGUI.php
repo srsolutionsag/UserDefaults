@@ -22,16 +22,11 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-	/**
-	 * @var UserDefaultsGlobalSettingsGUI
-	 */
-	protected $parent;
+	protected UserDefaultsGlobalSettingsGUI $parent;
 
 
 	/**
 	 * GlobalSettingsFormGUI constructor
-	 *
-	 * @param UserDefaultsGlobalSettingsGUI $parent
 	 */
 	public function __construct(UserDefaultsGlobalSettingsGUI $parent) {
 		parent::__construct();
@@ -42,10 +37,8 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	/**
-	 *
-	 */
-	protected function initForm() {
+	protected function initForm(): void
+    {
 		$this->setFormAction(self::dic()->ctrl()->getFormAction($this->parent));
 
 		$this->setTitle(self::plugin()->translate("tabs_global_settings"));
@@ -58,11 +51,8 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($category_ref_id);
 	}
 
-
-	/**
-	 *
-	 */
-	public function updateConfigure() {
+	public function updateConfigure(): void
+    {
 		$category_ref_id = $this->getInput(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
 		UserDefaultsConfig::setField(UserDefaultsConfig::KEY_CATEGORY_REF_ID, $category_ref_id);
 	}

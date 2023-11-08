@@ -19,16 +19,13 @@ final class Categories {
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const TYPE_CAT = "cat";
-	/**
-	 * @var self
-	 */
-	protected static $instance = NULL;
+	protected static ?Categories $instance = NULL;
 
 
 	/**
 	 * @return self
 	 */
-	public static function getInstance()/*: self*/ {
+	public static function getInstance(): ?Categories {
 		if (self::$instance === NULL) {
 			self::$instance = new self();
 		}
@@ -45,11 +42,10 @@ final class Categories {
 	}
 
 	/**
-	 * @param int $category_ref_id
-	 *
 	 * @return int[]
 	 */
-	public function getCategoriesOfCategory($category_ref_id) {
-		return self::dic()->repositoryTree()->getSubTree(self::dic()->repositoryTree()->getNodeData($category_ref_id), false, self::TYPE_CAT);
+	public function getCategoriesOfCategory(int $category_ref_id): array
+    {
+		return self::dic()->repositoryTree()->getSubTree(self::dic()->repositoryTree()->getNodeData($category_ref_id), false, [self::TYPE_CAT]);
 	}
 }

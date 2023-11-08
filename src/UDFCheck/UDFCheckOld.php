@@ -41,7 +41,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getConnectorContainerName() {
+	public function getConnectorContainerName(): string
+    {
 		return static::TABLE_NAME;
 	}
 
@@ -51,7 +52,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public static function returnDbTableName() {
+	public static function returnDbTableName(): string
+    {
 		return static::TABLE_NAME;
 	}
 
@@ -68,7 +70,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $id = 0;
+	protected int $id = 0;
 	/**
 	 * @var int
 	 *
@@ -78,7 +80,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $parent_id = 0;
+	protected int $parent_id = 0;
 	/**
 	 * @var string
 	 *
@@ -89,7 +91,7 @@ class UDFCheckOld extends ActiveRecord {
 	 * @deprecated
 	 *
 	 */
-	protected $field_key = 1;
+	protected string|int $field_key = 1;
 	/**
 	 * @var int
 	 *
@@ -100,7 +102,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $field_category = UDFCheckUser::FIELD_CATEGORY;
+	protected int $field_category = UDFCheckUser::FIELD_CATEGORY;
 	/**
 	 * @var string
 	 *
@@ -110,7 +112,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $check_value = '';
+	protected string $check_value = '';
 	/**
 	 * @var int
 	 *
@@ -120,7 +122,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $operator = UDFCheck::OP_EQUALS;
+	protected int $operator = UDFCheck::OP_EQUALS;
 	/**
 	 * @var bool
 	 *
@@ -130,7 +132,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $negated = false;
+	protected bool $negated = false;
 	/**
 	 * @var int
 	 *
@@ -140,7 +142,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $owner = 6;
+	protected int $owner = 6;
 	/**
 	 * @var int
 	 *
@@ -150,7 +152,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $status = UDFCheck::STATUS_ACTIVE;
+	protected int $status = UDFCheck::STATUS_ACTIVE;
 	/**
 	 * @var int
 	 *
@@ -160,7 +162,7 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $create_date;
+	protected int $create_date;
 	/**
 	 * @var int
 	 *
@@ -170,13 +172,14 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $update_date;
+	protected int $update_date;
 
 
 	/**
 	 * @deprecated
 	 */
-	public function update() {
+	public function update(): void
+    {
 		$this->setOwner(self::dic()->user()->getId());
 		$this->setUpdateDate(time());
 		parent::update();
@@ -186,7 +189,8 @@ class UDFCheckOld extends ActiveRecord {
 	/**
 	 * @deprecated
 	 */
-	public function create() {
+	public function create(): void
+    {
 		$this->setOwner(self::dic()->user()->getId());
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());
@@ -199,7 +203,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setCheckValue($check_value) {
+	public function setCheckValue($check_value): void
+    {
 		$this->check_value = $check_value;
 	}
 
@@ -209,7 +214,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getCheckValue() {
+	public function getCheckValue(): string
+    {
 		return $this->check_value;
 	}
 
@@ -219,7 +225,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setFieldKey($field_key) {
+	public function setFieldKey($field_key): void
+    {
 		$this->field_key = $field_key;
 	}
 
@@ -229,7 +236,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getFieldKey() {
+	public function getFieldKey(): int|string
+    {
 		return $this->field_key;
 	}
 
@@ -239,7 +247,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getFieldCategory() {
+	public function getFieldCategory(): int
+    {
 		return $this->field_category;
 	}
 
@@ -249,7 +258,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setFieldCategory($field_category) {
+	public function setFieldCategory($field_category): void
+    {
 		$this->field_category = $field_category;
 	}
 
@@ -259,7 +269,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setOperator($operator) {
+	public function setOperator($operator): void
+    {
 		$this->operator = $operator;
 	}
 
@@ -269,7 +280,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getOperator() {
+	public function getOperator(): int
+    {
 		return $this->operator;
 	}
 
@@ -279,7 +291,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setCreateDate($create_date) {
+	public function setCreateDate($create_date): void
+    {
 		$this->create_date = $create_date;
 	}
 
@@ -289,7 +302,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getCreateDate() {
+	public function getCreateDate(): int
+    {
 		return $this->create_date;
 	}
 
@@ -299,7 +313,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setId($id) {
+	public function setId(int $id): void
+    {
 		$this->id = $id;
 	}
 
@@ -309,7 +324,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getId() {
+	public function getId(): int
+    {
 		return $this->id;
 	}
 
@@ -319,7 +335,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setOwner($owner) {
+	public function setOwner(int $owner): void
+    {
 		$this->owner = $owner;
 	}
 
@@ -329,7 +346,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getOwner() {
+	public function getOwner(): int
+    {
 		return $this->owner;
 	}
 
@@ -339,7 +357,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setUpdateDate($update_date) {
+	public function setUpdateDate(int $update_date): void
+    {
 		$this->update_date = $update_date;
 	}
 
@@ -349,7 +368,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getUpdateDate() {
+	public function getUpdateDate(): int
+    {
 		return $this->update_date;
 	}
 
@@ -359,7 +379,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setStatus($status) {
+	public function setStatus(int $status): void
+    {
 		$this->status = $status;
 	}
 
@@ -369,7 +390,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getStatus() {
+	public function getStatus(): int
+    {
 		return $this->status;
 	}
 
@@ -379,7 +401,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setParentId($parent_id) {
+	public function setParentId(int $parent_id): void
+    {
 		$this->parent_id = $parent_id;
 	}
 
@@ -389,7 +412,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getParentId() {
+	public function getParentId(): int
+    {
 		return $this->parent_id;
 	}
 
@@ -399,7 +423,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function isNegated() {
+	public function isNegated(): bool
+    {
 		return $this->negated;
 	}
 
@@ -409,7 +434,8 @@ class UDFCheckOld extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function setNegated($negated) {
+	public function setNegated(bool $negated): void
+    {
 		$this->negated = $negated;
 	}
 
@@ -437,11 +463,12 @@ class UDFCheckOld extends ActiveRecord {
 	 * @param $field_name
 	 * @param $field_value
 	 *
-	 * @return mixed|null
-	 *
+	 * @return int|bool|null
+     *
 	 * @deprecated
 	 */
-	public function wakeUp($field_name, $field_value) {
+	public function wakeUp($field_name, $field_value): int|bool|null
+    {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':

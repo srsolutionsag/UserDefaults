@@ -35,11 +35,8 @@ class usrdefUserGUI {
 		ilSession::set(self::SESSION_ID, NULL);
 	}
 
-
-	/**
-	 *
-	 */
-	public function executeCommand() {
+	public function executeCommand(): void
+    {
 		$next = self::dic()->ctrl()->getNextClass();
 		$cmd = self::dic()->ctrl()->getCmd(self::CMD_INDEX);
 		switch ($next) {
@@ -50,7 +47,8 @@ class usrdefUserGUI {
 						$usrdefUserTableGUI->getCrsSelectorGUI()->handleExplorerCommand();
 						break;
 					case 'il_expl2_jstree_cont_rep_exp_sel_orgu':
-						$usrdefUserTableGUI->getOrguSelectorGUI()->handleExplorerCommand();
+                        //todo
+						//$usrdefUserTableGUI->getOrguSelectorGUI()->handleExplorerCommand();
 						break;
 				}
 
@@ -68,50 +66,35 @@ class usrdefUserGUI {
 		}
 	}
 
-
-	/**
-	 *
-	 */
-	protected function index() {
+	protected function index(): void
+    {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		self::output()->output($usrdefUserTableGUI);
 	}
 
-
-	/**
-	 *
-	 */
-	protected function applyFilter() {
+	protected function applyFilter(): void
+    {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		$usrdefUserTableGUI->resetOffset();
 		$usrdefUserTableGUI->writeFilterToSession();
 		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 
-
-	/**
-	 *
-	 */
-	protected function resetFilter() {
+	protected function resetFilter(): void
+    {
 		$usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
 		$usrdefUserTableGUI->resetFilter();
 		$usrdefUserTableGUI->resetOffset();
 		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 
-
-	/**
-	 *
-	 */
 	protected function confirmSelectUser() {
 		// Optinal
 	}
 
 
-	/**
-	 *
-	 */
-	protected function selectUser() {
+	protected function selectUser(): void
+    {
 		$usr_ids = $_POST['id'];
 		$user_objects = array();
 		if (count($usr_ids) == 0 || !is_array($usr_ids)) {

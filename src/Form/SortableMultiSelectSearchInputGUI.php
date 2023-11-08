@@ -26,13 +26,11 @@ class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
     /**
      * Insert property html
      *
-     * @param $a_tpl
-     *
      * @return void Size
      * @throws DICException
      * @throws ilException
      */
-    public function insert(&$a_tpl)
+    public function insert(\ilTemplate $a_tpl): void
     {
         global $DIC;
         $tpl = $DIC['tpl'];

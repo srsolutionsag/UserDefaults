@@ -71,11 +71,6 @@ class Menu extends AbstractStaticPluginMainMenuProvider {
 	}
 
 
-    /**
-     * @param AbstractBaseItem $entry
-     *
-     * @return AbstractBaseItem
-     */
     protected function symbol(AbstractBaseItem $entry) : AbstractBaseItem
     {
         if (self::version()->is6()) {

@@ -15,7 +15,7 @@ use srag\DIC\UserDefaults\Exception\DICException;
 /**
  * Class Plugin
  *
- * @package srag\DIC\UserDefaults\Plugin
+ * @package srag\DIC\AttendanceList\Plugin
  */
 final class Plugin implements PluginInterface
 {
@@ -48,7 +48,7 @@ final class Plugin implements PluginInterface
      *
      * @return ilLanguage
      */
-    private static final function getLanguage(string $lang) : ilLanguage
+    private static function getLanguage(string $lang) : ilLanguage
     {
         if (!isset(self::$languages[$lang])) {
             self::$languages[$lang] = new ilLanguage($lang);
@@ -109,7 +109,7 @@ final class Plugin implements PluginInterface
      */
     public function reloadDatabase() : void
     {
-        $this->plugin_object->updateDatabase();
+        $this->plugin_object->update();
     }
 
 
@@ -136,7 +136,7 @@ final class Plugin implements PluginInterface
     /**
      * @inheritDoc
      */
-    public function template(string $template_file, bool $remove_unknown_variables = true, bool $remove_empty_blocks = true, bool $plugin = true) : Template
+    public function template(string $template_file, bool $remove_unknown_variables = true, bool $remove_empty_blocks = true, bool $plugin = true) : \srag\CustomInputGUIs\UserDefaults\Template\Template
     {
         if ($plugin) {
             return new Template($this->directory() . "/templates/" . $template_file, $remove_unknown_variables, $remove_empty_blocks);

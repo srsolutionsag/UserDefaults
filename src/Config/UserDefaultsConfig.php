@@ -2,6 +2,7 @@
 
 namespace srag\Plugins\UserDefaults\Config;
 
+use ilException;
 use ilUserDefaultsPlugin;
 use ActiveRecord;
 use srag\DIC\UserDefaults\DICTrait;
@@ -17,7 +18,7 @@ use arConnector;
 class UserDefaultsConfig extends ActiveRecord
 {
     use DICTrait;
-    protected static $table_name = "usr_def_config";
+    protected static string $table_name = "usr_def_config";
     const TABLE_NAME = "usr_def_config";
     const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     const KEY_CATEGORY_REF_ID = "category_ref_id";
@@ -63,7 +64,7 @@ class UserDefaultsConfig extends ActiveRecord
      * @con_is_notnull  true
      * @con_is_primary  true
      */
-    protected $name = "";
+    protected ?string $name = "";
     /**
      * @var mixed
      *
@@ -71,16 +72,13 @@ class UserDefaultsConfig extends ActiveRecord
      * @con_fieldtype   text
      * @con_is_notnull  false
      */
-    protected $value = null;
+    protected mixed $value = null;
 
 
     /**
      * Config constructor
-     *
-     * @param string|null      $primary_name_value
-     * @param arConnector|null $connector
      */
-    public function __construct(/*?string*/ $primary_name_value = null, /*?*/ arConnector $connector = null)
+    public function __construct(?string $primary_name_value = null, ?arConnector $connector = null)
     {
         parent::__construct($primary_name_value, $connector);
     }
@@ -125,28 +123,19 @@ class UserDefaultsConfig extends ActiveRecord
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
 
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value) : void
+    public function setValue(mixed $value) : void
     {
         $this->value = $value;
     }
 
 
-    /**
-     * @inheritDoc
-     */
-    public function sleep(/*string*/ $field_name)
+    public function sleep($field_name)
     {
         $field_value = $this->{$field_name};
 
@@ -168,10 +157,7 @@ class UserDefaultsConfig extends ActiveRecord
         }
     }
 
-	/**
-	 * @var array
-	 */
-	private static $fields = [
+	private static array $fields = [
 		self::KEY_CATEGORY_REF_ID => self::TYPE_INTEGER
 	];
 
@@ -180,20 +166,19 @@ class UserDefaultsConfig extends ActiveRecord
         return self::$table_name;
     }
 
-    /**
-     * @param string $table_name
-     */
     public static function setTableName(string $table_name) : void
     {
         self::$table_name = $table_name;
     }
 
-
+    /**
+     * @throws ilException
+     */
     public static function getField(string $field): int {
         if (array_key_exists($field, self::$fields)) {
             return self::$fields[$field];
         }
 
-        throw new \ilException("UserDefaults configuration field '$field' not found");
+        throw new ilException("UserDefaults configuration field '$field' not found");
     }
 }

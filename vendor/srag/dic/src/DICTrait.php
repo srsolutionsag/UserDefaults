@@ -1,7 +1,6 @@
 <?php
 
 namespace srag\DIC\UserDefaults;
-
 use srag\DIC\UserDefaults\DIC\DICInterface;
 use srag\DIC\UserDefaults\Exception\DICException;
 use srag\DIC\UserDefaults\Output\OutputInterface;
@@ -11,7 +10,7 @@ use srag\DIC\UserDefaults\Version\VersionInterface;
 /**
  * Trait DICTrait
  *
- * @package srag\DIC\UserDefaults
+ * @package srag\DIC\AttendanceList
  */
 trait DICTrait
 {
@@ -78,7 +77,7 @@ trait DICTrait
     /**
      * @throws DICException Your class needs to implement the PLUGIN_CLASS_NAME constant!
      */
-    private static final function checkPluginClassNameConst() : void
+    private static function checkPluginClassNameConst() : void
     {
         if (!defined("static::PLUGIN_CLASS_NAME") || empty(static::PLUGIN_CLASS_NAME)) {
             throw new DICException("Your class needs to implement the PLUGIN_CLASS_NAME constant!", DICException::CODE_MISSING_CONST_PLUGIN_CLASS_NAME);

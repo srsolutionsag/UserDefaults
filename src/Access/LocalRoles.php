@@ -19,16 +19,13 @@ final class LocalRoles {
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const TYPE_LOCAL_ROLE = "role";
-	/**
-	 * @var self
-	 */
-	protected static $instance = NULL;
+	protected static ?LocalRoles $instance = NULL;
 
 
 	/**
 	 * @return self
 	 */
-	public static function getInstance()/*: self*/ {
+	public static function getInstance(): ?LocalRoles {
 		if (self::$instance === NULL) {
 			self::$instance = new self();
 		}

@@ -15,7 +15,7 @@ trait UserDefaultsTrait {
 	/**
 	 * @return Access
 	 */
-	protected static function access()/*: Access*/ {
+	protected static function access(): Access {
 		return Access::getInstance();
 	}
 
@@ -23,17 +23,16 @@ trait UserDefaultsTrait {
 	/**
 	 * @return Ilias
 	 */
-	protected static function ilias()/*: Ilias*/ {
+	protected static function ilias(): Ilias {
 		return Ilias::getInstance();
 	}
 
 
 	/**
 	 * CustomUserFieldsHelper is only available for DHBW Spec!
-	 *
-	 * @return bool
 	 */
-	protected static function isCustomUserFieldsHelperAvailable() {
+	protected static function isCustomUserFieldsHelperAvailable(): bool
+    {
 		if (file_exists("./Services/User/classes/class.ilCustomUserFieldsHelper.php")) {
 			require_once "./Services/User/classes/class.ilCustomUserFieldsHelper.php";
 

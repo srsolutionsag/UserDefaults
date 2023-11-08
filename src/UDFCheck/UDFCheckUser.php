@@ -17,13 +17,10 @@ class UDFCheckUser extends UDFCheck {
 	/**
 	 * @var array|null
 	 */
-	protected static $all_definitions_of_category = NULL;
+	protected static ?array $all_definitions_of_category = NULL;
 
-
-	/**
-	 * @inheritdoc
-	 */
-	protected static function getDefinitionsOfCategory() {
+	protected static function getDefinitionsOfCategory(): array
+    {
 		if (self::$all_definitions_of_category !== NULL) {
 			return self::$all_definitions_of_category;
 		}
@@ -53,83 +50,38 @@ class UDFCheckUser extends UDFCheck {
 	/**
 	 * @inheritdoc
 	 */
-	protected function getFieldValue(ilObjUser $user) {
+	protected function getFieldValue(ilObjUser $user): array
+    {
 		return [
 			$this->getFieldKey() => trim($this->getUserFieldValue($user, $this->getFieldKey()))
 		];
 	}
 
 
-	/**
-	 * @param ilObjUser $user
-	 * @param string    $field_name
-	 *
-	 * @return string
-	 */
-	protected function getUserFieldValue(ilObjUser $user, $field_name) {
-		switch ($field_name) {
-			case 'gender':
-				return $user->getGender();
-
-			case 'lastname':
-				return $user->getLastname();
-
-			case 'firstname':
-				return $user->getFirstname();
-
-			case 'login':
-				return $user->getLogin();
-
-			case 'title':
-				return $user->getTitle();
-
-			case 'institution':
-				return $user->getInstitution();
-
-			case 'department':
-				return $user->getDepartment();
-
-			case 'street':
-				return $user->getStreet();
-
-			case 'zipcode':
-				return $user->getZipcode();
-
-			case 'city':
-				return $user->getCity();
-
-			case 'country':
-				return $user->getCountry();
-
-			case 'sel_country':
-				return $user->getSelectedCountry();
-
-			case 'email':
-				return $user->getEmail();
-
-			case 'second_email':
-				return $user->getSecondEmail();
-
-			case 'hobby':
-				return $user->getHobby();
-
-			case 'org_units':
-				return $user->getOrgUnitsRepresentation();
-
-			case 'matriculation':
-				return $user->getMatriculation();
-
-			case 'interests_general':
-				return $user->getGeneralInterestsAsText();
-
-			case 'interests_help_offered':
-				return $user->getOfferingHelpAsText();
-
-			case 'interests_help_looking':
-				return $user->getLookingForHelpAsText();
-
-			default:
-				return '';
-		}
+	protected function getUserFieldValue(ilObjUser $user, string $field_name): string
+    {
+        return match ($field_name) {
+            'gender' => $user->getGender(),
+            'lastname' => $user->getLastname(),
+            'firstname' => $user->getFirstname(),
+            'login' => $user->getLogin(),
+            'title' => $user->getTitle(),
+            'institution' => $user->getInstitution(),
+            'department' => $user->getDepartment(),
+            'street' => $user->getStreet(),
+            'zipcode' => $user->getZipcode(),
+            'city' => $user->getCity(),
+            'country' => $user->getCountry(),
+            'sel_country' => $user->getSelectedCountry(),
+            'email' => $user->getEmail(),
+            'second_email' => $user->getSecondEmail(),
+            'hobby' => $user->getHobby(),
+            'org_units' => $user->getOrgUnitsRepresentation(),
+            'matriculation' => $user->getMatriculation(),
+            'interests_general' => $user->getGeneralInterestsAsText(),
+            'interests_help_offered' => $user->getOfferingHelpAsText(),
+            'interests_help_looking' => $user->getLookingForHelpAsText(),
+            default => '',
+        };
 	}
 }

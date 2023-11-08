@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use srag\DIC\UserDefaults\DICTrait;
+use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\UserSetting\GlobalSettingsFormGUI;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
@@ -30,10 +31,8 @@ class UserDefaultsGlobalSettingsGUI {
 	}
 
 
-	/**
-	 *
-	 */
-	public function executeCommand() {
+	public function executeCommand(): void
+    {
 		$next_class = self::dic()->ctrl()->getNextClass($this);
 
 		switch (strtolower($next_class)) {
@@ -53,31 +52,33 @@ class UserDefaultsGlobalSettingsGUI {
 		}
 	}
 
-
-	/**
-	 * @return GlobalSettingsFormGUI
-	 */
-	protected function getGlobalSettingsForm() {
+	protected function getGlobalSettingsForm(): GlobalSettingsFormGUI
+    {
 		$form = new GlobalSettingsFormGUI($this);
 
 		return $form;
 	}
 
 
-	/**
-	 *
-	 */
-	protected function configure() {
+    /**
+     * @throws DICException
+     * @throws ilTemplateException
+     */
+    protected function configure(): void
+    {
 		$form = $this->getGlobalSettingsForm();
 
 		self::output()->output($form);
 	}
 
 
-	/**
-	 *
-	 */
-	protected function updateConfigure() {
+    /**
+     * @throws DICException
+     * @throws ilCtrlException
+     * @throws ilTemplateException
+     */
+    protected function updateConfigure(): void
+    {
 		$form = $this->getGlobalSettingsForm();
 		$form->setValuesByPost();
 

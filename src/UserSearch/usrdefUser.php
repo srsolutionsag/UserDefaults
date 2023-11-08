@@ -41,7 +41,8 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public function getConnectorContainerName() {
+	public function getConnectorContainerName(): string
+    {
 		return self::TABLE_NAME;
 	}
 
@@ -51,7 +52,8 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	public static function returnDbTableName() {
+	public static function returnDbTableName(): string
+    {
 		return self::TABLE_NAME;
 	}
 
@@ -61,13 +63,14 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $usrdefObj;
+	protected usrdefObj $usrdefObj;
 
 
 	/**
 	 * @deprecated
 	 */
-	public function create() {
+	public function create(): void
+    {
 		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
@@ -75,7 +78,7 @@ class usrdefUser extends ActiveRecord {
 	/**
 	 * @deprecated
 	 */
-	public function update() {
+	public function update(): void {
 		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
@@ -83,7 +86,7 @@ class usrdefUser extends ActiveRecord {
 	/**
 	 * @deprecated
 	 */
-	public function delete() {
+	public function delete(): void {
 		throw new ilException('ActiveReacord Class ' . __CLASS__ . ' is not allowed to ' . __METHOD__ . ' objects');
 	}
 
@@ -91,7 +94,8 @@ class usrdefUser extends ActiveRecord {
 	/**
 	 * @deprecated
 	 */
-	public function afterObjectLoad() {
+	public function afterObjectLoad(): void
+    {
 		$this->setusrdefObj(usrdefObj::find($this->getUsrId()));
 	}
 

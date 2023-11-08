@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use srag\DIC\UserDefaults\DICTrait;
+use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
@@ -11,7 +12,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  *
  * @version 1.0.00
- * ilCtrl_IsCalledBy ilUserDefaultsConfigGUI : ilObjComponentSettingsGUI
+ * @ilCtrl_isCalledBy ilUserDefaultsConfigGUI: ilObjComponentSettingsGUI
  */
 class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 
@@ -31,10 +32,11 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 	}
 
 
-	/**
-	 * @param string $cmd
-	 */
-	public function performCommand($cmd) {
+    /**
+     * @throws ilCtrlException|DICException
+     */
+	public function performCommand(string $cmd): void
+    {
 		self::dic()->tabs()->addTab(self::TAB_SETTINGS, self::plugin()->translate('tabs_settings'), self::dic()->ctrl()
 			->getLinkTargetByClass(UserSettingsGUI::class));
 		self::dic()->tabs()->addTab(self::TAB_USERS, self::plugin()->translate('tabs_users'), self::dic()->ctrl()
@@ -47,23 +49,20 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 			case strtolower(UDFCheckGUI::class):
 				self::dic()->tabs()->activateTab(self::TAB_SETTINGS);
 				$gui = new UDFCheckGUI(new UserSettingsGUI());
-				self::dic()->ctrl()->forwardCommand($gui);
-				break;
+                break;
 			case strtolower(usrdefUserGUI::class):
 				self::dic()->tabs()->activateTab(self::TAB_USERS);
 				$gui = new usrdefUserGUI();
-				self::dic()->ctrl()->forwardCommand($gui);
-				break;
+                break;
 			case strtolower(UserDefaultsGlobalSettingsGUI::class):
 				self::dic()->tabs()->activateTab(self::TAB_GLOBAL_SETTINGS);
 				$gui = new UserDefaultsGlobalSettingsGUI();
-				self::dic()->ctrl()->forwardCommand($gui);
-				break;
+                break;
 			default;
 				self::dic()->tabs()->activateTab(self::TAB_SETTINGS);
 				$gui = new UserSettingsGUI($this);
-				self::dic()->ctrl()->forwardCommand($gui);
-				break;
+                break;
 		}
-	}
+        self::dic()->ctrl()->forwardCommand($gui);
+    }
 }

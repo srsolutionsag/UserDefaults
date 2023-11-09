@@ -73,11 +73,5 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
         $userDefaultsConfig->setName(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
         $userDefaultsConfig->setValue($category_ref_id);
         $userDefaultsConfig->store();
-
-        //$userDefaultsConfig->setValue($category_ref_id);
-        //$userDefaultsConfig->update();
-
-		//todo
-        //UserDefaultsConfig::setField(UserDefaultsConfig::KEY_CATEGORY_REF_ID, $category_ref_id);
 	}
 }

@@ -90,7 +90,10 @@ class UserDefaultsGlobalSettingsGUI {
 
 		$form->updateConfigure();
 
-		ilUtil::sendSuccess(self::plugin()->translate("saved"), true);
+        global $DIC;
+        $tpl = $DIC["tpl"];
+        $tpl->setOnScreenMessage('success',self::plugin()->translate('saved'), true);
+
 
 		self::dic()->ctrl()->redirectByClass(self::class, self::CMD_CONFIGURE);
 	}

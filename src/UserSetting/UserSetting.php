@@ -136,8 +136,9 @@ class UserSetting extends ActiveRecord {
 		$this->setOwner(self::dic()->user()->getId());
 		$this->setUpdateDate(time());
 		if (!$this->hasChecks() AND $this->getStatus() == self::STATUS_ACTIVE) {
-			ilUtil::sendInfo(ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'));
-			ilUtil::sendInfo(ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'), true);
+            global $DIC;
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage('info', ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'), true);
 			$this->setStatus(self::STATUS_INACTIVE);
 		}
 		parent::update();
@@ -668,7 +669,7 @@ class UserSetting extends ActiveRecord {
 	 * @db_fieldtype        timestamp
 	 * @db_is_notnull       true
 	 */
-	protected int $create_date;
+	protected int $create_date = 0;
 	/**
 	 * @var int
 	 *
@@ -676,7 +677,7 @@ class UserSetting extends ActiveRecord {
 	 * @db_fieldtype        timestamp
 	 * @db_is_notnull       true
 	 */
-	protected int $update_date;
+	protected int $update_date = 0;
 	/**
 	 * @var array
 	 *
@@ -1075,7 +1076,7 @@ class UserSetting extends ActiveRecord {
 		return $this->global_roles;
 	}
 
-    public function setUnsignGlobalRoles(array $unsign_global_roles): void
+    public function setUnsignGlobalRoles(bool $unsign_global_roles): void
     {
         $this->unsign_global_roles = $unsign_global_roles;
     }
@@ -1263,7 +1264,7 @@ class UserSetting extends ActiveRecord {
 			return false;
 		}
 		foreach ($this->getAssignedOrgus() as $orgu_obj_id) {
-			if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
+			if (ilObject2::_lookupType((int) $orgu_obj_id) != 'orgu') {
 				continue;
 			}
 
@@ -1316,7 +1317,7 @@ class UserSetting extends ActiveRecord {
 			return false;
 		}
 		foreach ($this->getAssignedStudyprograms() as $studyProgramObjId) {
-			if (ilObject2::_lookupType($studyProgramObjId) != 'prg') {
+			if (ilObject2::_lookupType((int) $studyProgramObjId) != 'prg') {
 				continue;
 			}
 

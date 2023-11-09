@@ -2,6 +2,7 @@
 
 namespace srag\Plugins\UserDefaults\UDFCheck;
 
+use arField;
 use ilObjUser;
 use ilUserSearchOptions;
 
@@ -30,7 +31,7 @@ class UDFCheckUser extends UDFCheck {
 		foreach (ilUserSearchOptions::_getSearchableFieldsInfo(true) as $field) {
 			$usr_field = array();
 
-			if (!in_array($field['type'], array( FIELD_TYPE_TEXT, FIELD_TYPE_SELECT, FIELD_TYPE_MULTI ))) {
+			if (array_key_exists('type', $field) && !in_array($field['type'], array( ilUserSearchOptions::FIELD_TYPE_TEXT,  ilUserSearchOptions::FIELD_TYPE_SELECT,  ilUserSearchOptions::FIELD_TYPE_MULTI ))) {
 				continue;
 			}
 

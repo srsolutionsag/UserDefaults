@@ -131,7 +131,11 @@ class UserSettingsGUI {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, new UserSetting());
 		$ilUserSettingsFormGUI->setValuesByPost();
 		if ($ilUserSettingsFormGUI->saveObject()) {
-			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
+
+            global $DIC;
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage('success',self::plugin()->translate('msg_entry_added'), true);
+
 			self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 		}
 		self::output()->output($ilUserSettingsFormGUI);
@@ -150,7 +154,9 @@ class UserSettingsGUI {
 		$ilUserSettingsFormGUI = new UserSettingsFormGUI($this, UserSetting::find($_GET[self::IDENTIFIER]));
 		$ilUserSettingsFormGUI->setValuesByPost();
 		if ($ilUserSettingsFormGUI->saveObject()) {
-			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
+            global $DIC;
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage('success',self::plugin()->translate('msg_entry_added'), true);
 			$this->cancel();
 		}
 		self::output()->output($ilUserSettingsFormGUI);
@@ -164,7 +170,11 @@ class UserSettingsGUI {
 		$copy = $original->duplicate();
 		$copy->setStatus(UserSetting::STATUS_INACTIVE);
 		$copy->update();
-		ilUtil::sendSuccess(self::plugin()->translate("msg_duplicate_successful"), true);
+
+        global $DIC;
+        $tpl = $DIC["tpl"];
+        $tpl->setOnScreenMessage('success',self::plugin()->translate('msg_duplicate_successful'), true);
+
 		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 

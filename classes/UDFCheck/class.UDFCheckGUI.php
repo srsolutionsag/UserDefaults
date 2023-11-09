@@ -92,7 +92,9 @@ class UDFCheckGUI {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
 		$ilUDFCheckFormGUI->setValuesByPost();
 		if ($id = $ilUDFCheckFormGUI->saveObject()) {
-			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
+            global $DIC;
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage('success', self::plugin()->translate('msg_entry_added'), true);
 			self::dic()->ctrl()->setParameter($this, self::IDENTIFIER_CATEGORY, $ilUDFCheckFormGUI->getObject()->getFieldCategory());
 			self::dic()->ctrl()->setParameter($this, self::IDENTIFIER, $id);
 			self::dic()->ctrl()->redirect($this, self::CMD_EDIT);
@@ -118,7 +120,9 @@ class UDFCheckGUI {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this, $this->getObject());
 		$ilUDFCheckFormGUI->setValuesByPost();
 		if ($ilUDFCheckFormGUI->saveObject()) {
-			ilUtil::sendSuccess(self::plugin()->translate('msg_entry_added'), true);
+            global $DIC;
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage('success',self::plugin()->translate('msg_entry_added'), true);
 			$this->cancel();
 		}
 		self::output()->output($ilUDFCheckFormGUI);
@@ -153,6 +157,6 @@ class UDFCheckGUI {
 
 	protected function getObject(): ?UDFCheck
     {
-		return UDFCheck::getCheckById(filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY), filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER));
+		return UDFCheck::getCheckById((int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY), (int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER));
 	}
 }

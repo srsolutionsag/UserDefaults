@@ -198,7 +198,7 @@ class UDFCheckTableGUI extends ilTable2GUI {
     {
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($this->isColumnSelected($k)) {
-				if ($v['sort_field']) {
+				if (array_key_exists('sort_field', $v) && $v['sort_field']) {
 					$sort = $v['sort_field'];
 				} else {
 					$sort = $k;

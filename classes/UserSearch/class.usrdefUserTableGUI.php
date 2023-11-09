@@ -117,7 +117,9 @@ class usrdefUserTableGUI extends ilTable2GUI {
 			if ($value && !is_array($value)) {
 				$value = str_replace('%', '', $value);
 				if (strlen($value) < 3) {
-					ilUtil::sendFailure(self::plugin()->translate('msg_failure_more_characters_needed'), true);
+                    global $DIC;
+                    $tpl = $DIC["tpl"];
+                    $tpl->setOnScreenMessage('failure', self::plugin()->translate('msg_failure_more_characters_needed'), true);
 					continue;
 				}
 
@@ -131,7 +133,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 			$value = $this->filter['repo'];
 			$obj_ids = array();
 			foreach ($value as $ref_id) {
-				$obj_ids[] = ilObject2::_lookupObjId($ref_id);
+				$obj_ids[] = ilObject2::_lookupObjId((int) $ref_id);
 			}
 
 			$usrdefUser->innerjoin('obj_members', 'usr_id', 'usr_id');
@@ -142,7 +144,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		}
 
 		// ORGU
-		if ($this->filter['orgu'] && is_array($this->filter['orgu'])
+		if (in_array('orgu', $this->filter) && $this->filter['orgu'] && is_array($this->filter['orgu'])
 			&& count($this->filter['orgu']) > 0) {
 			$value = $this->filter['orgu'];
 			$role_ids = array();
@@ -160,7 +162,9 @@ class usrdefUserTableGUI extends ilTable2GUI {
 
 		$usrdefUser->where(array( 'usr_id' => 13 ), '!=');
 		if (!$usrdefUser->hasSets()) {
-			ilUtil::sendInfo('Keine Ergebnisse für diesen Filter');
+            global $DIC;
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage('success','Keine Ergebnisse für diesen Filter', true);
 		}
 		$usrdefUser->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$usrdefUser->orderBy('email');

@@ -2,9 +2,11 @@
 
 namespace srag\Plugins\UserDefaults\UserSetting;
 
+use arException;
 use ilNumberInputGUI;
 use ilPropertyFormGUI;
 use ilUserDefaultsPlugin;
+use RectorPrefix202302\SebastianBergmann\Diff\Exception;
 use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
@@ -47,13 +49,35 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 
 		$category_ref_id = new ilNumberInputGUI(self::plugin()->translate(UserDefaultsConfig::KEY_CATEGORY_REF_ID), UserDefaultsConfig::KEY_CATEGORY_REF_ID);
 		$category_ref_id->setInfo(self::plugin()->translate(UserDefaultsConfig::KEY_CATEGORY_REF_ID . "_info"));
-		$category_ref_id->setValue(UserDefaultsConfig::getField(UserDefaultsConfig::KEY_CATEGORY_REF_ID));
+        try {
+            /** @var UserDefaultsConfig $userDefaultsConfig */
+            $userDefaultsConfig = UserDefaultsConfig::findOrGetInstance(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
+            $category_ref_id->setValue($userDefaultsConfig->getValue());
+        } catch (arException $ex) {
+            //
+        }
 		$this->addItem($category_ref_id);
 	}
 
 	public function updateConfigure(): void
     {
 		$category_ref_id = $this->getInput(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
-		UserDefaultsConfig::setField(UserDefaultsConfig::KEY_CATEGORY_REF_ID, $category_ref_id);
+        /**
+         * @var UserDefaultsConfig $userDefaultsConfig
+         */
+        try {
+            $userDefaultsConfig = UserDefaultsConfig::findOrGetInstance(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
+        } catch (arException $ex) {
+            $userDefaultsConfig = new UserDefaultsConfig();
+        }
+        $userDefaultsConfig->setName(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
+        $userDefaultsConfig->setValue($category_ref_id);
+        $userDefaultsConfig->store();
+
+        //$userDefaultsConfig->setValue($category_ref_id);
+        //$userDefaultsConfig->update();
+
+		//todo
+        //UserDefaultsConfig::setField(UserDefaultsConfig::KEY_CATEGORY_REF_ID, $category_ref_id);
 	}
 }

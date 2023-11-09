@@ -97,8 +97,10 @@ class usrdefUserGUI {
     {
 		$usr_ids = $_POST['id'];
 		$user_objects = array();
-		if (count($usr_ids) == 0 || !is_array($usr_ids)) {
-			ilUtil::sendFailure(self::plugin()->translate('msg_no_users_selected'), true);
+		if ((is_array($usr_ids) && count($usr_ids) === 0) || !is_array($usr_ids)) {
+            global $DIC;
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage('failure', self::plugin()->translate('msg_no_users_selected'), true);
 			self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 		}
 		foreach ($usr_ids as $usr_id) {
@@ -113,8 +115,9 @@ class usrdefUserGUI {
 		))->get() as $ilUserSetting) {
 			$ilUserSetting->doMultipleAssignements($user_objects);
 		}
-
-		ilUtil::sendSuccess(self::plugin()->translate("userdef_users_assigned", "", [ count($usr_ids) ]), true);
+        global $DIC;
+        $tpl = $DIC["tpl"];
+        $tpl->setOnScreenMessage('success',self::plugin()->translate('userdef_users_assigned', "", [ count($usr_ids) ]), true);
 		self::dic()->ctrl()->redirect($this, self::CMD_INDEX);
 	}
 }

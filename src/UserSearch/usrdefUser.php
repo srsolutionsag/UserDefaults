@@ -113,7 +113,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $usr_id;
+	protected ?int $usr_id;
 	/**
 	 * @var
 	 *
@@ -123,7 +123,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $login;
+	protected string $login;
 	/**
 	 * @var
 	 *
@@ -133,7 +133,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $passwd;
+	protected string $passwd;
 	/**
 	 * @var
 	 *
@@ -143,7 +143,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $firstname;
+	protected string $firstname;
 	/**
 	 * @var
 	 *
@@ -153,7 +153,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $lastname;
+	protected string $lastname;
 	/**
 	 * @var
 	 *
@@ -163,7 +163,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $title;
+	protected string $title;
 	/**
 	 * @var
 	 *
@@ -173,7 +173,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $gender;
+	protected string $gender;
 	/**
 	 * @var
 	 *
@@ -183,7 +183,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $email;
+	protected string $email;
 	/**
 	 * @var
 	 *
@@ -193,7 +193,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $institution;
+	protected string $institution;
 	/**
 	 * @var
 	 *
@@ -203,7 +203,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $street;
+	protected string $street;
 	/**
 	 * @var
 	 *
@@ -213,7 +213,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $city;
+	protected string $city;
 	/**
 	 * @var
 	 *
@@ -223,7 +223,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $zipcode;
+	protected string $zipcode;
 	/**
 	 * @var
 	 *
@@ -233,7 +233,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $country;
+	protected string $country;
 	/**
 	 * @var
 	 *
@@ -243,37 +243,31 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $phone_office;
+	protected string $phone_office;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $last_login;
+	protected string $last_login;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $last_update;
+	protected string $last_update;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $create_date;
+	protected string $create_date;
 	/**
 	 * @var
 	 *
@@ -283,7 +277,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $hobby;
+	protected string $hobby;
 	/**
 	 * @var
 	 *
@@ -293,7 +287,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $department;
+	protected string $department;
 	/**
 	 * @var
 	 *
@@ -303,7 +297,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $phone_home;
+	protected string $phone_home;
 	/**
 	 * @var
 	 *
@@ -313,7 +307,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $phone_mobile;
+	protected string $phone_mobile;
 	/**
 	 * @var
 	 *
@@ -323,7 +317,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $fax;
+	protected string $fax;
 	/**
 	 * @var
 	 *
@@ -333,7 +327,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $i2passwd;
+	protected string $i2passwd;
 	/**
 	 * @var
 	 *
@@ -343,7 +337,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $time_limit_owner;
+	protected int $time_limit_owner;
 	/**
 	 * @var
 	 *
@@ -353,7 +347,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $time_limit_unlimited;
+	protected int $time_limit_unlimited;
 	/**
 	 * @var
 	 *
@@ -363,7 +357,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $time_limit_from;
+	protected int $time_limit_from;
 	/**
 	 * @var
 	 *
@@ -373,7 +367,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $time_limit_until;
+	protected int $time_limit_until;
 	/**
 	 * @var
 	 *
@@ -383,7 +377,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $time_limit_message;
+	protected int $time_limit_message;
 	/**
 	 * @var
 	 *
@@ -393,7 +387,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $referral_comment;
+	protected string $referral_comment;
 	/**
 	 * @var
 	 *
@@ -403,7 +397,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $matriculation;
+	protected string $matriculation;
 	/**
 	 * @var
 	 *
@@ -414,27 +408,23 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $active;
+	protected int $active;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $approve_date;
+	protected string $approve_date;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $agree_date;
+	protected string $agree_date;
 	/**
 	 * @var
 	 *
@@ -444,7 +434,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $ilinc_id;
+	protected int $ilinc_id;
 	/**
 	 * @var
 	 *
@@ -454,7 +444,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $ilinc_login;
+	protected string $ilinc_login;
 	/**
 	 * @var
 	 *
@@ -464,7 +454,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $ilinc_passwd;
+	protected string $ilinc_passwd;
 	/**
 	 * @var
 	 *
@@ -474,7 +464,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $client_ip;
+	protected string $client_ip;
 	/**
 	 * @var
 	 *
@@ -484,7 +474,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $auth_mode;
+	protected string $auth_mode;
 	/**
 	 * @var
 	 *
@@ -494,7 +484,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $profile_incomplete;
+	protected int $profile_incomplete;
 	/**
 	 * @var
 	 *
@@ -504,7 +494,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $ext_account;
+	protected string $ext_account;
 	/**
 	 * @var
 	 *
@@ -514,7 +504,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $im_icq;
+	protected string $im_icq;
 	/**
 	 * @var
 	 *
@@ -524,7 +514,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $im_yahoo;
+	protected string $im_yahoo;
 	/**
 	 * @var
 	 *
@@ -534,7 +524,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $im_msn;
+	protected string $im_msn;
 	/**
 	 * @var
 	 *
@@ -544,7 +534,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $im_aim;
+	protected string $im_aim;
 	/**
 	 * @var
 	 *
@@ -554,7 +544,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $im_skype;
+	protected string $im_skype;
 	/**
 	 * @var
 	 *
@@ -564,7 +554,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $feed_hash;
+	protected string $feed_hash;
 	/**
 	 * @var
 	 *
@@ -574,7 +564,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $delicious;
+	protected string $delicious;
 	/**
 	 * @var
 	 *
@@ -584,7 +574,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $latitude;
+	protected string $latitude;
 	/**
 	 * @var
 	 *
@@ -594,7 +584,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $longitude;
+	protected string $longitude;
 	/**
 	 * @var
 	 *
@@ -605,7 +595,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $loc_zoom;
+	protected int $loc_zoom;
 	/**
 	 * @var
 	 *
@@ -616,7 +606,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $login_attempts;
+	protected int $login_attempts;
 	/**
 	 * @var
 	 *
@@ -627,7 +617,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $last_password_change;
+	protected int $last_password_change;
 	/**
 	 * @var
 	 *
@@ -637,7 +627,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $im_jabber;
+	protected string $im_jabber;
 	/**
 	 * @var
 	 *
@@ -647,7 +637,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $im_voip;
+	protected string $im_voip;
 	/**
 	 * @var
 	 *
@@ -657,17 +647,15 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $reg_hash;
+	protected string $reg_hash;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $birthday;
+	protected string $birthday;
 	/**
 	 * @var
 	 *
@@ -677,27 +665,23 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $sel_country;
+	protected string $sel_country;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $last_visited;
+	protected string $last_visited;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
-	 * @con_fieldtype
-	 * @con_length
 	 *
 	 * @deprecated
 	 */
-	protected $inactivation_date;
+	protected string $inactivation_date;
 	/**
 	 * @var
 	 *
@@ -708,7 +692,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected $is_self_registered;
+	protected int $is_self_registered;
 
 
 	/**

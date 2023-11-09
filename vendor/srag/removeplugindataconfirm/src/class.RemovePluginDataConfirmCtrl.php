@@ -199,8 +199,9 @@ class RemovePluginDataConfirmCtrl
     protected function setKeepData() : void
     {
         self::setUninstallRemovesData(false);
-
-        ilUtil::sendInfo($this->txt("msg_kept_data"), true);
+        global $DIC;
+        $tpl = $DIC["tpl"];
+        $tpl->setOnScreenMessage('info', $this->txt("msg_kept_data"), true);
 
         $this->redirectToPlugins("uninstallPlugin");
     }
@@ -211,10 +212,10 @@ class RemovePluginDataConfirmCtrl
      */
     protected function setRemoveData() : void
     {
+        global $DIC;
         self::setUninstallRemovesData(true);
-
-        ilUtil::sendInfo($this->txt("msg_removed_data"), true);
-
+        $tpl = $DIC["tpl"];
+        $tpl->setOnScreenMessage('info', $this->txt("msg_removed_data"), true);
         $this->redirectToPlugins("uninstallPlugin");
     }
 

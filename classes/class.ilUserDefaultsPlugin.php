@@ -87,7 +87,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
     public function getPrefix(): string {
-        return "usrdef";
+        return "evnt_evhk_usrdef";
     }
 
 
@@ -143,7 +143,10 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 				break;
 		}
 
-		$sets = self::$mapping[$a_event];
+        if(array_key_exists($a_event, self::$mapping)) {
+            $sets = self::$mapping[$a_event];
+        }
+
 
         // adding orgunits emits an event and ends up in a loop
 		if ($run === true && $sets && $user instanceof ilObjUser && !str_contains($a_component, "Modules/OrgUnit")) {

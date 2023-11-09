@@ -73,11 +73,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
 		return self::$instance;
 	}
-
-
-	/**
-	 *
-	 */
     public function __construct(
         ilDBInterface $db,
         ilComponentRepositoryWrite $component_repository,

@@ -7,11 +7,6 @@ use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
- * Class ilUserDefaultsConfigGUI
- *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- *
- * @version 1.0.00
  * @ilCtrl_isCalledBy ilUserDefaultsConfigGUI: ilObjComponentSettingsGUI
  */
 class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
@@ -22,16 +17,12 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 	const TAB_SETTINGS = "settings";
 	const TAB_USERS = "users";
 	const TAB_GLOBAL_SETTINGS = "global_settings";
-
-
 	/**
 	 * ilUserDefaultsConfigGUI constructor
 	 */
 	public function __construct() {
 
 	}
-
-
     /**
      * @throws ilCtrlException|DICException
      */

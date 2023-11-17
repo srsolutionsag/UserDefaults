@@ -1,8 +1,6 @@
 <?php
-
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-use srag\DIC\UserDefaults\DICTrait;
 use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\UserSetting\GlobalSettingsFormGUI;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
@@ -15,86 +13,66 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  * @ilCtrl_IsCalledBy UserDefaultsGlobalSettingsGUI : ilUserDefaultsConfigGUI
  */
 class UserDefaultsGlobalSettingsGUI {
-
-	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const CMD_CONFIGURE = "configure";
 	const CMD_UPDATE_CONFIGURE = "updateConfigure";
 
+    private ilCtrl $ctrl;
+    private ilUserDefaultsPlugin $pl;
+    private ilGlobalTemplateInterface $tpl;
+    private \ILIAS\DI\UIServices $ui;
 
-	/**
-	 * UserDefaultsGlobalSettingsGUI constructor
-	 */
-	public function __construct() {
-
+    public function __construct() {
+        global $DIC;
+        $this->ctrl = $DIC->ctrl();
+        $this->ui = $DIC->ui();
+        $this->tpl = $DIC->ui()->mainTemplate();
+        $this->pl = ilUserDefaultsPlugin::getInstance();
 	}
 
-
-	public function executeCommand(): void
+    /**
+     * @throws ilCtrlException
+     */
+    public function executeCommand(): void
     {
-		$next_class = self::dic()->ctrl()->getNextClass($this);
+		$next_class = $this->ctrl->getNextClass($this);
+        $cmd = $this->ctrl->getCmd();
+        switch ($cmd) {
+            case self::CMD_CONFIGURE:
+            case self::CMD_UPDATE_CONFIGURE:
+                $this->{$cmd}();
+                break;
 
-		switch (strtolower($next_class)) {
-			default:
-				$cmd = self::dic()->ctrl()->getCmd();
-
-				switch ($cmd) {
-					case self::CMD_CONFIGURE:
-					case self::CMD_UPDATE_CONFIGURE:
-						$this->{$cmd}();
-						break;
-
-					default:
-						break;
-				}
-				break;
-		}
-	}
+            default:
+                break;
+        }
+    }
 
 	protected function getGlobalSettingsForm(): GlobalSettingsFormGUI
     {
-		$form = new GlobalSettingsFormGUI($this);
-
-		return $form;
+        return new GlobalSettingsFormGUI($this);
 	}
 
-
-    /**
-     * @throws DICException
-     * @throws ilTemplateException
-     */
     protected function configure(): void
     {
 		$form = $this->getGlobalSettingsForm();
-
-		self::output()->output($form);
-	}
-
+        $this->ui->mainTemplate()->setContent($form->getHTML());
+    }
 
     /**
-     * @throws DICException
      * @throws ilCtrlException
-     * @throws ilTemplateException
      */
     protected function updateConfigure(): void
     {
 		$form = $this->getGlobalSettingsForm();
 		$form->setValuesByPost();
-
 		if (!$form->checkInput()) {
-			self::output()->output($form);
-
+            $this->ui->mainTemplate()->setContent($form->getHTML());
 			return;
 		}
-
 		$form->updateConfigure();
-
-        global $DIC;
-        $tpl = $DIC["tpl"];
-        $tpl->setOnScreenMessage('success',self::plugin()->translate('saved'), true);
-
-
-		self::dic()->ctrl()->redirectByClass(self::class, self::CMD_CONFIGURE);
+        $this->tpl->setOnScreenMessage('success',$this->pl->txt('saved'), true);
+        $this->ctrl->redirectByClass(self::class, self::CMD_CONFIGURE);
 	}
 }

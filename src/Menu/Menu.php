@@ -3,29 +3,30 @@
 namespace srag\Plugins\UserDefaults\Menu;
 
 use ilAdministrationGUI;
-use ILIAS\GlobalScreen\Scope\MainMenu\Factory\AbstractBaseItem;
+use ilCtrlException;
 use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
-use ILIAS\UI\Component\Symbol\Icon\Standard;
 use ilObjComponentSettingsGUI;
 use ilUserDefaultsConfigGUI;
 use ilUserDefaultsPlugin;
 use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
-/**
- * Class Menu
- *
- * @package srag\Plugins\UserDefaults\Menu
- *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
- *
- * @since   ILIAS 5.4
- */
 class Menu extends AbstractStaticPluginMainMenuProvider {
-
-	use DICTrait;
-	use UserDefaultsTrait;
+    use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    private \ilCtrlInterface $ctrl;
+    private ilUserDefaultsPlugin $pl;
+    private \ILIAS\DI\UIServices $ui;
+    private \ILIAS\DI\RBACServices $rbac;
+    private \ilObjUser $user;
+
+    public function __construct(\ILIAS\DI\Container $dic) {
+        $this->ctrl = $dic->ctrl();
+        $this->ui = $dic->ui();
+        $this->rbac = $dic->rbac();
+        $this->user = $dic->user();
+        $this->pl = ilUserDefaultsPlugin::getInstance();
+    }
 
 
 	/**
@@ -33,50 +34,41 @@ class Menu extends AbstractStaticPluginMainMenuProvider {
 	 */
 	public function getStaticTopItems(): array {
 		return [
-            $this->symbol($this->mainmenu->topParentItem($this->if->identifier(ilUserDefaultsPlugin::PLUGIN_ID . "_top"))->withTitle(ilUserDefaultsPlugin::PLUGIN_NAME)
+           $this->mainmenu->topParentItem($this->if->identifier(ilUserDefaultsPlugin::PLUGIN_ID . "_top"))->withTitle(ilUserDefaultsPlugin::PLUGIN_NAME)
 				->withAvailableCallable(function (): bool {
-					return self::plugin()->getPluginObject()->isActive();
+					return $this->pl->isActive();
 				})->withVisibilityCallable(function (): bool {
-					return self::dic()->rbac()->review()->isAssigned(self::dic()->user()->getId(), 2); // Default admin role
-				}))
+					return $this->rbac->review()->isAssigned($this->user->getId(), 2); // Default admin role
+				})
 		];
 	}
 
 
-	/**
-	 * @inheritdoc
-	 */
+    /**
+     * @inheritdoc
+     * @throws ilCtrlException
+     */
 	public function getStaticSubItems(): array {
 		$parent = $this->getStaticTopItems()[0];
 
-		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "ref_id", 31);
-		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "ctype", IL_COMP_SERVICE);
-		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "cname", "EventHandling");
-		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "slot_id", "evhk");
-		self::dic()->ctrl()->setParameterByClass(ilUserDefaultsConfigGUI::class, "pname", ilUserDefaultsPlugin::PLUGIN_NAME);
+        $this->ctrl->setParameterByClass(ilUserDefaultsConfigGUI::class, "ref_id", 31);
+        $this->ctrl->setParameterByClass(ilUserDefaultsConfigGUI::class, "ctype", "Services");
+        $this->ctrl->setParameterByClass(ilUserDefaultsConfigGUI::class, "cname", "EventHandling");
+        $this->ctrl->setParameterByClass(ilUserDefaultsConfigGUI::class, "slot_id", "evhk");
+        $this->ctrl->setParameterByClass(ilUserDefaultsConfigGUI::class, "pname", ilUserDefaultsPlugin::PLUGIN_NAME);
 
 		return [
-			$this->symbol($this->mainmenu->link($this->if->identifier(ilUserDefaultsPlugin::PLUGIN_ID . "_configuration"))
-				->withParent($parent->getProviderIdentification())->withTitle(ilUserDefaultsPlugin::PLUGIN_NAME)->withAction(self::dic()->ctrl()
+			$this->mainmenu->link($this->if->identifier(ilUserDefaultsPlugin::PLUGIN_ID . "_configuration"))
+				->withParent($parent->getProviderIdentification())->withTitle(ilUserDefaultsPlugin::PLUGIN_NAME)->withAction($this->ctrl
 					->getLinkTargetByClass([
 						ilAdministrationGUI::class,
 						ilObjComponentSettingsGUI::class,
 						ilUserDefaultsConfigGUI::class
 					], ""))->withAvailableCallable(function (): bool {
-					return self::plugin()->getPluginObject()->isActive();
+					return $this->pl->isActive();
 				})->withVisibilityCallable(function (): bool {
-					return self::dic()->rbac()->review()->isAssigned(self::dic()->user()->getId(), 2); // Default admin role
-				}))
+					return $this->rbac->review()->isAssigned($this->user->getId(), 2); // Default admin role
+				})
 		];
 	}
-
-
-    protected function symbol(AbstractBaseItem $entry) : AbstractBaseItem
-    {
-        if (self::version()->is6()) {
-            $entry = $entry->withSymbol(self::dic()->ui()->factory()->symbol()->icon()->standard(Standard::USR, ilUserDefaultsPlugin::PLUGIN_NAME)->withIsOutlined(true));
-        }
-
-        return $entry;
-    }
 }

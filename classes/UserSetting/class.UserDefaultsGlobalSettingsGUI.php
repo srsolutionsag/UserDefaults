@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\UserSetting\GlobalSettingsFormGUI;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 

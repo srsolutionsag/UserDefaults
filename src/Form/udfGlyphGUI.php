@@ -4,22 +4,12 @@ namespace srag\Plugins\UserDefaults\Form;
 
 use ilGlyphGUI;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
-/**
- * Class xlvoGlyphGUI
- *
- * @package srag\Plugins\UserDefaults\Form
- *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- */
 class udfGlyphGUI extends ilGlyphGUI {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-
 
 	/**
 	 * Get glyph html

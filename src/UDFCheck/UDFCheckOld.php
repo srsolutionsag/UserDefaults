@@ -4,23 +4,10 @@ namespace srag\Plugins\UserDefaults\UDFCheck;
 
 use ActiveRecord;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use srag\ActiveRecordConfig\LiveVoting\Config\Config;
 
-/**
- * Class UDFCheckOld
- *
- * @package srag\Plugins\UserDefaults\UDFCheck
- *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
- *
- * @deprecated
- */
 class UDFCheckOld extends ActiveRecord {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	/**
 	 * @var string

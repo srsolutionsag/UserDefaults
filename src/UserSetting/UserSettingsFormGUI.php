@@ -14,8 +14,6 @@ use ilTemplateException;
 use ilTextAreaInputGUI;
 use ilTextInputGUI;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
-use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Access\Categories;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Access\GlobalRoles;
@@ -26,17 +24,8 @@ use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserSettingsGUI;
 
-/**
- * Class ilUserSettingsFormGUI
- *
- * @package srag\Plugins\UserDefaults\UserSetting
- *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
- */
 class UserSettingsFormGUI extends ilPropertyFormGUI {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const F_TITLE = 'title';
@@ -73,47 +62,44 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	protected UserSettingsGUI $parent_gui;
 	protected UserSetting $object;
 	private array $orguPositions;
+    private ilUserDefaultsPlugin $pl;
 
-	/**
-	 * @param UserSettingsGUI $parent_gui
-	 * @param UserSetting     $ilUserSetting
-	 */
+    /**
+     * @param UserSettingsGUI $parent_gui
+     * @param UserSetting $ilUserSetting
+     * @throws \ilCtrlException
+     */
 	public function __construct(UserSettingsGUI $parent_gui, UserSetting $ilUserSetting) {
+        global $DIC;
 		parent::__construct();
+        $this->pl = ilUserDefaultsPlugin::getInstance();
+        $this->ctrl = $DIC->ctrl();
 		$this->parent_gui = $parent_gui;
 		$this->object = $ilUserSetting;
-		//		self::plugin()->getPluginObject()->updateLanguageFiles();
-		$this->setFormAction(self::dic()->ctrl()->getFormAction($this->parent_gui));
+		$this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 		$this->initForm();
 	}
 
 
-    /**
-     * @throws DICException
-     */
 	protected function txt(string $key): string
     {
-		return self::plugin()->translate($key, 'set');
+		return $this->pl->txt('set_'.$key);
 	}
 
 
     /**
-     * @throws DICException
      * @throws \ilCtrlException
      * @throws ilTemplateException
      */
     protected function initForm(): void
     {
-		$this->setTitle(self::plugin()->translate('form_title'));
+		$this->setTitle($this->pl->txt('form_title'));
 		$te = new ilTextInputGUI($this->txt(self::F_TITLE), self::F_TITLE);
 		$te->setRequired(true);
 		$this->addItem($te);
 
 		$te = new ilTextAreaInputGUI($this->txt(self::F_DESCRIPTION), self::F_DESCRIPTION);
 		$this->addItem($te);
-
-		// $cb = new ilCheckboxInputGUI($this->txt(self::F_STATUS), self::F_STATUS);
-		//		$this->addItem($cb);
 
 		$a_item = new ilFormSectionHeaderGUI();
 		$a_item->setTitle($this->txt(self::F_APPLICATION));
@@ -128,14 +114,14 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($a_item);
 
 		$ilGlobalRoleMultiSelectInputGUI = new ilContainerMultiSelectInputGUI(GlobalRoles::TYPE_GLOBAL_ROLE, $this->txt(self::F_GLOBAL_ROLES), self::F_GLOBAL_ROLES);
-        $ilGlobalRoleMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_GLOBAL_ROLES));
+        $ilGlobalRoleMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_GLOBAL_ROLES));
 		$this->addItem($ilGlobalRoleMultiSelectInputGUI);
 
         $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSIGN_GLOBAL_ROLES), self::F_UNSIGN_GLOBAL_ROLES);
         $this->addItem($ilCheckboxInputGUI);
 
 		$ilLocalRoleMultiSelectInputGUI = new ilContainerMultiSelectInputGUI(LocalRoles::TYPE_LOCAL_ROLE, $this->txt(self::F_ASSIGNED_LOCAL_ROLES), self::F_ASSIGNED_LOCAL_ROLES);
-		$ilLocalRoleMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_LOCAL_ROLES));
+		$ilLocalRoleMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_LOCAL_ROLES));
 		$this->addItem($ilLocalRoleMultiSelectInputGUI);
 
         $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSIGN_LOCAL_ROLES), self::F_UNSIGN_LOCAL_ROLES);
@@ -150,7 +136,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$multiSelect->setShowLabel(true);
 
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI(Courses::TYPE_CRS, $this->txt(self::F_ASSIGNED_COURSES), self::F_ASSIGNED_COURSES);
-		$ilCourseMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
 		$ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES), self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES);
@@ -162,7 +148,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $this->addItem($a_item);
 
         $ilGroupMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS), self::F_ASSIGNED_GROUPS);
-		$ilGroupMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+		$ilGroupMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilGroupMultiSelectInputGUI);
 
         $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_GROUPS), self::F_UNSUBSCRIBE_GROUPS);
@@ -184,14 +170,14 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 
         $ilGroupMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS_QUEUE), 'obj_id', false, true, true);
         $ilGroupMultiSelectInputGUI->setWidth(600);
-        self::dic()->ctrl()->setParameter($this->parent_gui, 'with_parent', 1);
-        self::dic()->ctrl()->setParameter($this->parent_gui, 'with_members', 1);
-        self::dic()->ctrl()->setParameter($this->parent_gui, 'with_empty', 1);
-        $ilGroupMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
-        self::dic()->ctrl()->setParameter($this->parent_gui, 'with_parent', 0);
-        self::dic()->ctrl()->setParameter($this->parent_gui, 'with_members', 0);
-        self::dic()->ctrl()->setParameter($this->parent_gui, 'with_empty', 0);
-        $ilGroupMultiSelectInputGUI->setLinkToObject(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_LINK_TO_OBJECT));
+        $this->ctrl->setParameter($this->parent_gui, 'with_parent', 1);
+        $this->ctrl->setParameter($this->parent_gui, 'with_members', 1);
+        $this->ctrl->setParameter($this->parent_gui, 'with_empty', 1);
+        $ilGroupMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+        $this->ctrl->setParameter($this->parent_gui, 'with_parent', 0);
+        $this->ctrl->setParameter($this->parent_gui, 'with_members', 0);
+        $this->ctrl->setParameter($this->parent_gui, 'with_empty', 0);
+        $ilGroupMultiSelectInputGUI->setLinkToObject($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_LINK_TO_OBJECT));
         $groups_queue_input->addInput($ilGroupMultiSelectInputGUI);
 
         $this->addItem($groups_queue_input);
@@ -218,7 +204,6 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $se = new ilSelectInputGUI($this->txt(self::F_PORTFOLIO_TEMPLATE_ID), self::F_PORTFOLIO_TEMPLATE_ID);
 
 		$options = ilObjPortfolioTemplate::getAvailablePortfolioTemplates();
-		//		$options[0] = self::plugin()->translate('crs_no_template');
 		$options[1] = '--';
 
 		asort($options);
@@ -238,11 +223,11 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($te);
 
 		$ilCourseMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), self::F_PORTFOLIO_ASSIGNED_TO_GROUPS);
-		$ilCourseMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+		$ilCourseMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilCourseMultiSelectInputGUI);
 
 		$ilOrgUnitMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('orgu', $this->txt(self::F_ASSIGNED_ORGUS), self::F_ASSIGNED_ORGUS);
-		$ilOrgUnitMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+		$ilOrgUnitMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilOrgUnitMultiSelectInputGUI);
 
 		$selectOrguPosition = new ilSelectInputGUI($this->txt(self::F_ASSIGNED_ORGU_POSITION), self::F_ASSIGNED_ORGU_POSITION);
@@ -261,7 +246,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $this->addItem($ilCheckboxInputGUI);
 
 		$ilStudyProgramMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('prg', $this->txt(self::F_ASSIGNED_STUDYPROGRAMS), self::F_ASSIGNED_STUDYPROGRAMS);
-		$ilStudyProgramMultiSelectInputGUI->setAjaxLink(self::dic()->ctrl()->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+		$ilStudyProgramMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
 		$this->addItem($ilStudyProgramMultiSelectInputGUI);
 
         $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_STUDYPROGRAMS), self::F_UNSUBSCRIBE_STUDYPROGRAMS);
@@ -394,10 +379,10 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
 	protected function addCommandButtons(): void
     {
 		if ($this->object->getId() > 0) {
-			$this->addCommandButton(UserSettingsGUI::CMD_UPDATE, self::plugin()->translate('form_button_update'));
+			$this->addCommandButton(UserSettingsGUI::CMD_UPDATE, $this->pl->txt('form_button_update'));
 		} else {
-			$this->addCommandButton(UserSettingsGUI::CMD_CREATE, self::plugin()->translate('form_button_create'));
+			$this->addCommandButton(UserSettingsGUI::CMD_CREATE, $this->pl->txt('form_button_create'));
 		}
-		$this->addCommandButton(UserSettingsGUI::CMD_CANCEL, self::plugin()->translate('form_button_cancel'));
+		$this->addCommandButton(UserSettingsGUI::CMD_CANCEL, $this->pl->txt('form_button_cancel'));
 	}
 }

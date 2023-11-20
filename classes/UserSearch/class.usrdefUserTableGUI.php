@@ -2,7 +2,6 @@
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Form\usrdefOrguSelectorInputGUI;
 use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
@@ -40,7 +39,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
         $this->ctrl->saveParameter($a_parent_obj, $this->getNavParameter());
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 		$this->parent_obj = $a_parent_obj;
-		$this->setRowTemplate('tpl.row.html', self::plugin()->directory());
+		$this->setRowTemplate('tpl.row.html',$this->pl->getDirectory());
 		$this->setEnableNumInfo(true);
 		$this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
 		$this->addColumns();
@@ -122,7 +121,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 				if (strlen($value) < 3) {
                     global $DIC;
                     $tpl = $DIC["tpl"];
-                    $tpl->setOnScreenMessage('failure', self::plugin()->translate('msg_failure_more_characters_needed'), true);
+                    $tpl->setOnScreenMessage('failure', $this->pl->txt('msg_failure_more_characters_needed'), true);
 					continue;
 				}
 
@@ -179,31 +178,31 @@ class usrdefUserTableGUI extends ilTable2GUI {
 	public function getSelectableColumns(): array
     {
 		$cols['firstname'] = array(
-			'txt' => self::plugin()->translate('usr_firstname'),
+			'txt' => $this->pl->txt('usr_firstname'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => 'firstname',
 		);
 		$cols['lastname'] = array(
-			'txt' => self::plugin()->translate('usr_lastname'),
+			'txt' => $this->pl->txt('usr_lastname'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => 'lastname',
 		);
 		$cols['email'] = array(
-			'txt' => self::plugin()->translate('usr_email'),
+			'txt' => $this->pl->txt('usr_email'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => 'email',
 		);
 		$cols['login'] = array(
-			'txt' => self::plugin()->translate('usr_login'),
+			'txt' => $this->pl->txt('usr_login'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => 'login',
 		);
 		$cols['actions'] = array(
-			'txt' => self::plugin()->translate('common_actions'),
+			'txt' => $this->pl->txt('common_actions'),
 			'default' => true,
 			'width' => '50px',
 		);
@@ -232,16 +231,16 @@ class usrdefUserTableGUI extends ilTable2GUI {
     {
 		$this->setFilterCols(6);
 		// firstname
-		$te = new ilTextInputGUI(self::plugin()->translate('usr_firstname'), 'firstname');
+		$te = new ilTextInputGUI($this->pl->txt('usr_firstname'), 'firstname');
 		$this->addAndReadFilterItem($te);
 		// lastname
-		$te = new ilTextInputGUI(self::plugin()->translate('usr_lastname'), 'lastname');
+		$te = new ilTextInputGUI($this->pl->txt('usr_lastname'), 'lastname');
 		$this->addAndReadFilterItem($te);
 		// email
-		$te = new ilTextInputGUI(self::plugin()->translate('usr_email'), 'email');
+		$te = new ilTextInputGUI($this->pl->txt('usr_email'), 'email');
 		$this->addAndReadFilterItem($te);
 		// login
-		$te = new ilTextInputGUI(self::plugin()->translate('usr_login'), 'login');
+		$te = new ilTextInputGUI($this->pl->txt('usr_login'), 'login');
 		$this->addAndReadFilterItem($te);
 
 		$crs = $this->getCrsSelectorGUI();
@@ -253,7 +252,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		//$this->addAndReadFilterItem($crs);
 
 		// orgu legacy
-		//		$orgu = new ilMultiSelectInputGUI(self::plugin()->translate('usr_orgu'), 'orgu');
+		//		$orgu = new ilMultiSelectInputGUI($this->pl->txt('usr_orgu'), 'orgu');
 		//		$orgu->setOptions(ilObjOrgUnitTree::_getInstance()->getAllChildren(56));
 		//		$this->addAndReadFilterItem($orgu);
 	}

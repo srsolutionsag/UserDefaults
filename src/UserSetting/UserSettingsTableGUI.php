@@ -2,66 +2,72 @@
 
 namespace srag\Plugins\UserDefaults\UserSetting;
 
+use arException;
 use ilAdvancedSelectionListGUI;
 use ilExcel;
 use ilLinkButton;
 use ilTable2GUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
-use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;
 
-/**
- * Class ilUserSettingsTableGUI
- *
- * @package srag\Plugins\UserDefaults\UserSetting
- *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
- */
 class UserSettingsTableGUI extends ilTable2GUI {
-
-	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const USR_DEF_CONTENT = 'usr_def_content';
 	protected array $filter = array();
 	protected array $ignored_cols = array();
+    private ilUserDefaultsPlugin $pl;
+    private \ilToolbarGUI $toolbar;
 
-	public function __construct(UserSettingsGUI $parent_obj, string $parent_cmd = UserSettingsGUI::CMD_INDEX, string $template_context = "") {
-		$this->setPrefix(self::USR_DEF_CONTENT);
+    /**
+     * @throws DICException
+     * @throws \ilCtrlException
+     * @throws \ilException
+     */
+    public function __construct(UserSettingsGUI $parent_obj, string $parent_cmd = UserSettingsGUI::CMD_INDEX, string $template_context = "") {
+		global $DIC;
+        $this->ctrl = $DIC->ctrl();
+        $this->pl = ilUserDefaultsPlugin::getInstance();
+        $this->toolbar = $DIC->toolbar();
+        
+        $this->setPrefix(self::USR_DEF_CONTENT);
 		$this->setFormName(self::USR_DEF_CONTENT);
 		$this->setId(self::USR_DEF_CONTENT);
-		$this->setTitle(self::plugin()->translate('set_table_title'));
+		$this->setTitle($this->pl->txt('set_table_title'));
 		parent::__construct($parent_obj, $parent_cmd, $template_context);
-		self::dic()->ctrl()->saveParameter($parent_obj, $this->getNavParameter());
+        $this->ctrl->saveParameter($parent_obj, $this->getNavParameter());
 		$this->setEnableNumInfo(true);
-		$this->setFormAction(self::dic()->ctrl()->getFormAction($parent_obj));
+		$this->setFormAction($this->ctrl->getFormAction($parent_obj));
 		$this->addColumns();
 		$this->setDefaultOrderField('title');
 		$this->setExternalSorting(true);
 		$this->setExternalSegmentation(true);
-		$this->setRowTemplate('tpl.settings_row.html', self::plugin()->directory());
+		$this->setRowTemplate('tpl.settings_row.html', $this->pl->getDirectory());
 		$this->parseData();
 
 		$button = ilLinkButton::getInstance();
-		$button->setCaption(self::plugin()->translate("set_add"), false);
-		$button->setUrl(self::dic()->ctrl()->getLinkTarget($parent_obj, UserSettingsGUI::CMD_ADD));
+		$button->setCaption($this->pl->txt("set_add"), false);
+		$button->setUrl( $this->ctrl->getLinkTarget($parent_obj, UserSettingsGUI::CMD_ADD));
 		$button->addCSSClass("submit");
 		$button->addCSSClass("emphsubmit");
-		self::dic()->toolbar()->addButtonInstance($button);
+
+        $this->toolbar->addButtonInstance($button);
 
 		$this->setSelectAllCheckbox('setting_select');
-		$this->addMultiCommand(UserSettingsGUI::CMD_ACTIVATE_MULTIPLE_CONFIRM, self::plugin()->translate('set_activate'));
-		$this->addMultiCommand(UserSettingsGUI::CMD_DEACTIVATE_MULTIPLE_CONFIRM, self::plugin()->translate('set_deactivate'));
-		$this->addMultiCommand(UserSettingsGUI::CMD_DELETE_MULTIPLE_CONFIRM, self::plugin()->translate('set_delete'));
+		$this->addMultiCommand(UserSettingsGUI::CMD_ACTIVATE_MULTIPLE_CONFIRM, $this->pl->txt('set_activate'));
+		$this->addMultiCommand(UserSettingsGUI::CMD_DEACTIVATE_MULTIPLE_CONFIRM, $this->pl->txt('set_deactivate'));
+		$this->addMultiCommand(UserSettingsGUI::CMD_DELETE_MULTIPLE_CONFIRM, $this->pl->txt('set_delete'));
 	}
 
 
-	protected function parseData(): void
+    /**
+     * @throws arException
+     */
+    protected function parseData(): void
     {
 		$this->determineOffsetAndOrder();
 		$this->determineLimit();
@@ -94,7 +100,13 @@ class UserSettingsTableGUI extends ilTable2GUI {
 	}
 
 
-	public function fillRow(array $a_set): void
+    /**
+     * @throws \ilTemplateException
+     * @throws \ilCtrlException
+     * @throws DICException
+     * @throws \JsonException
+     */
+    public function fillRow(array $a_set): void
     {
 		$ilUserSetting = UserSetting::find($a_set['id']);
 		$ilUDFCheckGUI = new UDFCheckGUI($this->parent_obj);
@@ -105,28 +117,28 @@ class UserSettingsTableGUI extends ilTable2GUI {
 
 		foreach ($this->getSelectableColumns() as $k => $v) {
 			if ($k == 'actions') {
-				self::dic()->ctrl()->setParameter($this->parent_obj, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
-				self::dic()->ctrl()->setParameter($ilUDFCheckGUI, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
+				 $this->ctrl->setParameter($this->parent_obj, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
+				 $this->ctrl->setParameter($ilUDFCheckGUI, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
 
 				$current_selection_list = new ilAdvancedSelectionListGUI();
-				$current_selection_list->setListTitle(self::plugin()->translate('set_actions'));
+				$current_selection_list->setListTitle( $this->pl->txt('set_actions'));
 				$current_selection_list->setId('set_actions' . $ilUserSetting->getId());
 				$current_selection_list->setUseImages(false);
-				$current_selection_list->addItem(self::plugin()->translate('set_edit'), 'set_edit', self::dic()->ctrl()
+				$current_selection_list->addItem( $this->pl->txt('set_edit'), 'set_edit',  $this->ctrl
 					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT));
 
-				$current_selection_list->addItem(self::plugin()->translate('set_udf_checks'), 'set_udf_checks', self::dic()->ctrl()
+				$current_selection_list->addItem( $this->pl->txt('set_udf_checks'), 'set_udf_checks',  $this->ctrl
 					->getLinkTarget($ilUDFCheckGUI, UDFCheckGUI::CMD_INDEX));
 				if ($ilUserSetting->getStatus() == UserSetting::STATUS_ACTIVE) {
-					$current_selection_list->addItem(self::plugin()->translate('set_deactivate'), 'set_deactivate', self::dic()->ctrl()
+					$current_selection_list->addItem( $this->pl->txt('set_deactivate'), 'set_deactivate',  $this->ctrl
 						->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DEACTIVATE));
 				} else {
-					$current_selection_list->addItem(self::plugin()->translate('set_activate'), 'set_activate', self::dic()->ctrl()
+					$current_selection_list->addItem( $this->pl->txt('set_activate'), 'set_activate',  $this->ctrl
 						->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_ACTIVATE));
 				}
-				$current_selection_list->addItem(self::plugin()->translate('set_duplicate'), 'set_duplicate', self::dic()->ctrl()
+				$current_selection_list->addItem($this->pl->txt('set_duplicate'), 'set_duplicate',  $this->ctrl
 					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DUPLICATE));
-				$current_selection_list->addItem(self::plugin()->translate('set_delete'), 'set_delete', self::dic()->ctrl()
+				$current_selection_list->addItem($this->pl->txt('set_delete'), 'set_delete',  $this->ctrl
 					->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE));
 
 				$this->tpl->setCurrentBlock('td');
@@ -163,34 +175,34 @@ class UserSettingsTableGUI extends ilTable2GUI {
 	public function getSelectableColumns(): array
     {
 		$cols['status_image'] = array(
-			'txt' => self::plugin()->translate('set_status'),
+			'txt' => $this->pl->txt('set_status'),
 			'default' => true,
 			'width' => '30px',
 			'sort_field' => 'status',
 		);
 		$cols['title'] = array(
-			'txt' => self::plugin()->translate('set_title'),
+			'txt' => $this->pl->txt('set_title'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => 'title',
 		);
 		$cols['on_create'] = array(
-			'txt' => self::plugin()->translate('set_on_create'),
+			'txt' => $this->pl->txt('set_on_create'),
 			'default' => true,
 			'width' => 'auto',
 		);
 		$cols['on_update'] = array(
-			'txt' => self::plugin()->translate('set_on_update'),
+			'txt' => $this->pl->txt('set_on_update'),
 			'default' => true,
 			'width' => 'auto',
 		);
 		$cols['on_manual'] = array(
-			'txt' => self::plugin()->translate('set_on_manual'),
+			'txt' => $this->pl->txt('set_on_manual'),
 			'default' => true,
 			'width' => 'auto',
 		);
 		$cols['actions'] = array(
-			'txt' => self::plugin()->translate('set_actions'),
+			'txt' => $this->pl->txt('set_actions'),
 			'default' => true,
 			'width' => '150px',
 		);
@@ -198,8 +210,8 @@ class UserSettingsTableGUI extends ilTable2GUI {
 		return $cols;
 	}
 
-
-	private function addColumns() {
+	private function addColumns(): void
+    {
 		$this->addColumn('');
 
 		foreach ($this->getSelectableColumns() as $k => $v) {
@@ -228,7 +240,7 @@ class UserSettingsTableGUI extends ilTable2GUI {
 				$value = implode(', ', $value);
 			}
 			if (!in_array($key, $this->getIgnoredCols()) AND $this->isColumnSelected($key)) {
-				$a_worksheet->writeString($a_row, $col, strip_tags($value));
+				$a_worksheet->setCell($a_row, $col, strip_tags($value));
 				$col ++;
 			}
 		}

@@ -6,11 +6,6 @@ use arField;
 use ilObjUser;
 use ilUserSearchOptions;
 
-/**
- * Class UDFCheckUser
- *
- * @package srag\Plugins\UserDefaults\UDFCheck
- */
 class UDFCheckUser extends UDFCheck {
 
 	const TABLE_NAME = 'usr_def_checks_user';

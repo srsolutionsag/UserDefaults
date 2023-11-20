@@ -7,30 +7,20 @@ use ilSubEnabledFormPropertyGUI;
 use ilTemplate;
 use ilTemplateException;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
-use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
-/**
- * Class ilMultipleTextInput3GUI
- *
- * @package srag\Plugins\UserDefaults\Form
- *
- * @author  Oskar Truffer <ot@studer-raimann.ch>
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version $Id:
- */
 class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
-
-	use DICTrait;
-	use UserDefaultsTrait;
+    use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	protected array $values;
 	protected string $placeholder;
 	protected bool $disableOldFields;
+    private ilUserDefaultsPlugin $pl;
 
-	public function __construct(string $title, string $post_var, string $placeholder) {
+    public function __construct(string $title, string $post_var, string $placeholder) {
 		parent::__construct($title, $post_var);
+        $this->pl = ilUserDefaultsPlugin::getInstance();
+
 		$this->placeholder = $placeholder;
 	}
 
@@ -48,11 +38,15 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 	}
 
 
-	protected function buildHTML(ilTemplate $tpl): ilTemplate
+    /**
+     * @throws DICException
+     * @throws ilTemplateException
+     */
+    protected function buildHTML(ilTemplate $tpl): ilTemplate
     {
 		$tpl->setCurrentBlock("title");
-		$tpl->setVariable("CSS_PATH", self::plugin()->getPluginObject()->getStyleSheetLocation("content.css"));
-		$tpl->setVariable("X_IMAGE_PATH", self::plugin()->getPluginObject()->getImagePath("x_image.png"));
+		$tpl->setVariable("CSS_PATH",  $this->pl->getStyleSheetLocation("content.css"));
+		$tpl->setVariable("X_IMAGE_PATH",  $this->pl->getImagePath("x_image.png"));
 		$tpl->setVariable("PLACEHOLDER", $this->placeholder);
 		$tpl->setVariable("POSTVAR", $this->getPostVar());
 		$tpl->setVariable("NEW_OPTION", $this->getPostVar());
@@ -66,7 +60,7 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 				$tpl->setCurrentBlock("lvo_option");
 				$tpl->setVariable("OPTION_ID", $this->getPostVar() . "[" . $id . "]");
 				$tpl->setVariable("NEW_OPTION", $new);
-				if (substr($id, 0, 3) == "new") {
+				if (str_starts_with($id, "new")) {
 					$new ++;
 				}
 				$tpl->setVariable("OPTION_VALUE", $value);
@@ -75,7 +69,7 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 				$tpl->setVariable("PLACEHOLDER", "");
 				$tpl->setVariable("X_DISPLAY", "float");
 				$tpl->setVariable("DISABLED", "disabled");
-				$tpl->setVariable("X_IMAGE_PATH", self::plugin()->getPluginObject()->getImagePath("x_image.png"));
+				$tpl->setVariable("X_IMAGE_PATH", $this->pl->getImagePath("x_image.png"));
 				$tpl->parseCurrentBlock();
 			}
 		}
@@ -87,7 +81,7 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI {
 		$tpl->setVariable("OPTION_CLASS", "lvo_new_option");
 		$tpl->setVariable("PLACEHOLDER", "placeholder = '" . $this->placeholder . "'");
 		$tpl->setVariable("PLACEHOLDER_CLASS", "placeholder");
-		$tpl->setVariable("X_IMAGE_PATH", self::plugin()->getPluginObject()->getImagePath("x_image.png"));
+		$tpl->setVariable("X_IMAGE_PATH", $this->pl->getImagePath("x_image.png"));
 		$tpl->setVariable("X_DISPLAY", "none");
 		$tpl->parseCurrentBlock();
 

@@ -5,22 +5,15 @@ namespace srag\Plugins\UserDefaults\UserSearch;
 use ActiveRecord;
 use ilException;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefUser
  *
- * @package    srag\Plugins\UserDefaults\UserSearch
- *
- * @author     Fabian Schmid <fs@studer-raimann.ch>
- * @version    2.0.6
- *
  * @deprecated TODO: Remove this class
  */
 class usrdefUser extends ActiveRecord {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	/**
 	 * @var string

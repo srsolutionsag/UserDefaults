@@ -148,7 +148,7 @@ class UserSettingsFormGUI extends ilPropertyFormGUI {
         $this->addItem($a_item);
 
         $ilGroupMultiSelectInputGUI = new ilContainerMultiSelectInputGUI('grp', $this->txt(self::F_ASSIGNED_GROUPS), self::F_ASSIGNED_GROUPS);
-		$ilGroupMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_COURSES));
+		$ilGroupMultiSelectInputGUI->setAjaxLink($this->ctrl->getLinkTarget($this->parent_gui, UserSettingsGUI::CMD_SEARCH_GROUPS));
 		$this->addItem($ilGroupMultiSelectInputGUI);
 
         $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_GROUPS), self::F_UNSUBSCRIBE_GROUPS);

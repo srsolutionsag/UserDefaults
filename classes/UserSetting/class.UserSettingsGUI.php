@@ -220,9 +220,10 @@ class UserSettingsGUI
         $with_parent = (bool)filter_input(INPUT_GET, "with_parent");
         $with_members = (bool)filter_input(INPUT_GET, "with_members");
         $with_empty = (bool)filter_input(INPUT_GET, "with_empty");
-        $category_ref_id = UserDefaultsConfig::getField(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
-        if (!empty($category_ref_id)) {
-            $courses = $this->repositoryTree->getSubTree($this->repositoryTree->getNodeData($category_ref_id), false, ["crs"]);
+
+        $userDefaultsConfig = UserDefaultsConfig::findOrGetInstance(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
+        if (!empty($userDefaultsConfig->getValue())) {
+            $courses = $this->repositoryTree->getSubTree($this->repositoryTree->getNodeData($userDefaultsConfig->getValue()), false, ["crs"]);
         } else {
             $courses = [];
         }
@@ -246,8 +247,8 @@ class UserSettingsGUI
         if ($with_empty) {
             $courses[] = ["id" => 0, "text" => '-'];
         }
-
-        while (($row = $result->fetchAssoc()) !== false) {
+        $rows = $this->db->fetchAll($result);
+        foreach ($rows as $row) {
             $title = $row["title"];
             if ($with_parent) {
                 $allReferences = ilObject::_getAllReferences($row["obj_id"]);

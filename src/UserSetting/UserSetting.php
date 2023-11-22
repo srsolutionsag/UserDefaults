@@ -64,10 +64,11 @@ class UserSetting extends ActiveRecord {
 
     public function __construct($primary_key = 0) {
         global $DIC;
-        parent::__construct($primary_key);
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->rbac = $DIC->rbac();
         $this->user = $DIC->user();
+
+        parent::__construct($primary_key);
     }
 
     /**
@@ -168,7 +169,7 @@ class UserSetting extends ActiveRecord {
 	public function doAssignements(ilObjUser $user): void
     {
 		$this->setUsrObject($user);
-		if ($this->isValid()) {
+		if ($this->isValid() === true) {
 			$this->generatePortfolio();
 			$this->assignLocalRoles();
 			$this->assignCourses();
@@ -432,7 +433,6 @@ class UserSetting extends ActiveRecord {
 	protected function isValid(): bool
     {
 		$do_assignements = true;
-
 		foreach ($this->getUdfCheckObjects() as $udf) {
 			if (!$udf->isValid($this->getUsrObject())) {
 				$do_assignements = false;
@@ -547,8 +547,7 @@ class UserSetting extends ActiveRecord {
 
 	public function afterObjectLoad(): void
     {
-		$ilUDFChecks = UDFCheck::getChecksByParent($this->getId());
-		$this->setUdfCheckObjects($ilUDFChecks);
+
 	}
 
 	protected function addSkills(): void
@@ -1073,6 +1072,9 @@ class UserSetting extends ActiveRecord {
 
 	public function getUdfCheckObjects(): array
     {
+        //todo
+        $ilUDFChecks = UDFCheck::getChecksByParent($this->getId());
+        $this->setUdfCheckObjects($ilUDFChecks);
 		return $this->udf_check_objects;
 	}
 

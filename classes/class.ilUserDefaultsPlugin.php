@@ -88,6 +88,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
                                 string $a_event,
                                 array $a_parameter): void
     {
+
 		$run = false;
 		$user = NULL;
 		switch ($a_component) {
@@ -143,7 +144,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
         // adding orgunits emits an event and ends up in a loop
 		if ($run === true && $sets && $user instanceof ilObjUser && !str_contains($a_component, "Modules/OrgUnit")) {
-			/**
+            /**
 			 * @var UserSetting $ilUserSetting
 			 */
 			foreach (UserSetting::where(array(
@@ -170,7 +171,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	}
 
 
-	protected function deleteData(): void {
+	protected function afterUninstall(): void {
         $this->db->dropTable(UDFCheckOld::TABLE_NAME, false);
 		foreach (UDFCheck::$class_names as $class) {
             $this->db->dropTable($class::TABLE_NAME, false);

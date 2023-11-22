@@ -6,8 +6,9 @@ use ActiveRecord;
 use ActiveRecordList;
 use ilObjUser;
 use ilUserDefaultsPlugin;
+use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use srag\ActiveRecordConfig\UserDefaults\Config\Config;
+
 
 abstract class UDFCheck extends ActiveRecord {
 
@@ -330,7 +331,7 @@ abstract class UDFCheck extends ActiveRecord {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':
-				return date(Config::SQL_DATE_FORMAT, $this->{$field_name});
+				return date(UserDefaultsConfig::SQL_DATE_FORMAT, $this->{$field_name});
 				break;
 		}
 

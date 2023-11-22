@@ -79,7 +79,7 @@ class UDFCheckGUI {
     {
 		$ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
 		$ilUDFCheckFormGUI->fillForm();
-		self::output()->output($ilUDFCheckFormGUI);
+        $this->ui->mainTemplate()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 
 	protected function create(): void
@@ -89,7 +89,7 @@ class UDFCheckGUI {
 		if ($id = $ilUDFCheckFormGUI->saveObject()) {
             global $DIC;
             $tpl = $DIC["tpl"];
-            $tpl->setOnScreenMessage('success', self::plugin()->translate('msg_entry_added'), true);
+            $tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
 			$this->ctrl->setParameter($this, self::IDENTIFIER_CATEGORY, $ilUDFCheckFormGUI->getObject()->getFieldCategory());
             $this->ctrl->setParameter($this, self::IDENTIFIER, $id);
             $this->ctrl->redirect($this, self::CMD_EDIT);

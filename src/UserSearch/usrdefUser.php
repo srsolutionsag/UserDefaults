@@ -241,6 +241,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -249,6 +250,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -257,6 +259,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -350,7 +353,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected int $time_limit_from;
+	protected ?int $time_limit_from;
 	/**
 	 * @var
 	 *
@@ -360,7 +363,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected int $time_limit_until;
+	protected ?int $time_limit_until;
 	/**
 	 * @var
 	 *
@@ -406,6 +409,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -414,10 +418,11 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
-	protected string $agree_date;
+	protected ?string $agree_date;
 	/**
 	 * @var
 	 *
@@ -547,7 +552,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected string $feed_hash;
+	protected ?string $feed_hash;
 	/**
 	 * @var
 	 *
@@ -640,15 +645,16 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected string $reg_hash;
+	protected ?string $reg_hash;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
-	protected string $birthday;
+	protected ?string $birthday;
 	/**
 	 * @var
 	 *
@@ -663,6 +669,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -671,10 +678,11 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
-	protected string $inactivation_date;
+	protected ?string $inactivation_date;
 	/**
 	 * @var
 	 *

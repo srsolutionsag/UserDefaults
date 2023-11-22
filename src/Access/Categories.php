@@ -2,50 +2,44 @@
 
 namespace srag\Plugins\UserDefaults\Access;
 
+use ilTree;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
-/**
- * Class Categories
- *
- * @package srag\Plugins\UserDefaults\Access
- *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
- */
-final class Categories {
+final class Categories
+{
+    use UserDefaultsTrait;
 
-	use DICTrait;
-	use UserDefaultsTrait;
-	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-	const TYPE_CAT = "cat";
-	protected static ?Categories $instance = NULL;
+    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    const TYPE_CAT = "cat";
+    protected static ?Categories $instance = NULL;
+    private ilTree $repositoryTree;
 
 
-	/**
-	 * @return self
-	 */
-	public static function getInstance(): ?Categories {
-		if (self::$instance === NULL) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-	}
-
-
-	/**
-	 * Categories constructor
-	 */
-	private function __construct() {
-
-	}
-
-	/**
-	 * @return int[]
-	 */
-	public function getCategoriesOfCategory(int $category_ref_id): array
+    public static function getInstance(): ?Categories
     {
-		return self::dic()->repositoryTree()->getSubTree(self::dic()->repositoryTree()->getNodeData($category_ref_id), false, [self::TYPE_CAT]);
-	}
+        if (self::$instance === NULL) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+
+    /**
+     * Categories constructor
+     */
+    private function __construct()
+    {
+        global $DIC;
+        $this->repositoryTree = $DIC->repositoryTree();
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCategoriesOfCategory(int $category_ref_id): array
+    {
+        return $this->repositoryTree->getSubTree($this->repositoryTree->getNodeData($category_ref_id), false, [self::TYPE_CAT]);
+    }
 }

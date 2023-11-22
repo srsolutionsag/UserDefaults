@@ -5,8 +5,6 @@ namespace srag\Plugins\UserDefaults\Form;
 use ilDclGenericMultiInputGUI;
 use ilException;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
-use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
@@ -18,16 +16,24 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
 {
-    use DICTrait;
+
     use UserDefaultsTrait;
     const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+
+    public function __construct(
+        string $a_title = "",
+        string $a_postvar = ""
+    ) {
+        global $DIC;
+        parent::__construct($a_title, $a_postvar);
+        $this->pl = ilUserDefaultsPlugin::getInstance();
+    }
 
 
     /**
      * Insert property html
      *
      * @return void Size
-     * @throws DICException
      * @throws ilException
      */
     public function insert(\ilTemplate $a_tpl): void
@@ -54,7 +60,7 @@ class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
 
         if ($this->getMulti()) {
             $output = '<div id="' . $this->getFieldId() . '" class="multi_line_input">' . $output . '</div>';
-            $tpl->addJavascript(self::plugin()->directory() . '/templates/default/generic_multi_line_input.js');
+            $tpl->addJavascript($this->pl->getDirectory() . '/templates/default/generic_multi_line_input.js');
             $output .= '<script type="text/javascript">$("#' . $this->getFieldId() . '").multi_line_input('
                 . json_encode($this->input_options) . ', '
                 . json_encode(array('limit' => $this->limit, 'sortable' => $this->multi_sortable, 'locale' => $DIC->language()->getLangKey()))
@@ -65,5 +71,4 @@ class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
         $a_tpl->setVariable("PROP_GENERIC", $output);
         $a_tpl->parseCurrentBlock();
     }
-
 }

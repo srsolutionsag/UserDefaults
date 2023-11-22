@@ -6,21 +6,12 @@ use ActiveRecord;
 use ActiveRecordList;
 use ilObjUser;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
+use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use srag\ActiveRecordConfig\UserDefaults\Config\Config;
 
-/**
- * Class UDFCheck
- *
- * @package srag\Plugins\UserDefaults\UDFCheck
- *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
- */
+
 abstract class UDFCheck extends ActiveRecord {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	const OP_EQUALS = 1;
@@ -79,8 +70,9 @@ abstract class UDFCheck extends ActiveRecord {
 		UDFCheckUser::FIELD_CATEGORY => UDFCheckUser::class,
 		UDFCheckUDF::FIELD_CATEGORY => UDFCheckUDF::class
 	];
+    private ilObjUser $user;
 
-	public final function getConnectorContainerName(): string
+    public final function getConnectorContainerName(): string
     {
 		return static::TABLE_NAME;
 	}
@@ -90,8 +82,16 @@ abstract class UDFCheck extends ActiveRecord {
 		return static::TABLE_NAME;
 	}
 
+    public function __construct($primary_key = 0)
+    {
+        global $DIC;
+        parent::__construct($primary_key);
 
-	public static function newInstance(int $field_category): UDFCheckUDF|static
+        $this->user = $DIC->user();
+    }
+
+
+    public static function newInstance(int $field_category): UDFCheckUDF|static
     {
 		$class = self::$class_names[$field_category];
 
@@ -325,13 +325,13 @@ abstract class UDFCheck extends ActiveRecord {
 	/**
 	 * @param $field_name
 	 *
-	 * @return mixed|null|string
+	 * @return string|null
 	 */
 	public function sleep($field_name) {
 		switch ($field_name) {
 			case 'create_date':
 			case 'update_date':
-				return date(Config::SQL_DATE_FORMAT, $this->{$field_name});
+				return date(UserDefaultsConfig::SQL_DATE_FORMAT, $this->{$field_name});
 				break;
 		}
 
@@ -359,14 +359,14 @@ abstract class UDFCheck extends ActiveRecord {
 
 	public function update(): void
     {
-		$this->setOwner(self::dic()->user()->getId());
+		$this->setOwner($this->user->getId());
 		$this->setUpdateDate(time());
 		parent::update();
 	}
 
 	public function create(): void
     {
-		$this->setOwner(self::dic()->user()->getId());
+		$this->setOwner($this->user->getId());
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());
 		parent::create();

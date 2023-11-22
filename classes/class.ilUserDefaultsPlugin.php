@@ -9,7 +9,6 @@ use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use srag\RemovePluginDataConfirm\UserDefaults\PluginUninstallTrait;
 
 /**
  * Class ilUserDefaultsPlugin
@@ -23,7 +22,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	const PLUGIN_ID = 'usrdef';
 	const PLUGIN_NAME = 'UserDefaults';
 	const PLUGIN_CLASS_NAME = self::class;
-	const REMOVE_PLUGIN_DATA_CONFIRM_CLASS_NAME = usrdefRemoveDataConfirm::class;
 	// Known Components
 	const SERVICES_USER = 'Services/User';
 	const SERVICES_OBJECT = 'Services/Object';
@@ -90,6 +88,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
                                 string $a_event,
                                 array $a_parameter): void
     {
+
 		$run = false;
 		$user = NULL;
 		switch ($a_component) {
@@ -145,7 +144,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 
         // adding orgunits emits an event and ends up in a loop
 		if ($run === true && $sets && $user instanceof ilObjUser && !str_contains($a_component, "Modules/OrgUnit")) {
-			/**
+            /**
 			 * @var UserSetting $ilUserSetting
 			 */
 			foreach (UserSetting::where(array(
@@ -167,20 +166,25 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	 * @inheritdoc
 	 */
 	public function promoteGlobalScreenProvider(): AbstractStaticPluginMainMenuProvider {
-		return new Menu(self::dic()->dic(), $this);
+        global $DIC;
+		return new Menu($DIC, $this);
 	}
 
 
-	protected function deleteData(): void {
-		self::dic()->database()->dropTable(UDFCheckOld::TABLE_NAME, false);
+	protected function afterUninstall(): void {
+        $this->db->dropTable(UDFCheckOld::TABLE_NAME, false);
 		foreach (UDFCheck::$class_names as $class) {
-			self::dic()->database()->dropTable($class::TABLE_NAME, false);
+            $this->db->dropTable($class::TABLE_NAME, false);
 		}
-		self::dic()->database()->dropTable(UserSetting::TABLE_NAME, false);
+        $this->db->dropTable(UserSetting::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);
 		//self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);
-		self::dic()->database()->dropTable(UserDefaultsConfig::TABLE_NAME, false);
+        $this->db->dropTable(UserDefaultsConfig::TABLE_NAME, false);
 	}
+
+    public function getImagePath(string $imageName): string {
+        return $this->getDirectory()."/templates/images/".$imageName;
+    }
 
 
     /**

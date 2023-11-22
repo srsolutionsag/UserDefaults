@@ -59,25 +59,27 @@ foreach (\srag\Plugins\UserDefaults\UserSetting\UserSetting::get() as $ilUserSet
 ?>
 <#13>
 <?php
-if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+global $DIC;
+if ($DIC->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
-	if(\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"udf_field_id")
-		&& \srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"field_key")) {
-		\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"field_key");
+	if($DIC->database()->tableColumnExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"udf_field_id")
+		&& $DIC->database()->tableColumnExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"field_key")) {
+		$DIC->database()->dropTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME,"field_key");
 	}
 
-	\srag\DIC\UserDefaults\DICStatic::dic()->database()
+	$DIC->database
 		->renameTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "udf_field_id", "field_key");
 
-	\srag\DIC\UserDefaults\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
+	$DIC->d->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
 		"type" => "text"
 	]);
 }
 ?>
 <#14>
 <?php
-if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+global $DIC;
+if ($DIC->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
 	/**
@@ -93,10 +95,11 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugi
 ?>
 <#15>
 <?php
-if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+global $DIC;
+if ($DIC->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
-	\srag\DIC\UserDefaults\DICStatic::dic()->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
+	$DIC->database()->modifyTableColumn(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, "field_key", [
 		"type" => "text",
 		"length" => "256"
 	]);
@@ -104,10 +107,11 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugi
 ?>
 <#16>
 <?php
+global $DIC;
 \srag\Plugins\UserDefaults\UDFCheck\UDFCheckUser::updateDB();
 \srag\Plugins\UserDefaults\UDFCheck\UDFCheckUDF::updateDB();
 
-if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
+if ($DIC->database()->tableExists(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME)) {
 	\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::updateDB();
 
 	/**
@@ -129,7 +133,7 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugi
 		$UDFCheck->store();
 	}
 
-	\srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTable(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, false);
+	$DIC->database()->dropTable(\srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld::TABLE_NAME, false);
 }
 ?>
 <#17>
@@ -150,11 +154,12 @@ if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableExists(\srag\Plugi
 ?>
 <#21>
 <?php
+global $DIC;
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 $usr_setting_table = \srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME;
-if ($ilDB->tableColumnExists($usr_setting_table, 'global_role')) {
-	$ilDB->query('UPDATE ' . $usr_setting_table . ' SET global_roles = CONCAT("[", global_role, "]") WHERE true');
-	$ilDB->dropTableColumn($usr_setting_table, 'global_role');
+if ($DIC->database()->tableColumnExists($usr_setting_table, 'global_role')) {
+    $DIC->database()->query('UPDATE ' . $usr_setting_table . ' SET global_roles = CONCAT("[", global_role, "]") WHERE true');
+    $DIC->database()->dropTableColumn($usr_setting_table, 'global_role');
 }
 ?>
 <#22>
@@ -163,19 +168,21 @@ if ($ilDB->tableColumnExists($usr_setting_table, 'global_role')) {
 ?>
 <#23>
 <?php
-if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop"))
-    \srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop");
+global $DIC;
+if ($DIC->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop"))
+    $DIC->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_courses_desktop");
 
-if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop"))
-    \srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop");
+if ($DIC->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop"))
+    $DIC->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_categories_desktop");
 
-if (\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop"))
-    \srag\DIC\UserDefaults\DICStatic::dic()->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop");
+if ($DIC->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop"))
+    $DIC->database()->dropTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "assigned_groupes_desktop");
 ?>
 <#24>
 <?php
-if (!\srag\DIC\UserDefaults\DICStatic::dic()->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp"))
-    \srag\DIC\UserDefaults\DICStatic::dic()->database()->addTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp", ["type" => "integer"]);
+global $DIC;
+if (!$DIC->database()->tableColumnExists(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp"))
+    $DIC->database()->addTableColumn(\srag\Plugins\UserDefaults\UserSetting\UserSetting::TABLE_NAME, "unsubscr_from_grp", ["type" => "integer"]);
 ?>
 <#25>
 <?php

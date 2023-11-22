@@ -21,13 +21,9 @@
     "issues": "https://git.fluxlabs.ch"
   },
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.0",
     "ext-dom": "*",
-    "ext-json": "*",
-    "srag/activerecordconfig": ">=0.1.0",
-    "srag/dic": ">=0.1.0",
-    "srag/librariesnamespacechanger": ">=0.1.0",
-    "srag/removeplugindataconfirm": ">=0.1.0"
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
@@ -42,9 +38,5 @@
     "sort-packages": true,
     "classmap-authoritative": true
   },
-  "scripts": {
-    "pre-autoload-dump": [
-      "srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger::rewriteLibrariesNamespaces"
-    ]
-  }
+  "scripts": {  }
 }

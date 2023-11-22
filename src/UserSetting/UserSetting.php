@@ -45,7 +45,6 @@ use ilRbacReview;
  */
 class UserSetting extends ActiveRecord {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	const TABLE_NAME = 'usr_def_sets';
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
@@ -59,6 +58,18 @@ class UserSetting extends ActiveRecord {
 		self::P_USER_LASTNAME,
 		self::P_USER_EMAIL,
 	);
+    private ilUserDefaultsPlugin $pl;
+    private \ILIAS\DI\RBACServices $rbac;
+    private ilObjUser $user;
+
+    public function __construct($primary_key = 0) {
+        global $DIC;
+        $this->pl = ilUserDefaultsPlugin::getInstance();
+        $this->rbac = $DIC->rbac();
+        $this->user = $DIC->user();
+
+        parent::__construct($primary_key);
+    }
 
     /**
      * @deprecated
@@ -133,12 +144,12 @@ class UserSetting extends ActiveRecord {
 
 	public function update(): void
     {
-		$this->setOwner(self::dic()->user()->getId());
+		$this->setOwner($this->user->getId());
 		$this->setUpdateDate(time());
 		if (!$this->hasChecks() AND $this->getStatus() == self::STATUS_ACTIVE) {
             global $DIC;
             $tpl = $DIC["tpl"];
-            $tpl->setOnScreenMessage('info', ilUserDefaultsPlugin::getInstance()->txt('msg_activation_failed'), true);
+            $tpl->setOnScreenMessage('info', $this->pl->txt('msg_activation_failed'), true);
 			$this->setStatus(self::STATUS_INACTIVE);
 		}
 		parent::update();
@@ -146,7 +157,7 @@ class UserSetting extends ActiveRecord {
 
 	public function create(): void
     {
-		$this->setOwner(self::dic()->user()->getId());
+		$this->setOwner($this->user->getId());
 		$this->setUpdateDate(time());
 		$this->setCreateDate(time());
 		if (!$this->hasChecks()) {
@@ -158,7 +169,7 @@ class UserSetting extends ActiveRecord {
 	public function doAssignements(ilObjUser $user): void
     {
 		$this->setUsrObject($user);
-		if ($this->isValid()) {
+		if ($this->isValid() === true) {
 			$this->generatePortfolio();
 			$this->assignLocalRoles();
 			$this->assignCourses();
@@ -211,7 +222,7 @@ class UserSetting extends ActiveRecord {
 		$global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
             if (ilObject2::_lookupType($global_role) == 'role') {
-                self::dic()->rbac()->admin()->assignUser($global_role, $this->getUsrObject()->getId());
+                $this->rbac->admin()->assignUser($global_role, $this->getUsrObject()->getId());
             }
         }
 	}
@@ -225,7 +236,7 @@ class UserSetting extends ActiveRecord {
         $global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
             if (ilObject2::_lookupType($global_role) == 'role') {
-                self::dic()->rbac()->admin()->deassignUser($global_role, $this->getUsrObject()->getId());
+                $this->rbac->admin()->deassignUser($global_role, $this->getUsrObject()->getId());
             }
         }
     }
@@ -239,7 +250,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($local_roles as $local_roles_obj_id) {
-			self::dic()->rbac()->admin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+            $this->rbac->admin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
 		}
 	}
 
@@ -256,7 +267,7 @@ class UserSetting extends ActiveRecord {
         }
 
         foreach ($local_roles as $local_roles_obj_id) {
-            self::dic()->rbac()->admin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+            $this->rbac->admin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
         }
     }
 
@@ -347,11 +358,11 @@ class UserSetting extends ActiveRecord {
 	    $usr_id = $this->getUsrObject()->getId();
             $references = ilObject2::_getAllReferences($id);
             $reference= array_shift($references);
-	    $groupRoles = self::dic()->rbac()->review()->getRolesOfRoleFolder($reference);
+	    $groupRoles =$this->rbac->review()->getRolesOfRoleFolder($reference);
 	    foreach ($groupRoles as $grouprole) {
 		    if (ilObject2::_lookupTitle($grouprole) == 'il_grp_member_'.$reference) {
 			    $memberRole = $grouprole;
-	    		    self::dic()->rbac()->admin()->deassignUser($memberRole,$usr_id);
+	    		   $this->rbac->admin()->deassignUser($memberRole,$usr_id);
 			    continue;
 		    }
 	    }
@@ -422,7 +433,6 @@ class UserSetting extends ActiveRecord {
 	protected function isValid(): bool
     {
 		$do_assignements = true;
-
 		foreach ($this->getUdfCheckObjects() as $udf) {
 			if (!$udf->isValid($this->getUsrObject())) {
 				$do_assignements = false;
@@ -537,8 +547,7 @@ class UserSetting extends ActiveRecord {
 
 	public function afterObjectLoad(): void
     {
-		$ilUDFChecks = UDFCheck::getChecksByParent($this->getId());
-		$this->setUdfCheckObjects($ilUDFChecks);
+
 	}
 
 	protected function addSkills(): void
@@ -872,7 +881,7 @@ class UserSetting extends ActiveRecord {
     {
         return match ($field_name) {
             'global_roles', 'assigned_local_roles', 'assigned_courses', 'assigned_groupes', 'portfolio_assigned_to_groups', 'assigned_groups_queue', 'assigned_orgus', 'assigned_studyprograms' => json_encode($this->{$field_name}),
-            'create_date', 'update_date' => date(Config::SQL_DATE_FORMAT, $this->{$field_name}),
+            'create_date', 'update_date' => date("Y-m-d H:i:s", $this->{$field_name}),
             default => null,
         };
 
@@ -1063,6 +1072,9 @@ class UserSetting extends ActiveRecord {
 
 	public function getUdfCheckObjects(): array
     {
+        //todo
+        $ilUDFChecks = UDFCheck::getChecksByParent($this->getId());
+        $this->setUdfCheckObjects($ilUDFChecks);
 		return $this->udf_check_objects;
 	}
 

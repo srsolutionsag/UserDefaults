@@ -5,7 +5,6 @@ namespace srag\Plugins\UserDefaults\Config;
 use ilException;
 use ilUserDefaultsPlugin;
 use ActiveRecord;
-use srag\DIC\UserDefaults\DICTrait;
 use arConnector;
 
 /**
@@ -17,7 +16,6 @@ use arConnector;
  */
 class UserDefaultsConfig extends ActiveRecord
 {
-    use DICTrait;
     protected static string $table_name = "usr_def_config";
     const TABLE_NAME = "usr_def_config";
     const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
@@ -75,65 +73,40 @@ class UserDefaultsConfig extends ActiveRecord
     protected mixed $value = null;
 
 
-    /**
-     * Config constructor
-     */
     public function __construct(?string $primary_name_value = null, ?arConnector $connector = null)
     {
         parent::__construct($primary_name_value, $connector);
     }
 
-
-
-    /**
-     * @inheritDoc
-     *
-     * @deprecated
-     */
     public static function returnDbTableName() : string
     {
         return self::getTableName();
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function getConnectorContainerName() : string
     {
         return self::getTableName();
     }
 
-
-    /**
-     * @return string
-     */
     public function getName() : string
     {
         return $this->name;
     }
 
-
-    /**
-     * @param string $name
-     */
     public function setName(string $name) : void
     {
         $this->name = $name;
     }
-
 
     public function getValue(): mixed
     {
         return $this->value;
     }
 
-
     public function setValue(mixed $value) : void
     {
         $this->value = $value;
     }
-
 
     public function sleep($field_name)
     {
@@ -145,10 +118,6 @@ class UserDefaultsConfig extends ActiveRecord
         }
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function wakeUp(/*string*/ $field_name, $field_value)
     {
         switch ($field_name) {

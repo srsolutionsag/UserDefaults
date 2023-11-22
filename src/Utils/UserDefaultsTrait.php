@@ -5,11 +5,6 @@ namespace srag\Plugins\UserDefaults\Utils;
 use srag\Plugins\UserDefaults\Access\Access;
 use srag\Plugins\UserDefaults\Access\Ilias;
 
-/**
- * Trait UserDefaultsTrait
- *
- * @package srag\Plugins\UserDefaults\Utils
- */
 trait UserDefaultsTrait {
 
 	/**

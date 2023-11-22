@@ -5,11 +5,6 @@ namespace srag\Plugins\UserDefaults\UDFCheck;
 use ilObjUser;
 use ilUserDefinedFields;
 
-/**
- * Class UDFCheckUDF
- *
- * @package srag\Plugins\UserDefaults\UDFCheck
- */
 class UDFCheckUDF extends UDFCheck {
 
 	const TABLE_NAME = 'usr_def_checks_udf';
@@ -36,7 +31,6 @@ class UDFCheckUDF extends UDFCheck {
 					continue;
 				}
 			}
-
 
 			$udf_field["txt"] = $field["field_name"];
 			$udf_field["field_category"] = self::FIELD_CATEGORY;

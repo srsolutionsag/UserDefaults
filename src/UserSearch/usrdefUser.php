@@ -5,22 +5,15 @@ namespace srag\Plugins\UserDefaults\UserSearch;
 use ActiveRecord;
 use ilException;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefUser
  *
- * @package    srag\Plugins\UserDefaults\UserSearch
- *
- * @author     Fabian Schmid <fs@studer-raimann.ch>
- * @version    2.0.6
- *
  * @deprecated TODO: Remove this class
  */
 class usrdefUser extends ActiveRecord {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	/**
 	 * @var string
@@ -248,6 +241,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -256,6 +250,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -264,6 +259,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -357,7 +353,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected int $time_limit_from;
+	protected ?int $time_limit_from;
 	/**
 	 * @var
 	 *
@@ -367,7 +363,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected int $time_limit_until;
+	protected ?int $time_limit_until;
 	/**
 	 * @var
 	 *
@@ -413,6 +409,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -421,10 +418,11 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
-	protected string $agree_date;
+	protected ?string $agree_date;
 	/**
 	 * @var
 	 *
@@ -554,7 +552,7 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected string $feed_hash;
+	protected ?string $feed_hash;
 	/**
 	 * @var
 	 *
@@ -647,15 +645,16 @@ class usrdefUser extends ActiveRecord {
 	 *
 	 * @deprecated
 	 */
-	protected string $reg_hash;
+	protected ?string $reg_hash;
 	/**
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
-	protected string $birthday;
+	protected ?string $birthday;
 	/**
 	 * @var
 	 *
@@ -670,6 +669,7 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
@@ -678,10 +678,11 @@ class usrdefUser extends ActiveRecord {
 	 * @var
 	 *
 	 * @con_has_field true
+     * @con_fieldtype text
 	 *
 	 * @deprecated
 	 */
-	protected string $inactivation_date;
+	protected ?string $inactivation_date;
 	/**
 	 * @var
 	 *

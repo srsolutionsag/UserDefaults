@@ -6,32 +6,20 @@ use arException;
 use ilNumberInputGUI;
 use ilPropertyFormGUI;
 use ilUserDefaultsPlugin;
-use RectorPrefix202302\SebastianBergmann\Diff\Exception;
-use srag\DIC\UserDefaults\DICTrait;
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserDefaultsGlobalSettingsGUI;
-
-/**
- * Class GlobalSettingsFormGUI
- *
- * @package srag\Plugins\UserDefaults\UserSetting
- *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
- */
 class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 
-	use DICTrait;
-	use UserDefaultsTrait;
+    use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	protected UserDefaultsGlobalSettingsGUI $parent;
-
-
-	/**
-	 * GlobalSettingsFormGUI constructor
-	 */
+    
 	public function __construct(UserDefaultsGlobalSettingsGUI $parent) {
+        global $DIC;
 		parent::__construct();
+        $this->ctrl = $DIC->ctrl();
+        $this->pl = ilUserDefaultsPlugin::getInstance();
 
 		$this->parent = $parent;
 
@@ -41,14 +29,14 @@ class GlobalSettingsFormGUI extends ilPropertyFormGUI {
 
 	protected function initForm(): void
     {
-		$this->setFormAction(self::dic()->ctrl()->getFormAction($this->parent));
+		$this->setFormAction($this->ctrl->getFormAction($this->parent));
 
-		$this->setTitle(self::plugin()->translate("tabs_global_settings"));
+		$this->setTitle($this->pl->txt("tabs_global_settings"));
 
-		$this->addCommandButton(UserDefaultsGlobalSettingsGUI::CMD_UPDATE_CONFIGURE, self::plugin()->translate("save"));
+		$this->addCommandButton(UserDefaultsGlobalSettingsGUI::CMD_UPDATE_CONFIGURE, $this->pl->txt("save"));
 
-		$category_ref_id = new ilNumberInputGUI(self::plugin()->translate(UserDefaultsConfig::KEY_CATEGORY_REF_ID), UserDefaultsConfig::KEY_CATEGORY_REF_ID);
-		$category_ref_id->setInfo(self::plugin()->translate(UserDefaultsConfig::KEY_CATEGORY_REF_ID . "_info"));
+		$category_ref_id = new ilNumberInputGUI($this->pl->txt(UserDefaultsConfig::KEY_CATEGORY_REF_ID), UserDefaultsConfig::KEY_CATEGORY_REF_ID);
+		$category_ref_id->setInfo($this->pl->txt(UserDefaultsConfig::KEY_CATEGORY_REF_ID . "_info"));
         try {
             /** @var UserDefaultsConfig $userDefaultsConfig */
             $userDefaultsConfig = UserDefaultsConfig::findOrGetInstance(UserDefaultsConfig::KEY_CATEGORY_REF_ID);

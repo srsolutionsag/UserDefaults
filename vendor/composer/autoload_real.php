@@ -22,12 +22,14 @@ class ComposerAutoloaderInite4e194e8b14c7471adf365b41e191675
             return self::$loader;
         }
 
+        require __DIR__ . '/platform_check.php';
+
         spl_autoload_register(array('ComposerAutoloaderInite4e194e8b14c7471adf365b41e191675', 'loadClassLoader'), true, true);
         self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(__DIR__));
         spl_autoload_unregister(array('ComposerAutoloaderInite4e194e8b14c7471adf365b41e191675', 'loadClassLoader'));
 
         require __DIR__ . '/autoload_static.php';
-        \Composer\Autoload\ComposerStaticInite4e194e8b14c7471adf365b41e191675::getInitializer($loader)();
+        call_user_func(\Composer\Autoload\ComposerStaticInite4e194e8b14c7471adf365b41e191675::getInitializer($loader));
 
         $loader->setClassMapAuthoritative(true);
         $loader->register(true);

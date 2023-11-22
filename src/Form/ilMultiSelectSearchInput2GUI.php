@@ -2,27 +2,17 @@
 
 namespace srag\Plugins\UserDefaults\Form;
 
+use ilLegacyFormElementsUtil;
 use ilMultiSelectInputGUI;
 use ilTemplate;
 use ilTemplateException;
 use ilUserDefaultsPlugin;
-use srag\DIC\UserDefaults\DICTrait;
-use srag\DIC\UserDefaults\Exception\DICException;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use srDefaultAccessChecker;
 use stdClass;
 
-/**
- * Class ilMultiSelectSearchInput2GUI
- *
- * @package srag\Plugins\UserDefaults\Form
- *
- * @author  Oskar Truffer <ot@studer-raimann.ch>
- */
 class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 
-	use DICTrait;
 	use UserDefaultsTrait;
 	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 	protected int $width = 300;
@@ -34,23 +24,26 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	protected ilTemplate $input_template;
 	protected ilTemplate $tpl;
 	protected mixed $multiple;
+    protected ilUserDefaultsPlugin $pl;
+    private \ILIAS\DI\UIServices $ui;
+    private \ilObjUser $user;
 
-
-    /**
-     * @throws DICException
-     */
-	public function __construct(string $title, string $post_var, bool $multiple = true) {
-		if (substr($post_var, - 2) != '[]') {
+    public function __construct(string $title, string $post_var, bool $multiple = true) {
+        global $DIC;
+		if (!str_ends_with($post_var, '[]')) {
 			$post_var = $post_var . ($multiple === true ? '[]' : '');
 		}
 		parent::__construct($title, $post_var);
+        $this->pl = ilUserDefaultsPlugin::getInstance();
+        $this->ui = $DIC->ui();
+        $this->user = $DIC->user();
         $this->multiple = $multiple;
-        $template = self::dic()->ui()->mainTemplate();
-        $template->addJavaScript(self::plugin()->directory() . '/templates/default/multiple_select.js');
-        $template->addJavaScript(self::plugin()->directory() . '/lib/select2/select2.min.js');
-        $template->addJavaScript(self::plugin()->directory() . '/lib/select2/select2_locale_' . self::dic()->user()
+        $template = $this->ui->mainTemplate();
+        $template->addJavaScript(  $this->pl->getDirectory() . '/templates/default/multiple_select.js');
+        $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2.min.js');
+        $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2_locale_' . $this->user
 				->getCurrentLanguage() . '.js');
-        $template->addCss(self::plugin()->directory() . '/lib/select2/select2.css');
+        $template->addCss($this->pl->getDirectory() . '/lib/select2/select2.css');
 		$this->setWidth(300);
 	}
 
@@ -59,7 +52,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
     {
 		if ($this->getRequired()) {
 		    if (($this->multiple && count($_POST[$this->getPostVar()]) == 0) || (!$this->multiple && $_POST[$this->getPostVar()] == '')) {
-                $this->setAlert(self::dic()->language()->txt('msg_input_is_required'));
+                $this->setAlert($this->pl->txt('msg_input_is_required'));
                 return false;
             }
 		}
@@ -78,7 +71,6 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		}
 	}
 
-
 	public function getSubItems(): array
     {
 		return array();
@@ -90,7 +82,6 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 	}
 
     /**
-     * @throws DICException
      * @throws ilTemplateException
      */
     public function render(): string
@@ -105,7 +96,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
         $this->tpl->setVariable('ID', $this->stripLastStringOccurrence($this->getPostVar(), "[]"));
         $this->tpl->setVariable('ESCAPED_ID', $this->escapePostVar($this->getPostVar()));
         $this->tpl->setVariable('CSS_CLASS', $this->getCssClass());
-        $this->tpl->setVariable('PLACEHOLDER', self::plugin()->translate($this->getContainerType() . '_placeholder'));
+        $this->tpl->setVariable('PLACEHOLDER', $this->pl->txt($this->getContainerType() . '_placeholder'));
         if ($this->getDisabled()) {
             $this->tpl->setVariable('ALL_DISABLED', 'disabled=\'disabled\'');
         }
@@ -122,9 +113,9 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
         $config->minimum_input_length = $this->getMinimumInputLength();
         $config->id = $this->escapePostVar($this->getPostVar());
         $config->ajax_link = $this->getAjaxLink();
-        $config->placeholder = self::plugin()->translate($this->getContainerType() . '_placeholder');
+        $config->placeholder = $this->pl->txt($this->getContainerType() . '_placeholder');
         $config->multiple = (bool) $this->multiple;
-        self::dic()->ui()->mainTemplate()->addOnLoadCode(
+        $this->ui->mainTemplate()->addOnLoadCode(
             'SrMultipleSelect.init("' . $config->id . '", ' . json_encode($config) . ');'
         );
 
@@ -134,17 +125,17 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 				if ($this->getDisabled()) {
 					$this->tpl->setVariable('DISABLED', ' disabled=\'disabled\'');
 				}
-				if (in_array($option_value, $values)) {
+				if (in_array($option_value, (array)$values)) {
 					$this->tpl->setVariable('SELECTED', 'selected');
 				}
 
-				$this->tpl->setVariable('VAL', ilUtil::prepareFormOutput($option_value));
+				$this->tpl->setVariable('VAL', ilLegacyFormElementsUtil::prepareFormOutput($option_value));
 				$this->tpl->setVariable('TEXT', $option_text);
 				$this->tpl->parseCurrentBlock();
 			}
 		}
 
-		return self::output()->getHTML($this->tpl);
+		return $this->tpl->get();
 	}
 
 
@@ -230,28 +221,6 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 		return $this->ajax_link;
 	}
 
-
-	/**
-	 * @param srDefaultAccessChecker $access_checker
-	 */
-    /*
-	public function setAccessChecker($access_checker): void
-    {
-		$this->access_checker = $access_checker;
-	}
-    */
-
-
-	/**
-	 * @return srDefaultAccessChecker
-	 */
-    /*
-	public function getAccessChecker() {
-		return $this->access_checker;
-	}
-    */
-
-
 	public function setInputTemplate(ilTemplate $input_template): void
     {
 		$this->input_template = $input_template;
@@ -260,12 +229,10 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
 
     /**
      * @return ilTemplate
-     * @throws DICException
-     * @throws ilTemplateException
      */
 	public function getInputTemplate(): ilTemplate
     {
-        return self::plugin()->template('tpl.multiple_select.html');
+        return $this->pl->getTemplate('tpl.multiple_select.html');
 	}
 
 

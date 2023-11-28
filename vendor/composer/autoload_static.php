@@ -42,7 +42,6 @@ class ComposerStaticInite4e194e8b14c7471adf365b41e191675
         'srag\\Plugins\\UserDefaults\\Form\\udfMultiLineInputGUI' => __DIR__ . '/../..' . '/src/Form/udfMultiLineInputGUI.php',
         'srag\\Plugins\\UserDefaults\\Form\\udfOrguSelectorExplorerGUI' => __DIR__ . '/../..' . '/src/Form/udfOrguSelectorExplorerGUI.php',
         'srag\\Plugins\\UserDefaults\\Form\\usrdefOrguSelectorInputGUI' => __DIR__ . '/../..' . '/src/Form/usrdefOrguSelectorInputGUI.php',
-        'srag\\Plugins\\UserDefaults\\Menu\\Menu' => __DIR__ . '/../..' . '/src/Menu/Menu.php',
         'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheck' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheck.php',
         'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckFormGUI' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckFormGUI.php',
         'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckOld' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckOld.php',

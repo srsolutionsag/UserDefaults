@@ -27,7 +27,6 @@ return array(
     'srag\\Plugins\\UserDefaults\\Form\\udfMultiLineInputGUI' => $baseDir . '/src/Form/udfMultiLineInputGUI.php',
     'srag\\Plugins\\UserDefaults\\Form\\udfOrguSelectorExplorerGUI' => $baseDir . '/src/Form/udfOrguSelectorExplorerGUI.php',
     'srag\\Plugins\\UserDefaults\\Form\\usrdefOrguSelectorInputGUI' => $baseDir . '/src/Form/usrdefOrguSelectorInputGUI.php',
-    'srag\\Plugins\\UserDefaults\\Menu\\Menu' => $baseDir . '/src/Menu/Menu.php',
     'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheck' => $baseDir . '/src/UDFCheck/UDFCheck.php',
     'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckFormGUI' => $baseDir . '/src/UDFCheck/UDFCheckFormGUI.php',
     'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckOld' => $baseDir . '/src/UDFCheck/UDFCheckOld.php',

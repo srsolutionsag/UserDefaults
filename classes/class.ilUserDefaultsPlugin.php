@@ -4,7 +4,6 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
-use srag\Plugins\UserDefaults\Menu\Menu;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;

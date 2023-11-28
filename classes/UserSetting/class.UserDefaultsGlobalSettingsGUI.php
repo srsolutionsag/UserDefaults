@@ -72,6 +72,7 @@ class UserDefaultsGlobalSettingsGUI {
 		}
 		$form->updateConfigure();
         $this->tpl->setOnScreenMessage('success',$this->pl->txt('saved'), true);
+
         $this->ctrl->redirectByClass(self::class, self::CMD_CONFIGURE);
 	}
 }

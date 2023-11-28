@@ -62,7 +62,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 
         $this->object = $object;
 
-        $this->is_new = ($this->object === NULL);
+        $this->is_new = (bool)($this->object === NULL);
 
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 
@@ -207,7 +207,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
         $this->setValuesByArray($array);
     }
 
-    public function saveObject(): bool
+    public function saveObject(): int
     {
         if (!$this->checkInput()) {
             return false;

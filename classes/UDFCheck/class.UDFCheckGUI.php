@@ -94,6 +94,7 @@ class UDFCheckGUI {
             $this->ctrl->setParameter($this, self::IDENTIFIER, $id);
             $this->ctrl->redirect($this, self::CMD_EDIT);
 		}
+
         $this->ui->mainTemplate()->setContent($ilUDFCheckFormGUI->getHTML());
 	}
 

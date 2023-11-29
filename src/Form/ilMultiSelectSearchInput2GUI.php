@@ -39,12 +39,16 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
         $this->user = $DIC->user();
         $this->multiple = $multiple;
         $template = $this->ui->mainTemplate();
+
+
         $template->addJavaScript(  $this->pl->getDirectory() . '/templates/default/multiple_select.js');
         $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2.min.js');
         $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2_locale_' . $this->user
 				->getCurrentLanguage() . '.js');
         $template->addCss($this->pl->getDirectory() . '/lib/select2/select2.css');
-		$this->setWidth(300);
+
+
+        $this->setWidth(300);
 	}
 
 

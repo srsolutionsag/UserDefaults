@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'srag\\Plugins\\UserDefaults\\' => array($baseDir . '/src'),
+    'fluxlabs\\FluxEcoInputGuis\\' => array($baseDir . '/lib/FluxEcoInputGuis/src'),
 );

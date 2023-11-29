@@ -217,12 +217,6 @@ class UserSettingsGUI
      */
     protected function searchCourses(): void
     {
-        $term = filter_input(INPUT_GET, "term");
-        $type = filter_input(INPUT_GET, "container_type");
-        $with_parent = (bool)filter_input(INPUT_GET, "with_parent");
-        $with_members = (bool)filter_input(INPUT_GET, "with_members");
-        $with_empty = (bool)filter_input(INPUT_GET, "with_empty");
-
         $userDefaultsConfig = UserDefaultsConfig::findOrGetInstance(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
         if (!empty($userDefaultsConfig->getValue())) {
             $courses = $this->repositoryTree->getSubTree($this->repositoryTree->getNodeData($userDefaultsConfig->getValue()), false, ["crs"]);
@@ -233,26 +227,19 @@ class UserSettingsGUI
 				  FROM " . usrdefObj::TABLE_NAME . " AS obj
 				  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
 				  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
-			      WHERE obj.type = %s
-			      AND (" . $this->db->like("obj.title", "text", "%%" . $term . "%%") . " OR " . $this->db
-                ->like("trans.title", "text", $term, "%%" . $term . "%%") . ")
+			      WHERE obj.type = 'crs'
 				" . (!empty($courses) ? "AND " . $this->db->in("ref.ref_id", $courses, false, "integer") : "") . "
-				  AND obj.title != %s
 				  AND ref.deleted IS NULL
 			      ORDER BY obj.title";
-        $types = ["text", "text"];
-        $values = [$type, "__OrgUnitAdministration"];
 
-        $result = $this->db->queryF($query, $types, $values);
+        $result = $this->db->query($query);
 
         $courses = [];
-        if ($with_empty) {
-            $courses[] = ["id" => 0, "text" => '-'];
-        }
+
         $rows = $this->db->fetchAll($result);
         foreach ($rows as $row) {
             $title = $row["title"];
-            if ($with_parent) {
+            /*if ($with_parent) {
                 $allReferences = ilObject::_getAllReferences($row["obj_id"]);
                 $ref_id = array_shift($allReferences);
                 $title = ilObject::_lookupTitle(ilObject::_lookupObjectId($this->repositoryTree->getParentId($ref_id))) . ' » ' . $title;
@@ -261,7 +248,7 @@ class UserSettingsGUI
                 $group = new ilObjGroup($row['obj_id'], false);
                 $part = ilGroupParticipants::_getInstanceByObjId($row['obj_id']);
                 $title = $title . ' (' . $part->getCountMembers() . '/' . ($group->getMaxMembers() == 0 ? '-' : $group->getMaxMembers()) . ')';
-            }
+            }*/
             $courses[] = ["id" => $row["obj_id"], "text" => $title];
         }
         header("Content-Type: application/json; charset=utf-8");

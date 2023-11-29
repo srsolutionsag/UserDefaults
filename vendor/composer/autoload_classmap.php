@@ -10,6 +10,8 @@ return array(
     'UDFCheckGUI' => $baseDir . '/classes/UDFCheck/class.UDFCheckGUI.php',
     'UserDefaultsGlobalSettingsGUI' => $baseDir . '/classes/UserSetting/class.UserDefaultsGlobalSettingsGUI.php',
     'UserSettingsGUI' => $baseDir . '/classes/UserSetting/class.UserSettingsGUI.php',
+    'fluxlabs\\FluxEcoInputGuis\\Adapters\\Apis\\FluxEcoInputGuisIliasApi' => $baseDir . '/lib/FluxEcoInputGuis/src/Adapters/Apis/FluxEcoInputGuisIliasApi.php',
+    'fluxlabs\\FluxEcoInputGuis\\Adapters\\IliasFormProperties\\FluxEcoSearchInputGUI' => $baseDir . '/lib/FluxEcoInputGuis/src/Adapters/IliasFormProperties/FluxEcoSearchInputGUI.php',
     'ilUserDefaultsConfigGUI' => $baseDir . '/classes/class.ilUserDefaultsConfigGUI.php',
     'ilUserDefaultsPlugin' => $baseDir . '/classes/class.ilUserDefaultsPlugin.php',
     'srag\\Plugins\\UserDefaults\\Access\\Access' => $baseDir . '/src/Access/Access.php',

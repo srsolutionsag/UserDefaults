@@ -98,12 +98,12 @@ class UserDefaultsConfig extends ActiveRecord
         $this->name = $name;
     }
 
-    public function getValue(): mixed
+    public function getValue(): string|int
     {
         return $this->value;
     }
 
-    public function setValue(mixed $value) : void
+    public function setValue(string|int $value) : void
     {
         $this->value = $value;
     }

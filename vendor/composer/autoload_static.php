@@ -11,12 +11,20 @@ class ComposerStaticInite4e194e8b14c7471adf365b41e191675
         array (
             'srag\\Plugins\\UserDefaults\\' => 26,
         ),
+        'f' => 
+        array (
+            'fluxlabs\\FluxEcoInputGuis\\' => 26,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'srag\\Plugins\\UserDefaults\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'fluxlabs\\FluxEcoInputGuis\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/lib/FluxEcoInputGuis/src',
         ),
     );
 
@@ -25,6 +33,8 @@ class ComposerStaticInite4e194e8b14c7471adf365b41e191675
         'UDFCheckGUI' => __DIR__ . '/../..' . '/classes/UDFCheck/class.UDFCheckGUI.php',
         'UserDefaultsGlobalSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserDefaultsGlobalSettingsGUI.php',
         'UserSettingsGUI' => __DIR__ . '/../..' . '/classes/UserSetting/class.UserSettingsGUI.php',
+        'fluxlabs\\FluxEcoInputGuis\\Adapters\\Apis\\FluxEcoInputGuisIliasApi' => __DIR__ . '/../..' . '/lib/FluxEcoInputGuis/src/Adapters/Apis/FluxEcoInputGuisIliasApi.php',
+        'fluxlabs\\FluxEcoInputGuis\\Adapters\\IliasFormProperties\\FluxEcoSearchInputGUI' => __DIR__ . '/../..' . '/lib/FluxEcoInputGuis/src/Adapters/IliasFormProperties/FluxEcoSearchInputGUI.php',
         'ilUserDefaultsConfigGUI' => __DIR__ . '/../..' . '/classes/class.ilUserDefaultsConfigGUI.php',
         'ilUserDefaultsPlugin' => __DIR__ . '/../..' . '/classes/class.ilUserDefaultsPlugin.php',
         'srag\\Plugins\\UserDefaults\\Access\\Access' => __DIR__ . '/../..' . '/src/Access/Access.php',

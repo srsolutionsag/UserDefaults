@@ -4,10 +4,10 @@ form_button_create#:#Erstellen
 form_button_cancel#:#Abbrechen
 set_title#:#Titel
 set_description#:#Beschreibung
-set_global_roles#:#Einschreiben in globale Rollen
-set_assigned_local_roles#:#Einschreiben in lokale Rollen
-set_assigned_courses#:#Einschreiben in Kurse
-set_assigned_groupes#:#Einschreiben in Gruppen
+set_global_roles#:#Konfigurierte Rollen
+set_assigned_local_roles#:#Konfigurierte Rollen
+set_assigned_courses#:#Konfigurierte Kurse
+set_assigned_groupes#:#Konfigurierte Gruppen
 set_portfolio_template_id#:#Portfolio-Vorlage
 set_portfolio_assigned_to_groups#:#Portfolio automatisch freigeben
 set_table_title#:#Einstellungs-Sets
@@ -23,26 +23,26 @@ set_placeholders#:#Platzhalter
 set_deactivate#:#Deaktivieren
 set_udf_checks#:#UDF-Checks bearbeiten
 set_delete#:#Löschen
-set_assigned_orgus#:#Organisationseinheiten Zuweisen
-set_assigned_orgu_position#:#Organisationseinheiten Position
-set_assigned_studyprograms#:#In Studienprogramm einschreiben
+set_assigned_orgus#:#Konfigurierte Organisationseinheiten
+set_assigned_orgu_position#:#Konfigurierte Positionen
+set_assigned_studyprograms#:#Konfigurierte Studienprogramme
 set_form_please_choose#:#-- Bitte wählen --
 set_duplicate#:#Duplizieren
 set_input_to_desktop#:#MISSING set_input_to_desktop
-set_unsubscribe_courses_and_categories#:#Aus obigen Kursen und Kategorien abmelden, falls Bedingung nicht zutrifft
-set_unsubscribe_groups#:#Aus obigen Gruppen und Kategorien abmelden, falls Bedingung nicht zutrifft
-set_unsubscribe_local_roles#:#Von lokalen Rollen entfernen, falls Bedingung nicht zutrifft
-set_unsubscribe_global_roles#:#Von globalen Rollen entfernen, falls Bedingung nicht zutrifft
-set_unsubscribe_studyprograms#:#Aus obigen Studienprogrammen abmelden, falls Bedingung nicht zutrifft
-set_unsubscribe_orgus#:#Aus obigen Organisationseinheiten abmelden, falls Bedingung nicht zutrifft
+set_unsubscribe_courses_and_categories#:#Aus konfigurierten Kursen abmelden, falls Bedingung nicht zutrifft
+set_unsubscribe_groups#:#Aus konfigurierten Gruppen abmelden, falls Bedingung nicht zutrifft
+set_unsubscribe_local_roles#:#Konfigurierte Rollen entfernen, falls Bedingung nicht zutrifft
+set_unsubscribe_global_roles#:#Konfigurierte Rollen entfernen, falls Bedingung nicht zutrifft
+set_unsubscribe_studyprograms#:#Aus konfigurierte Studienprogramme abmelden, falls Bedingung nicht zutrifft
+set_unsubscribe_orgus#:#Konfigurierte Organisationseinheiten entfernen, falls Bedingung nicht zutrifft
 set_remove_portfolio#:#Portfolio entfernen, falls Bedingung nicht zutrifft
 set_assigned_groups_first_available#:#In die erste Gruppe mit freien Plätzen einschreiben.
 set_assigned_groups_option_request#:#
-set_assigned_groups#:#Zu Gruppe hinzufügen
-set_on_create#:#Erstellen
-set_on_update#:#Updaten
-set_on_manual#:#manuell
-set_application#:#Anwenden
+set_assigned_groups#:#Konfigurierte Gruppen
+set_on_create#:#Kontoerstellung
+set_on_update#:#Kontoaktualisierung
+set_on_manual#:#Manuelles Anwenden
+set_application#:#Anwenden bei
 set_specific_settings#:#Einstellungen
 msg_entry_added#:#Eintrag gespeichert
 msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhanden
@@ -72,7 +72,7 @@ grp_placeholder#:#Gruppen wählen
 orgu_placeholder#:#Organisationseinheit
 prg_placeholder#:#Studienprogramm
 tabs_settings#:#Einstellungen
-tabs_users#:#Benutzersuche
+tabs_users#:#Manuelles Anwenden
 usr_firstname#:#Vorname
 usr_lastname#:#Nachname
 usr_email#:#E-Mail
@@ -115,8 +115,14 @@ saved#:#Gespeichert
 category_ref_id#:#Kategorie-Knotenpunkt für Kurse
 category_ref_id_info#:#Kategorie-Ref-ID
 set_roles#:#Rollen
+global_roles#:#Zuweisung von Globalen Rollen
+local_roles#:#Zuweisung von Lokalen Rollen
+courses#:#Einschreiben in Kurse
+portfolio#:#Zuweisung Portfolio
+orgus#:#Einschreiben in Organisationseinheiten
+studyprograms#:#Einschreiben in Studienprogramme
 set_courses_and_categories#:#Kurse und Kategorien
-set_groups#:#Gruppen
+set_groups#:#Einschreiben in Gruppen
 set_groups_queue#:#Gruppenverteilung
 set_other#:#Sonstiges
 set_assigned_groups_option_request#:#Teilnahmeanfrage statt Einschreibung

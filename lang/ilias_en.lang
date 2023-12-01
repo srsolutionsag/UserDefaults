@@ -4,8 +4,8 @@ form_button_create#:#Create
 form_button_cancel#:#Cancel
 set_title#:#Title
 set_description#:#Description
-set_global_roles#:#Assign to global Roles
-set_assigned_local_roles#:#Assign to local Roles
+set_global_roles#:#Assign to Global Roles
+set_assigned_local_roles#:#Assign to Local Roles
 set_assigned_courses#:#Assign to Courses
 set_assigned_groupes#:#Assign to Groups
 set_portfolio_template_id#:#Portfolio-Template
@@ -23,24 +23,24 @@ set_placeholders#:#Placeholders
 set_deactivate#:#Deactivate
 set_udf_checks#:#Edit UDF-Checks
 set_delete#:#Delete
-set_assigned_orgus#:#Assign to organisational units
-set_assigned_orgu_position#:#organistaional unit position
+set_assigned_orgus#:#Assign to organisational Units
+set_assigned_orgu_position#:#organisational Units Position
 set_assigned_studyprograms#:#Register to studyprogram
 set_form_please_choose#:#-- Please choose --
 set_duplicate#:#Duplicate
 set_input_to_desktop#:#MISSING set_input_to_desktop
-set_unsubscribe_courses_and_categories#:#Unsubscribe from the above courses and categories if the condition does not match
+set_unsubscribe_courses_and_categories#:#Unsubscribe from the above courses if the condition does not match
 set_unsubscribe_groups#:#Unsubscribe from the above groups if the condition does not match
-set_unsubscribe_local_roles#:#Remove locale roles if condition does not match
-set_unsubscribe_global_roles#:#Remove global roles if condition does not match
+set_unsubscribe_local_roles#:#Remove Locale Roles if condition does not match
+set_unsubscribe_global_roles#:#Remove Global Roles if condition does not match
 set_unsubscribe_studyprograms#:#Unsubscribe from the above studyprograms if the condition does not match
-set_unsubscribe_orgus#:#Unsubscribe from the above organisation units if the condition does not match
+set_unsubscribe_orgus#:#Unsubscribe from the above Organisation Units if the condition does not match
 set_remove_portfolio#:#Remove portfolio if condition does not match
 set_assigned_groups#:#Assign to Group
-set_on_create#:#On Create
-set_on_update#:#On Update
-set_on_manual#:#Manual
-set_application#:#Application
+set_on_create#:#Account Creation
+set_on_update#:#Account Updates
+set_on_manual#:#Applying Manually
+set_application#:#Applying on
 set_specific_settings#:#Settings
 msg_entry_added#:#Entry saved
 msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activated
@@ -67,10 +67,10 @@ check_op_starts_with#:#Starts with
 role_placeholder#:#Choose Role
 crs_placeholder#:#Choose Courses
 grp_placeholder#:#Choose Groups
-orgu_placeholder#:#Organisational unit
+orgu_placeholder#:#Organisational Unit
 prg_placeholder#:#Studyprogram
 tabs_settings#:#Settings
-tabs_users#:#Apply to Users
+tabs_users#:#Applying Manually
 usr_firstname#:#Firstname
 usr_lastname#:#Lastname
 usr_email#:#E-Mail
@@ -113,6 +113,12 @@ saved#:#Saved
 category_ref_id#:#Category node for courses
 category_ref_id_info#:#Category ref id
 set_roles#:#Roles
+global_roles#:#Global Roles
+local_roles#:#Local Roles
+courses#:#Courses
+portfolio#:#Portfolio
+orgus#:#Organisational Units
+studyprograms#:#Studyprograms
 set_courses_and_categories#:#Courses and Categories
 set_groups#:#Groups
 set_groups_queue#:#Group Queue

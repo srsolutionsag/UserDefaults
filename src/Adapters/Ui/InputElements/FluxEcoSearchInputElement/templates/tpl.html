@@ -1,0 +1,18 @@
+<!-- BEGIN flux_eco_ui_search_input_element -->
+<script type="module" >
+    import FluxEcoUiInputs from "./{JS_FILE_PATH}/flux-eco-ui-input/FluxEcoUiInputs.mjs";
+    import FluxEcoUIInputStyleSheets from "./{JS_FILE_PATH}/flux-eco-ui-element-style/styles/input/FluxEcoUIInputStyleSheets.mjs";
+    function handle(fluxEcoUiSearchInputConf) {
+        FluxEcoUiInputs.create({styleSheets: FluxEcoUIInputStyleSheets.create()}).createSearch({
+            name: fluxEcoUiSearchInputConf.name,
+            dataSrc: fluxEcoUiSearchInputConf.dataSrc,
+            selectedIds: fluxEcoUiSearchInputConf.selectedIds.split(',').map(Number)
+        }).render(fluxEcoUiSearchInputConf.formContainer);
+    }
+    const fluxEcoUiSearchInputConf = {SEARCH_INPUT_CONF}
+    fluxEcoUiSearchInputConf['formContainer']  = document.getElementById(["il_prop_cont",fluxEcoUiSearchInputConf.name].join("_")).getElementsByTagName('div')[0];
+
+    console.log(fluxEcoUiSearchInputConf);
+    handle(fluxEcoUiSearchInputConf);
+</script>
+<!-- END flux_eco_ui_search_input_element -->

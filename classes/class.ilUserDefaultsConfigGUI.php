@@ -36,8 +36,6 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 			->getLinkTargetByClass(UserSettingsGUI::class));
         $this->tabs->addTab(self::TAB_USERS, $this->pl->txt('tabs_users'), $this->ctrl
 			->getLinkTargetByClass(usrdefUserGUI::class));
-        $this->tabs->addTab(self::TAB_GLOBAL_SETTINGS, $this->pl->txt('tabs_global_settings'), $this->ctrl
-			->getLinkTargetByClass(UserDefaultsGlobalSettingsGUI::class, UserDefaultsGlobalSettingsGUI::CMD_CONFIGURE));
 
 		$nextClass = $this->ctrl->getNextClass();
 		switch ($nextClass) {
@@ -49,9 +47,8 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
                 $this->tabs->activateTab(self::TAB_USERS);
 				$gui = new usrdefUserGUI();
                 break;
-			case strtolower(UserDefaultsGlobalSettingsGUI::class):
-                $this->tabs->activateTab(self::TAB_GLOBAL_SETTINGS);
-				$gui = new UserDefaultsGlobalSettingsGUI();
+            case strtolower(ilUserDefaultsRestApiGUI::class):
+                $gui = new ilUserDefaultsRestApiGUI();
                 break;
 			default;
                 $this->tabs->activateTab(self::TAB_SETTINGS);

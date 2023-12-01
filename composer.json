@@ -27,7 +27,6 @@
   },
   "autoload": {
     "psr-4": {
-      "fluxlabs\\FluxEcoInputGuis\\": "lib/FluxEcoInputGuis/src/",
       "srag\\Plugins\\UserDefaults\\": "src/"
     },
     "classmap": [

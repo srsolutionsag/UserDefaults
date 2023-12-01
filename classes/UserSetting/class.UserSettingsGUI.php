@@ -2,7 +2,11 @@
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
+use srag\Plugins\UserDefaults\Adapters\Config\Configs;
+use srag\Plugins\UserDefaults\Adapters\Api;
+
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
+use srag\Plugins\UserDefaults\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\UserSetting\UserSettingsFormGUI;
@@ -19,11 +23,7 @@ class UserSettingsGUI
 
     const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     const CMD_INDEX = 'configure';
-    const CMD_SEARCH_LOCAL_ROLES = 'searchLocalRoles';
-    const CMD_SEARCH_GLOBAL_ROLES = 'searchGlobalRoles';
-    const CMD_SEARCH_COURSES = 'searchCourses';
-    const CMD_SEARCH_GROUPS = 'searchGroups';
-    const CMD_SEARCH_CATEGORIES = 'searchCategories';
+
     const CMD_CANCEL = 'cancel';
     const CMD_CREATE = 'create';
     const CMD_UPDATE = 'update';
@@ -50,6 +50,7 @@ class UserSettingsGUI
     private ilTree $repositoryTree;
     private \ILIAS\DI\RBACServices $rbac;
     private ilObjectDataCache $objDataCache;
+    private UserDefaultsApi $userDefaultsApi;
 
 
     /**
@@ -68,6 +69,8 @@ class UserSettingsGUI
         $this->rbac = $DIC->rbac();
         $this->objDataCache = $DIC["ilObjDataCache"];
         $this->ctrl->saveParameter($this, self::IDENTIFIER);
+
+        $this->userDefaultsApi = UserDefaultsApi::new();
     }
 
 
@@ -78,11 +81,6 @@ class UserSettingsGUI
             case self::CMD_INDEX:
                 $this->index();
                 break;
-            case self::CMD_SEARCH_GLOBAL_ROLES:
-            case self::CMD_SEARCH_LOCAL_ROLES:
-            case self::CMD_SEARCH_COURSES:
-            case self::CMD_SEARCH_GROUPS:
-            case self::CMD_SEARCH_CATEGORIES:
             case self::CMD_CANCEL:
             case self::CMD_CREATE:
             case self::CMD_UPDATE:
@@ -127,50 +125,38 @@ class UserSettingsGUI
 
     protected function index(): void
     {
-        $ilUserSettingsTableGUI = new UserSettingsTableGUI($this);
-        $this->ui->mainTemplate()->setContent($ilUserSettingsTableGUI->getHTML());
+        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->getTableHtml(Api\AssignmentProcess\GetTableHtmlRequest::new($this)));
     }
 
 
     protected function add(): void
     {
-        $ilUserSettingsFormGUI = new UserSettingsFormGUI($this, new UserSetting());
-        $this->ui->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->getFormHtml(Api\AssignmentProcess\GetFormHtmlRequest::new($this)));
     }
 
-    /**
-     * @throws ilCtrlException
-     */
     protected function create(): void
     {
-        $ilUserSettingsFormGUI = new UserSettingsFormGUI($this, new UserSetting());
-        $ilUserSettingsFormGUI->setValuesByPost();
-        if ($ilUserSettingsFormGUI->saveObject()) {
+        $onSuccess = function() {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
             $this->ctrl->redirect($this, self::CMD_INDEX);
-        }
-        $this->ui->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+        };
+        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->handleFormSubmission(Api\AssignmentProcess\HandleFormSubmissionRequest::new($this, null, $onSuccess)));
     }
 
     protected function edit(): void
     {
-        $ilUserSettingsFormGUI = new UserSettingsFormGUI($this, UserSetting::find($_GET[self::IDENTIFIER]));
-        $ilUserSettingsFormGUI->fillForm();
-        $this->ui->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->getFormHtml(Api\AssignmentProcess\GetFormHtmlRequest::new($this, $_GET[self::IDENTIFIER])));
     }
-    /**
-     * @throws ilCtrlException
-     */
+
     protected function update(): void
     {
-        $ilUserSettingsFormGUI = new UserSettingsFormGUI($this, UserSetting::find($_GET[self::IDENTIFIER]));
-        $ilUserSettingsFormGUI->setValuesByPost();
-        if ($ilUserSettingsFormGUI->saveObject()) {
+        $onSuccess = function() {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
-            $this->cancel();
-        }
-        $this->ui->mainTemplate()->setContent($ilUserSettingsFormGUI->getHTML());
+            $this->ctrl->redirect($this, self::CMD_INDEX);
+        };
+        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->handleFormSubmission(Api\AssignmentProcess\HandleFormSubmissionRequest::new($this, $_GET[self::IDENTIFIER], $onSuccess)));
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -212,52 +198,14 @@ class UserSettingsGUI
         $this->ctrl->setParameter($this, self::IDENTIFIER, NULL);
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
-    /**
-     * @throws ilException
-     */
-    protected function searchCourses(): void
-    {
-        $userDefaultsConfig = UserDefaultsConfig::findOrGetInstance(UserDefaultsConfig::KEY_CATEGORY_REF_ID);
-        if (!empty($userDefaultsConfig->getValue())) {
-            $courses = $this->repositoryTree->getSubTree($this->repositoryTree->getNodeData($userDefaultsConfig->getValue()), false, ["crs"]);
-        } else {
-            $courses = [];
-        }
-        $query = "SELECT obj.obj_id, obj.title
-				  FROM " . usrdefObj::TABLE_NAME . " AS obj
-				  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
-				  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
-			      WHERE obj.type = 'crs'
-				" . (!empty($courses) ? "AND " . $this->db->in("ref.ref_id", $courses, false, "integer") : "") . "
-				  AND ref.deleted IS NULL
-			      ORDER BY obj.title";
 
-        $result = $this->db->query($query);
-
-        $courses = [];
-
-        $rows = $this->db->fetchAll($result);
-        foreach ($rows as $row) {
-            $title = $row["title"];
-            /*if ($with_parent) {
-                $allReferences = ilObject::_getAllReferences($row["obj_id"]);
-                $ref_id = array_shift($allReferences);
-                $title = ilObject::_lookupTitle(ilObject::_lookupObjectId($this->repositoryTree->getParentId($ref_id))) . ' » ' . $title;
-            }
-            if ($with_members && $type == 'grp') {
-                $group = new ilObjGroup($row['obj_id'], false);
-                $part = ilGroupParticipants::_getInstanceByObjId($row['obj_id']);
-                $title = $title . ' (' . $part->getCountMembers() . '/' . ($group->getMaxMembers() == 0 ? '-' : $group->getMaxMembers()) . ')';
-            }*/
-            $courses[] = ["id" => $row["obj_id"], "text" => $title];
-        }
-        header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($courses);
-        exit;
-    }
+    /*
 
     protected function searchGroups(): void
     {
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode(new stdClass());
+        exit;
         $term = filter_input(INPUT_GET, "term");
         $type = filter_input(INPUT_GET, "container_type");
         $with_parent = (bool)filter_input(INPUT_GET, "with_parent");
@@ -308,40 +256,14 @@ class UserSettingsGUI
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($courses);
         exit;
-    }
+    }*/
 
-    protected function searchLocalRoles(): void
-    {
-        $local_roles = $this->rbac->review()->getRolesByFilter(ilRbacReview::FILTER_NOT_INTERNAL);
-        $return_local_roles = array();
-        foreach ($local_roles as $local_role) {
-            if (ilObject2::_lookupDeletedDate($local_role['parent'])) {
-                continue;
-            }
-            $return_local_roles[] = ["id" => $local_role["obj_id"], "text" => $this->objDataCache->lookupTitle($this->objDataCache->lookupObjId($local_role['parent'])) . " >> " . $local_role["title"]];
-        }
-        header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($return_local_roles);
-        exit;
-    }
 
-    protected function searchGlobalRoles(): void
-    {
-        $global_roles = $this->rbac->review()->getRolesByFilter(ilRbacReview::FILTER_ALL_GLOBAL);
-        $return_global_roles = array();
-        foreach ($global_roles as $global_role) {
-            if (ilObject2::_lookupDeletedDate($global_role['parent'])) {
-                continue;
-            }
-            $return_global_roles[] = ["id" => $global_role["obj_id"], "text" => $global_role["title"]];
-        }
-        header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($return_global_roles);
-        exit;
-    }
+
     /**
      * @throws ilException
      */
+    /*
     protected function searchCategories(): void
     {
         $term = filter_input(INPUT_GET, "term");
@@ -378,7 +300,8 @@ class UserSettingsGUI
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($categories);
         exit;
-    }
+    }*/
+
     /**
      * @throws ilCtrlException
      */

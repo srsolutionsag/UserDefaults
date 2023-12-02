@@ -1,8 +1,7 @@
 <?php
 
 use JetBrains\PhpStorm\NoReturn;
-use srag\Plugins\UserDefaults\Adapters\Api;
-use srag\Plugins\UserDefaults\Adapters\Config\Configs;
+use srag\Plugins\UserDefaults\UserDefaultsApi;
 
 
 /**
@@ -10,13 +9,7 @@ use srag\Plugins\UserDefaults\Adapters\Config\Configs;
  */
 class ilUserDefaultsRestApiGUI
 {
-    private Api\Course\CoursesApiEndpoint $coursesApiEndpoint;
-    private Api\GlobalRole\GlobalRolesApiEndpoint $globalRolesApiEndpoint;
-    private Api\LocalRole\LocalRolesApiEndpoint $localRolesApiEndpoint;
-    private Api\Group\GroupsApiEndpoint $groupsApiEndpoint;
-    private Api\OrgUnits\OrgUnitsApiEndpoint $orgUnitsApiEndpoint;
-    private Api\PortfolioTemplate\PortfolioTemplatesApiEndpoint $portfolioTemplatesApiEndpoint;
-    private Api\StudyProgramme\StudyProgrammesApiEndpoint $studyProgrammesApiEndpoint;
+    private UserDefaultsApi $userDefaultsApi;
 
 
     /**
@@ -43,16 +36,13 @@ class ilUserDefaultsRestApiGUI
     {
         global $DIC;
         $this->ctrl = $DIC->ctrl();
+        //is Admin?
+        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
+            echo "no Permission";
+            exit;
+        };
 
-        $configs = Configs::new();
-        $this->coursesApiEndpoint = Api\Course\CoursesApiEndpoint::new($configs);
-        $this->globalRolesApiEndpoint = Api\GlobalRole\GlobalRolesApiEndpoint::new($configs);
-        $this->localRolesApiEndpoint = Api\LocalRole\LocalRolesApiEndpoint::new($configs);
-        $this->groupsApiEndpoint = Api\Group\GroupsApiEndpoint::new($configs);
-        $this->orgUnitsApiEndpoint = Api\OrgUnits\OrgUnitsApiEndpoint::new($configs);
-        $this->portfolioTemplatesApiEndpoint = Api\PortfolioTemplate\PortfolioTemplatesApiEndpoint::new($configs);
-        $this->studyProgrammesApiEndpoint = Api\StudyProgramme\StudyProgrammesApiEndpoint::new($configs);
-
+        $this->userDefaultsApi =  UserDefaultsApi::new();
     }
 
     public function executeCommand(): void
@@ -73,56 +63,56 @@ class ilUserDefaultsRestApiGUI
     #[NoReturn] public function courses(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->coursesApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->courses->findAll());
         exit;
     }
 
     #[NoReturn] public function globalRoles(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->globalRolesApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->globalRoles->findAll());
         exit;
     }
 
     #[NoReturn] public function groups(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->groupsApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->groups->findAll());
         exit;
     }
 
     #[NoReturn] public function localRoles(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->localRolesApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->localRoles->findAll());
         exit;
     }
 
     #[NoReturn] public function orgUnits(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->orgUnitsApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->orgUnits->findAll());
         exit;
     }
 
     #[NoReturn] public function orgUnitPositions(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->orgUnitsApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->orgUnits->findAllPositions());
         exit;
     }
 
     #[NoReturn] public function portfolioTemplates(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->portfolioTemplatesApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->portfolioTemplates->findAll());
         exit;
     }
 
     #[NoReturn] public function studyProgrammes(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->studyProgrammesApiEndpoint->get());
+        echo json_encode($this->userDefaultsApi->studyProgrammes->findAll());
         exit;
     }
 }

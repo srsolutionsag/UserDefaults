@@ -40,6 +40,12 @@ class UDFCheckGUI {
      */
 	public function __construct(UserSettingsGUI|UDFCheckGUI $parent_gui) {
         global $DIC;
+        //is Admin?
+        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
+            echo "no Permission";
+            exit;
+        };
+
         $this->ctrl = $DIC->ctrl();
         $this->ui = $DIC->ui();
         $this->pl = ilUserDefaultsPlugin::getInstance();

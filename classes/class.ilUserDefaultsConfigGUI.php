@@ -23,12 +23,18 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 	 */
 	public function __construct() {
         global $DIC;
+        //is Admin?
+        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
+            echo "no Permission";
+            exit;
+        };
+
         $this->ctrl = $DIC->ctrl();
         $this->tabs = $DIC["ilTabs"];
         $this->pl = ilUserDefaultsPlugin::getInstance();
     }
     /**
-     * @throws ilCtrlException|DICException
+     * @throws ilCtrlException
      */
 	public function performCommand(string $cmd): void
     {

@@ -237,15 +237,7 @@ class usrdefUser extends ActiveRecord {
 	 * @deprecated
 	 */
 	protected string $phone_office;
-	/**
-	 * @var
-	 *
-	 * @con_has_field true
-     * @con_fieldtype text
-	 *
-	 * @deprecated
-	 */
-	protected string $last_login;
+
 	/**
 	 * @var
 	 *
@@ -255,15 +247,7 @@ class usrdefUser extends ActiveRecord {
 	 * @deprecated
 	 */
 	protected string $last_update;
-	/**
-	 * @var
-	 *
-	 * @con_has_field true
-     * @con_fieldtype text
-	 *
-	 * @deprecated
-	 */
-	protected string $create_date;
+
 	/**
 	 * @var
 	 *
@@ -405,15 +389,7 @@ class usrdefUser extends ActiveRecord {
 	 * @deprecated
 	 */
 	protected int $active;
-	/**
-	 * @var
-	 *
-	 * @con_has_field true
-     * @con_fieldtype text
-	 *
-	 * @deprecated
-	 */
-	protected string $approve_date;
+
 	/**
 	 * @var
 	 *
@@ -563,26 +539,8 @@ class usrdefUser extends ActiveRecord {
 	 * @deprecated
 	 */
 	protected string $delicious;
-	/**
-	 * @var
-	 *
-	 * @con_has_field true
-	 * @con_fieldtype text
-	 * @con_length    30
-	 *
-	 * @deprecated
-	 */
-	protected string $latitude;
-	/**
-	 * @var
-	 *
-	 * @con_has_field true
-	 * @con_fieldtype text
-	 * @con_length    30
-	 *
-	 * @deprecated
-	 */
-	protected string $longitude;
+
+
 	/**
 	 * @var
 	 *
@@ -665,15 +623,7 @@ class usrdefUser extends ActiveRecord {
 	 * @deprecated
 	 */
 	protected string $sel_country;
-	/**
-	 * @var
-	 *
-	 * @con_has_field true
-     * @con_fieldtype text
-	 *
-	 * @deprecated
-	 */
-	protected string $last_visited;
+
 	/**
 	 * @var
 	 *

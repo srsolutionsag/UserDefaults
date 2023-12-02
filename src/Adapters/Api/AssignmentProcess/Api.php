@@ -16,7 +16,7 @@ class Api
 
     public static function new(Configs $configs): Api
     {
-        return new self(Facade::new($configs->assignmentProcessService));
+        return new self(Facade::new($configs));
     }
 
 
@@ -25,18 +25,22 @@ class Api
         return $this->facade->findAll();
     }
 
-    public function getTableHtml(GetTableHtmlRequest $request): string
+    /**
+     * @throws \ilException
+     * @throws \ilCtrlException
+     */
+    public function renderTable(object $parentIliasGui): void
     {
-        return $this->facade->getTableHtml($request);
+        $this->facade->renderTable(Requests\RenderTable::new($parentIliasGui));
     }
 
-    public function getFormHtml(GetFormHtmlRequest $request): string
+    public function renderForm(object $parentIliasGui, ?int $assignmentProcessId = null): void
     {
-        return $this->facade->getFormHtml($request);
+        $this->facade->renderForm(Requests\RenderForm::new($parentIliasGui, $assignmentProcessId));
     }
 
-    public function handleFormSubmission(HandleFormSubmissionRequest $request): string
+    public function handleFormSubmission(object $parentIliasGui, ?int $assignmentProcessId = null, ?callable $onSuccess = null): void
     {
-        return $this->facade->handleFormSubmission($request);
+        $this->facade->handleFormSubmission(Requests\HandleFormSubmission::new($parentIliasGui, $assignmentProcessId, $onSuccess));
     }
 }

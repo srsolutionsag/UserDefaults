@@ -32,6 +32,12 @@ class usrdefUserGUI
     public function __construct()
     {
         global $DIC;
+        //is Admin?
+        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
+            echo "no Permission";
+            exit;
+        };
+
         $this->ctrl = $DIC->ctrl();
         $this->ui = $DIC->ui();
         $this->tpl = $DIC->ui()->mainTemplate();
@@ -51,7 +57,7 @@ class usrdefUserGUI
                 $usrdefUserTableGUI = new usrdefUserTableGUI($this, self::CMD_INDEX);
                 switch ($_GET['exp_cont']) {
                     case 'il_expl2_jstree_cont_rep_exp_sel_repo':
-                        $usrdefUserTableGUI->getCrsSelectorGUI()->handleExplorerCommand();
+                        //$usrdefUserTableGUI->getCrsSelectorGUI()->handleExplorerCommand();
                         break;
                     case 'il_expl2_jstree_cont_rep_exp_sel_orgu':
                         //todo

@@ -2,7 +2,6 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
@@ -96,7 +95,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 					case self::AFTER_LOGIN:
 						$user_id = ilObjUser::getUserIdByLogin($a_parameter['username']);
 						$user = new ilObjUser($user_id);
-
 						$run = true;
 						break;
 				}
@@ -126,7 +124,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 				switch ($a_event) {
 					case self::ASSIGN_USER_TO_POSITION:
 					case self::REMOVE_USER_FROM_POSITION:
-						$user = new ilObjUser($a_parameter['user_id']);
+						$user = new ilObjUser($a_parameter['usr_id']);
 						$run = true;
 						break;
 				}
@@ -158,15 +156,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	public function getPluginName(): string
     {
 		return self::PLUGIN_NAME;
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function promoteGlobalScreenProvider(): AbstractStaticPluginMainMenuProvider {
-        global $DIC;
-		return new Menu($DIC, $this);
 	}
 
 

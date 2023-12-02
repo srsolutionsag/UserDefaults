@@ -130,7 +130,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		}
 
 		// CRS and GRPS
-		if ($this->filter['repo'] && is_array($this->filter['repo'])
+		/*if ($this->filter['repo'] && is_array($this->filter['repo'])
 			&& count($this->filter['repo']) > 0) {
 			$value = $this->filter['repo'];
 			$obj_ids = array();
@@ -143,7 +143,7 @@ class usrdefUserTableGUI extends ilTable2GUI {
 				'obj_members.obj_id' => $obj_ids,
 				'obj_members.member' => 1,
 			));
-		}
+		}*/
 
 		// ORGU
 		if (in_array('orgu', $this->filter) && $this->filter['orgu'] && is_array($this->filter['orgu'])
@@ -170,6 +170,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		}
 		$usrdefUser->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
 		$usrdefUser->orderBy('email');
+
+
 		// $usrdefUser->debug();
 		$this->setData($usrdefUser->getArray());
 	}
@@ -243,8 +245,8 @@ class usrdefUserTableGUI extends ilTable2GUI {
 		$te = new ilTextInputGUI($this->pl->txt('usr_login'), 'login');
 		$this->addAndReadFilterItem($te);
 
-		$crs = $this->getCrsSelectorGUI();
-		$this->addAndReadFilterItem($crs);
+		/*$crs = $this->getCrsSelectorGUI();
+		$this->addAndReadFilterItem($crs);*/
 
 		// orgu
 		//todo

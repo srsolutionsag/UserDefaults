@@ -2,15 +2,10 @@
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-use srag\Plugins\UserDefaults\Adapters\Config\Configs;
 use srag\Plugins\UserDefaults\Adapters\Api;
 
-use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\UserDefaultsApi;
-use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\UserSetting\UserSettingsFormGUI;
-use srag\Plugins\UserDefaults\UserSetting\UserSettingsTableGUI;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
@@ -60,6 +55,13 @@ class UserSettingsGUI
     public function __construct()
     {
         global $DIC;
+        //is Admin?
+        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
+            echo "no Permission";
+            exit;
+        };
+
+
         $this->ctrl = $DIC->ctrl();
         $this->ui = $DIC->ui();
         $this->tpl = $DIC->ui()->mainTemplate();
@@ -102,6 +104,7 @@ class UserSettingsGUI
                 break;
         }
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -112,6 +115,7 @@ class UserSettingsGUI
         $ilUserSetting->update();
         $this->cancel();
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -123,38 +127,42 @@ class UserSettingsGUI
         $this->cancel();
     }
 
+    /**
+     * @throws ilException
+     * @throws ilCtrlException
+     */
     protected function index(): void
     {
-        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->getTableHtml(Api\AssignmentProcess\GetTableHtmlRequest::new($this)));
+        $this->userDefaultsApi->assignmentProcesses->renderTable($this);
     }
 
 
     protected function add(): void
     {
-        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->getFormHtml(Api\AssignmentProcess\GetFormHtmlRequest::new($this)));
+        $this->userDefaultsApi->assignmentProcesses->renderForm($this);
     }
 
     protected function create(): void
     {
-        $onSuccess = function() {
+        $onSuccess = function () {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
-        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->handleFormSubmission(Api\AssignmentProcess\HandleFormSubmissionRequest::new($this, null, $onSuccess)));
+        $this->userDefaultsApi->assignmentProcesses->handleFormSubmission($this, null, $onSuccess);
     }
 
     protected function edit(): void
     {
-        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->getFormHtml(Api\AssignmentProcess\GetFormHtmlRequest::new($this, $_GET[self::IDENTIFIER])));
+       $this->userDefaultsApi->assignmentProcesses->renderForm($this, $_GET[self::IDENTIFIER]);
     }
 
     protected function update(): void
     {
-        $onSuccess = function() {
+        $onSuccess = function () {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
-        $this->ui->mainTemplate()->setContent($this->userDefaultsApi->assignmentProcess()->handleFormSubmission(Api\AssignmentProcess\HandleFormSubmissionRequest::new($this, $_GET[self::IDENTIFIER], $onSuccess)));
+       $this->userDefaultsApi->assignmentProcesses->handleFormSubmission($this, $_GET[self::IDENTIFIER], $onSuccess);
     }
 
     /**
@@ -169,6 +177,7 @@ class UserSettingsGUI
         $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_duplicate_successful'), true);
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -181,6 +190,7 @@ class UserSettingsGUI
         $conf->setCancel($this->pl->txt('set_cancel'), self::CMD_INDEX);
         $this->ui->mainTemplate()->setContent($conf->getHTML());
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -190,6 +200,7 @@ class UserSettingsGUI
         $ilUserSetting->delete();
         $this->cancel();
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -259,7 +270,6 @@ class UserSettingsGUI
     }*/
 
 
-
     /**
      * @throws ilException
      */
@@ -313,26 +323,8 @@ class UserSettingsGUI
         $this->ctrl->setParameterByClass(ilRepositoryGUI::class, 'ref_id', $ref_id);
         $this->ctrl->redirectByClass(ilRepositoryGUI::class);
     }
-    /**
-     * @throws ilCtrlException
-     */
-    protected function applyFilter(): void
-    {
-        $tableGui = new UserSettingsTableGUI($this, self::CMD_INDEX);
-        $tableGui->resetOffset(true);
-        $tableGui->writeFilterToSession();
-        $this->ctrl->redirect($this, self::CMD_INDEX);
-    }
-    /**
-     * @throws ilCtrlException
-     */
-    protected function resetFilter(): void
-    {
-        $tableGui = new UserSettingsTableGUI($this, self::CMD_INDEX);
-        $tableGui->resetOffset();
-        $tableGui->resetFilter();
-        $this->ctrl->redirect($this, self::CMD_INDEX);
-    }
+
+
     /**
      * @throws ilCtrlException
      */
@@ -355,6 +347,7 @@ class UserSettingsGUI
         }
         $this->ui->mainTemplate()->setContent($conf->getHTML());
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -373,6 +366,7 @@ class UserSettingsGUI
         }
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -395,6 +389,7 @@ class UserSettingsGUI
         }
         $this->ui->mainTemplate()->setContent($conf->getHTML());
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -412,6 +407,7 @@ class UserSettingsGUI
         }
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
+
     /**
      * @throws ilCtrlException
      */
@@ -432,6 +428,7 @@ class UserSettingsGUI
         }
         $this->ui->mainTemplate()->setContent($conf->getHTML());
     }
+
     /**
      * @throws ilCtrlException
      */

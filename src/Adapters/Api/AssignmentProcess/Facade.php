@@ -2,19 +2,20 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\AssignmentProcess;
 
+use srag\Plugins\UserDefaults\Adapters\Config\Configs;
 use srag\Plugins\UserDefaults\Adapters\Ui;
 use srag\Plugins\UserDefaults\Domain\Ports\AssignmentProcessService;
 
 class Facade
 {
-    private function __construct(private AssignmentProcessService $service)
+    private function __construct(private AssignmentProcessService $service, private \ILIAS\DI\UIServices $iliasUiServices)
     {
 
     }
 
-    public static function new(AssignmentProcessService $service): Facade
+    public static function new(Configs $configs): Facade
     {
-        return new self($service);
+        return new self($configs->assignmentProcessService, $configs->iliasUiServices);
     }
 
 
@@ -30,30 +31,28 @@ class Facade
     }
 
     /**
-     * @return string
+     * @throws \ilCtrlException
+     * @throws \ilException
      */
-    public function getTableHtml(GetTableHtmlRequest $request): string
+    public function renderTable(Requests\RenderTable $request): void
     {
-        return Ui\AssignmentProcess\Table::new($request->parentIliasGui)->getHtml();
+        $this->iliasUiServices->mainTemplate()->setContent(Responses\Table::new($request->parentIliasGui)->getHtml());
     }
 
-    /**
-     * @return string
-     */
-    public function getFormHtml(GetFormHtmlRequest $request): string
+    public function renderForm(Requests\RenderForm $request): void
     {
-        return Ui\AssignmentProcess\Form::new($request->parentIliasGui, $request->assignmentProcessId)->getHtml();
+        $this->iliasUiServices->mainTemplate()->setContent(Responses\Form::new($request->parentIliasGui, $request->assignmentProcessId)->getHtml());
     }
 
-    public function handleFormSubmission(HandleFormSubmissionRequest $request): string
+    public function handleFormSubmission(Requests\HandleFormSubmission $request): void
     {
-        $ilUserSettingsFormGUI = Ui\AssignmentProcess\Form::new($request->parentIliasGui, $request->assignmentProcessId);
-        $ilUserSettingsFormGUI->setValuesByPost();
+        $form = Responses\Form::new($request->parentIliasGui, $request->assignmentProcessId);
+        $form->setValuesByPost();
 
         //todo checkInput; saveObject to $service
-        if ($ilUserSettingsFormGUI->saveObject()) {
+        if ($form->saveObject()) {
             $request->onSuccess();
         }
-        return $ilUserSettingsFormGUI->getHTML();
+        $this->iliasUiServices->mainTemplate()->setContent($form->getHTML());
     }
 }

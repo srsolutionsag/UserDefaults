@@ -28,11 +28,8 @@ use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use php4DOMDocument;
-use srag\DIC\UserDefaults\DICTrait;
-use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use srag\ActiveRecordConfig\UserDefaults\Config\Config;
 use ilRbacReview;
 
 /**
@@ -279,7 +276,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($courses as $crs_obj_id) {
-			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != Courses::TYPE_CRS) {
+			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != "crs") {
 				continue;
 			}
 			$crs = new ilObjCourse($crs_obj_id,false);
@@ -305,7 +302,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($courses as $crs_obj_id) {
-			if ($crs_obj_id === "" || ilObject2::_lookupType($crs_obj_id) !== Courses::TYPE_CRS) {
+			if ($crs_obj_id === "" || ilObject2::_lookupType($crs_obj_id) !== "crs") {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
@@ -329,12 +326,14 @@ class UserSetting extends ActiveRecord {
 			$usr_id = $this->getUsrObject()->getId();
 
 			if ($this->isAssignedGroupsOptionRequest()) {
-				//ilGroupMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION_REQUEST,
-				$added = $part->addSubscriber($usr_id);
-				$part->updateSubscriptionTime($usr_id, time());
-				$part->sendNotification(31, $usr_id);
+                if($part->isAssigned($usr_id) === false && $part->isSubscriber($usr_id) === false) {
+                    //ilGroupMembershipMailNotification::TYPE_NOTIFICATION_REGISTRATION_REQUEST,
+                    $part->addSubscriber($usr_id);
+                    $part->updateSubscriptionTime($usr_id, time());
+                    $part->sendNotification(31, $usr_id);
+                }
 			} else {
-				$added = $part->add($usr_id, ilParticipants::IL_GRP_MEMBER);
+				$part->add($usr_id, ilParticipants::IL_GRP_MEMBER);
 			}
 		}
 

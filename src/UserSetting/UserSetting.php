@@ -661,7 +661,7 @@ class UserSetting extends ActiveRecord {
      * @con_fieldtype integer
      * @con_length    1
      */
-    protected bool $unsign_global_roles = false;
+    protected ?bool $unsign_global_roles = false;
 	/**
 	 * @var int
 	 *
@@ -701,7 +701,7 @@ class UserSetting extends ActiveRecord {
      * @con_fieldtype integer
      * @con_length    1
      */
-    protected bool $unsign_local_roles = false;
+    protected ?bool $unsign_local_roles = false;
 	/**
 	 * @var array
 	 *
@@ -725,7 +725,7 @@ class UserSetting extends ActiveRecord {
 	 * @con_fieldtype integer
 	 * @con_length    1
 	 */
-	protected bool $unsubscr_from_crs_and_cat = false;
+	protected ?bool $unsubscr_from_crs_and_cat = false;
     /**
      * @var bool
      *
@@ -733,7 +733,7 @@ class UserSetting extends ActiveRecord {
      * @con_fieldtype integer
      * @con_length    1
      */
-    protected bool $unsubscr_from_grp = false;
+    protected ?bool $unsubscr_from_grp = false;
 	/**
 	 * @var bool
 	 *
@@ -741,7 +741,7 @@ class UserSetting extends ActiveRecord {
 	 * @con_fieldtype integer
 	 * @con_length    1
 	 */
-	protected bool $assigned_groups_option_request = false;
+	protected ?bool $assigned_groups_option_request = false;
     /**
      * @var array
      *
@@ -805,7 +805,7 @@ class UserSetting extends ActiveRecord {
      * @con_fieldtype integer
      * @con_length    1
      */
-    protected bool $remove_from_portfolio = false;
+    protected ?bool $remove_from_portfolio = false;
 	/**
 	 * @var array
 	 *
@@ -829,7 +829,7 @@ class UserSetting extends ActiveRecord {
      * @con_fieldtype integer
      * @con_length    1
      */
-    protected bool $unsubscribe_from_orgus = false;
+    protected ?bool $unsubscribe_from_orgus = false;
 	/**
 	 * @var array
 	 *
@@ -845,7 +845,7 @@ class UserSetting extends ActiveRecord {
      * @con_fieldtype integer
      * @con_length    1
      */
-    protected bool $unsubscr_from_studyprograms = false;
+    protected ?bool $unsubscr_from_studyprograms = false;
 	/**
 	 * @var UDFCheck[]
 	 */

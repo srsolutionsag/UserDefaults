@@ -218,7 +218,7 @@ class UserSetting extends ActiveRecord {
     {
 		$global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
-            if (ilObject2::_lookupType($global_role) == 'role') {
+            if (ilObject2::_lookupType((int)$global_role) == 'role') {
                 $this->rbac->admin()->assignUser($global_role, $this->getUsrObject()->getId());
             }
         }
@@ -232,7 +232,7 @@ class UserSetting extends ActiveRecord {
 
         $global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
-            if (ilObject2::_lookupType($global_role) == 'role') {
+            if (ilObject2::_lookupType((int)$global_role) == 'role') {
                 $this->rbac->admin()->deassignUser($global_role, $this->getUsrObject()->getId());
             }
         }
@@ -276,7 +276,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($courses as $crs_obj_id) {
-			if ($crs_obj_id == "" || ilObject2::_lookupType($crs_obj_id) != "crs") {
+			if ($crs_obj_id == "" || ilObject2::_lookupType((int)$crs_obj_id) != "crs") {
 				continue;
 			}
 			$crs = new ilObjCourse($crs_obj_id,false);
@@ -302,7 +302,7 @@ class UserSetting extends ActiveRecord {
 		}
 
 		foreach ($courses as $crs_obj_id) {
-			if ($crs_obj_id === "" || ilObject2::_lookupType($crs_obj_id) !== "crs") {
+			if ($crs_obj_id === "" || ilObject2::_lookupType((int)$crs_obj_id) !== "crs") {
 				continue;
 			}
 			$part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
@@ -319,7 +319,7 @@ class UserSetting extends ActiveRecord {
         $groups = $this->getAssignedGroupes();
 
         foreach ($groups as $grp_obj_id) {
-			if ($grp_obj_id == "" || ilObject2::_lookupType($grp_obj_id) != 'grp') {
+			if ($grp_obj_id == "" || ilObject2::_lookupType((int)$grp_obj_id) != 'grp') {
 				continue;
 			}
 			$part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
@@ -351,7 +351,7 @@ class UserSetting extends ActiveRecord {
         }
 
         foreach ($groups as $id) {
-            if ($id === "" || ilObject2::_lookupType($id) !== "grp") {
+            if ($id === "" || ilObject2::_lookupType((int)$id) !== "grp") {
                 continue;
             }
 	    $usr_id = $this->getUsrObject()->getId();
@@ -509,7 +509,7 @@ class UserSetting extends ActiveRecord {
 		// Set permissions
 		$ilPortfolioAccessHandler = new ilPortfolioAccessHandler();
 		foreach ($this->getPortfolioAssignedToGroups() as $grp_obj_id) {
-			if (ilObject2::_lookupType($grp_obj_id) == 'grp') {
+			if (ilObject2::_lookupType((int)$grp_obj_id) == 'grp') {
 				$ilPortfolioAccessHandler->removePermission($target->getId(), $grp_obj_id);
 				$ilPortfolioAccessHandler->addPermission($target->getId(), $grp_obj_id);
 			}
@@ -917,7 +917,7 @@ class UserSetting extends ActiveRecord {
 
     public function isGroupsQueueDesktop() : bool
     {
-        return $this->groups_queue_desktop ?? false;
+        return (bool)$this->groups_queue_desktop ?? false;
     }
 
 
@@ -995,9 +995,9 @@ class UserSetting extends ActiveRecord {
         $this->unsign_local_roles = $unsign_local_roles;
     }
 
-    public function isUnsignLocalRoles(): bool|array
+    public function isUnsignLocalRoles(): bool
     {
-        return $this->unsign_local_roles;
+        return (bool)$this->unsign_local_roles;
     }
 
 	public function setAssignedCourses($assigned_courses): void
@@ -1023,7 +1023,7 @@ class UserSetting extends ActiveRecord {
 
 	public function isAssignedGroupsOptionRequest(): bool
     {
-		return $this->assigned_groups_option_request;
+		return (bool)$this->assigned_groups_option_request;
 	}
 
 	public function setAssignedGroupsOptionRequest(bool $assigned_groups_option_request): void
@@ -1043,7 +1043,7 @@ class UserSetting extends ActiveRecord {
 
 	public function isUnsubscrfromcrsAndcategoriesDesktop(): bool
     {
-		return $this->unsubscr_from_crs_and_cat;
+		return (bool)$this->unsubscr_from_crs_and_cat;
 	}
 
     public function setUnsubscrfromcrsAndcategoriesDesktop(bool $unsubscr_from_crs_and_cat): void
@@ -1053,7 +1053,7 @@ class UserSetting extends ActiveRecord {
 
     public function isUnsubscrfromgrp(): bool
     {
-        return $this->unsubscr_from_grp;
+        return (bool)$this->unsubscr_from_grp;
     }
 
     public function setUnsubscrfromgrpDesktop(bool $unsubscr_from_grp): void
@@ -1094,7 +1094,7 @@ class UserSetting extends ActiveRecord {
 
     public function isUnsignGlobalRoles(): bool
     {
-        return $this->unsign_global_roles;
+        return (bool)$this->unsign_global_roles;
     }
 
 	public function setPortfolioAssignedToGroups(array $portfolio_assigned_to_groups): void
@@ -1210,7 +1210,7 @@ class UserSetting extends ActiveRecord {
 
     public function isUnsubscrFromOrgus(): bool
     {
-        return $this->unsubscribe_from_orgus;
+        return (bool)$this->unsubscribe_from_orgus;
     }
 
     public function setUnsubscrFromOrgus(bool $state): void
@@ -1230,7 +1230,7 @@ class UserSetting extends ActiveRecord {
 
     public function isUnsubscrFromStudyprograms(): bool
     {
-        return $this->unsubscr_from_studyprograms;
+        return (bool)$this->unsubscr_from_studyprograms;
     }
 
     public function setUnsubscrFromstudyprograms(bool $state): void
@@ -1240,7 +1240,7 @@ class UserSetting extends ActiveRecord {
 
 	public function isOnCreate(): bool
     {
-		return $this->on_create;
+		return (bool)$this->on_create;
 	}
 
 
@@ -1261,7 +1261,7 @@ class UserSetting extends ActiveRecord {
 
 	public function isOnManual(): bool
     {
-		return $this->on_manual;
+		return (bool)$this->on_manual;
 	}
 
 	public function setOnManual(bool $on_manual): void
@@ -1300,8 +1300,9 @@ class UserSetting extends ActiveRecord {
             return false;
         }
 
+
         foreach ($this->getAssignedOrgus() as $orgu_obj_id) {
-            if (ilObject2::_lookupType($orgu_obj_id) != 'orgu') {
+            if (ilObject2::_lookupType((int)$orgu_obj_id) != 'orgu') {
                 continue;
             }
 
@@ -1361,7 +1362,7 @@ class UserSetting extends ActiveRecord {
             return false;
         }
         foreach ($this->getAssignedStudyprograms() as $studyProgramObjId) {
-            if (ilObject2::_lookupType($studyProgramObjId) != 'prg') {
+            if (ilObject2::_lookupType((int)$studyProgramObjId) != 'prg') {
                 continue;
             }
 

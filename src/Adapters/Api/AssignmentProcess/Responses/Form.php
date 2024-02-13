@@ -416,9 +416,9 @@ class Form extends ilPropertyFormGUI
 
         $assigned_orgus = $this->getInput(self::F_ASSIGNED_ORGUS);
         $this->object->setAssignedOrgus($assigned_orgus);
-
-        $this->object->setAssignedOrguPosition($this->getInput(self::F_ASSIGNED_ORGU_POSITION)[0]);
-
+        if (array_key_exists("0",$this->getInput(self::F_ASSIGNED_ORGU_POSITION))) {
+            $this->object->setAssignedOrguPosition($this->getInput(self::F_ASSIGNED_ORGU_POSITION)[0]);
+        }
         $this->object->setUnsubscrFromOrgus((int)$this->getInput(self::F_UNSUBSCRIBE_ORGUS));
 
         $assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);

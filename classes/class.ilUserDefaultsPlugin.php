@@ -174,7 +174,12 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
         return $this->getDirectory()."/templates/images/".$imageName;
     }
 
-
+    	public static function grantAccess():bool {
+	    global $DIC;
+	 	// check if user is allowed to configure UserDefauts
+		// since major parts of the plugin assign roles to users the capability to assign roles in useradministration is checked
+	    return ($DIC->rbac()->system()->checkAccess("edit_roleassignment",USER_FOLDER_ID);
+    	}
     /**
      * @inheritDoc
      */

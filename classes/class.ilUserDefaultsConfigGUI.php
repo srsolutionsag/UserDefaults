@@ -23,8 +23,8 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
 	 */
 	public function __construct() {
         global $DIC;
-        //is Admin?
-        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
+        //Access granted?
+        if(!ilUserDefaultsPlugin::grantAccess()) {
             echo "no Permission";
             exit;
         };

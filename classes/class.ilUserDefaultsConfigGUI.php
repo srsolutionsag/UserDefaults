@@ -25,7 +25,7 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI {
         global $DIC;
         //Access granted?
         if(!ilUserDefaultsPlugin::grantAccess()) {
-            echo "no Permission";
+            echo "no Plugin Permission";
             exit;
         };
 

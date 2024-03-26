@@ -178,6 +178,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin {
 	    global $DIC;
 	 	// check if user is allowed to configure UserDefauts
 		// since major parts of the plugin assign roles to users the capability to assign roles in useradministration is checked
+		// write would check if user can edit settings
 	    return ($DIC->rbac()->system()->checkAccess("edit_roleassignment",USER_FOLDER_ID));
     	}
     /**

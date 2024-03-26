@@ -32,9 +32,9 @@ class usrdefUserGUI
     public function __construct()
     {
         global $DIC;
-        //is Admin?
-        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
-            echo "no Permission";
+        //Check Access
+        if(!ilUserDefaultsPlugin::grantAccess()) {
+            echo "no Search Permission";
             exit;
         };
 

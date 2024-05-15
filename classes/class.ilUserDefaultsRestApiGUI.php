@@ -36,8 +36,8 @@ class ilUserDefaultsRestApiGUI
     {
         global $DIC;
         $this->ctrl = $DIC->ctrl();
-        //is Admin?
-        if(in_array(2, $DIC->rbac()->review()->assignedGlobalRoles($DIC->user()->getId())) === false) {
+        // fix DH: Has permission
+        if (!ilUserDefaultsPlugin::grantAccess()) {
             echo "no Permission";
             exit;
         };

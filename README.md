@@ -20,6 +20,10 @@ Start at the plugin directory
 
 ## Rebuild & Maintenance
 
+some changes by DHBW, test thoroughly, no function granted
+
+original releases:
+
 fluxlabs ag, support@fluxlabs.ch
 
 This project needs to be rebuilt before it can be maintained.

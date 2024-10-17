@@ -4,6 +4,7 @@ namespace srag\Plugins\UserDefaults\Adapters\Api\OrgUnits;
 
 use ilOrgUnitPosition;
 use srag\Plugins\UserDefaults\Domain\Ports\OrgUnitService;
+use ilOrgUnitPositionLocalDIC;
 
 class Facade
 {
@@ -33,8 +34,12 @@ class Facade
 
     public function findAllPositions(): array
     {
+        //ToDO: check if next two lines should be in constructor
+        $orgu = \ilOrgUnitLocalDIC::dic();
+        $this->orguPos = $orgu["repo.Positions"];
+        
         $orguPositions = [];
-        foreach (ilOrgUnitPosition::getArray() as $position) {
+        foreach ($this->orguPos->getAllPositions() as $position) {
             $orguPositions[] = Responses\OrgUnitPositions::new($position['id'], $position['title']);
         }
         return $orguPositions;

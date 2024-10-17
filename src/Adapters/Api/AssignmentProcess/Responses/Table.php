@@ -95,8 +95,8 @@ class Table extends ilTable2GUI {
 		$xdglRequestList->orderBy('title');
 		$a_data = $xdglRequestList->getArray();
 
-		$img_on = ilUtil::img(ilUtil::getImagePath('icon_ok.svg'),null, "20px","20px");
-		$img_off = ilUtil::img(ilUtil::getImagePath('icon_not_ok.svg'),null, "20px","20px");
+		$img_on = ilUtil::img(ilUtil::getImagePath('standard/icon_ok.svg'),null, "20px","20px");
+		$img_off = ilUtil::img(ilUtil::getImagePath('standard/icon_not_ok.svg'),null, "20px","20px");
 
 		foreach ($a_data as $k => $d) {
 			$a_data[$k]['status_image'] = ($d['status'] == UserSetting::STATUS_ACTIVE ? $img_on : $img_off);

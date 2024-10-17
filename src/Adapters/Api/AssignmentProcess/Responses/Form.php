@@ -6,6 +6,7 @@ use ilCheckboxInputGUI;
 use ilFormSectionHeaderGUI;
 use ilObjPortfolioTemplate;
 use ilOrgUnitPosition;
+use ilOrgUnitLocalDIC;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
@@ -73,6 +74,8 @@ class Form extends ilPropertyFormGUI
     public function __construct(UserSettingsGUI $parent_gui, UserSetting $ilUserSetting)
     {
         global $DIC;
+        $orgus = ilOrgUnitLocalDIC::dic();
+        $this->positionRepo = $orgus["repo.Positions"];
         parent::__construct();
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->ctrl = $DIC->ctrl();
@@ -339,7 +342,10 @@ class Form extends ilPropertyFormGUI
         }, $this->object->getAssignedGroupsQueue());
         $assigned_groups_queue = array_values($assigned_groups_queue);
         $assignedOrguPosition = $this->object->getAssignedOrguPosition();
-        $selectOrguPosVal = current(array_filter(ilOrgUnitPosition::get(), function ($pos) use ($assignedOrguPosition) {
+        if ($assignedOrguPosition == null) {
+            $assignedOrguPosition = 0;
+        }
+        $selectOrguPosVal = current(array_filter($this->positionRepo->getAllPositions(), function ($pos) use ($assignedOrguPosition) {
             return $pos->getId() == $assignedOrguPosition;
         }));
 

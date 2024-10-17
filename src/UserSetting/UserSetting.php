@@ -1326,7 +1326,7 @@ class UserSetting extends ActiveRecord {
             $orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
 
             if (!is_null($this->getAssignedOrguPosition())) {
-                $ua = ilOrgUnitUserAssignment::findOrCreateAssignment($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
+                $ua = $this->orgUnitAssignmentRepo->get($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
             }
 
             $ua->delete();

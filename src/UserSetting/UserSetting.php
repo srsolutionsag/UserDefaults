@@ -20,7 +20,7 @@ use ilObjPortfolio;
 use ilObjPortfolioTemplate;
 use ilObjStudyProgramme;
 use ilObjUser;
-use ilOrgUnitUserAssignment;
+use OrgUnit\Positions\ilOrgUnitUserAssignment\ilOrgUnitUserAssignmentDBRepository;
 use ilParticipants;
 use ilPersonalSkill;
 use ilPortfolioAccessHandler;
@@ -64,6 +64,9 @@ class UserSetting extends ActiveRecord {
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->rbac = $DIC->rbac();
         $this->user = $DIC->user();
+
+	$org_repo = \ilOrgUnitLocalDIC::dic();
+	$this->orgUnitAssignmentRepo = $org_repo["repo.UserAssignments"];
 
         parent::__construct($primary_key);
     }
@@ -1200,7 +1203,12 @@ class UserSetting extends ActiveRecord {
 
     public function getAssignedOrguPosition(): ?int
     {
-        return $this->assigned_orgu_position;
+	if ($this->assigned_orgu_position > 0) {    
+        	return $this->assigned_orgu_position;
+	} else {
+		// fallback to core position employee 
+		return 1;
+	}
     }
 
     public function setAssignedOrguPosition(int $id): void
@@ -1288,7 +1296,7 @@ class UserSetting extends ActiveRecord {
 				continue;
 			}
 			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-			ilOrgUnitUserAssignment::findOrCreateAssignment($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
+			$this->orgUnitsAssignmentRepo->get($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
 		}
 
 		return true;

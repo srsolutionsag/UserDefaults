@@ -1296,7 +1296,7 @@ class UserSetting extends ActiveRecord {
 				continue;
 			}
 			$orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-			$this->orgUnitsAssignmentRepo->get($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
+			$this->orgUnitAssignmentRepo->get($usr_id, (int)$this->getAssignedOrguPosition(), $orgUnit->getRefId());
 		}
 
 		return true;

@@ -40,7 +40,7 @@ class Facade
         
         $orguPositions = [];
         foreach ($this->orguPos->getAllPositions() as $position) {
-            $orguPositions[] = Responses\OrgUnitPositions::new($position['id'], $position['title']);
+            $orguPositions[] = Responses\OrgUnitPositions::new($position->getId(), $position->getTitle());
         }
         return $orguPositions;
     }

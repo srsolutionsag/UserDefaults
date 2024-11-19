@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\Plugins\UserDefaults;
+namespace srag\Plugins\UserDefaults\API;
 
 use srag\Plugins\UserDefaults\Adapters\Api;
 use srag\Plugins\UserDefaults\Adapters\Config\Configs;

@@ -1,6 +1,7 @@
 <?php
 
-use srag\Plugins\UserDefaults\UserDefaultsApi;
+use srag\Plugins\UserDefaults\API\UserDefaultsApi;
+use srag\Plugins\UserDefaults\API\Commands;
 
 /**
  * @ilCtrl_IsCalledBy ilUserDefaultsRestApiGUI: ilUserDefaultsConfigGUI
@@ -50,33 +51,19 @@ class ilUserDefaultsRestApiGUI
 
     public function executeCommand(): void
     {
-        $cmd = $this->ctrl->getCmd();
-        switch ($cmd) {
-            case static::commandNames()->courses:
-                $this->courses();
-                break;
-            case static::commandNames()->globalRoles:
-                $this->globalRoles();
-                break;
-            case static::commandNames()->groups:
-                $this->groups();
-                break;
-            case static::commandNames()->localRoles:
-                $this->localRoles();
-                break;
-            case static::commandNames()->orgUnits:
-                $this->orgUnits();
-                break;
-            case static::commandNames()->orgUnitPositions:
-                $this->orgUnitPositions();
-                break;
-            case static::commandNames()->portfolioTemplates:
-                $this->portfolioTemplates();
-                break;
-            case static::commandNames()->studyProgrammes:
-                $this->studyProgrammes();
-                break;
-        }
+        $cmd = Commands::from($this->ctrl->getCmd());
+
+        match ($cmd) {
+            Commands::courses => $this->courses(),
+            Commands::globalRoles => $this->globalRoles(),
+            Commands::groups => $this->groups(),
+            Commands::localRoles => $this->localRoles(),
+            Commands::orgUnits => $this->orgUnits(),
+            Commands::orgUnitPositions => $this->orgUnitPositions(),
+            Commands::portfolioTemplates => $this->portfolioTemplates(),
+            Commands::studyProgrammes => $this->studyProgrammes(),
+            default => null
+        };
     }
 
     public function courses(): void

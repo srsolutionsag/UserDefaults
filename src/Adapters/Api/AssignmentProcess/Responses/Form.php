@@ -14,11 +14,11 @@ use ilTextInputGUI;
 use ilUserDefaultsConfigGUI;
 use ilUserDefaultsPlugin;
 use ilUserDefaultsRestApiGUI;
-use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;
-use srag\Plugins\UserDefaults\UserDefaultsApi;
+use srag\Plugins\UserDefaults\API\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserSettingsGUI;
+use srag\Plugins\UserDefaults\API\Commands;
 
 class Form extends ilPropertyFormGUI
 {
@@ -134,7 +134,7 @@ class Form extends ilPropertyFormGUI
                 self::F_GLOBAL_ROLES,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->globalRoles
+                    Commands::globalRoles->value
                 )
             )
         );
@@ -155,7 +155,7 @@ class Form extends ilPropertyFormGUI
                 self::F_ASSIGNED_LOCAL_ROLES,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->localRoles
+                    Commands::localRoles->value
                 )
             )
         );
@@ -177,7 +177,7 @@ class Form extends ilPropertyFormGUI
                 self::F_ASSIGNED_COURSES,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->courses
+                    Commands::courses->value
                 )
             )
         );
@@ -199,7 +199,7 @@ class Form extends ilPropertyFormGUI
                 self::F_ASSIGNED_GROUPS,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->groups
+                    Commands::groups->value
                 )
             )
         );
@@ -265,7 +265,7 @@ class Form extends ilPropertyFormGUI
                 self::F_ASSIGNED_ORGUS,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->orgUnits
+                    Commands::orgUnits->value
                 )
             )
         );
@@ -277,7 +277,7 @@ class Form extends ilPropertyFormGUI
                 self::F_ASSIGNED_ORGU_POSITION,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->orgUnitPositions
+                    Commands::orgUnitPositions->value
                 )
             )
         );
@@ -302,7 +302,7 @@ class Form extends ilPropertyFormGUI
                 self::F_ASSIGNED_STUDYPROGRAMS,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->studyProgrammes
+                    Commands::studyProgrammes->value
                 )
             )
         );
@@ -353,7 +353,7 @@ class Form extends ilPropertyFormGUI
                 self::F_PORTFOLIO_ASSIGNED_TO_GROUPS,
                 $this->ctrl->getLinkTargetByClass(
                     [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
-                    ilUserDefaultsRestApiGUI::commandNames()->portfolioTemplates
+                    Commands::portfolioTemplates->value
                 )
             )
         );

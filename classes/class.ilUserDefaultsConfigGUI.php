@@ -1,20 +1,24 @@
 <?php
 
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-
 /**
  * @ilCtrl_isCalledBy ilUserDefaultsConfigGUI: ilObjComponentSettingsGUI
  */
 class ilUserDefaultsConfigGUI extends ilPluginConfigGUI
 {
-    use UserDefaultsTrait;
-
-    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const TAB_SETTINGS = "settings";
     public const TAB_USERS = "users";
     public const TAB_GLOBAL_SETTINGS = "global_settings";
+    /**
+     * @readonly
+     */
     private ilCtrl $ctrl;
+    /**
+     * @readonly
+     */
     private ilTabsGUI $tabs;
+    /**
+     * @readonly
+     */
     private ilUserDefaultsPlugin $pl;
 
     /**
@@ -52,8 +56,7 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI
                 ->getLinkTargetByClass(usrdefUserGUI::class)
         );
 
-        $nextClass = $this->ctrl->getNextClass();
-        switch ($nextClass) {
+        switch ($this->ctrl->getNextClass()) {
             case strtolower(UDFCheckGUI::class):
                 $this->tabs->activateTab(self::TAB_SETTINGS);
                 $gui = new UDFCheckGUI(new UserSettingsGUI());

@@ -4,18 +4,9 @@ use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
-/**
- * Class ilUserDefaultsPlugin
- *
- * @author  Fabian Schmid <fs@studer-raimann.ch>
- * @version 1.0.0
- */
 class ilUserDefaultsPlugin extends ilEventHookPlugin
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_ID = 'usrdef';
     public const PLUGIN_NAME = 'UserDefaults';
     public const PLUGIN_CLASS_NAME = self::class;
@@ -33,12 +24,10 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
     public const ASSIGN_USER_TO_POSITION = 'assignUserToPosition';
     public const REMOVE_USER_FROM_POSITION = 'removeUserFromPosition';
     /**
-     * @var
+     * @deprecated Do not use Singleton pattern
      */
-    protected static $instance;
-    /**
-     * @var array
-     */
+    protected static ?self $instance = null;
+
     protected static array $mapping = [
         self::CREATED_1 => 'on_create',
         self::CREATED_2 => 'on_create',
@@ -50,11 +39,11 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
     ];
 
     /**
-     * @return ilUserDefaultsPlugin
+     * @deprecated Do not use Singleton pattern
      */
     public static function getInstance(): ilUserDefaultsPlugin
     {
-        if (!isset(self::$instance)) {
+        if (self::$instance === null) {
             global $DIC;
 
             /** @var $component_factory ilComponentFactory */
@@ -68,13 +57,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         return self::$instance;
     }
 
-    public function __construct(
-        ilDBInterface $db,
-        ilComponentRepositoryWrite $component_repository,
-        string $id
-    ) {
-        parent::__construct($db, $component_repository, $id);
-    }
 
     public function getPrefix(): string
     {
@@ -88,6 +70,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
     ): void {
         $run = false;
         $user = null;
+
         switch ($a_component) {
             case self::SERVICES_AUTHENTICATION:
                 if ($a_event === self::AFTER_LOGIN) {
@@ -143,11 +126,11 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         if (str_contains($a_component, "Modules/OrgUnit")) {
             return;
         }
-        /**
-         * @var UserSetting $ilUserSetting
-         */
-        foreach (UserSetting::where(['status' => UserSetting::STATUS_ACTIVE, $sets => true])->get() as $ilUserSetting) {
-            $ilUserSetting->doAssignements($user);
+
+        $user_settings = UserSetting::where(['status' => UserSetting::STATUS_ACTIVE, $sets => true])->get();
+        foreach ($user_settings as $user_setting) {
+            /** @var UserSetting $user_setting */
+            $user_setting->doAssignements($user);
         }
     }
 

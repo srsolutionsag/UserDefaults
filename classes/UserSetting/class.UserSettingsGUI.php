@@ -2,7 +2,7 @@
 
 use ILIAS\DI\UIServices;
 use ILIAS\DI\RBACServices;
-use srag\Plugins\UserDefaults\UserDefaultsApi;
+use srag\Plugins\UserDefaults\API\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 

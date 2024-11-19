@@ -920,7 +920,7 @@ class UserSetting extends ActiveRecord
 
     public function isGroupsQueueDesktop(): bool
     {
-        return (bool) $this->groups_queue_desktop ?? false;
+        return (bool) ($this->groups_queue_desktop ?? false);
     }
 
     public function setGroupsQueueDesktop(bool $groups_queue_desktop): void

@@ -1,30 +1,17 @@
 <?php
 
 use ILIAS\DI\UIServices;
-use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
-/**
- * @ilCtrl_Calls usrdefUserTableGUI: ilFormPropertyDispatchGUI
- */
 class usrdefUserTableGUI extends ilTable2GUI
 {
-    use UserDefaultsTrait;
-
-    public const TABLE_ID = 'tbl_mutla_users';
-    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    protected const TABLE_ID = 'tbl_mutla_users';
+    protected const BASE_ORG_UNIT = 56;
     protected array $filter = [];
     protected ilCtrl $ctrl;
-    private UIServices $ui;
-    private ilUserDefaultsPlugin $pl;
+    protected UIServices $ui;
+    protected ilUserDefaultsPlugin $pl;
 
-    /**
-     * @throws arException
-     * @throws DICException
-     * @throws ilCtrlException
-     * @throws ilException
-     */
     public function __construct(usrdefUserGUI $a_parent_obj, string $a_parent_cmd)
     {
         global $DIC;
@@ -49,36 +36,14 @@ class usrdefUserTableGUI extends ilTable2GUI
         $this->setDisableFilterHiding(true);
         $this->parseData();
         $this->addCommandButton('selectUser', $this->pl->txt('button_select_user'));
-
         $this->setSelectAllCheckbox('id');
     }
-
-    /**
-     * @throws ilCtrlException
-     */
-    public function executeCommand(): bool
-    {
-        switch ($this->ctrl->getNextClass($this)) {
-            case strtolower(self::class):
-            case '':
-                $cmd = $this->ctrl->getCmd() . 'Cmd';
-                return $this->$cmd();
-            default:
-                $this->ctrl->setReturn($this, 'index');
-                return parent::executeCommand();
-        }
-    }
-
     protected function fillRow(array $a_set): void
     {
-        /**
-         * @var usrdefUser $usrdefUser
-         */
-        $usrdefUser = usrdefUser::find($a_set['usr_id']);
         foreach (array_keys($this->getSelectableColumns()) as $k) {
-            if ($k == 'actions') {
+            if ($k === 'actions') {
                 $this->tpl->setCurrentBlock('checkbox');
-                $this->tpl->setVariable('ID', $usrdefUser->getUsrId());
+                $this->tpl->setVariable('ID', $a_set['usr_id']);
                 $this->tpl->parseCurrentBlock();
                 continue;
             }
@@ -143,18 +108,12 @@ class usrdefUserTableGUI extends ilTable2GUI
         }*/
 
         // ORGU
-        if (in_array('orgu', $this->filter) && $this->filter['orgu'] && is_array($this->filter['orgu'])
-            && $this->filter['orgu'] !== []) {
+        if (($this->filter['orgu'] ?? []) !== []) {
             $value = $this->filter['orgu'];
-            $role_ids = [];
-            $roles = ilObjOrgUnitTree::_getInstance()->getEmployeeRoles();
-            foreach ($value as $ref_id) {
-                if ($roles[$ref_id]) {
-                    $role_ids[] = $roles[$ref_id];
-                }
-            }
-            $usrdefUser->innerjoin('rbac_ua', 'usr_id', 'usr_id');
-            $usrdefUser->where(['rbac_ua.rol_id' => $role_ids]);
+            $usrdefUser->innerjoin('il_orgu_ua', 'usr_id', 'user_id');
+            $usrdefUser->where(
+                ['il_orgu_ua.position_id' => ilOrgUnitPosition::CORE_POSITION_EMPLOYEE, 'il_orgu_ua.orgu_id' => $value]
+            );
         }
 
         $this->setMaxCount($usrdefUser->count());
@@ -238,9 +197,10 @@ class usrdefUserTableGUI extends ilTable2GUI
         //$this->addAndReadFilterItem($crs);
 
         // orgu legacy
-        //		$orgu = new ilMultiSelectInputGUI($this->pl->txt('usr_orgu'), 'orgu');
-        //		$orgu->setOptions(ilObjOrgUnitTree::_getInstance()->getAllChildren(56));
-        //		$this->addAndReadFilterItem($orgu);
+        $orgu = new ilMultiSelectInputGUI($this->pl->txt('usr_orgu'), 'orgu');
+        $orgu_option = $this->buildOrgunitOptions();
+        $orgu->setOptions($orgu_option);
+        $this->addAndReadFilterItem($orgu);
     }
 
     protected function addAndReadFilterItem(ilFormPropertyGUI $item): void
@@ -248,5 +208,23 @@ class usrdefUserTableGUI extends ilTable2GUI
         $this->addFilterItem($item);
         $item->readFromSession();
         $this->filter[$item->getPostVar()] = $item->getValue();
+    }
+
+    /**
+     * @return array
+     */
+    protected function buildOrgunitOptions(): array
+    {
+        $all_children = ilObjOrgUnitTree::_getInstance()->getAllChildren(self::BASE_ORG_UNIT);
+
+        $org_units = [];
+        foreach ($all_children as $child) {
+            if ($child === self::BASE_ORG_UNIT) {
+                continue;
+            }
+            $org_units[$child] = ilObject::_lookupTitle(ilObject::_lookupObjId($child));
+        }
+
+        return $org_units;
     }
 }

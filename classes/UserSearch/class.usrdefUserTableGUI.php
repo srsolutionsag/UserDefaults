@@ -2,7 +2,6 @@
 
 use ILIAS\DI\UIServices;
 use srag\Plugins\UserDefaults\Access\Courses;
-use srag\Plugins\UserDefaults\Form\usrdefOrguSelectorInputGUI;
 use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
@@ -70,7 +69,7 @@ class usrdefUserTableGUI extends ilTable2GUI
         }
     }
 
-    public function fillRow(array $a_set): void
+    protected function fillRow(array $a_set): void
     {
         /**
          * @var usrdefUser $usrdefUser
@@ -208,7 +207,6 @@ class usrdefUserTableGUI extends ilTable2GUI
     {
         foreach ($this->getSelectableColumns() as $k => $v) {
             if ($this->isColumnSelected($k)) {
-                $sort = null;
                 $sort = array_key_exists('sort_field', $v) && $v['sort_field'] ? $v['sort_field'] : $k;
                 $this->addColumn($v['txt'], $sort, $v['width']);
             }
@@ -250,32 +248,5 @@ class usrdefUserTableGUI extends ilTable2GUI
         $this->addFilterItem($item);
         $item->readFromSession();
         $this->filter[$item->getPostVar()] = $item->getValue();
-    }
-
-
-    /**
-     * @param bool $a_in_determination
-     */
-    /*public function resetOffset($a_in_determination = false) {
-        parent::resetOffset(false);
-        self::dic()->ctrl()->setParameter($this->parent_obj, $this->getNavParameter(), $this->nav_value);
-    }*/
-
-    public function getCrsSelectorGUI(): ilRepositorySelector2InputGUI
-    {
-        // courses
-        $crs = new ilRepositorySelector2InputGUI($this->pl->txt('usr_repo'), 'repo', true);
-        $crs->getExplorerGUI()->setSelectableTypes(['grp', Courses::TYPE_CRS]);
-
-        return $crs;
-    }
-
-    public function getOrguSelectorGUI(): usrdefOrguSelectorInputGUI
-    {
-        $crs = new usrdefOrguSelectorInputGUI($this->pl->txt('usr_orgu'), 'orgu', true);
-        $crs->getExplorerGUI()->setRootId(56);
-        $crs->getExplorerGUI()->setClickableTypes(['orgu']);
-
-        return $crs;
     }
 }

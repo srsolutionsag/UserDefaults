@@ -97,7 +97,7 @@ class UDFCheckTableGUI extends ilTable2GUI
      * @throws ilCtrlException
      * @throws \JsonException
      */
-    public function fillRow(array $a_set): void
+    protected function fillRow(array $a_set): void
     {
         $a_set["operator"] = $this->pl->txt("check_op_" . UDFCheck::$operator_text_keys[$a_set["operator"]]);
 

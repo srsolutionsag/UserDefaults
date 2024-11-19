@@ -113,18 +113,6 @@ class UserDefaultsConfig extends ActiveRecord
         $this->value = $value;
     }
 
-    public function sleep($field_name)
-    {
-        $field_value = $this->{$field_name};
-
-        return parent::sleep($field_name);
-    }
-
-    public function wakeUp(/*string*/ $field_name, $field_value)
-    {
-        return parent::wakeUp($field_name, $field_value);
-    }
-
     private static array $fields = [
         self::KEY_CATEGORY_REF_ID => self::TYPE_INTEGER
     ];

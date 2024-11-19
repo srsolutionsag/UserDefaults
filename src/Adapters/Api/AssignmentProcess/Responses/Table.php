@@ -119,7 +119,7 @@ class Table extends ilTable2GUI
      * @throws DICException
      * @throws \JsonException
      */
-    public function fillRow(array $a_set): void
+    protected function fillRow(array $a_set): void
     {
         $ilUserSetting = UserSetting::find($a_set['id']);
         $ilUDFCheckGUI = new UDFCheckGUI($this->parent_obj);

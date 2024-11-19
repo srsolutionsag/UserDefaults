@@ -67,7 +67,7 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI
                 break;
             default:
                 $this->tabs->activateTab(self::TAB_SETTINGS);
-                $gui = new UserSettingsGUI($this);
+                $gui = new UserSettingsGUI();
                 break;
         }
         $this->ctrl->forwardCommand($gui);

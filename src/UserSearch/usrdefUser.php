@@ -450,7 +450,7 @@ class usrdefUser extends ActiveRecord
      *
      * @deprecated
      */
-    protected string $auth_mode;
+    protected ?string $auth_mode = null;
     /**
      * @var
      *
@@ -729,7 +729,7 @@ class usrdefUser extends ActiveRecord
      *
      * @deprecated
      */
-    public function getAuthMode(): string
+    public function getAuthMode(): ?string
     {
         return $this->auth_mode;
     }
@@ -739,7 +739,7 @@ class usrdefUser extends ActiveRecord
      *
      * @deprecated
      */
-    public function setAuthMode(string $auth_mode): void
+    public function setAuthMode(?string $auth_mode): void
     {
         $this->auth_mode = $auth_mode;
     }

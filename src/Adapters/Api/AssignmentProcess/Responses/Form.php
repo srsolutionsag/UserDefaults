@@ -171,9 +171,6 @@ class Form extends ilPropertyFormGUI
         $a_item->setTitle($this->pl->txt('courses'));
         $this->addItem($a_item);
 
-        $multiSelect = new udfMultiLineInputGUI($this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), "MultiGroup");
-        $multiSelect->setShowLabel(true);
-
         $this->addItem(
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_ASSIGNED_COURSES),

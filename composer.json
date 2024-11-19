@@ -1,42 +1,12 @@
 {
-  "name": "fluxapp/user-defaults",
-  "description": "ILIAS UserDefaults Plugin",
-  "version": "2.1.0",
-  "type": "plugin",
-  "keywords": [
-    "ilias",
-    "fluxlabs",
-    "user-defaults"
-  ],
-  "license": "GPL-3.0-only",
-  "authors": [
-    {
-      "name": "fluxlabs ag - lab burgdorf",
-      "email": "support@fluxlabs.ch",
-      "homepage": "https://fluxlabs.ch",
-      "role": "Developer, Maintainer"
-    }
-  ],
-  "support": {
-    "issues": "https://git.fluxlabs.ch"
-  },
-  "require": {
-    "php": ">=8.0",
-    "ext-dom": "*",
-    "ext-json": "*"
-  },
-  "autoload": {
-    "psr-4": {
-      "srag\\Plugins\\UserDefaults\\": "src/"
+    "name": "dhbw/user-defaults",
+    "autoload": {
+        "psr-4": {
+            "srag\\Plugins\\UserDefaults\\": "src/"
+        },
+        "classmap": [
+            "classes"
+        ]
     },
-    "classmap": [
-      "./classes/"
-    ]
-  },
-  "config": {
-    "optimize-autoloader": true,
-    "sort-packages": true,
-    "classmap-authoritative": true
-  },
-  "scripts": {  }
+    "require": {}
 }

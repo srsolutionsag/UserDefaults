@@ -6,8 +6,7 @@ class RenderTable
 {
     private function __construct(
         public object $parentIliasGui
-    )
-    {
+    ) {
 
     }
 

@@ -11,29 +11,30 @@ use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use stdClass;
 
-class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
-
-	use UserDefaultsTrait;
-	const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-	protected int $width = 300;
-	protected int $height = 10;
-	protected string $css_class = "";
-	protected int $minimum_input_length = 0;
-	protected string $ajax_link;
-	protected string $link_to_object;
-	protected ilTemplate $input_template;
-	protected ilTemplate $tpl;
-	protected mixed $multiple;
+class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
+{
+    use UserDefaultsTrait;
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    protected int $width = 300;
+    protected int $height = 10;
+    protected string $css_class = "";
+    protected int $minimum_input_length = 0;
+    protected string $ajax_link;
+    protected string $link_to_object;
+    protected ilTemplate $input_template;
+    protected ilTemplate $tpl;
+    protected mixed $multiple;
     protected ilUserDefaultsPlugin $pl;
     private \ILIAS\DI\UIServices $ui;
     private \ilObjUser $user;
 
-    public function __construct(string $title, string $post_var, bool $multiple = true) {
+    public function __construct(string $title, string $post_var, bool $multiple = true)
+    {
         global $DIC;
-		if (!str_ends_with($post_var, '[]')) {
-			$post_var = $post_var . ($multiple === true ? '[]' : '');
-		}
-		parent::__construct($title, $post_var);
+        if (!str_ends_with($post_var, '[]')) {
+            $post_var = $post_var . ($multiple === true ? '[]' : '');
+        }
+        parent::__construct($title, $post_var);
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->ui = $DIC->ui();
         $this->user = $DIC->user();
@@ -41,58 +42,58 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
         $template = $this->ui->mainTemplate();
 
 
-        $template->addJavaScript(  $this->pl->getDirectory() . '/templates/default/multiple_select.js');
+        $template->addJavaScript($this->pl->getDirectory() . '/templates/default/multiple_select.js');
         $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2.min.js');
         $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2_locale_' . $this->user
-				->getCurrentLanguage() . '.js');
+                ->getCurrentLanguage() . '.js');
         $template->addCss($this->pl->getDirectory() . '/lib/select2/select2.css');
 
 
         $this->setWidth(300);
-	}
+    }
 
 
-	public function checkInput(): bool
+    public function checkInput(): bool
     {
-		if ($this->getRequired()) {
-		    if (($this->multiple && count($_POST[$this->getPostVar()]) == 0) || (!$this->multiple && $_POST[$this->getPostVar()] == '')) {
+        if ($this->getRequired()) {
+            if (($this->multiple && count($_POST[$this->getPostVar()]) == 0) || (!$this->multiple && $_POST[$this->getPostVar()] == '')) {
                 $this->setAlert($this->pl->txt('msg_input_is_required'));
                 return false;
             }
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
-	public function getValue(): array
+    public function getValue(): array
     {
-		$val = $this->value;
-		if (is_array($val) || !$this->multiple) {
-			return $val;
-		} elseif (!$val) {
-			return array();
-		} else {
-			return explode(',', (string)$val);
-		}
-	}
+        $val = $this->value;
+        if (is_array($val) || !$this->multiple) {
+            return $val;
+        } elseif (!$val) {
+            return array();
+        } else {
+            return explode(',', (string) $val);
+        }
+    }
 
-	public function getSubItems(): array
+    public function getSubItems(): array
     {
-		return array();
-	}
+        return array();
+    }
 
-	public function getContainerType(): string
+    public function getContainerType(): string
     {
-		return Courses::TYPE_CRS;
-	}
+        return Courses::TYPE_CRS;
+    }
 
     /**
      * @throws ilTemplateException
      */
     public function render(): string
     {
-		$this->tpl = $this->getInputTemplate();
-		$values = $this->getValueAsJson();
-		$options = $this->getOptions();
+        $this->tpl = $this->getInputTemplate();
+        $values = $this->getValueAsJson();
+        $options = $this->getOptions();
 
         $this->tpl->setVariable('WIDTH', $this->getWidth());
         $this->tpl->setVariable('HEIGHT', $this->getHeight());
@@ -124,31 +125,31 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
         );
 
         if ($options) {
-			foreach ($options as $option_value => $option_text) {
-				$this->tpl->setCurrentBlock('item');
-				if ($this->getDisabled()) {
-					$this->tpl->setVariable('DISABLED', ' disabled=\'disabled\'');
-				}
-				if (in_array($option_value, (array)$values)) {
-					$this->tpl->setVariable('SELECTED', 'selected');
-				}
+            foreach ($options as $option_value => $option_text) {
+                $this->tpl->setCurrentBlock('item');
+                if ($this->getDisabled()) {
+                    $this->tpl->setVariable('DISABLED', ' disabled=\'disabled\'');
+                }
+                if (in_array($option_value, (array) $values)) {
+                    $this->tpl->setVariable('SELECTED', 'selected');
+                }
 
-				$this->tpl->setVariable('VAL', ilLegacyFormElementsUtil::prepareFormOutput($option_value));
-				$this->tpl->setVariable('TEXT', $option_text);
-				$this->tpl->parseCurrentBlock();
-			}
-		}
+                $this->tpl->setVariable('VAL', ilLegacyFormElementsUtil::prepareFormOutput($option_value));
+                $this->tpl->setVariable('TEXT', $option_text);
+                $this->tpl->parseCurrentBlock();
+            }
+        }
 
-		return $this->tpl->get();
-	}
+        return $this->tpl->get();
+    }
 
 
-	protected function getValueAsJson(): string
+    protected function getValueAsJson(): string
     {
-		return json_encode(array());
-	}
+        return json_encode(array());
+    }
 
-    public function getLinkToObject() : string
+    public function getLinkToObject(): string
     {
         return $this->link_to_object;
     }
@@ -160,139 +161,140 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI {
     }
 
 
-	/**
-	 * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
-	 */
-	public function setHeight(int $a_height): void
+    /**
+     * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
+     */
+    public function setHeight(int $a_height): void
     {
-		$this->height = $a_height;
-	}
+        $this->height = $a_height;
+    }
 
 
-	public function getHeight(): int
+    public function getHeight(): int
     {
-		return $this->height;
-	}
+        return $this->height;
+    }
 
 
-	/**
-	 * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
-	 */
-	public function setWidth(int $a_width): void
+    /**
+     * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
+     */
+    public function setWidth(int $a_width): void
     {
-		$this->width = $a_width;
-	}
+        $this->width = $a_width;
+    }
 
-	public function getWidth(): int
+    public function getWidth(): int
     {
-		return $this->width;
-	}
+        return $this->width;
+    }
 
 
-	public function setCssClass(string $css_class): void {
-		$this->css_class = $css_class;
-	}
-
-
-	public function getCssClass(): string
+    public function setCssClass(string $css_class): void
     {
-		return $this->css_class;
-	}
+        $this->css_class = $css_class;
+    }
 
 
-	public function setMinimumInputLength(int $minimum_input_length): void
+    public function getCssClass(): string
     {
-		$this->minimum_input_length = $minimum_input_length;
-	}
+        return $this->css_class;
+    }
 
 
-	public function getMinimumInputLength(): int
+    public function setMinimumInputLength(int $minimum_input_length): void
     {
-		return $this->minimum_input_length;
-	}
+        $this->minimum_input_length = $minimum_input_length;
+    }
 
 
-	/**
-	 * @param string $ajax_link setting the ajax link will lead to ignoration of the 'setOptions' function as the link given will be used to get the
-	 */
-	public function setAjaxLink(string $ajax_link): void
+    public function getMinimumInputLength(): int
     {
-		$this->ajax_link = $ajax_link;
-	}
+        return $this->minimum_input_length;
+    }
 
-	public function getAjaxLink(): string
-    {
-		return $this->ajax_link;
-	}
 
-	public function setInputTemplate(ilTemplate $input_template): void
+    /**
+     * @param string $ajax_link setting the ajax link will lead to ignoration of the 'setOptions' function as the link given will be used to get the
+     */
+    public function setAjaxLink(string $ajax_link): void
     {
-		$this->input_template = $input_template;
-	}
+        $this->ajax_link = $ajax_link;
+    }
+
+    public function getAjaxLink(): string
+    {
+        return $this->ajax_link;
+    }
+
+    public function setInputTemplate(ilTemplate $input_template): void
+    {
+        $this->input_template = $input_template;
+    }
 
 
     /**
      * @return ilTemplate
      */
-	public function getInputTemplate(): ilTemplate
+    public function getInputTemplate(): ilTemplate
     {
         return $this->pl->getTemplate('tpl.multiple_select.html');
-	}
+    }
 
 
-	/**
-	 * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do
-	 * this stupid 'trick'. Shame on select2 project ;)
-	 *
-	 * @return string the real postvar.
-	 */
-	protected function searchPostVar(): string
+    /**
+     * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do
+     * this stupid 'trick'. Shame on select2 project ;)
+     *
+     * @return string the real postvar.
+     */
+    protected function searchPostVar(): string
     {
-		if (str_ends_with($this->getPostVar(), '[]')) {
-			return substr($this->getPostVar(), 0, - 2);
-		} else {
-			return $this->getPostVar();
-		}
-	}
+        if (str_ends_with($this->getPostVar(), '[]')) {
+            return substr($this->getPostVar(), 0, - 2);
+        } else {
+            return $this->getPostVar();
+        }
+    }
 
 
-	public function setValueByArray(array $a_values): void
+    public function setValueByArray(array $a_values): void
     {
-		$val = $a_values[$this->searchPostVar()];
-		if (is_array($val)) {
-			$val;
-		} elseif (!$val) {
-			$val = array();
-		} else {
-			$val = explode(',', $val);
-		}
-		$this->setValue($val);
-	}
+        $val = $a_values[$this->searchPostVar()];
+        if (is_array($val)) {
+            $val;
+        } elseif (!$val) {
+            $val = array();
+        } else {
+            $val = explode(',', $val);
+        }
+        $this->setValue($val);
+    }
 
 
-	protected function escapePostVar($postVar): array|string
+    protected function escapePostVar($postVar): array|string
     {
-		$postVar = $this->stripLastStringOccurrence($postVar, "[]");
-		$postVar = str_replace("[", '\\\\[', $postVar);
-		$postVar = str_replace("]", '\\\\]', $postVar);
+        $postVar = $this->stripLastStringOccurrence($postVar, "[]");
+        $postVar = str_replace("[", '\\\\[', $postVar);
+        $postVar = str_replace("]", '\\\\]', $postVar);
 
-		return $postVar;
-	}
+        return $postVar;
+    }
 
 
-	/**
-	 * @param string $text
-	 * @param string $string
-	 *
-	 * @return string
-	 */
-	private function stripLastStringOccurrence(string $text, string $string): string
+    /**
+     * @param string $text
+     * @param string $string
+     *
+     * @return string
+     */
+    private function stripLastStringOccurrence(string $text, string $string): string
     {
-		$pos = strrpos($text, $string);
-		if ($pos !== false) {
-			$text = substr_replace($text, "", $pos, strlen($string));
-		}
+        $pos = strrpos($text, $string);
+        if ($pos !== false) {
+            $text = substr_replace($text, "", $pos, strlen($string));
+        }
 
-		return $text;
-	}
+        return $text;
+    }
 }

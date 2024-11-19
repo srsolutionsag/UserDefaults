@@ -7,11 +7,9 @@ use srag\Plugins\UserDefaults\Adapters\Ui\InputElements;
 
 class Api
 {
-
     private function __construct(
         private Facade $facade
-    )
-    {
+    ) {
 
     }
 

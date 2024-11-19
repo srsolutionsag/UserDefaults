@@ -8,8 +8,7 @@ class PortfolioTemplateService
 {
     private function __construct(
         private Repository $repository
-    )
-    {
+    ) {
 
     }
 

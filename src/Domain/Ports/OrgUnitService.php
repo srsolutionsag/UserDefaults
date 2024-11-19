@@ -8,8 +8,7 @@ class OrgUnitService
 {
     private function __construct(
         private Repository $repository
-    )
-    {
+    ) {
 
     }
 

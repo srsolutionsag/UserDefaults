@@ -1,15 +1,14 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\LocalRole;
+
 use srag\Plugins\UserDefaults\Adapters\Config\Configs;
 
 class Api
 {
-
     private function __construct(
         private Facade $localRoles
-    )
-    {
+    ) {
 
     }
 

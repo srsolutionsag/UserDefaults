@@ -6,7 +6,6 @@ use srag\Plugins\UserDefaults\Domain\Model\LocalRole;
 
 class IliasLocalRoleAdapter
 {
-
     private function __construct(public int $objId, public string $title)
     {
 

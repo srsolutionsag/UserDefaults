@@ -7,7 +7,6 @@ use srag\Plugins\UserDefaults\Domain\Model\PortfolioTemplate;
 
 class IliasPortfolioAdapter
 {
-
     private function __construct(public int $objId, public string $title)
     {
 

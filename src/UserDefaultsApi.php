@@ -7,19 +7,17 @@ use srag\Plugins\UserDefaults\Adapters\Config\Configs;
 
 class UserDefaultsApi
 {
-
     private function __construct(
-        public Api\Course\Api            $courses,
+        public Api\Course\Api $courses,
         public Api\AssignmentProcess\Api $assignmentProcesses,
-        public Api\Ui\Api                $uiComponents,
-        public Api\GlobalRole\Api        $globalRoles,
-        public Api\LocalRole\Api         $localRoles,
-        public Api\Group\Api             $groups,
-        public Api\OrgUnits\Api          $orgUnits,
+        public Api\Ui\Api $uiComponents,
+        public Api\GlobalRole\Api $globalRoles,
+        public Api\LocalRole\Api $localRoles,
+        public Api\Group\Api $groups,
+        public Api\OrgUnits\Api $orgUnits,
         public Api\PortfolioTemplate\Api $portfolioTemplates,
-        public Api\StudyProgramme\Api    $studyProgrammes
-    )
-    {
+        public Api\StudyProgramme\Api $studyProgrammes
+    ) {
 
     }
 

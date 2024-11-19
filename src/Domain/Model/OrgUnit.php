@@ -2,9 +2,8 @@
 
 namespace srag\Plugins\UserDefaults\Domain\Model;
 
-class OrgUnit  implements Entity
+class OrgUnit implements Entity
 {
-
     private function __construct(public ValueObjects\IliasModuleId $id, public ValueObjects\Title $title)
     {
 

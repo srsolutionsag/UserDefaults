@@ -7,9 +7,9 @@ use srag\Plugins\UserDefaults\Domain\Model;
 class OrgUnitPositions
 {
     private function __construct(
-        public int $id, public string $title
-    )
-    {
+        public int $id,
+        public string $title
+    ) {
 
     }
 

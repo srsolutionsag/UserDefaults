@@ -6,11 +6,9 @@ use srag\Plugins\UserDefaults\Adapters\Config\Configs;
 
 class Api
 {
-
     private function __construct(
         private Facade $facade
-    )
-    {
+    ) {
 
     }
 

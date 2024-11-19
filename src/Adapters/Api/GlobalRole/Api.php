@@ -1,16 +1,15 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\GlobalRole;
+
 use srag\Plugins\UserDefaults\Adapters\Config\Configs;
 use srag\Plugins\UserDefaults\Domain\Ports\GlobalRoleService;
 
 class Api
 {
-
     private function __construct(
         private Facade $globalRoles
-    )
-    {
+    ) {
 
     }
 

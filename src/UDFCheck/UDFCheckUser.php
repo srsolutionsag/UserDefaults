@@ -6,55 +6,55 @@ use arField;
 use ilObjUser;
 use ilUserSearchOptions;
 
-class UDFCheckUser extends UDFCheck {
+class UDFCheckUser extends UDFCheck
+{
+    public const TABLE_NAME = 'usr_def_checks_user';
+    public const FIELD_CATEGORY = 1;
+    /**
+     * @var array|null
+     */
+    protected static ?array $all_definitions_of_category = null;
 
-	const TABLE_NAME = 'usr_def_checks_user';
-	const FIELD_CATEGORY = 1;
-	/**
-	 * @var array|null
-	 */
-	protected static ?array $all_definitions_of_category = NULL;
-
-	protected static function getDefinitionsOfCategory(): array
+    protected static function getDefinitionsOfCategory(): array
     {
-		if (self::$all_definitions_of_category !== NULL) {
-			return self::$all_definitions_of_category;
-		}
+        if (self::$all_definitions_of_category !== null) {
+            return self::$all_definitions_of_category;
+        }
 
-		self::$all_definitions_of_category = [];
+        self::$all_definitions_of_category = [];
 
-		foreach (ilUserSearchOptions::_getSearchableFieldsInfo(true) as $field) {
-			$usr_field = array();
+        foreach (ilUserSearchOptions::_getSearchableFieldsInfo(true) as $field) {
+            $usr_field = array();
 
-			if (array_key_exists('type', $field) && !in_array($field['type'], array( ilUserSearchOptions::FIELD_TYPE_TEXT,  ilUserSearchOptions::FIELD_TYPE_SELECT,  ilUserSearchOptions::FIELD_TYPE_MULTI ))) {
-				continue;
-			}
+            if (array_key_exists('type', $field) && !in_array($field['type'], array( ilUserSearchOptions::FIELD_TYPE_TEXT,  ilUserSearchOptions::FIELD_TYPE_SELECT,  ilUserSearchOptions::FIELD_TYPE_MULTI ))) {
+                continue;
+            }
 
-			$usr_field["txt"] = $field["lang"];
-			$usr_field["field_category"] = self::FIELD_CATEGORY;
-			$usr_field["field_key"] = $field["db"];
-			$usr_field["field_type"] = $field["type"];
-			$usr_field["field_values"] = $field["values"];
+            $usr_field["txt"] = $field["lang"];
+            $usr_field["field_category"] = self::FIELD_CATEGORY;
+            $usr_field["field_key"] = $field["db"];
+            $usr_field["field_type"] = $field["type"];
+            $usr_field["field_values"] = $field["values"];
 
-			self::$all_definitions_of_category[] = $usr_field;
-		}
+            self::$all_definitions_of_category[] = $usr_field;
+        }
 
-		return self::$all_definitions_of_category;
-	}
+        return self::$all_definitions_of_category;
+    }
 
 
-	/**
-	 * @inheritdoc
-	 */
-	protected function getFieldValue(ilObjUser $user): array
+    /**
+     * @inheritdoc
+     */
+    protected function getFieldValue(ilObjUser $user): array
     {
-		return [
-			$this->getFieldKey() => trim($this->getUserFieldValue($user, $this->getFieldKey()))
-		];
-	}
+        return [
+            $this->getFieldKey() => trim($this->getUserFieldValue($user, $this->getFieldKey()))
+        ];
+    }
 
 
-	protected function getUserFieldValue(ilObjUser $user, string $field_name): string
+    protected function getUserFieldValue(ilObjUser $user, string $field_name): string
     {
         return match ($field_name) {
             'gender' => $user->getGender(),
@@ -79,5 +79,5 @@ class UDFCheckUser extends UDFCheck {
             'interests_help_looking' => $user->getLookingForHelpAsText(),
             default => '',
         };
-	}
+    }
 }

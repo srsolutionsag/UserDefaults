@@ -8,8 +8,7 @@ class StudyProgrammeService
 {
     private function __construct(
         private Repository $repository
-    )
-    {
+    ) {
 
     }
 

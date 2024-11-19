@@ -8,8 +8,7 @@ class GlobalRoleService
 {
     private function __construct(
         private Repository $repository
-    )
-    {
+    ) {
 
     }
 

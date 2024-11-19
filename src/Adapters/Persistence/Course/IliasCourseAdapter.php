@@ -6,7 +6,6 @@ use srag\Plugins\UserDefaults\Domain\Model\Course;
 
 class IliasCourseAdapter
 {
-
     private function __construct(public int $objId, public int $refId, public string $title)
     {
 

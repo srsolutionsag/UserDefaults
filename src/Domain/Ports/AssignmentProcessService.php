@@ -8,8 +8,7 @@ class AssignmentProcessService
 {
     private function __construct(
         private Repository $repository
-    )
-    {
+    ) {
 
     }
 

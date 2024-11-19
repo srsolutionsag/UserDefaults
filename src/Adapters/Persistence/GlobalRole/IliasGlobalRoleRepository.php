@@ -6,7 +6,6 @@ use srag\Plugins\UserDefaults\Domain;
 
 class IliasGlobalRoleRepository implements Domain\Ports\Repository
 {
-
     private function __construct(private \ilRbacReview $rbacReview, private \ilTree $ilTree)
     {
 
@@ -24,7 +23,7 @@ class IliasGlobalRoleRepository implements Domain\Ports\Repository
     {
         $globalRoles = [];
         foreach ($this->rbacReview->getRolesByFilter($this->rbacReview::FILTER_ALL_GLOBAL) as $global_role) {
-            if ($this->ilTree->isDeleted($global_role['parent']) || $global_role["obj_id"] === 2 ||  $global_role["obj_id"] === 14) {
+            if ($this->ilTree->isDeleted($global_role['parent']) || $global_role["obj_id"] === 2 || $global_role["obj_id"] === 14) {
                 continue;
             }
             $globalRoles[] = IliasGlobalRoleAdapter::new($global_role["obj_id"], $global_role["title"])->toDomain();

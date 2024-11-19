@@ -6,7 +6,6 @@ use srag\Plugins\UserDefaults\Domain\Model\StudyProgramme;
 
 class IliasStudyProgrammeAdapter
 {
-
     private function __construct(public int $objId, public int $refId, public string $title)
     {
 

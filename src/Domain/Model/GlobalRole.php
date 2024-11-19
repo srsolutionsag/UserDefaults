@@ -4,7 +4,6 @@ namespace srag\Plugins\UserDefaults\Domain\Model;
 
 class GlobalRole implements Entity
 {
-
     private function __construct(public ValueObjects\ObjId $objId, public ValueObjects\Title $title)
     {
 

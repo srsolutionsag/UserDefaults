@@ -37,7 +37,7 @@ class Facade
         //ToDO: check if next two lines should be in constructor
         $orgu = \ilOrgUnitLocalDIC::dic();
         $this->orguPos = $orgu["repo.Positions"];
-        
+
         $orguPositions = [];
         foreach ($this->orguPos->getAllPositions() as $position) {
             $orguPositions[] = Responses\OrgUnitPositions::new($position->getId(), $position->getTitle());

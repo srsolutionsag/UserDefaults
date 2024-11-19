@@ -5,9 +5,10 @@ namespace srag\Plugins\UserDefaults\Adapters\Api\AssignmentProcess\Requests;
 class HandleFormSubmission
 {
     private function __construct(
-        public object $parentIliasGui, public ?int $assignmentProcessId, private $onSuccess
-    )
-    {
+        public object $parentIliasGui,
+        public ?int $assignmentProcessId,
+        private $onSuccess
+    ) {
 
     }
 

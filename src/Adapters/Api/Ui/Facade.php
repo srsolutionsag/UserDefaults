@@ -20,6 +20,6 @@ class Facade
 
     public function searchInputElement(string $title, string $postvar, string $dataSrc): Ui\InputElements\FluxEcoSearchInputElement\InputElement
     {
-        return Ui\InputElements\FluxEcoSearchInputElement\InputElement::new($title, $postvar,  $this->config->adaptersWebPath."/Ui/InputElements/FluxEcoSearchInputElement/templates", $dataSrc);
+        return Ui\InputElements\FluxEcoSearchInputElement\InputElement::new($title, $postvar, $this->config->adaptersWebPath . "/Ui/InputElements/FluxEcoSearchInputElement/templates", $dataSrc);
     }
 }

@@ -16,8 +16,7 @@ class InputElement extends ilFormPropertyGUI
     private function __construct(
         string $a_title = "",
         string $a_postvar = ""
-    )
-    {
+    ) {
         parent::__construct($a_title, $a_postvar);
     }
 
@@ -26,8 +25,7 @@ class InputElement extends ilFormPropertyGUI
         string $a_postvar,
         string $templatesPath,
         string $dataSrc
-    ): self
-    {
+    ): self {
         $inputGUI = new InputElement($a_title, $a_postvar);
         $inputGUI->templatesPath = $templatesPath;
         $inputGUI->dataSrc = $dataSrc;

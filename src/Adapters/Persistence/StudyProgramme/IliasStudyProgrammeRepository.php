@@ -6,7 +6,6 @@ use srag\Plugins\UserDefaults\Domain;
 
 class IliasStudyProgrammeRepository implements Domain\Ports\Repository
 {
-
     private function __construct(private \ilDBInterface $db)
     {
 

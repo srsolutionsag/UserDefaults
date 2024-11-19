@@ -6,7 +6,6 @@ use srag\Plugins\UserDefaults\Domain\Model\GlobalRole;
 
 class IliasGlobalRoleAdapter
 {
-
     private function __construct(public int $objId, public string $title)
     {
 

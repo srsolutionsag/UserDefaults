@@ -8,18 +8,17 @@ use srag\Plugins\UserDefaults\Domain\Ports;
 class Configs
 {
     private function __construct(
-        public Ports\CourseService            $courseService,
-        public Ports\GlobalRoleService        $globalRoleService,
-        public Ports\GroupService             $groupService,
-        public Ports\LocalRoleService         $localRoleService,
-        public Ports\OrgUnitService           $orgUnitService,
+        public Ports\CourseService $courseService,
+        public Ports\GlobalRoleService $globalRoleService,
+        public Ports\GroupService $groupService,
+        public Ports\LocalRoleService $localRoleService,
+        public Ports\OrgUnitService $orgUnitService,
         public Ports\PortfolioTemplateService $portfolioTemplateService,
-        public Ports\StudyProgrammeService    $studyProgrammeService,
+        public Ports\StudyProgrammeService $studyProgrammeService,
         public Ports\AssignmentProcessService $assignmentProcessService,
-        public string                         $adaptersWebPath,
-        public \ILIAS\DI\UIServices           $iliasUiServices
-    )
-    {
+        public string $adaptersWebPath,
+        public \ILIAS\DI\UIServices $iliasUiServices
+    ) {
 
     }
 

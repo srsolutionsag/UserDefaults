@@ -21,10 +21,10 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
 {
     use UserDefaultsTrait;
 
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    const HOOK_IS_LINE_REMOVABLE = "hook_is_line_removable";
-    const HOOK_IS_INPUT_DISABLED = "hook_is_disabled";
-    const HOOK_BEFORE_INPUT_RENDER = "hook_before_render";
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const HOOK_IS_LINE_REMOVABLE = "hook_is_line_removable";
+    public const HOOK_IS_INPUT_DISABLED = "hook_is_disabled";
+    public const HOOK_BEFORE_INPUT_RENDER = "hook_before_render";
 
     protected array $cust_attr = array();
     protected string|array $value;
@@ -203,7 +203,7 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
 
     public function getCustomAttributes(): array
     {
-        return (array)$this->cust_attr;
+        return (array) $this->cust_attr;
     }
 
     protected function createInputPostVar($iterator_id, ilFormPropertyGUI $input): string

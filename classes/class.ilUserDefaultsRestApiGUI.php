@@ -3,7 +3,6 @@
 use JetBrains\PhpStorm\NoReturn;
 use srag\Plugins\UserDefaults\UserDefaultsApi;
 
-
 /**
  * @ilCtrl_IsCalledBy ilUserDefaultsRestApiGUI: ilUserDefaultsConfigGUI
  */
@@ -17,7 +16,7 @@ class ilUserDefaultsRestApiGUI
      */
     public static function commandNames(): object
     {
-        return new class() {
+        return new class () {
             public string $courses = "courses";
             public string $globalRoles = "globalRoles";
             public string $groups = "groups";
@@ -42,7 +41,7 @@ class ilUserDefaultsRestApiGUI
             exit;
         };
 
-        $this->userDefaultsApi =  UserDefaultsApi::new();
+        $this->userDefaultsApi = UserDefaultsApi::new();
     }
 
     public function executeCommand(): void

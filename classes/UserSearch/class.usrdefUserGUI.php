@@ -13,14 +13,14 @@ class usrdefUserGUI
 {
     use UserDefaultsTrait;
 
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    const CMD_INDEX = 'index';
-    const CMD_APPLY_FILTER = 'applyFilter';
-    const CMD_RESET_FILTER = 'resetFilter';
-    const CMD_SELECT_USER = 'selectUser';
-    const CMD_CONFIRM = 'confirmSelectUser';
-    const IDENTIFIER = 'usr_id';
-    const SESSION_ID = 'multi_assign_user_id';
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const CMD_INDEX = 'index';
+    public const CMD_APPLY_FILTER = 'applyFilter';
+    public const CMD_RESET_FILTER = 'resetFilter';
+    public const CMD_SELECT_USER = 'selectUser';
+    public const CMD_CONFIRM = 'confirmSelectUser';
+    public const IDENTIFIER = 'usr_id';
+    public const SESSION_ID = 'multi_assign_user_id';
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $tpl;
@@ -33,7 +33,7 @@ class usrdefUserGUI
     {
         global $DIC;
         //Check Access
-        if(!ilUserDefaultsPlugin::grantAccess()) {
+        if (!ilUserDefaultsPlugin::grantAccess()) {
             echo "no Search Permission";
             exit;
         };
@@ -42,8 +42,8 @@ class usrdefUserGUI
         $this->ui = $DIC->ui();
         $this->tpl = $DIC->ui()->mainTemplate();
         $this->pl = ilUserDefaultsPlugin::getInstance();
-		ilSession::set(self::SESSION_ID, NULL);
-	}
+        ilSession::set(self::SESSION_ID, null);
+    }
 
     /**
      * @throws ilCtrlException

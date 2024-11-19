@@ -6,7 +6,6 @@ use srag\Plugins\UserDefaults\Domain;
 
 class IliasLocalRoleRepository implements Domain\Ports\Repository
 {
-
     private function __construct(private \ilRbacReview $rbacReview, private \ilTree $ilTree)
     {
 

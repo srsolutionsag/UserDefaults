@@ -25,41 +25,40 @@ use UserSettingsGUI;
 
 class Form extends ilPropertyFormGUI
 {
-
     use UserDefaultsTrait;
 
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    const F_TITLE = 'title';
-    const F_STATUS = 'status';
-    const F_GLOBAL_ROLES = 'global_roles';
-    const F_UNSIGN_GLOBAL_ROLES = 'unsubscribe_global_roles';
-    const F_ASSIGNED_LOCAL_ROLES = 'assigned_local_roles';
-    const F_UNSIGN_LOCAL_ROLES = 'unsubscribe_local_roles';
-    const F_ASSIGNED_COURSES = 'assigned_courses';
-    const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
-    const F_UNSUBSCRIBE_GROUPS = 'unsubscribe_groups';
-    const F_ASSIGNED_GROUPS = 'assigned_groups';
-    const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
-    const F_ASSIGNED_GROUPS_QUEUE = 'assigned_groups_queue';
-    const F_ASSIGNED_GROUPS_QUEUE_DESKTOP = 'assigned_groups_queue_desktop';
-    const F_ASSIGNED_GROUPS_QUEUE_TYPE = 'assigned_groups_queue_type';
-    const F_ASSIGNED_GROUPS_QUEUE_PARALLEL = 'assigned_groups_queue_parallel';
-    const F_ASSIGNED_GROUPS_QUEUE_SERIAL = 'assigned_groups_queue_serial';
-    const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
-    const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
-    const F_ASSIGNED_ORGUS = 'assigned_orgus';
-    const F_ASSIGNED_ORGU_POSITION = 'assigned_orgu_position';
-    const F_UNSUBSCRIBE_ORGUS = 'unsubscribe_orgus';
-    const F_ASSIGNED_STUDYPROGRAMS = 'assigned_studyprograms';
-    const F_UNSUBSCRIBE_STUDYPROGRAMS = 'unsubscribe_studyprograms';
-    const F_DESCRIPTION = 'description';
-    const F_PORTFOLIO_NAME = 'portfolio_name';
-    const F_REMOVE_PORTFOLIO = 'remove_portfolio';
-    const F_BLOG_NAME = 'blog_name';
-    const F_ON_CREATE = 'on_create';
-    const F_ON_UPDATE = 'on_update';
-    const F_ON_MANUAL = 'on_manual';
-    const F_APPLICATION = 'application';
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const F_TITLE = 'title';
+    public const F_STATUS = 'status';
+    public const F_GLOBAL_ROLES = 'global_roles';
+    public const F_UNSIGN_GLOBAL_ROLES = 'unsubscribe_global_roles';
+    public const F_ASSIGNED_LOCAL_ROLES = 'assigned_local_roles';
+    public const F_UNSIGN_LOCAL_ROLES = 'unsubscribe_local_roles';
+    public const F_ASSIGNED_COURSES = 'assigned_courses';
+    public const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
+    public const F_UNSUBSCRIBE_GROUPS = 'unsubscribe_groups';
+    public const F_ASSIGNED_GROUPS = 'assigned_groups';
+    public const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
+    public const F_ASSIGNED_GROUPS_QUEUE = 'assigned_groups_queue';
+    public const F_ASSIGNED_GROUPS_QUEUE_DESKTOP = 'assigned_groups_queue_desktop';
+    public const F_ASSIGNED_GROUPS_QUEUE_TYPE = 'assigned_groups_queue_type';
+    public const F_ASSIGNED_GROUPS_QUEUE_PARALLEL = 'assigned_groups_queue_parallel';
+    public const F_ASSIGNED_GROUPS_QUEUE_SERIAL = 'assigned_groups_queue_serial';
+    public const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
+    public const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
+    public const F_ASSIGNED_ORGUS = 'assigned_orgus';
+    public const F_ASSIGNED_ORGU_POSITION = 'assigned_orgu_position';
+    public const F_UNSUBSCRIBE_ORGUS = 'unsubscribe_orgus';
+    public const F_ASSIGNED_STUDYPROGRAMS = 'assigned_studyprograms';
+    public const F_UNSUBSCRIBE_STUDYPROGRAMS = 'unsubscribe_studyprograms';
+    public const F_DESCRIPTION = 'description';
+    public const F_PORTFOLIO_NAME = 'portfolio_name';
+    public const F_REMOVE_PORTFOLIO = 'remove_portfolio';
+    public const F_BLOG_NAME = 'blog_name';
+    public const F_ON_CREATE = 'on_create';
+    public const F_ON_UPDATE = 'on_update';
+    public const F_ON_MANUAL = 'on_manual';
+    public const F_APPLICATION = 'application';
     protected UserSettingsGUI $parent_gui;
     protected UserSetting $object;
     private array $orguPositions;
@@ -81,7 +80,7 @@ class Form extends ilPropertyFormGUI
         $this->ctrl = $DIC->ctrl();
         $this->parent_gui = $parent_gui;
         $this->object = $ilUserSetting;
-        
+
         $this->userDefaultsApi = UserDefaultsApi::new();
 
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
@@ -372,8 +371,8 @@ class Form extends ilPropertyFormGUI
             self::F_BLOG_NAME => $this->object->getBlogName(),
             self::F_PORTFOLIO_NAME => $this->object->getPortfolioName(),
             self::F_REMOVE_PORTFOLIO => $this->object->getRemovePortfolio(),
-            self::F_ASSIGNED_ORGUS =>  $this->object->getAssignedOrgus(),
-            self::F_ASSIGNED_ORGU_POSITION => (array)$this->object->getAssignedOrguPosition(),
+            self::F_ASSIGNED_ORGUS => $this->object->getAssignedOrgus(),
+            self::F_ASSIGNED_ORGU_POSITION => (array) $this->object->getAssignedOrguPosition(),
             self::F_UNSUBSCRIBE_ORGUS => $this->object->isUnsubscrFromOrgus(),
             self::F_ASSIGNED_STUDYPROGRAMS => $this->object->getAssignedStudyprograms(),
             self::F_UNSUBSCRIBE_STUDYPROGRAMS => $this->object->isUnsubscrFromStudyprograms(),
@@ -412,7 +411,7 @@ class Form extends ilPropertyFormGUI
 
 
         //todo ?
-        $this->object->setPortfolioTemplateId($this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) > 0 ? $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) : NULL);
+        $this->object->setPortfolioTemplateId($this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) > 0 ? $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) : null);
 
 
         $this->object->setPortfolioAssignedToGroups($this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS));
@@ -422,10 +421,10 @@ class Form extends ilPropertyFormGUI
 
         $assigned_orgus = $this->getInput(self::F_ASSIGNED_ORGUS);
         $this->object->setAssignedOrgus($assigned_orgus);
-        if (array_key_exists("0",$this->getInput(self::F_ASSIGNED_ORGU_POSITION))) {
+        if (array_key_exists("0", $this->getInput(self::F_ASSIGNED_ORGU_POSITION))) {
             $this->object->setAssignedOrguPosition($this->getInput(self::F_ASSIGNED_ORGU_POSITION)[0]);
         }
-        $this->object->setUnsubscrFromOrgus((int)$this->getInput(self::F_UNSUBSCRIBE_ORGUS));
+        $this->object->setUnsubscrFromOrgus((int) $this->getInput(self::F_UNSUBSCRIBE_ORGUS));
 
         $assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
         $this->object->setAssignedStudyprograms($assigned_studyprograms);

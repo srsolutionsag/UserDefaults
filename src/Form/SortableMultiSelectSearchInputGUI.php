@@ -16,9 +16,8 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
 {
-
     use UserDefaultsTrait;
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 
     public function __construct(
         string $a_title = "",

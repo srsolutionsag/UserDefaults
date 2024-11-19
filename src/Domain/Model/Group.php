@@ -4,7 +4,6 @@ namespace srag\Plugins\UserDefaults\Domain\Model;
 
 class Group implements Entity
 {
-
     private function __construct(public ValueObjects\IliasModuleId $id, public ValueObjects\Title $title)
     {
 

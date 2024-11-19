@@ -8,8 +8,7 @@ class LocalRoleService
 {
     private function __construct(
         private Repository $repository
-    )
-    {
+    ) {
 
     }
 

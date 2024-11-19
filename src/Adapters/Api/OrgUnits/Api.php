@@ -1,15 +1,14 @@
 <?php
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\OrgUnits;
+
 use srag\Plugins\UserDefaults\Adapters\Config\Configs;
 
 class Api
 {
-
     private function __construct(
         private Facade $orgUnits
-    )
-    {
+    ) {
 
     }
 
@@ -24,7 +23,8 @@ class Api
         return $this->orgUnits->findAll();
     }
 
-    public function findAllPositions(): array {
+    public function findAllPositions(): array
+    {
         return $this->orgUnits->findAllPositions();
     }
 }

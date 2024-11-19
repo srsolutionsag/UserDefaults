@@ -6,10 +6,8 @@ use srag\Plugins\UserDefaults\Domain\Model;
 
 class PortfolioTemplateService
 {
-    private function __construct(
-        private Repository $repository
-    ) {
-
+    private function __construct(private readonly Repository $repository)
+    {
     }
 
     public static function new(Repository $repository): self

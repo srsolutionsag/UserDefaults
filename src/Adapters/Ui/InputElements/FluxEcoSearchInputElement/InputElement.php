@@ -9,6 +9,14 @@ use ilTemplateException;
 
 class InputElement extends ilFormPropertyGUI
 {
+    /**
+     * @var bool
+     */
+    public $select_all;
+    /**
+     * @var bool
+     */
+    public $selected_first;
     protected array $value = [];
     protected string $dataSrc;
     private string $templatesPath;
@@ -34,7 +42,6 @@ class InputElement extends ilFormPropertyGUI
 
     public function setValue(array $value): void
     {
-
         $this->value = $value;
     }
 
@@ -47,7 +54,7 @@ class InputElement extends ilFormPropertyGUI
     {
         $post = $this->http->request()->getParsedBody();
         if ($post[$this->postvar] !== "") {
-            return array_map('intval', explode(",", $post[$this->postvar]));
+            return array_map('intval', explode(",", (string) $post[$this->postvar]));
         }
         return [];
     }
@@ -73,13 +80,12 @@ class InputElement extends ilFormPropertyGUI
     public function checkInput(): bool
     {
         $lng = $this->lng;
-        if ($this->getRequired() && count($this->getValue()) === 0) {
+        if ($this->getRequired() && $this->getValue() === []) {
             $this->setAlert($lng->txt("msg_input_is_required"));
             return false;
         }
         return true;
     }
-
 
     /**
      * @throws ilSystemStyleException
@@ -92,11 +98,14 @@ class InputElement extends ilFormPropertyGUI
         $tpl = new ilTemplate(__DIR__ . "/templates/tpl.html", true, true);
         $tpl->setCurrentBlock("flux_eco_ui_search_input_element");
         $tpl->setVariable("MODULE_NAME", $this->postvar);
-        $tpl->setVariable("SEARCH_INPUT_CONF", '{
+        $tpl->setVariable(
+            "SEARCH_INPUT_CONF",
+            '{
          dataSrc: "' . $this->dataSrc . '",
          name: "' . $this->postvar . '",
          selectedIds: "' . implode(",", $this->value) . '",
-        }');
+        }'
+        );
         $tpl->setVariable("JS_FILE_PATH", $this->templatesPath . "/../js");
         $tpl->parseCurrentBlock();
         return $tpl->get();

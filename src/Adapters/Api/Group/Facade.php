@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\Group;
 
+use srag\Plugins\UserDefaults\Adapters\Api\Group\Responses\Group;
 use srag\Plugins\UserDefaults\Domain\Ports\GroupService;
 
 class Facade
 {
-    private function __construct(private GroupService $groupService)
+    private function __construct(private readonly GroupService $groupService)
     {
-
     }
 
     public static function new(GroupService $groupService): Facade
@@ -25,7 +25,7 @@ class Facade
         $courseResponses = [];
 
         foreach ($groups as $group) {
-            $courseResponses[] = Responses\Group::formDomain($group);
+            $courseResponses[] = Group::formDomain($group);
         }
         return $courseResponses;
     }

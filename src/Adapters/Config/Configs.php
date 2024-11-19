@@ -2,38 +2,51 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Config;
 
-use srag\Plugins\UserDefaults\Adapters;
-use srag\Plugins\UserDefaults\Domain\Ports;
+use srag\Plugins\UserDefaults\Domain\Ports\CourseService;
+use srag\Plugins\UserDefaults\Domain\Ports\GlobalRoleService;
+use srag\Plugins\UserDefaults\Domain\Ports\GroupService;
+use srag\Plugins\UserDefaults\Domain\Ports\LocalRoleService;
+use srag\Plugins\UserDefaults\Domain\Ports\OrgUnitService;
+use srag\Plugins\UserDefaults\Domain\Ports\PortfolioTemplateService;
+use srag\Plugins\UserDefaults\Domain\Ports\StudyProgrammeService;
+use srag\Plugins\UserDefaults\Domain\Ports\AssignmentProcessService;
+use ILIAS\DI\UIServices;
+use srag\Plugins\UserDefaults\Adapters\Persistence\Course\IliasCourseRepository;
+use srag\Plugins\UserDefaults\Adapters\Persistence\GlobalRole\IliasGlobalRoleRepository;
+use srag\Plugins\UserDefaults\Adapters\Persistence\Group\IliasGroupRepository;
+use srag\Plugins\UserDefaults\Adapters\Persistence\LocalRole\IliasLocalRoleRepository;
+use srag\Plugins\UserDefaults\Adapters\Persistence\OrgUnit\IliasOrgUnitRepository;
+use srag\Plugins\UserDefaults\Adapters\Persistence\PortfolioTemplate\IliasPortfolioTemplateRepository;
+use srag\Plugins\UserDefaults\Adapters\Persistence\StudyProgramme\IliasStudyProgrammeRepository;
 
 class Configs
 {
     private function __construct(
-        public Ports\CourseService $courseService,
-        public Ports\GlobalRoleService $globalRoleService,
-        public Ports\GroupService $groupService,
-        public Ports\LocalRoleService $localRoleService,
-        public Ports\OrgUnitService $orgUnitService,
-        public Ports\PortfolioTemplateService $portfolioTemplateService,
-        public Ports\StudyProgrammeService $studyProgrammeService,
-        public Ports\AssignmentProcessService $assignmentProcessService,
+        public CourseService $courseService,
+        public GlobalRoleService $globalRoleService,
+        public GroupService $groupService,
+        public LocalRoleService $localRoleService,
+        public OrgUnitService $orgUnitService,
+        public PortfolioTemplateService $portfolioTemplateService,
+        public StudyProgrammeService $studyProgrammeService,
+        public AssignmentProcessService $assignmentProcessService,
         public string $adaptersWebPath,
-        public \ILIAS\DI\UIServices $iliasUiServices
+        public UIServices $iliasUiServices
     ) {
-
     }
 
     public static function new(): Configs
     {
         global $DIC;
         return new self(
-            Ports\CourseService::new(Adapters\Persistence\Course\IliasCourseRepository::new($DIC->database())),
-            Ports\GlobalRoleService::new(Adapters\Persistence\GlobalRole\IliasGlobalRoleRepository::new($DIC->rbac()->review(), $DIC->repositoryTree())),
-            Ports\GroupService::new(Adapters\Persistence\Group\IliasGroupRepository::new($DIC->database())),
-            Ports\LocalRoleService::new(Adapters\Persistence\LocalRole\IliasLocalRoleRepository::new($DIC->rbac()->review(), $DIC->repositoryTree())),
-            Ports\OrgUnitService::new(Adapters\Persistence\OrgUnit\IliasOrgUnitRepository::new($DIC->database())),
-            Ports\PortfolioTemplateService::new(Adapters\Persistence\PortfolioTemplate\IliasPortfolioTemplateRepository::new($DIC->database())),
-            Ports\StudyProgrammeService::new(Adapters\Persistence\StudyProgramme\IliasStudyProgrammeRepository::new($DIC->database())),
-            Ports\AssignmentProcessService::new(Adapters\Persistence\StudyProgramme\IliasStudyProgrammeRepository::new($DIC->database())),
+            CourseService::new(IliasCourseRepository::new($DIC->database())),
+            GlobalRoleService::new(IliasGlobalRoleRepository::new($DIC->rbac()->review(), $DIC->repositoryTree())),
+            GroupService::new(IliasGroupRepository::new($DIC->database())),
+            LocalRoleService::new(IliasLocalRoleRepository::new($DIC->rbac()->review(), $DIC->repositoryTree())),
+            OrgUnitService::new(IliasOrgUnitRepository::new($DIC->database())),
+            PortfolioTemplateService::new(IliasPortfolioTemplateRepository::new($DIC->database())),
+            StudyProgrammeService::new(IliasStudyProgrammeRepository::new($DIC->database())),
+            AssignmentProcessService::new(IliasStudyProgrammeRepository::new($DIC->database())),
             \ilUserDefaultsPlugin::getInstance()->getDirectory() . "/src/Adapters",
             $DIC->ui()
         );

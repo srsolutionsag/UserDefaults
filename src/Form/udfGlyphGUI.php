@@ -9,6 +9,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class udfGlyphGUI extends ilGlyphGUI
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 
     /**
@@ -21,7 +22,7 @@ class udfGlyphGUI extends ilGlyphGUI
      */
     public static function get(string $a_glyph, string $a_text = ""): string
     {
-        if ($a_glyph == 'remove') {
+        if ($a_glyph === 'remove') {
             self::$map[$a_glyph]['class'] = 'glyphicon glyphicon-' . $a_glyph;
         }
         if (!isset(self::$map[$a_glyph])) {
@@ -30,7 +31,6 @@ class udfGlyphGUI extends ilGlyphGUI
 
         return parent::get($a_glyph, $a_text) . ' ';
     }
-
 
     public static function gets(string $a_glyph): string
     {

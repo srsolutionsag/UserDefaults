@@ -8,7 +8,6 @@ class IliasGlobalRoleAdapter
 {
     private function __construct(public int $objId, public string $title)
     {
-
     }
 
     public static function new(int $objId, string $title): self

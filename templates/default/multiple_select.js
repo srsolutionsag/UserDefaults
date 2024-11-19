@@ -2,11 +2,11 @@ SrMultipleSelect = {
 
     configs: [],
 
-    addConfig: function(config, id) {
+    addConfig: function (config, id) {
         this.configs[id] = config;
     },
 
-    init: function(id, config) {
+    init: function (id, config) {
         console.log('init ' + id);
         var id_cut = id.substring(0, id.indexOf('\\['));
         if (typeof config !== 'undefined') {
@@ -22,18 +22,18 @@ SrMultipleSelect = {
             minimumInputLength: config.minimum_input_length,
             multiple: config.multiple
         };
-        if(link.length > 0){
+        if (link.length > 0) {
             settings["ajax"] = {
                 url: link,
                 dataType: 'json',
-                data: function(term, page){
+                data: function (term, page) {
                     return {
                         term: term,
                         container_type: config.container_type,
                         page_limit: 10
                     }
                 },
-                results: function(data, page){
+                results: function (data, page) {
                     return {
                         results: data
                     }

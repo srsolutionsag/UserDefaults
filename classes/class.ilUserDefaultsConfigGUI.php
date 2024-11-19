@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../vendor/autoload.php";
-
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
@@ -10,6 +8,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class ilUserDefaultsConfigGUI extends ilPluginConfigGUI
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const TAB_SETTINGS = "settings";
     public const TAB_USERS = "users";
@@ -34,15 +33,24 @@ class ilUserDefaultsConfigGUI extends ilPluginConfigGUI
         $this->tabs = $DIC["ilTabs"];
         $this->pl = ilUserDefaultsPlugin::getInstance();
     }
+
     /**
      * @throws ilCtrlException
      */
     public function performCommand(string $cmd): void
     {
-        $this->tabs->addTab(self::TAB_SETTINGS, $this->pl->txt('tabs_settings'), $this->ctrl
-            ->getLinkTargetByClass(UserSettingsGUI::class));
-        $this->tabs->addTab(self::TAB_USERS, $this->pl->txt('tabs_users'), $this->ctrl
-            ->getLinkTargetByClass(usrdefUserGUI::class));
+        $this->tabs->addTab(
+            self::TAB_SETTINGS,
+            $this->pl->txt('tabs_settings'),
+            $this->ctrl
+                ->getLinkTargetByClass(UserSettingsGUI::class)
+        );
+        $this->tabs->addTab(
+            self::TAB_USERS,
+            $this->pl->txt('tabs_users'),
+            $this->ctrl
+                ->getLinkTargetByClass(usrdefUserGUI::class)
+        );
 
         $nextClass = $this->ctrl->getNextClass();
         switch ($nextClass) {

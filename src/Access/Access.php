@@ -8,6 +8,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 final class Access
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     protected static ?Access $instance = null;
 
@@ -22,6 +23,5 @@ final class Access
 
     private function __construct()
     {
-
     }
 }

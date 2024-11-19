@@ -70,8 +70,7 @@ class UserDefaultsConfig extends ActiveRecord
      * @con_fieldtype   text
      * @con_is_notnull  false
      */
-    protected mixed $value = null;
-
+    protected $value = null;
 
     public function __construct(?string $primary_name_value = null, ?arConnector $connector = null)
     {
@@ -98,12 +97,18 @@ class UserDefaultsConfig extends ActiveRecord
         $this->name = $name;
     }
 
-    public function getValue(): string|int
+    /**
+     * @return int|string
+     */
+    public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue(string|int $value): void
+    /**
+     * @param string|int $value
+     */
+    public function setValue($value): void
     {
         $this->value = $value;
     }
@@ -112,24 +117,17 @@ class UserDefaultsConfig extends ActiveRecord
     {
         $field_value = $this->{$field_name};
 
-        switch ($field_name) {
-            default:
-                return parent::sleep($field_name);
-        }
+        return parent::sleep($field_name);
     }
 
     public function wakeUp(/*string*/ $field_name, $field_value)
     {
-        switch ($field_name) {
-            default:
-                return parent::wakeUp($field_name, $field_value);
-        }
+        return parent::wakeUp($field_name, $field_value);
     }
 
     private static array $fields = [
         self::KEY_CATEGORY_REF_ID => self::TYPE_INTEGER
     ];
-
 
     public static function getTableName(): string
     {

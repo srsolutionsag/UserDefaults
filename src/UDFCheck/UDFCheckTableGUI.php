@@ -19,10 +19,11 @@ use UserSettingsGUI;
 class UDFCheckTableGUI extends ilTable2GUI
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const USR_DEF_CONTENT = 'usr_def_content_checks';
-    protected array $filter = array();
-    protected array $ignored_cols = array();
+    protected array $filter = [];
+    protected array $ignored_cols = [];
     protected Renderer $renderer;
     protected Factory $image;
     private ilUserDefaultsPlugin $pl;
@@ -31,8 +32,11 @@ class UDFCheckTableGUI extends ilTable2GUI
      * @throws ilCtrlException
      * @throws ilException
      */
-    public function __construct(UDFCheckGUI $parent_obj, string $parent_cmd = UDFCheckGUI::CMD_INDEX, string $template_context = "")
-    {
+    public function __construct(
+        UDFCheckGUI $parent_obj,
+        string $parent_cmd = UDFCheckGUI::CMD_INDEX,
+        string $template_context = ""
+    ) {
         global $DIC;
 
         $this->renderer = $DIC->ui()->renderer();
@@ -73,10 +77,15 @@ class UDFCheckTableGUI extends ilTable2GUI
         $this->determineOffsetAndOrder();
         $this->determineLimit();
 
-        $checks = UDFCheck::getChecksByParent(filter_input(INPUT_GET, UserSettingsGUI::IDENTIFIER), true, $this->filter, [
-            $this->getOffset(),
-            $this->getOffset() + $this->getLimit()
-        ]);
+        $checks = UDFCheck::getChecksByParent(
+            filter_input(INPUT_GET, UserSettingsGUI::IDENTIFIER),
+            true,
+            $this->filter,
+            [
+                $this->getOffset(),
+                $this->getOffset() + $this->getLimit()
+            ]
+        );
 
         $this->setMaxCount(count($checks));
 
@@ -93,9 +102,13 @@ class UDFCheckTableGUI extends ilTable2GUI
         $a_set["operator"] = $this->pl->txt("check_op_" . UDFCheck::$operator_text_keys[$a_set["operator"]]);
 
         $ilUDFCheckGUI = new UDFCheckGUI($this->parent_obj);
-        foreach ($this->getSelectableColumns() as $k => $v) {
+        foreach (array_keys($this->getSelectableColumns()) as $k) {
             if ($k == 'actions') {
-                $this->ctrl->setParameter($this->parent_obj, UDFCheckGUI::IDENTIFIER_CATEGORY, $a_set["field_category"]);
+                $this->ctrl->setParameter(
+                    $this->parent_obj,
+                    UDFCheckGUI::IDENTIFIER_CATEGORY,
+                    $a_set["field_category"]
+                );
                 $this->ctrl->setParameter($ilUDFCheckGUI, UDFCheckGUI::IDENTIFIER_CATEGORY, $a_set["field_category"]);
                 $this->ctrl->setParameter($this->parent_obj, UDFCheckGUI::IDENTIFIER, $a_set["id"]);
                 $this->ctrl->setParameter($ilUDFCheckGUI, UDFCheckGUI::IDENTIFIER, $a_set["id"]);
@@ -104,10 +117,18 @@ class UDFCheckTableGUI extends ilTable2GUI
                 $current_selection_list->setListTitle($this->pl->txt('check_actions'));
                 $current_selection_list->setId('check_actions' . $a_set["id"]);
                 $current_selection_list->setUseImages(false);
-                $current_selection_list->addItem($this->pl->txt('check_edit'), 'check_edit', $this->ctrl
-                    ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT));
-                $current_selection_list->addItem($this->pl->txt('check_delete'), 'check_delete', $this->ctrl
-                    ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE));
+                $current_selection_list->addItem(
+                    $this->pl->txt('check_edit'),
+                    'check_edit',
+                    $this->ctrl
+                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('check_delete'),
+                    'check_delete',
+                    $this->ctrl
+                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE)
+                );
 
                 $this->tpl->setCurrentBlock('td');
                 $this->tpl->setVariable('VALUE', $current_selection_list->getHTML());
@@ -139,7 +160,10 @@ class UDFCheckTableGUI extends ilTable2GUI
                     default:
                         if ($a_set[$k]) {
                             $this->tpl->setCurrentBlock('td');
-                            $this->tpl->setVariable('VALUE', (is_array($a_set[$k]) ? implode(", ", $a_set[$k]) : $a_set[$k]));
+                            $this->tpl->setVariable(
+                                'VALUE',
+                                (is_array($a_set[$k]) ? implode(", ", $a_set[$k]) : $a_set[$k])
+                            );
                             $this->tpl->parseCurrentBlock();
                         } else {
                             $this->tpl->setCurrentBlock('td');
@@ -152,11 +176,9 @@ class UDFCheckTableGUI extends ilTable2GUI
         }
     }
 
-
     protected function setTableHeaders()
     {
     }
-
 
     public function initFilter(): void
     {
@@ -165,48 +187,35 @@ class UDFCheckTableGUI extends ilTable2GUI
 
     public function getSelectableColumns(): array
     {
-        $cols['field_key'] = array(
+        $cols['field_key'] = [
             'txt' => $this->pl->txt('check_name'),
             'default' => true,
             'width' => '40%',
-            'sort_field' => 'udf_definition_field_name',
-        );
-        $cols['check_value'] = array(
+            'sort_field' => 'udf_definition_field_name'
+        ];
+        $cols['check_value'] = [
             'txt' => $this->pl->txt('check_value'),
             'default' => true,
             'width' => 'auto',
-            'sort_field' => 'check_value',
-        );
-        $cols['negated'] = array(
+            'sort_field' => 'check_value'
+        ];
+        $cols['negated'] = [
             'txt' => $this->pl->txt('check_negation_gobal'),
             'default' => true,
             'width' => 'auto',
-            'sort_field' => 'check_negated',
-        );
-        $cols['operator'] = array(
-            'txt' => $this->pl->txt('check_operator'),
-            'default' => true,
-            'width' => 'auto',
-        );
-        $cols['actions'] = array(
-            'txt' => $this->pl->txt('check_actions'),
-            'default' => true,
-            'width' => '150px',
-        );
+            'sort_field' => 'check_negated'
+        ];
+        $cols['operator'] = ['txt' => $this->pl->txt('check_operator'), 'default' => true, 'width' => 'auto'];
+        $cols['actions'] = ['txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px'];
 
         return $cols;
     }
-
 
     private function addColumns(): void
     {
         foreach ($this->getSelectableColumns() as $k => $v) {
             if ($this->isColumnSelected($k)) {
-                if (array_key_exists('sort_field', $v) && $v['sort_field']) {
-                    $sort = $v['sort_field'];
-                } else {
-                    $sort = $k;
-                }
+                $sort = array_key_exists('sort_field', $v) && $v['sort_field'] ? $v['sort_field'] : $k;
                 $this->addColumn($v['txt'], $sort, $v['width']);
             }
         }
@@ -214,7 +223,7 @@ class UDFCheckTableGUI extends ilTable2GUI
 
     public function setExportFormats(array $formats): void
     {
-        parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
+        parent::setExportFormats([self::EXPORT_EXCEL, self::EXPORT_CSV]);
     }
 
     protected function fillRowExcel(ilExcel $a_worksheet, int &$a_row, array $a_set): void
@@ -224,8 +233,8 @@ class UDFCheckTableGUI extends ilTable2GUI
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            if (!in_array($key, $this->getIgnoredCols()) and $this->isColumnSelected($key)) {
-                $a_worksheet->setCell($a_row, $col, strip_tags($value));
+            if (!in_array($key, $this->getIgnoredCols()) && $this->isColumnSelected($key)) {
+                $a_worksheet->setCell($a_row, $col, strip_tags((string) $value));
                 $col++;
             }
         }
@@ -237,20 +246,23 @@ class UDFCheckTableGUI extends ilTable2GUI
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            if (!in_array($key, $this->getIgnoredCols()) and $this->isColumnSelected($key)) {
-                $a_csv->addColumn(strip_tags($value));
+            if (in_array($key, $this->getIgnoredCols())) {
+                continue;
             }
+            if (!$this->isColumnSelected($key)) {
+                continue;
+            }
+            $a_csv->addColumn(strip_tags((string) $value));
         }
         $a_csv->addRow();
     }
 
-
     public function numericOrdering(string $sort_field): bool
     {
-        return in_array($sort_field, array());
+        return in_array($sort_field, []);
     }
 
-    public function setIgnoredCols($ignored_cols): void
+    public function setIgnoredCols(array $ignored_cols): void
     {
         $this->ignored_cols = $ignored_cols;
     }

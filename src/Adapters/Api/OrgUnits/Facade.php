@@ -2,15 +2,16 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\OrgUnits;
 
-use ilOrgUnitPosition;
+use srag\Plugins\UserDefaults\Adapters\Api\OrgUnits\Responses\OrgUnit;
+use srag\Plugins\UserDefaults\Adapters\Api\OrgUnits\Responses\OrgUnitPositions;
 use srag\Plugins\UserDefaults\Domain\Ports\OrgUnitService;
-use ilOrgUnitPositionLocalDIC;
 
 class Facade
 {
-    private function __construct(private OrgUnitService $orgUnitService)
-    {
+    public $orguPos;
 
+    private function __construct(private readonly OrgUnitService $orgUnitService)
+    {
     }
 
     public static function new(OrgUnitService $orgUnitService): Facade
@@ -27,7 +28,7 @@ class Facade
         $courseResponses = [];
 
         foreach ($courses as $course) {
-            $courseResponses[] = Responses\OrgUnit::formDomain($course);
+            $courseResponses[] = OrgUnit::formDomain($course);
         }
         return $courseResponses;
     }
@@ -40,7 +41,7 @@ class Facade
 
         $orguPositions = [];
         foreach ($this->orguPos->getAllPositions() as $position) {
-            $orguPositions[] = Responses\OrgUnitPositions::new($position->getId(), $position->getTitle());
+            $orguPositions[] = OrgUnitPositions::new($position->getId(), $position->getTitle());
         }
         return $orguPositions;
     }

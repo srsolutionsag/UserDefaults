@@ -24,12 +24,13 @@ class UDFCheckUDF extends UDFCheck
 
         $user_defined_fields = ilUserDefinedFields::_getInstance();
         foreach ($user_defined_fields->getDefinitions() as $field) {
-            $udf_field = array();
+            $udf_field = [];
 
-            if (!self::isCustomUserFieldsHelperAvailable()) {
-                if (!in_array($field['field_type'], array( UDF_TYPE_TEXT, UDF_TYPE_SELECT ))) {
-                    continue;
-                }
+            if (!self::isCustomUserFieldsHelperAvailable() && !in_array(
+                $field['field_type'],
+                [UDF_TYPE_TEXT, UDF_TYPE_SELECT]
+            )) {
+                continue;
             }
 
             $udf_field["txt"] = $field["field_name"];
@@ -48,9 +49,8 @@ class UDFCheckUDF extends UDFCheck
     {
         $user->readUserDefinedFields();
         if (isset($user->user_defined_data['f_' . $this->getFieldKey()])) {
-            return explode(self::CHECK_SPLIT, $user->user_defined_data['f_' . $this->getFieldKey()]);
-        } else {
-            return array();
+            return explode(self::CHECK_SPLIT, (string) $user->user_defined_data['f_' . $this->getFieldKey()]);
         }
+        return [];
     }
 }

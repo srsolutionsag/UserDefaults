@@ -2,6 +2,7 @@
 
 namespace srag\Plugins\UserDefaults\Form;
 
+use ILIAS\DI\UIServices;
 use ilDate;
 use ilDateTimeException;
 use ilDateTimeInputGUI;
@@ -26,21 +27,24 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
     public const HOOK_IS_INPUT_DISABLED = "hook_is_disabled";
     public const HOOK_BEFORE_INPUT_RENDER = "hook_before_render";
 
-    protected array $cust_attr = array();
-    protected string|array $value;
-    protected array $inputs = array();
-    protected array $input_options = array();
-    protected array $hooks = array();
-    protected array $line_values = array();
+    protected array $cust_attr = [];
+    /**
+     * @var mixed[]|string
+     */
+    protected $value;
+    protected array $inputs = [];
+    protected array $input_options = [];
+    protected array $hooks = [];
+    protected array $line_values = [];
     protected string $template_dir = '';
-    protected array $post_var_cache = array();
+    protected array $post_var_cache = [];
     protected bool $show_label = false;
     protected bool $show_label_once = false;
-    protected array $hidden_inputs = array();
+    protected array $hidden_inputs = [];
     protected bool $position_movable = false;
     protected int $counter = 0;
     protected bool $show_info = false;
-    private \ILIAS\DI\UIServices $ui;
+    private UIServices $ui;
     private ilUserDefaultsPlugin $pl;
 
     public function __construct(string $a_title = "", string $a_postvar = "")
@@ -54,13 +58,12 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
         $this->initCSSandJS();
     }
 
-    public function getHook($key): bool|string
+    /**
+     * @return bool|string
+     */
+    public function getHook($key)
     {
-        if (isset($this->hooks[$key])) {
-            return $this->hooks[$key];
-        }
-
-        return false;
+        return $this->hooks[$key] ?? false;
     }
 
     public function addHook(string $key, array $options): void
@@ -79,7 +82,7 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
         return false;
     }
 
-    public function addInput(ilFormPropertyGUI $input, array $options = array()): void
+    public function addInput(ilFormPropertyGUI $input, array $options = []): void
     {
         $this->inputs[$input->getPostVar()] = $input;
         $this->input_options[$input->getPostVar()] = $options;
@@ -105,7 +108,6 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
     {
         $this->show_label = $show_label;
     }
-
 
     /**
      * @return    array    Options. Array ("value" => "option_text")
@@ -135,17 +137,18 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
         $this->value = $a_value;
     }
 
-
-    public function getValue(): array|string
+    /**
+     * @return mixed[]|string
+     */
+    public function getValue(): array
     {
-        $out = array();
+        $out = [];
         foreach ($this->inputs as $key => $item) {
             $out[$key] = $item->getValue();
         }
 
         return $out;
     }
-
 
     /**
      * @throws ilDateTimeException
@@ -164,11 +167,13 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
     {
         $valid = true;
         // escape data
-        $out_array = array();
+        $out_array = [];
         foreach ($_POST[$this->getPostVar()] as $item_num => $item) {
-            foreach ($this->inputs as $input_key => $input) {
+            foreach (array_keys($this->inputs) as $input_key) {
                 if (isset($item[$input_key])) {
-                    $out_array[$item_num][$input_key] = (is_string($item[$input_key])) ? ilUtil::stripSlashes($item[$input_key]) : $item[$input_key];
+                    $out_array[$item_num][$input_key] = (is_string($item[$input_key])) ? ilUtil::stripSlashes(
+                        $item[$input_key]
+                    ) : $item[$input_key];
                 }
             }
         }
@@ -200,21 +205,18 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
         }
     }
 
-
     public function getCustomAttributes(): array
     {
         return (array) $this->cust_attr;
     }
 
-    protected function createInputPostVar($iterator_id, ilFormPropertyGUI $input): string
+    protected function createInputPostVar(string $iterator_id, ilFormPropertyGUI $input): string
     {
         if ($this->getMulti()) {
             return $this->getPostVar() . '[' . $iterator_id . '][' . $input->getPostVar() . ']';
-        } else {
-            return $this->getPostVar() . '[' . $input->getPostVar() . ']';
         }
+        return $this->getPostVar() . '[' . $input->getPostVar() . ']';
     }
-
 
     /**
      * @throws ilTemplateException
@@ -247,8 +249,10 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
                         $is_ta = true;
                         break;
                     default:
-                        throw new ilException("Method " . get_class($input)
-                            . "::render() does not exists! You cannot use this input-type in ilMultiLineInputGUI");
+                        throw new ilException(
+                            "Method " . $input::class
+                            . "::render() does not exists! You cannot use this input-type in ilMultiLineInputGUI"
+                        );
                 }
             }
             $is_disabled_hook = $this->getHook(self::HOOK_IS_INPUT_DISABLED);
@@ -322,7 +326,9 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
                 $show_remove = $is_removeable_hook($this->getValue());
             }
             $show_remove = true;
-            $image_minus = ($show_remove) ? udfGlyphGUI::get('minus') : '<span class="glyphicon glyphicon-minus hide"></span>';
+            $image_minus = ($show_remove) ? udfGlyphGUI::get(
+                'minus'
+            ) : '<span class="glyphicon glyphicon-minus hide"></span>';
             $tpl->setCurrentBlock('multi_icons');
             $tpl->setVariable('IMAGE_PLUS', $image_plus);
             $tpl->setVariable('IMAGE_MINUS', $image_minus);
@@ -337,13 +343,11 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
         return $tpl->get();
     }
 
-
     public function initCSSandJS(): void
     {
         $this->ui->mainTemplate()->addCss($this->pl->getDirectory() . '/templates/default/multi_line_input.css');
         $this->ui->mainTemplate()->addJavascript($this->pl->getDirectory() . '/templates/default/multi_line_input.js');
     }
-
 
     /**
      * @throws DICException
@@ -354,7 +358,7 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
     {
         $output = "";
         $output .= $this->render(0, true);
-        if ($this->getMulti() && is_array($this->line_values) && count($this->line_values) > 0) {
+        if ($this->getMulti() && is_array($this->line_values) && $this->line_values !== []) {
             foreach ($this->line_values as $run => $data) {
                 $object = $this;
                 $object->setValue($data);
@@ -365,14 +369,14 @@ class udfMultiLineInputGUI extends ilFormPropertyGUI
         }
         if ($this->getMulti()) {
             $output = '<div id="' . $this->getFieldId() . '" class="multi_line_input">' . $output . '</div>';
-            $output .= '<script type="text/javascript">$("#' . $this->getFieldId() . '").multi_line_input(' . json_encode($this->input_options)
+            $output .= '<script type="text/javascript">$("#' . $this->getFieldId(
+            ) . '").multi_line_input(' . json_encode($this->input_options)
                 . ')</script>';
         }
         $a_tpl->setCurrentBlock("prop_generic");
         $a_tpl->setVariable("PROP_GENERIC", $output);
         $a_tpl->parseCurrentBlock();
     }
-
 
     /**
      * @throws ilException

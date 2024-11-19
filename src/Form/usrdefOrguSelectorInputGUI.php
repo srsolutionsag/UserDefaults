@@ -20,34 +20,32 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI
 {
     use DICTrait;
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     /**
      * @var callable
      */
     protected $title_modifier = null;
     /**
-     * @var bool
-     */
-    protected bool $multi_nodes = false;
-    /**
      * @var ilRepositorySelectorExplorerGUI
      */
     protected \ilExplorerBaseGUI $explorer_gui;
 
-
-    public function __construct(string $a_title, string $a_postvar, bool $a_multi = false)
+    public function __construct(string $a_title, string $a_postvar, protected bool $multi_nodes = false)
     {
         global $DIC;
-        $this->multi_nodes = $a_multi;
         $this->postvar = $a_postvar;
 
         $this->ctrl = $DIC->ctrl();
 
-        $this->explorer_gui = new udfOrguSelectorExplorerGUI(array(
-            ilPropertyFormGUI::class,
-            ilFormPropertyDispatchGUI::class,
-            ilRepositorySelector2InputGUI::class,
-        ), $this->getExplHandleCmd(), $this, "selectRepositoryItem", "root_id", "rep_exp_sel_" . $a_postvar);
+        $this->explorer_gui = new udfOrguSelectorExplorerGUI(
+            [ilPropertyFormGUI::class, ilFormPropertyDispatchGUI::class, ilRepositorySelector2InputGUI::class],
+            $this->getExplHandleCmd(),
+            $this,
+            "selectRepositoryItem",
+            "root_id",
+            "rep_exp_sel_" . $a_postvar
+        );
 
         $this->explorer_gui->setSelectMode($a_postvar . "_sel", $this->multi_nodes);
 
@@ -55,14 +53,11 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI
         $this->setType("rep_select");
     }
 
-
     public function setTitleModifier(callable $a_val): void
     {
         $this->title_modifier = $a_val;
         if ($a_val != null) {
-            $this->explorer_gui->setNodeContentModifier(function ($a_node) use ($a_val) {
-                return $a_val($a_node["child"]);
-            });
+            $this->explorer_gui->setNodeContentModifier(fn(array $a_node) => $a_val($a_node["child"]));
         } else {
             $this->explorer_gui->setNodeContentModifier(null);
         }
@@ -83,7 +78,6 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI
         return ilObject::_lookupTitle(ilObject::_lookupObjId($a_id));
     }
 
-
     public function handleExplorerCommand(): void
     {
         if ($this->explorer_gui->handleCommand()) {
@@ -91,7 +85,10 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI
         }
     }
 
-    public function getExplorerGUI(): \ilExplorerBaseGUI|udfOrguSelectorExplorerGUI|ilRepositorySelectorExplorerGUI
+    /**
+     * @return \ilExplorerBaseGUI|udfOrguSelectorExplorerGUI|\ilRepositorySelectorExplorerGUI
+     */
+    public function getExplorerGUI(): \ilExplorerBaseGUI
     {
         return $this->explorer_gui;
     }
@@ -111,7 +108,7 @@ class usrdefOrguSelectorInputGUI extends ilExplorerSelectInputGUI
     /**
      * @throws ilCtrlException
      */
-    public function render($a_mode = "property_form"): string
+    public function render(string $a_mode = "property_form"): string
     {
         $this->ctrl->setParameterByClass(ilFormPropertyDispatchGUI::class, "postvar", $this->postvar);
 

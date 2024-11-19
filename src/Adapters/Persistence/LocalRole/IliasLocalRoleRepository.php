@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Persistence\LocalRole;
 
-use srag\Plugins\UserDefaults\Domain;
+use srag\Plugins\UserDefaults\Domain\Ports\Repository;
+use srag\Plugins\UserDefaults\Domain\Model\LocalRole;
 
-class IliasLocalRoleRepository implements Domain\Ports\Repository
+class IliasLocalRoleRepository implements Repository
 {
-    private function __construct(private \ilRbacReview $rbacReview, private \ilTree $ilTree)
+    private function __construct(private readonly \ilRbacReview $rbacReview, private readonly \ilTree $ilTree)
     {
-
     }
 
     public static function new(\ilRbacReview $rbacReview, \ilTree $ilTree): self
@@ -17,7 +17,7 @@ class IliasLocalRoleRepository implements Domain\Ports\Repository
     }
 
     /**
-     * @return Domain\Model\LocalRole[]
+     * @return LocalRole[]
      */
     public function findAll(): array
     {

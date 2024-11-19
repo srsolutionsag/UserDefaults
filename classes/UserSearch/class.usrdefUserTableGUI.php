@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-
+use ILIAS\DI\UIServices;
 use srag\Plugins\UserDefaults\Access\Courses;
 use srag\Plugins\UserDefaults\Form\usrdefOrguSelectorInputGUI;
 use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
@@ -13,13 +12,13 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class usrdefUserTableGUI extends ilTable2GUI
 {
     use UserDefaultsTrait;
+
     public const TABLE_ID = 'tbl_mutla_users';
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     protected array $filter = [];
     protected ilCtrl $ctrl;
-    private \ILIAS\DI\UIServices $ui;
+    private UIServices $ui;
     private ilUserDefaultsPlugin $pl;
-
 
     /**
      * @throws arException
@@ -27,7 +26,7 @@ class usrdefUserTableGUI extends ilTable2GUI
      * @throws ilCtrlException
      * @throws ilException
      */
-    public function __construct(usrdefUserGUI $a_parent_obj, $a_parent_cmd)
+    public function __construct(usrdefUserGUI $a_parent_obj, string $a_parent_cmd)
     {
         global $DIC;
         $this->ctrl = $DIC->ctrl();
@@ -61,7 +60,7 @@ class usrdefUserTableGUI extends ilTable2GUI
     public function executeCommand(): bool
     {
         switch ($this->ctrl->getNextClass($this)) {
-            case strtolower(__CLASS__):
+            case strtolower(self::class):
             case '':
                 $cmd = $this->ctrl->getCmd() . 'Cmd';
                 return $this->$cmd();
@@ -71,14 +70,13 @@ class usrdefUserTableGUI extends ilTable2GUI
         }
     }
 
-
     public function fillRow(array $a_set): void
     {
         /**
          * @var usrdefUser $usrdefUser
          */
         $usrdefUser = usrdefUser::find($a_set['usr_id']);
-        foreach ($this->getSelectableColumns() as $k => $v) {
+        foreach (array_keys($this->getSelectableColumns()) as $k) {
             if ($k == 'actions') {
                 $this->tpl->setCurrentBlock('checkbox');
                 $this->tpl->setVariable('ID', $usrdefUser->getUsrId());
@@ -100,7 +98,6 @@ class usrdefUserTableGUI extends ilTable2GUI
         }
     }
 
-
     /**
      * @throws arException
      * @throws DICException
@@ -114,7 +111,7 @@ class usrdefUserTableGUI extends ilTable2GUI
         $usrdefUser->orderBy($this->getOrderField(), $this->getOrderDirection());
 
         foreach ($this->filter as $field => $value) {
-            if (in_array($field, array( 'repo', 'org' ))) {
+            if (in_array($field, ['repo', 'org'])) {
                 continue;
             }
             if ($value && !is_array($value)) {
@@ -126,7 +123,7 @@ class usrdefUserTableGUI extends ilTable2GUI
                     continue;
                 }
 
-                $usrdefUser->where(array( $field => '%' . $value . '%' ), 'LIKE');
+                $usrdefUser->where([$field => '%' . $value . '%'], 'LIKE');
             }
         }
 
@@ -148,9 +145,9 @@ class usrdefUserTableGUI extends ilTable2GUI
 
         // ORGU
         if (in_array('orgu', $this->filter) && $this->filter['orgu'] && is_array($this->filter['orgu'])
-            && count($this->filter['orgu']) > 0) {
+            && $this->filter['orgu'] !== []) {
             $value = $this->filter['orgu'];
-            $role_ids = array();
+            $role_ids = [];
             $roles = ilObjOrgUnitTree::_getInstance()->getEmployeeRoles();
             foreach ($value as $ref_id) {
                 if ($roles[$ref_id]) {
@@ -158,12 +155,12 @@ class usrdefUserTableGUI extends ilTable2GUI
                 }
             }
             $usrdefUser->innerjoin('rbac_ua', 'usr_id', 'usr_id');
-            $usrdefUser->where(array( 'rbac_ua.rol_id' => $role_ids ));
+            $usrdefUser->where(['rbac_ua.rol_id' => $role_ids]);
         }
 
         $this->setMaxCount($usrdefUser->count());
 
-        $usrdefUser->where(array( 'usr_id' => 13 ), '!=');
+        $usrdefUser->where(['usr_id' => 13], '!=');
         if (!$usrdefUser->hasSets()) {
             global $DIC;
             $tpl = $DIC["tpl"];
@@ -172,63 +169,51 @@ class usrdefUserTableGUI extends ilTable2GUI
         $usrdefUser->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
         $usrdefUser->orderBy('email');
 
-
         // $usrdefUser->debug();
         $this->setData($usrdefUser->getArray());
     }
 
-
     public function getSelectableColumns(): array
     {
-        $cols['firstname'] = array(
+        $cols['firstname'] = [
             'txt' => $this->pl->txt('usr_firstname'),
             'default' => true,
             'width' => 'auto',
-            'sort_field' => 'firstname',
-        );
-        $cols['lastname'] = array(
+            'sort_field' => 'firstname'
+        ];
+        $cols['lastname'] = [
             'txt' => $this->pl->txt('usr_lastname'),
             'default' => true,
             'width' => 'auto',
-            'sort_field' => 'lastname',
-        );
-        $cols['email'] = array(
+            'sort_field' => 'lastname'
+        ];
+        $cols['email'] = [
             'txt' => $this->pl->txt('usr_email'),
             'default' => true,
             'width' => 'auto',
-            'sort_field' => 'email',
-        );
-        $cols['login'] = array(
+            'sort_field' => 'email'
+        ];
+        $cols['login'] = [
             'txt' => $this->pl->txt('usr_login'),
             'default' => true,
             'width' => 'auto',
-            'sort_field' => 'login',
-        );
-        $cols['actions'] = array(
-            'txt' => $this->pl->txt('common_actions'),
-            'default' => true,
-            'width' => '50px',
-        );
+            'sort_field' => 'login'
+        ];
+        $cols['actions'] = ['txt' => $this->pl->txt('common_actions'), 'default' => true, 'width' => '50px'];
 
         return $cols;
     }
-
 
     private function addColumns(): void
     {
         foreach ($this->getSelectableColumns() as $k => $v) {
             if ($this->isColumnSelected($k)) {
                 $sort = null;
-                if (array_key_exists('sort_field', $v) && $v['sort_field']) {
-                    $sort = $v['sort_field'];
-                } else {
-                    $sort = $k;
-                }
+                $sort = array_key_exists('sort_field', $v) && $v['sort_field'] ? $v['sort_field'] : $k;
                 $this->addColumn($v['txt'], $sort, $v['width']);
             }
         }
     }
-
 
     protected function initFilters(): void
     {
@@ -276,12 +261,11 @@ class usrdefUserTableGUI extends ilTable2GUI
         self::dic()->ctrl()->setParameter($this->parent_obj, $this->getNavParameter(), $this->nav_value);
     }*/
 
-
     public function getCrsSelectorGUI(): ilRepositorySelector2InputGUI
     {
         // courses
         $crs = new ilRepositorySelector2InputGUI($this->pl->txt('usr_repo'), 'repo', true);
-        $crs->getExplorerGUI()->setSelectableTypes(array( 'grp', Courses::TYPE_CRS ));
+        $crs->getExplorerGUI()->setSelectableTypes(['grp', Courses::TYPE_CRS]);
 
         return $crs;
     }
@@ -290,7 +274,7 @@ class usrdefUserTableGUI extends ilTable2GUI
     {
         $crs = new usrdefOrguSelectorInputGUI($this->pl->txt('usr_orgu'), 'orgu', true);
         $crs->getExplorerGUI()->setRootId(56);
-        $crs->getExplorerGUI()->setClickableTypes(array( 'orgu' ));
+        $crs->getExplorerGUI()->setClickableTypes(['orgu']);
 
         return $crs;
     }

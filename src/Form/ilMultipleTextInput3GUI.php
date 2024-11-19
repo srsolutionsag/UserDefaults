@@ -1,7 +1,5 @@
 <?php
 
-/* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
-
 namespace srag\Plugins\UserDefaults\Form;
 
 use ilSubEnabledFormPropertyGUI;
@@ -13,20 +11,17 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     protected array $values;
-    protected string $placeholder;
     protected bool $disableOldFields;
     private ilUserDefaultsPlugin $pl;
 
-    public function __construct(string $title, string $post_var, string $placeholder)
+    public function __construct(string $title, string $post_var, protected string $placeholder)
     {
         parent::__construct($title, $post_var);
         $this->pl = ilUserDefaultsPlugin::getInstance();
-
-        $this->placeholder = $placeholder;
     }
-
 
     /**
      * @throws DICException
@@ -39,7 +34,6 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI
 
         return self::output()->getHTML($tpl);
     }
-
 
     /**
      * @throws DICException
@@ -93,9 +87,12 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI
         return $tpl;
     }
 
-    public function setValueByArray(mixed $value): void
+    /**
+     * @param mixed $value
+     */
+    public function setValueByArray(array $value): void
     {
-        $cleaned_values = array();
+        $cleaned_values = [];
         foreach ($value[$this->getPostVar()] as $v) {
             if ($v) {
                 $cleaned_values[] = $v;
@@ -105,7 +102,7 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI
         foreach ($this->getSubItems() as $item) {
             $item->setValueByArray($value);
         }
-        $this->values = is_array($cleaned_values) ? $cleaned_values : array();
+        $this->values = is_array($cleaned_values) ? $cleaned_values : [];
     }
 
     public function setDisableOldFields(bool $disableOldFields): void
@@ -117,7 +114,6 @@ class ilMultipleTextInput3GUI extends ilSubEnabledFormPropertyGUI
     {
         return $this->disableOldFields;
     }
-
 
     /**
      * @throws DICException

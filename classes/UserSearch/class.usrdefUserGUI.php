@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-
+use ILIAS\DI\UIServices;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
@@ -24,7 +23,7 @@ class usrdefUserGUI
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $tpl;
-    private \ILIAS\DI\UIServices $ui;
+    private UIServices $ui;
 
     /**
      * usrdefUserGUI constructor
@@ -112,7 +111,6 @@ class usrdefUserGUI
         // Optinal
     }
 
-
     /**
      * @throws ilCtrlException
      * @throws \srag\DIC\UserDefaults\Exception\DICException
@@ -120,8 +118,8 @@ class usrdefUserGUI
     protected function selectUser(): void
     {
         $usr_ids = $_POST['id'];
-        $user_objects = array();
-        if ((is_array($usr_ids) && count($usr_ids) === 0) || !is_array($usr_ids)) {
+        $user_objects = [];
+        if ((is_array($usr_ids) && $usr_ids === []) || !is_array($usr_ids)) {
             global $DIC;
             $tpl = $DIC["tpl"];
             $tpl->setOnScreenMessage('failure', $this->pl->txt('msg_no_users_selected'), true);
@@ -133,13 +131,12 @@ class usrdefUserGUI
         /**
          * @var UserSetting $ilUserSetting
          */
-        foreach (UserSetting::where(array(
-            'status' => UserSetting::STATUS_ACTIVE,
-            'on_manual' => true,
-        ))->get() as $ilUserSetting) {
+        foreach (
+            UserSetting::where(['status' => UserSetting::STATUS_ACTIVE, 'on_manual' => true])->get() as $ilUserSetting
+        ) {
             $ilUserSetting->doMultipleAssignements($user_objects);
         }
-        $this->tpl->setOnScreenMessage('success', $this->pl->txt('userdef_users_assigned', "", [count($usr_ids)]), true);
+        $this->tpl->setOnScreenMessage('success', $this->pl->txt('userdef_users_assigned'), true);
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
 }

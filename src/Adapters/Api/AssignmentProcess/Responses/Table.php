@@ -9,7 +9,6 @@ use ilLinkButton;
 use ilTable2GUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
-use srag\Plugins\UserDefaults\UserSearch\usrdefObj;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
@@ -18,10 +17,11 @@ use UserSettingsGUI;
 class Table extends ilTable2GUI
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const USR_DEF_CONTENT = 'usr_def_content';
-    protected array $filter = array();
-    protected array $ignored_cols = array();
+    protected array $filter = [];
+    protected array $ignored_cols = [];
     private ilUserDefaultsPlugin $pl;
     private \ilToolbarGUI $toolbar;
 
@@ -30,8 +30,11 @@ class Table extends ilTable2GUI
      * @throws \ilCtrlException
      * @throws \ilException
      */
-    public function __construct(UserSettingsGUI $parent_obj, string $parent_cmd = UserSettingsGUI::CMD_INDEX, string $template_context = "")
-    {
+    public function __construct(
+        UserSettingsGUI $parent_obj,
+        string $parent_cmd = UserSettingsGUI::CMD_INDEX,
+        string $template_context = ""
+    ) {
         global $DIC;
         $this->ctrl = $DIC->ctrl();
         $this->pl = ilUserDefaultsPlugin::getInstance();
@@ -75,7 +78,6 @@ class Table extends ilTable2GUI
         return new self($parentIliasGui);
     }
 
-
     /**
      * @throws arException
      */
@@ -88,7 +90,7 @@ class Table extends ilTable2GUI
 
         foreach ($this->filter as $field => $value) {
             if ($value) {
-                $xdglRequestList->where(array( $field => $value ));
+                $xdglRequestList->where([$field => $value]);
             }
         }
         $this->setMaxCount($xdglRequestList->count());
@@ -111,7 +113,6 @@ class Table extends ilTable2GUI
         $this->setData($a_data);
     }
 
-
     /**
      * @throws \ilTemplateException
      * @throws \ilCtrlException
@@ -127,7 +128,7 @@ class Table extends ilTable2GUI
         $this->tpl->setVariable('SETTING_ID', $ilUserSetting->getId());
         $this->tpl->parseCurrentBlock();
 
-        foreach ($this->getSelectableColumns() as $k => $v) {
+        foreach (array_keys($this->getSelectableColumns()) as $k) {
             if ($k == 'actions') {
                 $this->ctrl->setParameter($this->parent_obj, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
                 $this->ctrl->setParameter($ilUDFCheckGUI, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
@@ -136,22 +137,46 @@ class Table extends ilTable2GUI
                 $current_selection_list->setListTitle($this->pl->txt('set_actions'));
                 $current_selection_list->setId('set_actions' . $ilUserSetting->getId());
                 $current_selection_list->setUseImages(false);
-                $current_selection_list->addItem($this->pl->txt('set_edit'), 'set_edit', $this->ctrl
-                    ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT));
+                $current_selection_list->addItem(
+                    $this->pl->txt('set_edit'),
+                    'set_edit',
+                    $this->ctrl
+                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT)
+                );
 
-                $current_selection_list->addItem($this->pl->txt('set_udf_checks'), 'set_udf_checks', $this->ctrl
-                    ->getLinkTarget($ilUDFCheckGUI, UDFCheckGUI::CMD_INDEX));
+                $current_selection_list->addItem(
+                    $this->pl->txt('set_udf_checks'),
+                    'set_udf_checks',
+                    $this->ctrl
+                        ->getLinkTarget($ilUDFCheckGUI, UDFCheckGUI::CMD_INDEX)
+                );
                 if ($ilUserSetting->getStatus() == UserSetting::STATUS_ACTIVE) {
-                    $current_selection_list->addItem($this->pl->txt('set_deactivate'), 'set_deactivate', $this->ctrl
-                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DEACTIVATE));
+                    $current_selection_list->addItem(
+                        $this->pl->txt('set_deactivate'),
+                        'set_deactivate',
+                        $this->ctrl
+                            ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DEACTIVATE)
+                    );
                 } else {
-                    $current_selection_list->addItem($this->pl->txt('set_activate'), 'set_activate', $this->ctrl
-                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_ACTIVATE));
+                    $current_selection_list->addItem(
+                        $this->pl->txt('set_activate'),
+                        'set_activate',
+                        $this->ctrl
+                            ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_ACTIVATE)
+                    );
                 }
-                $current_selection_list->addItem($this->pl->txt('set_duplicate'), 'set_duplicate', $this->ctrl
-                    ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DUPLICATE));
-                $current_selection_list->addItem($this->pl->txt('set_delete'), 'set_delete', $this->ctrl
-                    ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE));
+                $current_selection_list->addItem(
+                    $this->pl->txt('set_duplicate'),
+                    'set_duplicate',
+                    $this->ctrl
+                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DUPLICATE)
+                );
+                $current_selection_list->addItem(
+                    $this->pl->txt('set_delete'),
+                    'set_delete',
+                    $this->ctrl
+                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE)
+                );
 
                 $this->tpl->setCurrentBlock('td');
                 $this->tpl->setVariable('VALUE', $current_selection_list->getHTML());
@@ -173,52 +198,33 @@ class Table extends ilTable2GUI
         }
     }
 
-
     protected function setTableHeaders()
     {
     }
-
 
     public function initFilter(): void
     {
         //we don't want a filter here. So we override this method.
     }
 
-
     public function getSelectableColumns(): array
     {
-        $cols['status_image'] = array(
+        $cols['status_image'] = [
             'txt' => $this->pl->txt('set_status'),
             'default' => true,
             'width' => '30px',
-            'sort_field' => 'status',
-        );
-        $cols['title'] = array(
+            'sort_field' => 'status'
+        ];
+        $cols['title'] = [
             'txt' => $this->pl->txt('set_title'),
             'default' => true,
             'width' => 'auto',
-            'sort_field' => 'title',
-        );
-        $cols['on_create'] = array(
-            'txt' => $this->pl->txt('set_on_create'),
-            'default' => true,
-            'width' => 'auto',
-        );
-        $cols['on_update'] = array(
-            'txt' => $this->pl->txt('set_on_update'),
-            'default' => true,
-            'width' => 'auto',
-        );
-        $cols['on_manual'] = array(
-            'txt' => $this->pl->txt('set_on_manual'),
-            'default' => true,
-            'width' => 'auto',
-        );
-        $cols['actions'] = array(
-            'txt' => $this->pl->txt('set_actions'),
-            'default' => true,
-            'width' => '150px',
-        );
+            'sort_field' => 'title'
+        ];
+        $cols['on_create'] = ['txt' => $this->pl->txt('set_on_create'), 'default' => true, 'width' => 'auto'];
+        $cols['on_update'] = ['txt' => $this->pl->txt('set_on_update'), 'default' => true, 'width' => 'auto'];
+        $cols['on_manual'] = ['txt' => $this->pl->txt('set_on_manual'), 'default' => true, 'width' => 'auto'];
+        $cols['actions'] = ['txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px'];
 
         return $cols;
     }
@@ -229,11 +235,7 @@ class Table extends ilTable2GUI
 
         foreach ($this->getSelectableColumns() as $k => $v) {
             if ($this->isColumnSelected($k)) {
-                if (array_key_exists('sort_field', $v) && $v['sort_field']) {
-                    $sort = $v['sort_field'];
-                } else {
-                    $sort = false;
-                }
+                $sort = array_key_exists('sort_field', $v) && $v['sort_field'] ? $v['sort_field'] : false;
                 $this->addColumn($v['txt'], $sort, $v['width']);
             }
         }
@@ -241,9 +243,8 @@ class Table extends ilTable2GUI
 
     public function setExportFormats(array $formats): void
     {
-        parent::setExportFormats(array( self::EXPORT_EXCEL, self::EXPORT_CSV ));
+        parent::setExportFormats([self::EXPORT_EXCEL, self::EXPORT_CSV]);
     }
-
 
     protected function fillRowExcel(ilExcel $a_worksheet, int &$a_row, array $a_set): void
     {
@@ -252,8 +253,8 @@ class Table extends ilTable2GUI
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            if (!in_array($key, $this->getIgnoredCols()) and $this->isColumnSelected($key)) {
-                $a_worksheet->setCell($a_row, $col, strip_tags($value));
+            if (!in_array($key, $this->getIgnoredCols()) && $this->isColumnSelected($key)) {
+                $a_worksheet->setCell($a_row, $col, strip_tags((string) $value));
                 $col++;
             }
         }
@@ -265,16 +266,20 @@ class Table extends ilTable2GUI
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            if (!in_array($key, $this->getIgnoredCols()) and $this->isColumnSelected($key)) {
-                $a_csv->addColumn(strip_tags($value));
+            if (in_array($key, $this->getIgnoredCols())) {
+                continue;
             }
+            if (!$this->isColumnSelected($key)) {
+                continue;
+            }
+            $a_csv->addColumn(strip_tags((string) $value));
         }
         $a_csv->addRow();
     }
 
     public function numericOrdering($sort_field): bool
     {
-        return in_array($sort_field, array());
+        return in_array($sort_field, []);
     }
 
     public function setIgnoredCols(array $ignored_cols): void

@@ -6,11 +6,8 @@ use srag\Plugins\UserDefaults\Domain\Model;
 
 class LocalRole
 {
-    private function __construct(
-        public int $id,
-        public string $title
-    ) {
-
+    private function __construct(public int $id, public string $title)
+    {
     }
 
     public static function fromDomain(Model\LocalRole $localRole): LocalRole

@@ -18,7 +18,6 @@ class UserDefaultsApi
         public Api\PortfolioTemplate\Api $portfolioTemplates,
         public Api\StudyProgramme\Api $studyProgrammes
     ) {
-
     }
 
     public static function new(): UserDefaultsApi

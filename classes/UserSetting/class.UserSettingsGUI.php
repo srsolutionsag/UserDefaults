@@ -1,8 +1,7 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-
-use srag\Plugins\UserDefaults\Adapters\Api;
+use ILIAS\DI\UIServices;
+use ILIAS\DI\RBACServices;
 use srag\Plugins\UserDefaults\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
@@ -39,13 +38,12 @@ class UserSettingsGUI
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $tpl;
-    private \ILIAS\DI\UIServices $ui;
+    private UIServices $ui;
     private ilDBInterface $db;
     private ilTree $repositoryTree;
-    private \ILIAS\DI\RBACServices $rbac;
+    private RBACServices $rbac;
     private ilObjectDataCache $objDataCache;
     private UserDefaultsApi $userDefaultsApi;
-
 
     /**
      * UserSettingsGUI constructor
@@ -60,7 +58,6 @@ class UserSettingsGUI
             exit;
         };
 
-
         $this->ctrl = $DIC->ctrl();
         $this->ui = $DIC->ui();
         $this->tpl = $DIC->ui()->mainTemplate();
@@ -73,7 +70,6 @@ class UserSettingsGUI
 
         $this->userDefaultsApi = UserDefaultsApi::new();
     }
-
 
     public function executeCommand(): void
     {
@@ -135,7 +131,6 @@ class UserSettingsGUI
         $this->userDefaultsApi->assignmentProcesses->renderTable($this);
     }
 
-
     protected function add(): void
     {
         $this->userDefaultsApi->assignmentProcesses->renderForm($this);
@@ -143,7 +138,7 @@ class UserSettingsGUI
 
     protected function create(): void
     {
-        $onSuccess = function () {
+        $onSuccess = function (): void {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -157,7 +152,7 @@ class UserSettingsGUI
 
     protected function update(): void
     {
-        $onSuccess = function () {
+        $onSuccess = function (): void {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -268,7 +263,6 @@ class UserSettingsGUI
         exit;
     }*/
 
-
     /**
      * @throws ilException
      */
@@ -323,14 +317,13 @@ class UserSettingsGUI
         $this->ctrl->redirectByClass(ilRepositoryGUI::class);
     }
 
-
     /**
      * @throws ilCtrlException
      */
     protected function activateMultipleConfirm(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -353,7 +346,7 @@ class UserSettingsGUI
     protected function activateMultiple(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -372,7 +365,7 @@ class UserSettingsGUI
     protected function deactivateMultipleConfirm(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -395,7 +388,7 @@ class UserSettingsGUI
     protected function deactivateMultiple(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -413,7 +406,7 @@ class UserSettingsGUI
     protected function deleteMultipleConfirm(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         }
@@ -434,7 +427,7 @@ class UserSettingsGUI
     protected function deleteMultiple(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };

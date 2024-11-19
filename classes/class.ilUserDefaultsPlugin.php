@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../vendor/autoload.php";
-
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckOld;
@@ -17,6 +15,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class ilUserDefaultsPlugin extends ilEventHookPlugin
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_ID = 'usrdef';
     public const PLUGIN_NAME = 'UserDefaults';
     public const PLUGIN_CLASS_NAME = self::class;
@@ -40,7 +39,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
     /**
      * @var array
      */
-    protected static array $mapping = array(
+    protected static array $mapping = [
         self::CREATED_1 => 'on_create',
         self::CREATED_2 => 'on_create',
         self::UPDATED => 'on_update',
@@ -48,8 +47,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         self::AFTER_LOGIN => 'on_update',
         self::ASSIGN_USER_TO_POSITION => 'on_update',
         self::REMOVE_USER_FROM_POSITION => 'on_update'
-    );
-
+    ];
 
     /**
      * @return ilUserDefaultsPlugin
@@ -69,6 +67,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
 
         return self::$instance;
     }
+
     public function __construct(
         ilDBInterface $db,
         ilComponentRepositoryWrite $component_repository,
@@ -82,33 +81,25 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         return "evnt_evhk_usrdef";
     }
 
-
     public function handleEvent(
         string $a_component,
         string $a_event,
         array $a_parameter
     ): void {
-
         $run = false;
         $user = null;
         switch ($a_component) {
             case self::SERVICES_AUTHENTICATION:
-                switch ($a_event) {
-                    case self::AFTER_LOGIN:
-                        $user_id = ilObjUser::getUserIdByLogin($a_parameter['username']);
-                        $user = new ilObjUser($user_id);
-                        $run = true;
-                        break;
+                if ($a_event === self::AFTER_LOGIN) {
+                    $user_id = ilObjUser::getUserIdByLogin($a_parameter['username']);
+                    $user = new ilObjUser($user_id);
+                    $run = true;
                 }
                 break;
             case self::SERVICES_OBJECT:
-                switch ($a_event) {
-                    case self::UPDATE:
-                        if ($a_parameter['obj_type'] == 'usr') {
-                            $user = new ilObjUser($a_parameter['obj_id']);
-                            $run = true;
-                        }
-                        break;
+                if ($a_event === self::UPDATE && $a_parameter['obj_type'] == 'usr') {
+                    $user = new ilObjUser($a_parameter['obj_id']);
+                    $run = true;
                 }
                 break;
             case self::SERVICES_USER:
@@ -139,19 +130,24 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         if (array_key_exists($a_event, self::$mapping)) {
             $sets = self::$mapping[$a_event];
         }
-
-
         // adding orgunits emits an event and ends up in a loop
-        if ($run === true && $sets && $user instanceof ilObjUser && !str_contains($a_component, "Modules/OrgUnit")) {
-            /**
-             * @var UserSetting $ilUserSetting
-             */
-            foreach (UserSetting::where(array(
-                'status' => UserSetting::STATUS_ACTIVE,
-                $sets => true,
-            ))->get() as $ilUserSetting) {
-                $ilUserSetting->doAssignements($user);
-            }
+        if (!$run) {
+            return;
+        }
+        if (!$sets) {
+            return;
+        }
+        if (!$user instanceof ilObjUser) {
+            return;
+        }
+        if (str_contains($a_component, "Modules/OrgUnit")) {
+            return;
+        }
+        /**
+         * @var UserSetting $ilUserSetting
+         */
+        foreach (UserSetting::where(['status' => UserSetting::STATUS_ACTIVE, $sets => true])->get() as $ilUserSetting) {
+            $ilUserSetting->doAssignements($user);
         }
     }
 
@@ -159,7 +155,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
     {
         return self::PLUGIN_NAME;
     }
-
 
     protected function afterUninstall(): void
     {
@@ -186,6 +181,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         // write would check if user can edit settings
         return ($DIC->rbac()->system()->checkAccess("edit_roleassignment", USER_FOLDER_ID));
     }
+
     /**
      * @inheritDoc
      */

@@ -2,7 +2,6 @@
 
 namespace srag\Plugins\UserDefaults\UDFCheck;
 
-use arField;
 use ilObjUser;
 use ilUserSearchOptions;
 
@@ -24,9 +23,13 @@ class UDFCheckUser extends UDFCheck
         self::$all_definitions_of_category = [];
 
         foreach (ilUserSearchOptions::_getSearchableFieldsInfo(true) as $field) {
-            $usr_field = array();
+            $usr_field = [];
 
-            if (array_key_exists('type', $field) && !in_array($field['type'], array( ilUserSearchOptions::FIELD_TYPE_TEXT,  ilUserSearchOptions::FIELD_TYPE_SELECT,  ilUserSearchOptions::FIELD_TYPE_MULTI ))) {
+            if (array_key_exists('type', $field) && !in_array($field['type'], [
+                    ilUserSearchOptions::FIELD_TYPE_TEXT,
+                    ilUserSearchOptions::FIELD_TYPE_SELECT,
+                    ilUserSearchOptions::FIELD_TYPE_MULTI
+                ])) {
                 continue;
             }
 
@@ -42,7 +45,6 @@ class UDFCheckUser extends UDFCheck
         return self::$all_definitions_of_category;
     }
 
-
     /**
      * @inheritdoc
      */
@@ -52,7 +54,6 @@ class UDFCheckUser extends UDFCheck
             $this->getFieldKey() => trim($this->getUserFieldValue($user, $this->getFieldKey()))
         ];
     }
-
 
     protected function getUserFieldValue(ilObjUser $user, string $field_name): string
     {

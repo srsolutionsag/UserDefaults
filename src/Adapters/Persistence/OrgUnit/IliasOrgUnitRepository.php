@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Persistence\OrgUnit;
 
-use srag\Plugins\UserDefaults\Domain;
+use srag\Plugins\UserDefaults\Domain\Ports\Repository;
+use srag\Plugins\UserDefaults\Domain\Model\Course;
 
-class IliasOrgUnitRepository implements Domain\Ports\Repository
+class IliasOrgUnitRepository implements Repository
 {
-    private function __construct(private \ilDBInterface $db)
+    private function __construct(private readonly \ilDBInterface $db)
     {
-
     }
 
     public static function new(\ilDBInterface $db): self
@@ -17,7 +17,7 @@ class IliasOrgUnitRepository implements Domain\Ports\Repository
     }
 
     /**
-     * @return Domain\Model\Course[]
+     * @return Course[]
      */
     public function findAll(): array
     {

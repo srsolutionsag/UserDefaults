@@ -2,6 +2,7 @@
 
 namespace srag\Plugins\UserDefaults\UserSetting;
 
+use ILIAS\DI\RBACServices;
 use ActiveRecord;
 use DOMXPath;
 use ilCourseConstants;
@@ -11,7 +12,6 @@ use ilExSubmission;
 use ilGroupParticipants;
 use ilObjCourse;
 use ilObject2;
-//use ilObject;
 use ilObjExercise;
 use ilObjGroup;
 use ilObjOrgUnit;
@@ -19,17 +19,16 @@ use ilObjPortfolio;
 use ilObjPortfolioTemplate;
 use ilObjStudyProgramme;
 use ilObjUser;
-use OrgUnit\Positions\ilOrgUnitUserAssignment\ilOrgUnitUserAssignmentDBRepository;
 use ilParticipants;
 use ilPersonalSkill;
 use ilPortfolioAccessHandler;
 use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
-use ilUtil;
 use php4DOMDocument;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
-use ilRbacReview;
+
+//use ilObject;
 
 /**
  * Class ilUserSetting
@@ -42,6 +41,8 @@ use ilRbacReview;
 class UserSetting extends ActiveRecord
 {
     use UserDefaultsTrait;
+
+    public $orgUnitAssignmentRepo;
     public const TABLE_NAME = 'usr_def_sets';
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const STATUS_INACTIVE = 1;
@@ -49,16 +50,15 @@ class UserSetting extends ActiveRecord
     public const P_USER_FIRSTNAME = 'FIRSTNAME';
     public const P_USER_LASTNAME = 'LASTNAME';
     public const P_USER_EMAIL = 'EMAIL';
-    protected static array $placeholders = array(
-        self::P_USER_FIRSTNAME,
-        self::P_USER_LASTNAME,
-        self::P_USER_EMAIL,
-    );
+    protected static array $placeholders = [self::P_USER_FIRSTNAME, self::P_USER_LASTNAME, self::P_USER_EMAIL];
     private ilUserDefaultsPlugin $pl;
-    private \ILIAS\DI\RBACServices $rbac;
+    private RBACServices $rbac;
     private ilObjUser $user;
 
-    public function __construct($primary_key = 0)
+    /**
+     * @param mixed $primary_key
+     */
+    public function __construct(mixed $primary_key = 0)
     {
         global $DIC;
         $this->pl = ilUserDefaultsPlugin::getInstance();
@@ -89,7 +89,6 @@ class UserSetting extends ActiveRecord
         return self::TABLE_NAME;
     }
 
-
     protected function getPlaceholder(string $key): string
     {
         return match ($key) {
@@ -105,9 +104,8 @@ class UserSetting extends ActiveRecord
         $return = ilUserDefaultsPlugin::getInstance()->txt('set_placeholders');
         $return .= ' [';
         $return .= implode('] [', self::$placeholders);
-        $return .= '] ';
 
-        return $return;
+        return $return . '] ';
     }
 
     public function getReplacesPortfolioTitle(): string
@@ -123,14 +121,13 @@ class UserSetting extends ActiveRecord
 
     protected ilObjUser $usr_object;
 
-
     /**
      * @param int   $primary_key
      * @param array $add_constructor_args
      *
      * @return UserSetting
      */
-    public static function find($primary_key, array $add_constructor_args = array()): ?ActiveRecord
+    public static function find($primary_key, array $add_constructor_args = []): ?ActiveRecord
     {
         return parent::find($primary_key, $add_constructor_args);
     }
@@ -148,7 +145,7 @@ class UserSetting extends ActiveRecord
     {
         $this->setOwner($this->user->getId());
         $this->setUpdateDate(time());
-        if (!$this->hasChecks() and $this->getStatus() == self::STATUS_ACTIVE) {
+        if (!$this->hasChecks() && $this->getStatus() == self::STATUS_ACTIVE) {
             global $DIC;
             $tpl = $DIC["tpl"];
             $tpl->setOnScreenMessage('info', $this->pl->txt('msg_activation_failed'), true);
@@ -171,7 +168,7 @@ class UserSetting extends ActiveRecord
     public function doAssignements(ilObjUser $user): void
     {
         $this->setUsrObject($user);
-        if ($this->isValid() === true) {
+        if ($this->isValid()) {
             $this->generatePortfolio();
             $this->assignLocalRoles();
             $this->assignCourses();
@@ -204,7 +201,7 @@ class UserSetting extends ActiveRecord
                 $this->unsubscribeStudyprograms();
             }
 
-            if ($this->getRemovePortfolio()) {
+            if ($this->getRemovePortfolio() !== '' && $this->getRemovePortfolio() !== '0') {
                 $this->removePortfolio();
             }
         }
@@ -223,7 +220,7 @@ class UserSetting extends ActiveRecord
     {
         $global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
-            if (ilObject2::_lookupType((int) $global_role) == 'role') {
+            if (ilObject2::_lookupType((int) $global_role) === 'role') {
                 $this->rbac->admin()->assignUser($global_role, $this->getUsrObject()->getId());
             }
         }
@@ -237,7 +234,7 @@ class UserSetting extends ActiveRecord
 
         $global_roles = $this->getGlobalRoles();
         foreach ($global_roles as $global_role) {
-            if (ilObject2::_lookupType((int) $global_role) == 'role') {
+            if (ilObject2::_lookupType((int) $global_role) === 'role') {
                 $this->rbac->admin()->deassignUser($global_role, $this->getUsrObject()->getId());
             }
         }
@@ -245,7 +242,6 @@ class UserSetting extends ActiveRecord
 
     protected function assignLocalRoles(): void
     {
-
         $local_roles = $this->getAssignedLocalRoles();
         if (count($local_roles) == 0) {
             return;
@@ -281,7 +277,10 @@ class UserSetting extends ActiveRecord
         }
 
         foreach ($courses as $crs_obj_id) {
-            if ($crs_obj_id == "" || ilObject2::_lookupType((int) $crs_obj_id) != "crs") {
+            if ($crs_obj_id == "") {
+                continue;
+            }
+            if (ilObject2::_lookupType((int) $crs_obj_id) !== "crs") {
                 continue;
             }
             $crs = new ilObjCourse($crs_obj_id, false);
@@ -307,7 +306,10 @@ class UserSetting extends ActiveRecord
         }
 
         foreach ($courses as $crs_obj_id) {
-            if ($crs_obj_id === "" || ilObject2::_lookupType((int) $crs_obj_id) !== "crs") {
+            if ($crs_obj_id === "") {
+                continue;
+            }
+            if (ilObject2::_lookupType((int) $crs_obj_id) !== "crs") {
                 continue;
             }
             $part = ilCourseParticipants::_getInstanceByObjId($crs_obj_id);
@@ -315,7 +317,7 @@ class UserSetting extends ActiveRecord
             if (!$part->isMember($usr_id)) {
                 continue;
             }
-            $added = $part->deleteParticipants(array( $usr_id ));
+            $added = $part->deleteParticipants([$usr_id]);
         }
     }
 
@@ -324,7 +326,10 @@ class UserSetting extends ActiveRecord
         $groups = $this->getAssignedGroupes();
 
         foreach ($groups as $grp_obj_id) {
-            if ($grp_obj_id == "" || ilObject2::_lookupType((int) $grp_obj_id) != 'grp') {
+            if ($grp_obj_id == "") {
+                continue;
+            }
+            if (ilObject2::_lookupType((int) $grp_obj_id) !== 'grp') {
                 continue;
             }
             $part = ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
@@ -351,12 +356,15 @@ class UserSetting extends ActiveRecord
             return;
         }
         $groups = $this->getAssignedGroupes();
-        if (count($groups) === 0) {
+        if ($groups === []) {
             return;
         }
 
         foreach ($groups as $id) {
-            if ($id === "" || ilObject2::_lookupType((int) $id) !== "grp") {
+            if ($id === "") {
+                continue;
+            }
+            if (ilObject2::_lookupType((int) $id) !== "grp") {
                 continue;
             }
             $usr_id = $this->getUsrObject()->getId();
@@ -364,7 +372,7 @@ class UserSetting extends ActiveRecord
             $reference = array_shift($references);
             $groupRoles = $this->rbac->review()->getRolesOfRoleFolder($reference);
             foreach ($groupRoles as $grouprole) {
-                if (ilObject2::_lookupTitle($grouprole) == 'il_grp_member_' . $reference) {
+                if (ilObject2::_lookupTitle($grouprole) === 'il_grp_member_' . $reference) {
                     $memberRole = $grouprole;
                     $this->rbac->admin()->deassignUser($memberRole, $usr_id);
                     continue;
@@ -373,13 +381,13 @@ class UserSetting extends ActiveRecord
         }
     }
 
-
     protected function assignGroupFromQueue(): void
     {
         $groups_queue = $this->getAssignedGroupsQueue();
-        $part_objs = array_map(function ($grp_obj_id) {
-            return ilGroupParticipants::_getInstanceByObjId($grp_obj_id);
-        }, $groups_queue);
+        $part_objs = array_map(
+            fn($grp_obj_id): \ilGroupParticipants => ilGroupParticipants::_getInstanceByObjId($grp_obj_id),
+            $groups_queue
+        );
         /** @var ilGroupParticipants $part_obj */
         foreach ($part_objs as $part_obj) {
             if ($part_obj->isMember($this->getUsrObject()->getId())) {
@@ -402,7 +410,7 @@ class UserSetting extends ActiveRecord
                     $min_member_count = $part->getCountMembers();
                 }
             }
-            $group_to_add = $group_to_add ?? end($groups_queue);
+            $group_to_add ??= end($groups_queue);
         } else {
             // take first group which is not full (or last group if every group is full)
             foreach ($groups_queue as $grp_obj_id) {
@@ -428,8 +436,6 @@ class UserSetting extends ActiveRecord
                 } else {
                     self::dic()->favourites()->remove($this->getUsrObject()->getId(), $ref_id);
                 }
-
-
             }
         }
     }
@@ -455,7 +461,7 @@ class UserSetting extends ActiveRecord
         $data = ilObjPortfolio::getPortfoliosOfUser($this->getUsrObject()->getId());
 
         foreach ($data as $p) {
-            if (trim($p['title']) == trim($this->getReplacesPortfolioTitle())) {
+            if (trim((string) $p['title']) === trim($this->getReplacesPortfolioTitle())) {
                 return;
             }
         }
@@ -466,19 +472,14 @@ class UserSetting extends ActiveRecord
         $prtt_id = $this->getPortfolioTemplateId();
         $recipe = null;
         foreach (ilPortfolioTemplatePage::getAllPortfolioPages($prtt_id) as $page) {
-            switch ($page["type"]) {
-                case ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE:
-                    if (!self::dic()->settings()->get('disable_wsp_blogs')) {
-                        $field_id = "blog_" . $page["id"];
-
-                        $recipe[$page["id"]] = array(
-                            "blog",
-                            "create",
-                            $page['title'],
-                        );
-                    }
-                    break;
+            if ($page["type"] !== ilPortfolioTemplatePage::TYPE_BLOG_TEMPLATE) {
+                continue;
             }
+            if (self::dic()->settings()->get('disable_wsp_blogs')) {
+                continue;
+            }
+            $field_id = "blog_" . $page["id"];
+            $recipe[$page["id"]] = ["blog", "create", $page['title']];
         }
 
         $recipe["skills"] = $this->getAllPortfolioSkills();
@@ -502,7 +503,7 @@ class UserSetting extends ActiveRecord
 
         $exc = new ilObjExercise($exc_ref_id);
         $ass = new ilExAssignment($ass_id);
-        if ($ass->getExerciseId() == $exc->getId()
+        if ($ass->getExerciseId() === $exc->getId()
             && $ass->getType() == ilExAssignment::TYPE_PORTFOLIO) {
             // #16205
             $sub = new ilExSubmission($ass, $ilUser->getId());
@@ -514,7 +515,7 @@ class UserSetting extends ActiveRecord
         // Set permissions
         $ilPortfolioAccessHandler = new ilPortfolioAccessHandler();
         foreach ($this->getPortfolioAssignedToGroups() as $grp_obj_id) {
-            if (ilObject2::_lookupType((int) $grp_obj_id) == 'grp') {
+            if (ilObject2::_lookupType((int) $grp_obj_id) === 'grp') {
                 $ilPortfolioAccessHandler->removePermission($target->getId(), $grp_obj_id);
                 $ilPortfolioAccessHandler->addPermission($target->getId(), $grp_obj_id);
             }
@@ -531,7 +532,7 @@ class UserSetting extends ActiveRecord
         $access_handler = new ilPortfolioAccessHandler();
 
         foreach ($data as $p) {
-            if (trim($p['title']) == trim($this->getReplacesPortfolioTitle())) {
+            if (trim((string) $p['title']) === trim($this->getReplacesPortfolioTitle())) {
                 if ($p['id'] != $target) {
                     return;
                 }
@@ -551,7 +552,6 @@ class UserSetting extends ActiveRecord
 
     public function afterObjectLoad(): void
     {
-
     }
 
     protected function addSkills(): void
@@ -564,39 +564,35 @@ class UserSetting extends ActiveRecord
         }
     }
 
-
     protected function getAllPortfolioSkills(): array
     {
         $user = $this->getUsrObject();
         $pskills = array_keys(ilPersonalSkill::getSelectedUserSkills($user->getId()));
-        $skill_ids = array();
+        $skill_ids = [];
         foreach (ilPortfolioTemplatePage::getAllPortfolioPages($this->getPortfolioTemplateId()) as $page) {
-            switch ($page['type']) {
-                case ilPortfolioTemplatePage::TYPE_PAGE:
-                    $source_page = new ilPortfolioTemplatePage($page['id']);
-                    $source_page->buildDom(true);
-                    $dom = $source_page->getDom();
-                    if ($dom instanceof php4DOMDocument) {
-                        $dom = $dom->myDOMDocument;
+            if ($page['type'] === ilPortfolioTemplatePage::TYPE_PAGE) {
+                $source_page = new ilPortfolioTemplatePage($page['id']);
+                $source_page->buildDom(true);
+                $dom = $source_page->getDom();
+                if ($dom instanceof php4DOMDocument) {
+                    $dom = $dom->myDOMDocument;
+                }
+                $xpath = new DOMXPath($dom);
+                $nodes = $xpath->query('//PageContent/Skills');
+                foreach ($nodes as $node) {
+                    $skill_id = $node->getAttribute('Id');
+                    if (!in_array($skill_id, $pskills)) {
+                        $skill_ids[] = $skill_id;
                     }
-                    $xpath = new DOMXPath($dom);
-                    $nodes = $xpath->query('//PageContent/Skills');
-                    foreach ($nodes as $node) {
-                        $skill_id = $node->getAttribute('Id');
-                        if (!in_array($skill_id, $pskills)) {
-                            $skill_ids[] = $skill_id;
-                        }
-                    }
-                    unset($nodes);
-                    unset($xpath);
-                    unset($dom);
-                    break;
+                }
+                unset($nodes);
+                unset($xpath);
+                unset($dom);
             }
         }
 
         return $skill_ids;
     }
-
 
     /**
      * Duplicate this setting and it's dependencies and save everything to the databse.
@@ -614,7 +610,6 @@ class UserSetting extends ActiveRecord
 
         return $copy;
     }
-
 
     /**
      * @var int
@@ -698,7 +693,7 @@ class UserSetting extends ActiveRecord
      * @con_fieldtype  text
      * @con_length     256
      */
-    protected array $assigned_local_roles = array();
+    protected array $assigned_local_roles = [];
     /**
      * @var bool
      *
@@ -714,7 +709,7 @@ class UserSetting extends ActiveRecord
      * @con_fieldtype  text
      * @con_length     256
      */
-    protected array $assigned_courses = array();
+    protected array $assigned_courses = [];
     /**
      * @var array
      *
@@ -722,7 +717,7 @@ class UserSetting extends ActiveRecord
      * @con_fieldtype  text
      * @con_length     256
      */
-    protected array $assigned_groupes = array();
+    protected array $assigned_groupes = [];
     /**
      * @var bool
      *
@@ -786,7 +781,7 @@ class UserSetting extends ActiveRecord
      * @con_fieldtype  text
      * @con_length     256
      */
-    protected array $portfolio_assigned_to_groups = array();
+    protected array $portfolio_assigned_to_groups = [];
     /**
      * @var string
      *
@@ -818,7 +813,7 @@ class UserSetting extends ActiveRecord
      * @con_fieldtype  text
      * @con_length     256
      */
-    protected array $assigned_orgus = array();
+    protected array $assigned_orgus = [];
     /**
      * @var int
      *
@@ -842,7 +837,7 @@ class UserSetting extends ActiveRecord
      * @con_fieldtype  text
      * @con_length     256
      */
-    protected array $assigned_studyprograms = array();
+    protected array $assigned_studyprograms = [];
     /**
      * @var bool
      *
@@ -854,7 +849,7 @@ class UserSetting extends ActiveRecord
     /**
      * @var UDFCheck[]
      */
-    protected array $udf_check_objects = array();
+    protected array $udf_check_objects = [];
     /**
      * @var bool
      *
@@ -880,23 +875,26 @@ class UserSetting extends ActiveRecord
      */
     protected bool $on_manual = true;
 
-
-    public function sleep($field_name): string|bool|null
+    /**
+     * @return false|string|null
+     */
+    public function sleep($field_name): string|false|null
     {
         return match ($field_name) {
-            'global_roles', 'assigned_local_roles', 'assigned_courses', 'assigned_groupes', 'portfolio_assigned_to_groups', 'assigned_groups_queue', 'assigned_orgus', 'assigned_studyprograms' => json_encode($this->{$field_name}),
+            'global_roles', 'assigned_local_roles', 'assigned_courses', 'assigned_groupes', 'portfolio_assigned_to_groups', 'assigned_groups_queue', 'assigned_orgus', 'assigned_studyprograms' => json_encode(
+                $this->{$field_name}
+            ),
             'create_date', 'update_date' => date("Y-m-d H:i:s", $this->{$field_name}),
             default => null,
         };
-
     }
-
 
     /**
      * @param $field_name
      * @param $field_value
+     * @return mixed[]|false|int|null
      */
-    public function wakeUp($field_name, $field_value): array|bool|int|null
+    public function wakeUp($field_name, $field_value): array|int|false|null
     {
         switch ($field_name) {
             case 'global_roles':
@@ -907,13 +905,13 @@ class UserSetting extends ActiveRecord
             case 'portfolio_assigned_to_groups':
             case 'assigned_orgus':
             case 'assigned_studyprograms':
-                $json_decode = json_decode($field_value, true);
+                $json_decode = json_decode((string) $field_value, true);
 
-                return is_array($json_decode) ? $json_decode : array();
+                return is_array($json_decode) ? $json_decode : [];
                 break;
             case 'create_date':
             case 'update_date':
-                return strtotime($field_value);
+                return strtotime((string) $field_value);
                 break;
         }
 
@@ -925,7 +923,6 @@ class UserSetting extends ActiveRecord
         return (bool) $this->groups_queue_desktop ?? false;
     }
 
-
     public function setGroupsQueueDesktop(bool $groups_queue_desktop): void
     {
         $this->groups_queue_desktop = $groups_queue_desktop;
@@ -935,7 +932,6 @@ class UserSetting extends ActiveRecord
     {
         return $this->groups_queue_parallel ?? false;
     }
-
 
     public function setGroupsQueueParallel(bool $groups_queue_parallel): void
     {
@@ -962,7 +958,6 @@ class UserSetting extends ActiveRecord
         return $this->id;
     }
 
-
     public function setStatus(int $status): void
     {
         $this->status = $status;
@@ -973,7 +968,6 @@ class UserSetting extends ActiveRecord
         return $this->status;
     }
 
-
     public function setTitle(string $title): void
     {
         $this->title = $title;
@@ -983,7 +977,6 @@ class UserSetting extends ActiveRecord
     {
         return $this->title;
     }
-
 
     public function setAssignedLocalRoles(array $assigned_local_roles): void
     {
@@ -1005,7 +998,7 @@ class UserSetting extends ActiveRecord
         return (bool) $this->unsign_local_roles;
     }
 
-    public function setAssignedCourses($assigned_courses): void
+    public function setAssignedCourses(array $assigned_courses): void
     {
         $this->assigned_courses = $assigned_courses;
     }
@@ -1014,7 +1007,6 @@ class UserSetting extends ActiveRecord
     {
         return $this->assigned_courses;
     }
-
 
     public function setAssignedGroupes(array $assigned_groupes): void
     {
@@ -1117,7 +1109,6 @@ class UserSetting extends ActiveRecord
         $this->portfolio_template_id = $portfolio_template_id;
     }
 
-
     public function getPortfolioTemplateId(): ?int
     {
         return $this->portfolio_template_id;
@@ -1207,10 +1198,9 @@ class UserSetting extends ActiveRecord
     {
         if ($this->assigned_orgu_position > 0) {
             return $this->assigned_orgu_position;
-        } else {
-            // fallback to core position employee
-            return 1;
         }
+        // fallback to core position employee
+        return 1;
     }
 
     public function setAssignedOrguPosition(int $id): void
@@ -1253,7 +1243,6 @@ class UserSetting extends ActiveRecord
         return (bool) $this->on_create;
     }
 
-
     public function setOnCreate(bool $on_create): void
     {
         $this->on_create = $on_create;
@@ -1281,11 +1270,11 @@ class UserSetting extends ActiveRecord
 
     protected function assignOrgunits(): bool
     {
-        if (!count($this->getAssignedOrgus())) {
+        if ($this->getAssignedOrgus() === []) {
             return false;
         }
         foreach ($this->getAssignedOrgus() as $orgu_obj_id) {
-            if (ilObject2::_lookupType((int) $orgu_obj_id) != 'orgu') {
+            if (ilObject2::_lookupType((int) $orgu_obj_id) !== 'orgu') {
                 continue;
             }
 
@@ -1306,13 +1295,12 @@ class UserSetting extends ActiveRecord
 
     protected function unsubscribeOrgunits(): bool
     {
-        if (!count($this->getAssignedOrgus())) {
+        if ($this->getAssignedOrgus() === []) {
             return false;
         }
 
-
         foreach ($this->getAssignedOrgus() as $orgu_obj_id) {
-            if (ilObject2::_lookupType((int) $orgu_obj_id) != 'orgu') {
+            if (ilObject2::_lookupType((int) $orgu_obj_id) !== 'orgu') {
                 continue;
             }
 
@@ -1328,10 +1316,13 @@ class UserSetting extends ActiveRecord
             $orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
 
             if (!is_null($this->getAssignedOrguPosition())) {
-                $ua = $this->orgUnitAssignmentRepo->get($usr_id, (int) $this->getAssignedOrguPosition(), $orgUnit->getRefId());
+                $ua = $this->orgUnitAssignmentRepo->get(
+                    $usr_id,
+                    (int) $this->getAssignedOrguPosition(),
+                    $orgUnit->getRefId()
+                );
                 $this->orgUnitAssignmentRepo->delete($ua);
             }
-
         }
 
         return true;
@@ -1339,11 +1330,11 @@ class UserSetting extends ActiveRecord
 
     protected function assignStudyprograms(): bool
     {
-        if (!count($this->getAssignedStudyprograms())) {
+        if ($this->getAssignedStudyprograms() === []) {
             return false;
         }
         foreach ($this->getAssignedStudyprograms() as $studyProgramObjId) {
-            if (ilObject2::_lookupType((int) $studyProgramObjId) != 'prg') {
+            if (ilObject2::_lookupType((int) $studyProgramObjId) !== 'prg') {
                 continue;
             }
 
@@ -1356,10 +1347,13 @@ class UserSetting extends ActiveRecord
                 continue;
             }
             $studyProgram = new ilObjStudyProgramme($prg_ref_id, true);
-
-            if ($studyProgram->isActive() && !$studyProgram->hasAssignmentOf($usr_id)) {
-                $studyProgram->assignUser($usr_id, 6);
+            if (!$studyProgram->isActive()) {
+                continue;
             }
+            if ($studyProgram->hasAssignmentOf($usr_id)) {
+                continue;
+            }
+            $studyProgram->assignUser($usr_id, 6);
         }
 
         return true;
@@ -1367,12 +1361,11 @@ class UserSetting extends ActiveRecord
 
     protected function unsubscribeStudyprograms(): bool
     {
-
-        if (!count($this->getAssignedStudyprograms())) {
+        if ($this->getAssignedStudyprograms() === []) {
             return false;
         }
         foreach ($this->getAssignedStudyprograms() as $studyProgramObjId) {
-            if (ilObject2::_lookupType((int) $studyProgramObjId) != 'prg') {
+            if (ilObject2::_lookupType((int) $studyProgramObjId) !== 'prg') {
                 continue;
             }
 
@@ -1400,7 +1393,7 @@ class UserSetting extends ActiveRecord
         return true;
     }
 
-    protected function copyDependencies($copy): array
+    protected function copyDependencies(\srag\Plugins\UserDefaults\UserSetting\UserSetting $copy): array
     {
         $original_udf_checks = $this->getUdfCheckObjects();
         /** @var UDFCheck[] $new_udf_checks */

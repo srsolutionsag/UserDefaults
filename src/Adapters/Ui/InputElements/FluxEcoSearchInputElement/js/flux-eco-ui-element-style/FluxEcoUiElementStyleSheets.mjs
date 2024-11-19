@@ -30,7 +30,7 @@ export default class FluxEcoUiElementStyleSheets {
      * @return {FluxEcoUIButtonStyleSheets}
      */
     get buttonStyleSheets() {
-        if(this.#state.fluxEcoUiButtonStyle === null) {
+        if (this.#state.fluxEcoUiButtonStyle === null) {
             this.#applyStateChanged({valueName: "fluxEcoUiButtonStyle", value: FluxEcoUIButtonStyleSheets.create()});
         }
         return this.#state.fluxEcoUiButtonStyle;
@@ -41,7 +41,7 @@ export default class FluxEcoUiElementStyleSheets {
      * @return {FluxEcoUIGridStyleSheets}
      */
     get gridStyleSheets() {
-        if(this.#state.fluxEcoUiGridStyleSheets === null) {
+        if (this.#state.fluxEcoUiGridStyleSheets === null) {
             this.#applyStateChanged({valueName: "fluxEcoUiGridStyleSheets", value: FluxEcoUIGridStyleSheets.create()});
         }
         return this.#state.fluxEcoUiGridStyleSheets;
@@ -51,8 +51,11 @@ export default class FluxEcoUiElementStyleSheets {
      * @return {FluxEcoUIInputStyleSheets}
      */
     get inputStyleSheets() {
-        if(this.#state.fluxEcoUiGridStyleSheets === null) {
-            this.#applyStateChanged({valueName: "fluxEcoUiInputStyleSheets", value: FluxEcoUIInputStyleSheets.create()});
+        if (this.#state.fluxEcoUiGridStyleSheets === null) {
+            this.#applyStateChanged({
+                valueName: "fluxEcoUiInputStyleSheets",
+                value: FluxEcoUIInputStyleSheets.create()
+            });
         }
         return this.#state.fluxEcoUiInputStyleSheets;
     }

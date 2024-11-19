@@ -1,7 +1,9 @@
 # ToDo
 
 ## Refactorings
+
 ### Target Folder Structure
+
 ```
 classes/
     class.ilUserDefaultsConfigGUI.php
@@ -35,6 +37,7 @@ src/UserSearch
 
 
 ```
+
 ### withPHP 8.1
 
 implement readonly properties

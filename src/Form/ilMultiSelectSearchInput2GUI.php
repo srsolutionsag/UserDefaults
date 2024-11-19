@@ -2,6 +2,7 @@
 
 namespace srag\Plugins\UserDefaults\Form;
 
+use ILIAS\DI\UIServices;
 use ilLegacyFormElementsUtil;
 use ilMultiSelectInputGUI;
 use ilTemplate;
@@ -14,6 +15,7 @@ use stdClass;
 class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     protected int $width = 300;
     protected int $height = 10;
@@ -23,16 +25,19 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
     protected string $link_to_object;
     protected ilTemplate $input_template;
     protected ilTemplate $tpl;
-    protected mixed $multiple;
+    /**
+     * @var mixed
+     */
+    protected bool $multiple;
     protected ilUserDefaultsPlugin $pl;
-    private \ILIAS\DI\UIServices $ui;
+    private UIServices $ui;
     private \ilObjUser $user;
 
     public function __construct(string $title, string $post_var, bool $multiple = true)
     {
         global $DIC;
         if (!str_ends_with($post_var, '[]')) {
-            $post_var = $post_var . ($multiple === true ? '[]' : '');
+            $post_var .= $multiple ? '[]' : '';
         }
         parent::__construct($title, $post_var);
         $this->pl = ilUserDefaultsPlugin::getInstance();
@@ -41,25 +46,24 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         $this->multiple = $multiple;
         $template = $this->ui->mainTemplate();
 
-
         $template->addJavaScript($this->pl->getDirectory() . '/templates/default/multiple_select.js');
         $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2.min.js');
-        $template->addJavaScript($this->pl->getDirectory() . '/lib/select2/select2_locale_' . $this->user
-                ->getCurrentLanguage() . '.js');
+        $template->addJavaScript(
+            $this->pl->getDirectory() . '/lib/select2/select2_locale_' . $this->user
+                ->getCurrentLanguage() . '.js'
+        );
         $template->addCss($this->pl->getDirectory() . '/lib/select2/select2.css');
-
 
         $this->setWidth(300);
     }
 
-
     public function checkInput(): bool
     {
-        if ($this->getRequired()) {
-            if (($this->multiple && count($_POST[$this->getPostVar()]) == 0) || (!$this->multiple && $_POST[$this->getPostVar()] == '')) {
-                $this->setAlert($this->pl->txt('msg_input_is_required'));
-                return false;
-            }
+        if ($this->getRequired() && (($this->multiple && count(
+            $_POST[$this->getPostVar()]
+        ) == 0) || (!$this->multiple && $_POST[$this->getPostVar()] == ''))) {
+            $this->setAlert($this->pl->txt('msg_input_is_required'));
+            return false;
         }
         return true;
     }
@@ -69,16 +73,16 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         $val = $this->value;
         if (is_array($val) || !$this->multiple) {
             return $val;
-        } elseif (!$val) {
-            return array();
-        } else {
-            return explode(',', (string) $val);
         }
+        if ($val === []) {
+            return [];
+        }
+        return explode(',', (string) $val);
     }
 
     public function getSubItems(): array
     {
-        return array();
+        return [];
     }
 
     public function getContainerType(): string
@@ -124,7 +128,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
             'SrMultipleSelect.init("' . $config->id . '", ' . json_encode($config) . ');'
         );
 
-        if ($options) {
+        if ($options !== []) {
             foreach ($options as $option_value => $option_text) {
                 $this->tpl->setCurrentBlock('item');
                 if ($this->getDisabled()) {
@@ -143,10 +147,9 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         return $this->tpl->get();
     }
 
-
     protected function getValueAsJson(): string
     {
-        return json_encode(array());
+        return json_encode([]);
     }
 
     public function getLinkToObject(): string
@@ -154,12 +157,10 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         return $this->link_to_object;
     }
 
-
     public function setLinkToObject(string $link_to_object): void
     {
         $this->link_to_object = $link_to_object;
     }
-
 
     /**
      * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
@@ -169,12 +170,10 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         $this->height = $a_height;
     }
 
-
     public function getHeight(): int
     {
         return $this->height;
     }
-
 
     /**
      * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
@@ -189,30 +188,25 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         return $this->width;
     }
 
-
     public function setCssClass(string $css_class): void
     {
         $this->css_class = $css_class;
     }
-
 
     public function getCssClass(): string
     {
         return $this->css_class;
     }
 
-
     public function setMinimumInputLength(int $minimum_input_length): void
     {
         $this->minimum_input_length = $minimum_input_length;
     }
 
-
     public function getMinimumInputLength(): int
     {
         return $this->minimum_input_length;
     }
-
 
     /**
      * @param string $ajax_link setting the ajax link will lead to ignoration of the 'setOptions' function as the link given will be used to get the
@@ -232,7 +226,6 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         $this->input_template = $input_template;
     }
 
-
     /**
      * @return ilTemplate
      */
@@ -240,7 +233,6 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
     {
         return $this->pl->getTemplate('tpl.multiple_select.html');
     }
-
 
     /**
      * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do
@@ -251,12 +243,10 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
     protected function searchPostVar(): string
     {
         if (str_ends_with($this->getPostVar(), '[]')) {
-            return substr($this->getPostVar(), 0, - 2);
-        } else {
-            return $this->getPostVar();
+            return substr($this->getPostVar(), 0, -2);
         }
+        return $this->getPostVar();
     }
-
 
     public function setValueByArray(array $a_values): void
     {
@@ -264,23 +254,23 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
         if (is_array($val)) {
             $val;
         } elseif (!$val) {
-            $val = array();
+            $val = [];
         } else {
-            $val = explode(',', $val);
+            $val = explode(',', (string) $val);
         }
         $this->setValue($val);
     }
 
-
-    protected function escapePostVar($postVar): array|string
+    /**
+     * @return mixed[]|string
+     */
+    protected function escapePostVar($postVar): string
     {
         $postVar = $this->stripLastStringOccurrence($postVar, "[]");
         $postVar = str_replace("[", '\\\\[', $postVar);
-        $postVar = str_replace("]", '\\\\]', $postVar);
 
-        return $postVar;
+        return str_replace("]", '\\\\]', $postVar);
     }
-
 
     /**
      * @param string $text
@@ -292,7 +282,7 @@ class ilMultiSelectSearchInput2GUI extends ilMultiSelectInputGUI
     {
         $pos = strrpos($text, $string);
         if ($pos !== false) {
-            $text = substr_replace($text, "", $pos, strlen($string));
+            return substr_replace($text, "", $pos, strlen($string));
         }
 
         return $text;

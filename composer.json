@@ -1,12 +1,12 @@
 {
-    "name": "dhbw/user-defaults",
-    "autoload": {
-        "psr-4": {
-            "srag\\Plugins\\UserDefaults\\": "src/"
-        },
-        "classmap": [
-            "classes"
-        ]
+  "name": "dhbw/user-defaults",
+  "autoload": {
+    "psr-4": {
+      "srag\\Plugins\\UserDefaults\\": "src/"
     },
-    "require": {}
+    "classmap": [
+      "classes"
+    ]
+  },
+  "require": {}
 }

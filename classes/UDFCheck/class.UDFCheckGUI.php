@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-
+use ILIAS\DI\UIServices;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckFormGUI;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckTableGUI;
@@ -18,6 +17,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class UDFCheckGUI
 {
     use UserDefaultsTrait;
+
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const CMD_INDEX = 'index';
     public const CMD_CANCEL = 'cancel';
@@ -33,12 +33,13 @@ class UDFCheckGUI
     public const IDENTIFIER = 'check_id';
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
-    private \ILIAS\DI\UIServices $ui;
+    private UIServices $ui;
 
     /**
+     * @param \UserSettingsGUI|\UDFCheckGUI $parent_gui
      * @throws ilCtrlException
      */
-    public function __construct(UserSettingsGUI|UDFCheckGUI $parent_gui)
+    public function __construct($parent_gui)
     {
         global $DIC;
         //check Access
@@ -59,20 +60,19 @@ class UDFCheckGUI
     public function executeCommand(): bool
     {
         $cmd = $this->ctrl->getCmd(self::CMD_INDEX);
-        switch ($cmd) {
-            case self::CMD_INDEX:
-            case self::CMD_CANCEL:
-            case self::CMD_CREATE:
-            case self::CMD_UPDATE:
-            case self::CMD_ADD:
-            case self::CMD_EDIT:
-            case self::CMD_ACTIVATE:
-            case self::CMD_DEACTIVATE:
-            case self::CMD_CONFIRM_DELETE:
-            case self::CMD_DELETE:
-                $this->{$cmd}();
-                break;
-        }
+        match ($cmd) {
+            self::CMD_INDEX,
+            self::CMD_CANCEL,
+            self::CMD_CREATE,
+            self::CMD_UPDATE,
+            self::CMD_ADD,
+            self::CMD_EDIT,
+            self::CMD_ACTIVATE,
+            self::CMD_DEACTIVATE,
+            self::CMD_CONFIRM_DELETE,
+            self::CMD_DELETE => $this->{$cmd}(),
+            default => true,
+        };
         return true;
     }
 
@@ -93,11 +93,15 @@ class UDFCheckGUI
     {
         $ilUDFCheckFormGUI = new UDFCheckFormGUI($this);
         $ilUDFCheckFormGUI->setValuesByPost();
-        if ($id = $ilUDFCheckFormGUI->saveObject()) {
+        if (($id = $ilUDFCheckFormGUI->saveObject()) !== 0) {
             global $DIC;
             $tpl = $DIC["tpl"];
             $tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
-            $this->ctrl->setParameter($this, self::IDENTIFIER_CATEGORY, $ilUDFCheckFormGUI->getObject()->getFieldCategory());
+            $this->ctrl->setParameter(
+                $this,
+                self::IDENTIFIER_CATEGORY,
+                $ilUDFCheckFormGUI->getObject()->getFieldCategory()
+            );
             $this->ctrl->setParameter($this, self::IDENTIFIER, $id);
             $this->ctrl->redirect($this, self::CMD_EDIT);
         }
@@ -116,7 +120,7 @@ class UDFCheckGUI
     {
         $ilUDFCheckFormGUI = new UDFCheckFormGUI($this, $this->getObject());
         $ilUDFCheckFormGUI->setValuesByPost();
-        if ($ilUDFCheckFormGUI->saveObject()) {
+        if ($ilUDFCheckFormGUI->saveObject() !== 0) {
             global $DIC;
             $tpl = $DIC["tpl"];
             $tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
@@ -140,7 +144,6 @@ class UDFCheckGUI
         $this->ui->mainTemplate()->setContent($conf->getHTML());
     }
 
-
     /**
      * @throws ilCtrlException
      */
@@ -150,7 +153,6 @@ class UDFCheckGUI
         $ilUDFCheck->delete();
         $this->cancel();
     }
-
 
     /**
      * @throws ilCtrlException
@@ -164,6 +166,9 @@ class UDFCheckGUI
 
     protected function getObject(): ?UDFCheck
     {
-        return UDFCheck::getCheckById((int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY), (int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER));
+        return UDFCheck::getCheckById(
+            (int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY),
+            (int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER)
+        );
     }
 }

@@ -10,6 +10,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class UDFCheckOld extends ActiveRecord
 {
     use UserDefaultsTrait;
+
     /**
      * @var string
      *
@@ -23,7 +24,6 @@ class UDFCheckOld extends ActiveRecord
      */
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 
-
     /**
      * @return string
      *
@@ -34,7 +34,6 @@ class UDFCheckOld extends ActiveRecord
         return static::TABLE_NAME;
     }
 
-
     /**
      * @return string
      *
@@ -44,7 +43,6 @@ class UDFCheckOld extends ActiveRecord
     {
         return static::TABLE_NAME;
     }
-
 
     /**
      * @var int
@@ -79,7 +77,7 @@ class UDFCheckOld extends ActiveRecord
      * @deprecated
      *
      */
-    protected string|int $field_key = 1;
+    protected $field_key = 1;
     /**
      * @var int
      *
@@ -162,7 +160,6 @@ class UDFCheckOld extends ActiveRecord
      */
     protected int $update_date;
 
-
     /**
      * @deprecated
      */
@@ -172,7 +169,6 @@ class UDFCheckOld extends ActiveRecord
         $this->setUpdateDate(time());
         parent::update();
     }
-
 
     /**
      * @deprecated
@@ -185,17 +181,15 @@ class UDFCheckOld extends ActiveRecord
         parent::create();
     }
 
-
     /**
      * @param string $check_value
      *
      * @deprecated
      */
-    public function setCheckValue($check_value): void
+    public function setCheckValue(string $check_value): void
     {
         $this->check_value = $check_value;
     }
-
 
     /**
      * @return string
@@ -207,7 +201,6 @@ class UDFCheckOld extends ActiveRecord
         return $this->check_value;
     }
 
-
     /**
      * @param string $field_key
      *
@@ -218,17 +211,15 @@ class UDFCheckOld extends ActiveRecord
         $this->field_key = $field_key;
     }
 
-
     /**
      * @return string
      *
      * @deprecated
      */
-    public function getFieldKey(): int|string
+    public function getFieldKey()
     {
         return $this->field_key;
     }
-
 
     /**
      * @return int
@@ -240,28 +231,25 @@ class UDFCheckOld extends ActiveRecord
         return $this->field_category;
     }
 
-
     /**
      * @param int $field_category
      *
      * @deprecated
      */
-    public function setFieldCategory($field_category): void
+    public function setFieldCategory(int $field_category): void
     {
         $this->field_category = $field_category;
     }
-
 
     /**
      * @param int $operator
      *
      * @deprecated
      */
-    public function setOperator($operator): void
+    public function setOperator(int $operator): void
     {
         $this->operator = $operator;
     }
-
 
     /**
      * @return int
@@ -273,17 +261,15 @@ class UDFCheckOld extends ActiveRecord
         return $this->operator;
     }
 
-
     /**
      * @param int $create_date
      *
      * @deprecated
      */
-    public function setCreateDate($create_date): void
+    public function setCreateDate(int $create_date): void
     {
         $this->create_date = $create_date;
     }
-
 
     /**
      * @return int
@@ -295,7 +281,6 @@ class UDFCheckOld extends ActiveRecord
         return $this->create_date;
     }
 
-
     /**
      * @param int $id
      *
@@ -305,7 +290,6 @@ class UDFCheckOld extends ActiveRecord
     {
         $this->id = $id;
     }
-
 
     /**
      * @return int
@@ -317,7 +301,6 @@ class UDFCheckOld extends ActiveRecord
         return $this->id;
     }
 
-
     /**
      * @param int $owner
      *
@@ -327,7 +310,6 @@ class UDFCheckOld extends ActiveRecord
     {
         $this->owner = $owner;
     }
-
 
     /**
      * @return int
@@ -339,7 +321,6 @@ class UDFCheckOld extends ActiveRecord
         return $this->owner;
     }
 
-
     /**
      * @param int $update_date
      *
@@ -349,7 +330,6 @@ class UDFCheckOld extends ActiveRecord
     {
         $this->update_date = $update_date;
     }
-
 
     /**
      * @return int
@@ -361,7 +341,6 @@ class UDFCheckOld extends ActiveRecord
         return $this->update_date;
     }
 
-
     /**
      * @param int $status
      *
@@ -371,7 +350,6 @@ class UDFCheckOld extends ActiveRecord
     {
         $this->status = $status;
     }
-
 
     /**
      * @return int
@@ -383,7 +361,6 @@ class UDFCheckOld extends ActiveRecord
         return $this->status;
     }
 
-
     /**
      * @param int $parent_id
      *
@@ -393,7 +370,6 @@ class UDFCheckOld extends ActiveRecord
     {
         $this->parent_id = $parent_id;
     }
-
 
     /**
      * @return int
@@ -405,7 +381,6 @@ class UDFCheckOld extends ActiveRecord
         return $this->parent_id;
     }
 
-
     /**
      * @return boolean
      *
@@ -415,7 +390,6 @@ class UDFCheckOld extends ActiveRecord
     {
         return $this->negated;
     }
-
 
     /**
      * @param boolean $negated
@@ -427,7 +401,6 @@ class UDFCheckOld extends ActiveRecord
         $this->negated = $negated;
     }
 
-
     /**
      * @param $field_name
      *
@@ -435,36 +408,27 @@ class UDFCheckOld extends ActiveRecord
      *
      * @deprecated
      */
-    public function sleep($field_name)
+    public function sleep($field_name): ?string
     {
-        switch ($field_name) {
-            case 'create_date':
-            case 'update_date':
-                return date(UserDefaultsConfig::SQL_DATE_FORMAT, $this->{$field_name});
-                break;
-        }
-
-        return null;
+        return match ($field_name) {
+            'create_date', 'update_date' => date(UserDefaultsConfig::SQL_DATE_FORMAT, $this->{$field_name}),
+            default => null,
+        };
     }
-
 
     /**
      * @param $field_name
      * @param $field_value
      *
-     * @return int|bool|null
+     * @return int|false|null
      *
      * @deprecated
      */
-    public function wakeUp($field_name, $field_value): int|bool|null
+    public function wakeUp($field_name, $field_value): int|false|null
     {
-        switch ($field_name) {
-            case 'create_date':
-            case 'update_date':
-                return strtotime($field_value);
-                break;
-        }
-
-        return null;
+        return match ($field_name) {
+            'create_date', 'update_date' => strtotime((string) $field_value),
+            default => null,
+        };
     }
 }

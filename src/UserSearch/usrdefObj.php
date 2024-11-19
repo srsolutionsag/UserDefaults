@@ -13,6 +13,7 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class usrdefObj extends ActiveRecord
 {
     use UserDefaultsTrait;
+
     /**
      * @var string
      *
@@ -26,7 +27,6 @@ class usrdefObj extends ActiveRecord
      */
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 
-
     /**
      * @deprecated
      */
@@ -35,7 +35,6 @@ class usrdefObj extends ActiveRecord
         return self::TABLE_NAME;
     }
 
-
     /**
      * @deprecated
      */
@@ -43,7 +42,6 @@ class usrdefObj extends ActiveRecord
     {
         return self::TABLE_NAME;
     }
-
 
     /**
      * @con_has_field  true
@@ -120,7 +118,6 @@ class usrdefObj extends ActiveRecord
      */
     protected $import_id;
 
-
     /**
      * @deprecated
      */
@@ -128,7 +125,6 @@ class usrdefObj extends ActiveRecord
     {
         return $this->obj_id;
     }
-
 
     /**
      * @deprecated
@@ -138,94 +134,85 @@ class usrdefObj extends ActiveRecord
         $this->obj_id = $obj_id;
     }
 
-
     /**
      * @return mixed
      *
      * @deprecated
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
-
 
     /**
      * @param mixed $type
      *
      * @deprecated
      */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
-
 
     /**
      * @return mixed
      *
      * @deprecated
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
-
 
     /**
      * @param mixed $title
      *
      * @deprecated
      */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
-
 
     /**
      * @return mixed
      *
      * @deprecated
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
-
 
     /**
      * @param mixed $description
      *
      * @deprecated
      */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
-
 
     /**
      * @return mixed
      *
      * @deprecated
      */
-    public function getOwner()
+    public function getOwner(): int
     {
         return $this->owner;
     }
-
 
     /**
      * @param mixed $owner
      *
      * @deprecated
      */
-    public function setOwner($owner)
+    public function setOwner(int $owner): void
     {
         $this->owner = $owner;
     }
-
 
     /**
      * @return mixed
@@ -237,17 +224,13 @@ class usrdefObj extends ActiveRecord
         return $this->create_date;
     }
 
-
     /**
-     * @param mixed $create_date
-     *
      * @deprecated
      */
-    public function setCreateDate($create_date)
+    public function setCreateDate(mixed $create_date): void
     {
         $this->create_date = $create_date;
     }
-
 
     /**
      * @return mixed
@@ -259,17 +242,13 @@ class usrdefObj extends ActiveRecord
         return $this->last_update;
     }
 
-
     /**
-     * @param mixed $last_update
-     *
      * @deprecated
      */
-    public function setLastUpdate($last_update)
+    public function setLastUpdate(mixed $last_update): void
     {
         $this->last_update = $last_update;
     }
-
 
     /**
      * @return mixed
@@ -281,13 +260,10 @@ class usrdefObj extends ActiveRecord
         return $this->import_id;
     }
 
-
     /**
-     * @param mixed $import_id
-     *
      * @deprecated
      */
-    public function setImportId($import_id)
+    public function setImportId(mixed $import_id): void
     {
         $this->import_id = $import_id;
     }

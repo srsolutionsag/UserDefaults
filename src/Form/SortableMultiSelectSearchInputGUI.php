@@ -17,6 +17,11 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
 {
     use UserDefaultsTrait;
+
+    /**
+     * @var \ilUserDefaultsPlugin
+     */
+    public $pl;
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 
     public function __construct(
@@ -27,7 +32,6 @@ class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
         parent::__construct($a_title, $a_postvar);
         $this->pl = ilUserDefaultsPlugin::getInstance();
     }
-
 
     /**
      * Insert property html
@@ -45,7 +49,7 @@ class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
 
         $output .= $this->render(0, true);
 
-        if ($this->getMulti() && is_array($this->line_values) && count($this->line_values) > 0) {
+        if ($this->getMulti() && is_array($this->line_values) && $this->line_values !== []) {
             $counter = 0;
             foreach ($this->line_values as $i => $data) {
                 $object = $this;
@@ -62,7 +66,13 @@ class SortableMultiSelectSearchInputGUI extends ilDclGenericMultiInputGUI
             $tpl->addJavascript($this->pl->getDirectory() . '/templates/default/generic_multi_line_input.js');
             $output .= '<script type="text/javascript">$("#' . $this->getFieldId() . '").multi_line_input('
                 . json_encode($this->input_options) . ', '
-                . json_encode(array('limit' => $this->limit, 'sortable' => $this->multi_sortable, 'locale' => $DIC->language()->getLangKey()))
+                . json_encode(
+                    [
+                        'limit' => $this->limit,
+                        'sortable' => $this->multi_sortable,
+                        'locale' => $DIC->language()->getLangKey()
+                    ]
+                )
                 . ')</script>';
         }
 

@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\LocalRole;
 
+use srag\Plugins\UserDefaults\Adapters\Api\LocalRole\Responses\LocalRole;
 use srag\Plugins\UserDefaults\Domain\Ports\LocalRoleService;
 
 class Facade
 {
-    private function __construct(private LocalRoleService $localRoleService)
+    private function __construct(private readonly LocalRoleService $localRoleService)
     {
-
     }
 
     public static function new(LocalRoleService $localRoleService): Facade
@@ -25,7 +25,7 @@ class Facade
         $courseResponses = [];
 
         foreach ($localRoles as $localRole) {
-            $courseResponses[] = Responses\LocalRole::fromDomain($localRole);
+            $courseResponses[] = LocalRole::fromDomain($localRole);
         }
         return $courseResponses;
     }

@@ -2,16 +2,19 @@
 
 namespace srag\Plugins\UserDefaults\Domain\Model;
 
+use srag\Plugins\UserDefaults\Domain\Model\ValueObjects\IliasModuleId;
+use srag\Plugins\UserDefaults\Domain\Model\ValueObjects\Title;
+use srag\Plugins\UserDefaults\Domain\Model\ValueObjects\ObjId;
+use srag\Plugins\UserDefaults\Domain\Model\ValueObjects\RefId;
+
 class StudyProgramme implements Entity
 {
-    private function __construct(public ValueObjects\IliasModuleId $id, public ValueObjects\Title $title)
+    private function __construct(public IliasModuleId $id, public Title $title)
     {
-
     }
-
 
     public static function new(int $objId, int $refId, string $title): self
     {
-        return new self(ValueObjects\IliasModuleId::new(ValueObjects\ObjId::new($objId), ValueObjects\RefId::new($refId)), ValueObjects\Title::new($title));
+        return new self(IliasModuleId::new(ObjId::new($objId), RefId::new($refId)), Title::new($title));
     }
 }

@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\StudyProgramme;
 
+use srag\Plugins\UserDefaults\Adapters\Api\StudyProgramme\Responses\StudyProgramme;
 use srag\Plugins\UserDefaults\Domain\Ports\StudyProgrammeService;
 
 class Facade
 {
-    private function __construct(private StudyProgrammeService $studyProgrammeService)
+    private function __construct(private readonly StudyProgrammeService $studyProgrammeService)
     {
-
     }
 
     public static function new(StudyProgrammeService $studyProgrammeService): self
@@ -25,7 +25,7 @@ class Facade
         $studyProgrammeResponses = [];
 
         foreach ($studyProgrammes as $studyProgramme) {
-            $studyProgrammeResponses[] = Responses\StudyProgramme::formDomain($studyProgramme);
+            $studyProgrammeResponses[] = StudyProgramme::formDomain($studyProgramme);
         }
         return $studyProgrammeResponses;
     }

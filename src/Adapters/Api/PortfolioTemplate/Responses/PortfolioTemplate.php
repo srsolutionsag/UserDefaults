@@ -6,11 +6,8 @@ use srag\Plugins\UserDefaults\Domain\Model;
 
 class PortfolioTemplate
 {
-    private function __construct(
-        public int $id,
-        public string $title
-    ) {
-
+    private function __construct(public int $id, public string $title)
+    {
     }
 
     public static function formDomain(Model\PortfolioTemplate $portfolio): PortfolioTemplate

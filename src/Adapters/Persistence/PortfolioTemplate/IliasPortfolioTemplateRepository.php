@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Persistence\PortfolioTemplate;
 
-use srag\Plugins\UserDefaults\Domain;
+use srag\Plugins\UserDefaults\Domain\Ports\Repository;
+use srag\Plugins\UserDefaults\Domain\Model\Course;
 
-class IliasPortfolioTemplateRepository implements Domain\Ports\Repository
+class IliasPortfolioTemplateRepository implements Repository
 {
-    private function __construct(private \ilDBInterface $db)
+    private function __construct(private readonly \ilDBInterface $db)
     {
-
     }
 
     public static function new(\ilDBInterface $db): self
@@ -17,7 +17,7 @@ class IliasPortfolioTemplateRepository implements Domain\Ports\Repository
     }
 
     /**
-     * @return Domain\Model\Course[]
+     * @return Course[]
      */
     public function findAll(): array
     {

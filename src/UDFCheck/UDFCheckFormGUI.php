@@ -122,9 +122,35 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                             $this->addItem($se);
                             break;
                         default:
-                            $se = new ilSelectInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
-                            $se->setOptions($this->object->getDefinitionValues());
-                            $this->addItem($se);
+                            $radio = new ilRadioGroupInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_RADIO);
+                            $option_text = new ilRadioOption(
+                                $this->pl->txt('check_text_fields'),
+                                self::F_CHECK_TEXT
+                            );
+                            $option_text->addSubItem(
+                                new ilTextInputGUI(
+                                    $this->pl->txt(self::F_CHECK_VALUE),
+                                    self::F_CHECK_VALUE . '_text_value'
+                                )
+                            );
+                            $radio->addOption($option_text);
+
+                            $option_select = new ilRadioOption(
+                                $this->pl->txt('check_select_lists'),
+                                self::F_CHECK_SELECT
+                            );
+                            $selection = new \ilSelectInputGUI(
+                                $this->pl->txt(self::F_CHECK_VALUE),
+                                self::F_CHECK_VALUE . '_select_value'
+                            );
+                            $selection->setOptions(
+                                $this->object->getDefinitionValues()
+                            );
+                            $option_select->addSubItem(
+                                $selection
+                            );
+                            $radio->addOption($option_select);
+                            $this->addItem($radio);
                             break;
                     }
                     break;
@@ -186,10 +212,19 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                 self::F_UDF_FIELD_KEY . "_" . $this->object->getFieldCategory() => $this->object->getFieldKey(),
                 self::F_UDF_FIELD_CATEGORY => $this->object->getFieldCategory(),
                 self::F_CHECK_VALUE => $this->object->getCheckValue(),
+                self::F_CHECK_VALUE . '_text_value' => $this->object->getCheckValue(),
+                self::F_CHECK_VALUE . '_select_value' => $this->object->getCheckValue(),
                 self::F_UDF_NEGATE_ID => $this->object->isNegated(),
-                self::F_UDF_OPERATOR => $this->object->getOperator(),
-                self::F_CHECK_RADIO => self::F_CHECK_TEXT
+                self::F_UDF_OPERATOR => $this->object->getOperator()
             ];
+
+            // preselect radio-option due to value
+            if (in_array($this->object->getCheckValue(), $this->object->getDefinitionValues())) {
+                $array[self::F_CHECK_RADIO] = self::F_CHECK_SELECT;
+            } else {
+                $array[self::F_CHECK_RADIO] = self::F_CHECK_TEXT;
+            }
+
 
             $definition = $this->object->getDefinition();
 
@@ -243,10 +278,17 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                                 $check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);
                             }
                             $this->object->setCheckValues($check_values);
+                            break;
                         }
                     }
+
+                    // normal inputs
+                    $this->object->setCheckValues([$this->getInput(self::F_CHECK_VALUE . '_text_value')]);
+
                     break;
                 case self::F_CHECK_SELECT:
+                    $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE . '_select_value'));
+                    break;
                 default:
                     $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE));
                     break;

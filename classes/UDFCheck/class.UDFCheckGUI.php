@@ -4,21 +4,12 @@ use ILIAS\DI\UIServices;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckFormGUI;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckTableGUI;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
- * Class UDFCheckGUI
- *
- * @author            Fabian Schmid <fs@studer-raimann.ch>
- * @version           1.0.0
- *
  * @ilCtrl_IsCalledBy UDFCheckGUI: ilUserDefaultsConfigGUI
  */
 class UDFCheckGUI
 {
-    use UserDefaultsTrait;
-
-    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const CMD_INDEX = 'index';
     public const CMD_CANCEL = 'cancel';
     public const CMD_CREATE = 'create';
@@ -71,7 +62,7 @@ class UDFCheckGUI
             self::CMD_DEACTIVATE,
             self::CMD_CONFIRM_DELETE,
             self::CMD_DELETE => $this->{$cmd}(),
-            default => true,
+            default => false,
         };
         return true;
     }

@@ -6,10 +6,8 @@ use srag\Plugins\UserDefaults\Domain\Model\OrgUnit;
 
 class IliasOrgUnitAdapter
 {
-
     private function __construct(public int $objId, public int $refId, public string $title)
     {
-
     }
 
     public static function new(int $objId, int $refId, string $title): self

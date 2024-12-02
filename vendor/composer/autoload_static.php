@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite4e194e8b14c7471adf365b41e191675
+class ComposerStaticInit5b74d8aafa7da1be31dee24b429344b2
 {
     public static $prefixLengthsPsr4 = array (
         's' => 
@@ -27,101 +27,6 @@ class ComposerStaticInite4e194e8b14c7471adf365b41e191675
         'ilUserDefaultsConfigGUI' => __DIR__ . '/../..' . '/classes/class.ilUserDefaultsConfigGUI.php',
         'ilUserDefaultsPlugin' => __DIR__ . '/../..' . '/classes/class.ilUserDefaultsPlugin.php',
         'ilUserDefaultsRestApiGUI' => __DIR__ . '/../..' . '/classes/class.ilUserDefaultsRestApiGUI.php',
-        'srag\\Plugins\\UserDefaults\\Access\\Access' => __DIR__ . '/../..' . '/src/Access/Access.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\AssignmentProcess\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/AssignmentProcess/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\AssignmentProcess\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/AssignmentProcess/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\AssignmentProcess\\Requests\\HandleFormSubmission' => __DIR__ . '/../..' . '/src/Adapters/Api/AssignmentProcess/Requests/HandleFormSubmission.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\AssignmentProcess\\Requests\\RenderForm' => __DIR__ . '/../..' . '/src/Adapters/Api/AssignmentProcess/Requests/RenderForm.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\AssignmentProcess\\Requests\\RenderTable' => __DIR__ . '/../..' . '/src/Adapters/Api/AssignmentProcess/Requests/RenderTable.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\AssignmentProcess\\Responses\\Form' => __DIR__ . '/../..' . '/src/Adapters/Api/AssignmentProcess/Responses/Form.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\AssignmentProcess\\Responses\\Table' => __DIR__ . '/../..' . '/src/Adapters/Api/AssignmentProcess/Responses/Table.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Course\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/Course/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Course\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/Course/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Course\\Responses\\Course' => __DIR__ . '/../..' . '/src/Adapters/Api/Course/Responses/Course.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\GlobalRole\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/GlobalRole/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\GlobalRole\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/GlobalRole/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\GlobalRole\\Responses\\GlobalRole' => __DIR__ . '/../..' . '/src/Adapters/Api/GlobalRole/Responses/GlobalRole.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Group\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/Group/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Group\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/Group/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Group\\Responses\\Group' => __DIR__ . '/../..' . '/src/Adapters/Api/Group/Responses/Group.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\LocalRole\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/LocalRole/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\LocalRole\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/LocalRole/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\LocalRole\\Responses\\LocalRole' => __DIR__ . '/../..' . '/src/Adapters/Api/LocalRole/Responses/LocalRole.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\OrgUnits\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/OrgUnits/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\OrgUnits\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/OrgUnits/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\OrgUnits\\Responses\\OrgUnit' => __DIR__ . '/../..' . '/src/Adapters/Api/OrgUnits/Responses/OrgUnit.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\OrgUnits\\Responses\\OrgUnitPositions' => __DIR__ . '/../..' . '/src/Adapters/Api/OrgUnits/Responses/OrgUnitPositions.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\PortfolioTemplate\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/PortfolioTemplate/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\PortfolioTemplate\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/PortfolioTemplate/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\PortfolioTemplate\\Responses\\PortfolioTemplate' => __DIR__ . '/../..' . '/src/Adapters/Api/PortfolioTemplate/Responses/PortfolioTemplate.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\StudyProgramme\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/StudyProgramme/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\StudyProgramme\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/StudyProgramme/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\StudyProgramme\\Responses\\StudyProgramme' => __DIR__ . '/../..' . '/src/Adapters/Api/StudyProgramme/Responses/StudyProgramme.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Ui\\Api' => __DIR__ . '/../..' . '/src/Adapters/Api/Ui/Api.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Api\\Ui\\Facade' => __DIR__ . '/../..' . '/src/Adapters/Api/Ui/Facade.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Config\\Configs' => __DIR__ . '/../..' . '/src/Adapters/Config/Configs.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\Course\\IliasCourseAdapter' => __DIR__ . '/../..' . '/src/Adapters/Persistence/Course/IliasCourseAdapter.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\Course\\IliasCourseRepository' => __DIR__ . '/../..' . '/src/Adapters/Persistence/Course/IliasCourseRepository.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\GlobalRole\\IliasGlobalRoleAdapter' => __DIR__ . '/../..' . '/src/Adapters/Persistence/GlobalRole/IliasGlobalRoleAdapter.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\GlobalRole\\IliasGlobalRoleRepository' => __DIR__ . '/../..' . '/src/Adapters/Persistence/GlobalRole/IliasGlobalRoleRepository.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\Group\\IliasGroupAdapter' => __DIR__ . '/../..' . '/src/Adapters/Persistence/Group/IliasGroupAdapter.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\Group\\IliasGroupRepository' => __DIR__ . '/../..' . '/src/Adapters/Persistence/Group/IliasGroupRepository.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\LocalRole\\IliasLocalRoleAdapter' => __DIR__ . '/../..' . '/src/Adapters/Persistence/LocalRole/IliasLocalRoleAdapter.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\LocalRole\\IliasLocalRoleRepository' => __DIR__ . '/../..' . '/src/Adapters/Persistence/LocalRole/IliasLocalRoleRepository.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\OrgUnit\\IliasOrgUnitAdapter' => __DIR__ . '/../..' . '/src/Adapters/Persistence/OrgUnit/IliasOrgUnitAdapter.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\OrgUnit\\IliasOrgUnitRepository' => __DIR__ . '/../..' . '/src/Adapters/Persistence/OrgUnit/IliasOrgUnitRepository.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\PortfolioTemplate\\IliasPortfolioAdapter' => __DIR__ . '/../..' . '/src/Adapters/Persistence/PortfolioTemplate/IliasPortfolioAdapter.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\PortfolioTemplate\\IliasPortfolioTemplateRepository' => __DIR__ . '/../..' . '/src/Adapters/Persistence/PortfolioTemplate/IliasPortfolioTemplateRepository.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\StudyProgramme\\IliasStudyProgrammeAdapter' => __DIR__ . '/../..' . '/src/Adapters/Persistence/StudyProgramme/IliasStudyProgrammeAdapter.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Persistence\\StudyProgramme\\IliasStudyProgrammeRepository' => __DIR__ . '/../..' . '/src/Adapters/Persistence/StudyProgramme/IliasStudyProgrammeRepository.php',
-        'srag\\Plugins\\UserDefaults\\Adapters\\Ui\\InputElements\\FluxEcoSearchInputElement\\InputElement' => __DIR__ . '/../..' . '/src/Adapters/Ui/InputElements/FluxEcoSearchInputElement/InputElement.php',
-        'srag\\Plugins\\UserDefaults\\Config\\UserDefaultsConfig' => __DIR__ . '/../..' . '/src/Config/UserDefaultsConfig.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\AssignmentProcess' => __DIR__ . '/../..' . '/src/Domain/Model/AssignmentProcess.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\Course' => __DIR__ . '/../..' . '/src/Domain/Model/Course.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\Entity' => __DIR__ . '/../..' . '/src/Domain/Model/Entity.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\GlobalRole' => __DIR__ . '/../..' . '/src/Domain/Model/GlobalRole.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\Group' => __DIR__ . '/../..' . '/src/Domain/Model/Group.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\LocalRole' => __DIR__ . '/../..' . '/src/Domain/Model/LocalRole.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\OrgUnit' => __DIR__ . '/../..' . '/src/Domain/Model/OrgUnit.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\PortfolioTemplate' => __DIR__ . '/../..' . '/src/Domain/Model/PortfolioTemplate.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\StudyProgramme' => __DIR__ . '/../..' . '/src/Domain/Model/StudyProgramme.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\AssignmentProcessId' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/AssignmentProcessId.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\IliasModuleId' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/IliasModuleId.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\IsActive' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/IsActive.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\ObjId' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/ObjId.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\OnApplyManually' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/OnApplyManually.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\OnCreate' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/OnCreate.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\OnUpdate' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/OnUpdate.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\RefId' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/RefId.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Model\\ValueObjects\\Title' => __DIR__ . '/../..' . '/src/Domain/Model/ValueObjects/Title.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\AssignmentProcessService' => __DIR__ . '/../..' . '/src/Domain/Ports/AssignmentProcessService.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\CourseService' => __DIR__ . '/../..' . '/src/Domain/Ports/CourseService.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\GlobalRoleService' => __DIR__ . '/../..' . '/src/Domain/Ports/GlobalRoleService.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\GroupService' => __DIR__ . '/../..' . '/src/Domain/Ports/GroupService.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\LocalRoleService' => __DIR__ . '/../..' . '/src/Domain/Ports/LocalRoleService.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\OrgUnitService' => __DIR__ . '/../..' . '/src/Domain/Ports/OrgUnitService.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\PortfolioTemplateService' => __DIR__ . '/../..' . '/src/Domain/Ports/PortfolioTemplateService.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\Repository' => __DIR__ . '/../..' . '/src/Domain/Ports/Repository.php',
-        'srag\\Plugins\\UserDefaults\\Domain\\Ports\\StudyProgrammeService' => __DIR__ . '/../..' . '/src/Domain/Ports/StudyProgrammeService.php',
-        'srag\\Plugins\\UserDefaults\\Form\\SortableMultiSelectSearchInputGUI' => __DIR__ . '/../..' . '/src/Form/SortableMultiSelectSearchInputGUI.php',
-        'srag\\Plugins\\UserDefaults\\Form\\ilContainerMultiSelectInputGUI' => __DIR__ . '/../..' . '/src/Form/ilContainerMultiSelectInputGUI.php',
-        'srag\\Plugins\\UserDefaults\\Form\\ilMultiSelectSearchInput2GUI' => __DIR__ . '/../..' . '/src/Form/ilMultiSelectSearchInput2GUI.php',
-        'srag\\Plugins\\UserDefaults\\Form\\ilMultipleTextInput3GUI' => __DIR__ . '/../..' . '/src/Form/ilMultipleTextInput3GUI.php',
-        'srag\\Plugins\\UserDefaults\\Form\\udfGlyphGUI' => __DIR__ . '/../..' . '/src/Form/udfGlyphGUI.php',
-        'srag\\Plugins\\UserDefaults\\Form\\udfMultiLineInputGUI' => __DIR__ . '/../..' . '/src/Form/udfMultiLineInputGUI.php',
-        'srag\\Plugins\\UserDefaults\\Form\\udfOrguSelectorExplorerGUI' => __DIR__ . '/../..' . '/src/Form/udfOrguSelectorExplorerGUI.php',
-        'srag\\Plugins\\UserDefaults\\Form\\usrdefOrguSelectorInputGUI' => __DIR__ . '/../..' . '/src/Form/usrdefOrguSelectorInputGUI.php',
-        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheck' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheck.php',
-        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckFormGUI' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckFormGUI.php',
-        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckOld' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckOld.php',
-        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckTableGUI' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckTableGUI.php',
-        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUDF' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckUDF.php',
-        'srag\\Plugins\\UserDefaults\\UDFCheck\\UDFCheckUser' => __DIR__ . '/../..' . '/src/UDFCheck/UDFCheckUser.php',
-        'srag\\Plugins\\UserDefaults\\UserDefaultsApi' => __DIR__ . '/../..' . '/src/UserDefaultsApi.php',
-        'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefObj' => __DIR__ . '/../..' . '/src/UserSearch/usrdefObj.php',
-        'srag\\Plugins\\UserDefaults\\UserSearch\\usrdefUser' => __DIR__ . '/../..' . '/src/UserSearch/usrdefUser.php',
-        'srag\\Plugins\\UserDefaults\\UserSetting\\UserSetting' => __DIR__ . '/../..' . '/src/UserSetting/UserSetting.php',
-        'srag\\Plugins\\UserDefaults\\Utils\\UserDefaultsTrait' => __DIR__ . '/../..' . '/src/Utils/UserDefaultsTrait.php',
         'usrdefUserGUI' => __DIR__ . '/../..' . '/classes/UserSearch/class.usrdefUserGUI.php',
         'usrdefUserTableGUI' => __DIR__ . '/../..' . '/classes/UserSearch/class.usrdefUserTableGUI.php',
     );
@@ -129,9 +34,9 @@ class ComposerStaticInite4e194e8b14c7471adf365b41e191675
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite4e194e8b14c7471adf365b41e191675::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite4e194e8b14c7471adf365b41e191675::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite4e194e8b14c7471adf365b41e191675::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5b74d8aafa7da1be31dee24b429344b2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5b74d8aafa7da1be31dee24b429344b2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5b74d8aafa7da1be31dee24b429344b2::$classMap;
 
         }, null, ClassLoader::class);
     }

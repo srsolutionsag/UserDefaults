@@ -5,11 +5,8 @@ namespace srag\Plugins\UserDefaults\Adapters\Api\AssignmentProcess\Responses;
 use ilCheckboxInputGUI;
 use ilFormSectionHeaderGUI;
 use ilObjPortfolioTemplate;
-use ilOrgUnitPosition;
 use ilOrgUnitLocalDIC;
 use ilPropertyFormGUI;
-use ilRadioGroupInputGUI;
-use ilRadioOption;
 use ilSelectInputGUI;
 use ilTemplateException;
 use ilTextAreaInputGUI;
@@ -17,61 +14,60 @@ use ilTextInputGUI;
 use ilUserDefaultsConfigGUI;
 use ilUserDefaultsPlugin;
 use ilUserDefaultsRestApiGUI;
-use srag\Plugins\UserDefaults\Form\udfMultiLineInputGUI;
-use srag\Plugins\UserDefaults\UserDefaultsApi;
+use srag\Plugins\UserDefaults\API\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserSettingsGUI;
+use srag\Plugins\UserDefaults\API\Commands;
 
 class Form extends ilPropertyFormGUI
 {
-
     use UserDefaultsTrait;
 
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    const F_TITLE = 'title';
-    const F_STATUS = 'status';
-    const F_GLOBAL_ROLES = 'global_roles';
-    const F_UNSIGN_GLOBAL_ROLES = 'unsubscribe_global_roles';
-    const F_ASSIGNED_LOCAL_ROLES = 'assigned_local_roles';
-    const F_UNSIGN_LOCAL_ROLES = 'unsubscribe_local_roles';
-    const F_ASSIGNED_COURSES = 'assigned_courses';
-    const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
-    const F_UNSUBSCRIBE_GROUPS = 'unsubscribe_groups';
-    const F_ASSIGNED_GROUPS = 'assigned_groups';
-    const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
-    const F_ASSIGNED_GROUPS_QUEUE = 'assigned_groups_queue';
-    const F_ASSIGNED_GROUPS_QUEUE_DESKTOP = 'assigned_groups_queue_desktop';
-    const F_ASSIGNED_GROUPS_QUEUE_TYPE = 'assigned_groups_queue_type';
-    const F_ASSIGNED_GROUPS_QUEUE_PARALLEL = 'assigned_groups_queue_parallel';
-    const F_ASSIGNED_GROUPS_QUEUE_SERIAL = 'assigned_groups_queue_serial';
-    const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
-    const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
-    const F_ASSIGNED_ORGUS = 'assigned_orgus';
-    const F_ASSIGNED_ORGU_POSITION = 'assigned_orgu_position';
-    const F_UNSUBSCRIBE_ORGUS = 'unsubscribe_orgus';
-    const F_ASSIGNED_STUDYPROGRAMS = 'assigned_studyprograms';
-    const F_UNSUBSCRIBE_STUDYPROGRAMS = 'unsubscribe_studyprograms';
-    const F_DESCRIPTION = 'description';
-    const F_PORTFOLIO_NAME = 'portfolio_name';
-    const F_REMOVE_PORTFOLIO = 'remove_portfolio';
-    const F_BLOG_NAME = 'blog_name';
-    const F_ON_CREATE = 'on_create';
-    const F_ON_UPDATE = 'on_update';
-    const F_ON_MANUAL = 'on_manual';
-    const F_APPLICATION = 'application';
-    protected UserSettingsGUI $parent_gui;
-    protected UserSetting $object;
+    public $positionRepo;
+
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const F_TITLE = 'title';
+    public const F_STATUS = 'status';
+    public const F_GLOBAL_ROLES = 'global_roles';
+    public const F_UNSIGN_GLOBAL_ROLES = 'unsubscribe_global_roles';
+    public const F_ASSIGNED_LOCAL_ROLES = 'assigned_local_roles';
+    public const F_UNSIGN_LOCAL_ROLES = 'unsubscribe_local_roles';
+    public const F_ASSIGNED_COURSES = 'assigned_courses';
+    public const F_UNSUBSCRIBE_COURSES_AND_CATEGORIES = 'unsubscribe_courses_and_categories';
+    public const F_UNSUBSCRIBE_GROUPS = 'unsubscribe_groups';
+    public const F_ASSIGNED_GROUPS = 'assigned_groups';
+    public const F_ASSIGNED_GROUPS_OPTION_REQUEST = 'assigned_groups_option_request';
+    public const F_ASSIGNED_GROUPS_QUEUE = 'assigned_groups_queue';
+    public const F_ASSIGNED_GROUPS_QUEUE_DESKTOP = 'assigned_groups_queue_desktop';
+    public const F_ASSIGNED_GROUPS_QUEUE_TYPE = 'assigned_groups_queue_type';
+    public const F_ASSIGNED_GROUPS_QUEUE_PARALLEL = 'assigned_groups_queue_parallel';
+    public const F_ASSIGNED_GROUPS_QUEUE_SERIAL = 'assigned_groups_queue_serial';
+    public const F_PORTFOLIO_TEMPLATE_ID = 'portfolio_template_id';
+    public const F_PORTFOLIO_ASSIGNED_TO_GROUPS = 'portfolio_assigned_to_groups';
+    public const F_ASSIGNED_ORGUS = 'assigned_orgus';
+    public const F_ASSIGNED_ORGU_POSITION = 'assigned_orgu_position';
+    public const F_UNSUBSCRIBE_ORGUS = 'unsubscribe_orgus';
+    public const F_ASSIGNED_STUDYPROGRAMS = 'assigned_studyprograms';
+    public const F_UNSUBSCRIBE_STUDYPROGRAMS = 'unsubscribe_studyprograms';
+    public const F_DESCRIPTION = 'description';
+    public const F_PORTFOLIO_NAME = 'portfolio_name';
+    public const F_REMOVE_PORTFOLIO = 'remove_portfolio';
+    public const F_BLOG_NAME = 'blog_name';
+    public const F_ON_CREATE = 'on_create';
+    public const F_ON_UPDATE = 'on_update';
+    public const F_ON_MANUAL = 'on_manual';
+    public const F_APPLICATION = 'application';
     private array $orguPositions;
     private ilUserDefaultsPlugin $pl;
     private UserDefaultsApi $userDefaultsApi;
 
     /**
      * @param UserSettingsGUI $parent_gui
-     * @param UserSetting $ilUserSetting
+     * @param UserSetting     $object
      * @throws \ilCtrlException
      */
-    public function __construct(UserSettingsGUI $parent_gui, UserSetting $ilUserSetting)
+    public function __construct(protected UserSettingsGUI $parent_gui, protected UserSetting $object)
     {
         global $DIC;
         $orgus = ilOrgUnitLocalDIC::dic();
@@ -79,9 +75,7 @@ class Form extends ilPropertyFormGUI
         parent::__construct();
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->ctrl = $DIC->ctrl();
-        $this->parent_gui = $parent_gui;
-        $this->object = $ilUserSetting;
-        
+
         $this->userDefaultsApi = UserDefaultsApi::new();
 
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
@@ -103,12 +97,10 @@ class Form extends ilPropertyFormGUI
         return $form;
     }
 
-
     protected function txt(string $key): string
     {
         return $this->pl->txt('set_' . $key);
     }
-
 
     /**
      * @throws \ilCtrlException
@@ -140,11 +132,17 @@ class Form extends ilPropertyFormGUI
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_GLOBAL_ROLES),
                 self::F_GLOBAL_ROLES,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->globalRoles)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::globalRoles->value
+                )
             )
         );
 
-        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSIGN_GLOBAL_ROLES), self::F_UNSIGN_GLOBAL_ROLES);
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI(
+            $this->txt(self::F_UNSIGN_GLOBAL_ROLES),
+            self::F_UNSIGN_GLOBAL_ROLES
+        );
         $this->addItem($ilCheckboxInputGUI);
 
         $a_item = new ilFormSectionHeaderGUI();
@@ -155,12 +153,17 @@ class Form extends ilPropertyFormGUI
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_ASSIGNED_LOCAL_ROLES),
                 self::F_ASSIGNED_LOCAL_ROLES,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->localRoles)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::localRoles->value
+                )
             )
         );
 
-
-        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSIGN_LOCAL_ROLES), self::F_UNSIGN_LOCAL_ROLES);
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI(
+            $this->txt(self::F_UNSIGN_LOCAL_ROLES),
+            self::F_UNSIGN_LOCAL_ROLES
+        );
         $this->addItem($ilCheckboxInputGUI);
 
         // Assign Courses
@@ -168,18 +171,21 @@ class Form extends ilPropertyFormGUI
         $a_item->setTitle($this->pl->txt('courses'));
         $this->addItem($a_item);
 
-        $multiSelect = new udfMultiLineInputGUI($this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS), "MultiGroup");
-        $multiSelect->setShowLabel(true);
-
         $this->addItem(
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_ASSIGNED_COURSES),
                 self::F_ASSIGNED_COURSES,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->courses)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::courses->value
+                )
             )
         );
 
-        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES), self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES);
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI(
+            $this->txt(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES),
+            self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES
+        );
         $this->addItem($ilCheckboxInputGUI);
 
         // Assign to Groups
@@ -191,14 +197,22 @@ class Form extends ilPropertyFormGUI
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_ASSIGNED_GROUPS),
                 self::F_ASSIGNED_GROUPS,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->groups)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::groups->value
+                )
             )
         );
-        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_ASSIGNED_GROUPS_OPTION_REQUEST), self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI(
+            $this->txt(self::F_ASSIGNED_GROUPS_OPTION_REQUEST),
+            self::F_ASSIGNED_GROUPS_OPTION_REQUEST
+        );
         $this->addItem($ilCheckboxInputGUI);
-        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_GROUPS), self::F_UNSUBSCRIBE_GROUPS);
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI(
+            $this->txt(self::F_UNSUBSCRIBE_GROUPS),
+            self::F_UNSUBSCRIBE_GROUPS
+        );
         $this->addItem($ilCheckboxInputGUI);
-
 
         // groups queue
         /*
@@ -249,7 +263,10 @@ class Form extends ilPropertyFormGUI
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_ASSIGNED_ORGUS),
                 self::F_ASSIGNED_ORGUS,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->orgUnits)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::orgUnits->value
+                )
             )
         );
 
@@ -258,7 +275,10 @@ class Form extends ilPropertyFormGUI
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_ASSIGNED_ORGU_POSITION),
                 self::F_ASSIGNED_ORGU_POSITION,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->orgUnitPositions)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::orgUnitPositions->value
+                )
             )
         );
 
@@ -280,11 +300,17 @@ class Form extends ilPropertyFormGUI
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_ASSIGNED_STUDYPROGRAMS),
                 self::F_ASSIGNED_STUDYPROGRAMS,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->studyProgrammes)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::studyProgrammes->value
+                )
             )
         );
 
-        $ilCheckboxInputGUI = new ilCheckboxInputGUI($this->txt(self::F_UNSUBSCRIBE_STUDYPROGRAMS), self::F_UNSUBSCRIBE_STUDYPROGRAMS);
+        $ilCheckboxInputGUI = new ilCheckboxInputGUI(
+            $this->txt(self::F_UNSUBSCRIBE_STUDYPROGRAMS),
+            self::F_UNSUBSCRIBE_STUDYPROGRAMS
+        );
         $this->addItem($ilCheckboxInputGUI);
 
         /*
@@ -294,7 +320,6 @@ class Form extends ilPropertyFormGUI
             return $pos->getId() . ": " . $pos->getTitle();
         }, $this->orguPositions);
         */
-
 
         //portfolio
         $a_item = new ilFormSectionHeaderGUI();
@@ -322,36 +347,36 @@ class Form extends ilPropertyFormGUI
         $te = new ilTextInputGUI($this->txt(self::F_BLOG_NAME), self::F_BLOG_NAME);
         $this->addItem($te);
 
-
         $this->addItem(
             $this->userDefaultsApi->uiComponents->searchInputElementHtml(
                 $this->txt(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS),
                 self::F_PORTFOLIO_ASSIGNED_TO_GROUPS,
-                $this->ctrl->getLinkTargetByClass([ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class], ilUserDefaultsRestApiGUI::commandNames()->portfolioTemplates)
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUserDefaultsConfigGUI::class, ilUserDefaultsRestApiGUI::class],
+                    Commands::portfolioTemplates->value
+                )
             )
         );
-
 
         $this->addCommandButtons();
     }
 
     public function fillForm(): void
     {
-        $assigned_groups_queue = array_map(function ($e) {
-            return ['obj_id' => $e];
-        }, $this->object->getAssignedGroupsQueue());
+        $assigned_groups_queue = array_map(fn($e): array => ['obj_id' => $e], $this->object->getAssignedGroupsQueue());
         $assigned_groups_queue = array_values($assigned_groups_queue);
         $assignedOrguPosition = $this->object->getAssignedOrguPosition();
         if ($assignedOrguPosition == null) {
             $assignedOrguPosition = 0;
         }
-        $selectOrguPosVal = current(array_filter($this->positionRepo->getAllPositions(), function ($pos) use ($assignedOrguPosition) {
-            return $pos->getId() == $assignedOrguPosition;
-        }));
+        $selectOrguPosVal = current(
+            array_filter(
+                $this->positionRepo->getAllPositions(),
+                fn($pos): bool => $pos->getId() == $assignedOrguPosition
+            )
+        );
 
-
-
-        $array = array(
+        $array = [
             self::F_TITLE => $this->object->getTitle(),
             self::F_DESCRIPTION => $this->object->getDescription(),
             //			self::F_STATUS => ($this->object->getStatus() == ilUserSetting::STATUS_ACTIVE ? 1 : 0),
@@ -372,15 +397,15 @@ class Form extends ilPropertyFormGUI
             self::F_BLOG_NAME => $this->object->getBlogName(),
             self::F_PORTFOLIO_NAME => $this->object->getPortfolioName(),
             self::F_REMOVE_PORTFOLIO => $this->object->getRemovePortfolio(),
-            self::F_ASSIGNED_ORGUS =>  $this->object->getAssignedOrgus(),
-            self::F_ASSIGNED_ORGU_POSITION => (array)$this->object->getAssignedOrguPosition(),
+            self::F_ASSIGNED_ORGUS => $this->object->getAssignedOrgus(),
+            self::F_ASSIGNED_ORGU_POSITION => (array) $this->object->getAssignedOrguPosition(),
             self::F_UNSUBSCRIBE_ORGUS => $this->object->isUnsubscrFromOrgus(),
             self::F_ASSIGNED_STUDYPROGRAMS => $this->object->getAssignedStudyprograms(),
             self::F_UNSUBSCRIBE_STUDYPROGRAMS => $this->object->isUnsubscrFromStudyprograms(),
             self::F_ON_CREATE => $this->object->isOnCreate(),
             self::F_ON_UPDATE => $this->object->isOnUpdate(),
             self::F_ON_MANUAL => $this->object->isOnManual(),
-        );
+        ];
 
         $this->setValuesByArray($array);
     }
@@ -393,27 +418,27 @@ class Form extends ilPropertyFormGUI
         $this->object->setTitle($this->getInput(self::F_TITLE));
         $this->object->setDescription($this->getInput(self::F_DESCRIPTION));
 
-
         $this->object->setGlobalRoles($this->getInput(self::F_GLOBAL_ROLES));
         $this->object->setUnsignGlobalRoles($this->getInput(self::F_UNSIGN_GLOBAL_ROLES));
 
         $this->object->setAssignedLocalRoles($this->getInput(self::F_ASSIGNED_LOCAL_ROLES));
         $this->object->setUnsignLocalRoles($this->getInput(self::F_UNSIGN_LOCAL_ROLES));
 
-
         $this->object->setAssignedCourses($this->getInput(self::F_ASSIGNED_COURSES));
 
-        $this->object->setUnsubscrfromcrsAndcategoriesDesktop($this->getInput(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES));
+        $this->object->setUnsubscrfromcrsAndcategoriesDesktop(
+            $this->getInput(self::F_UNSUBSCRIBE_COURSES_AND_CATEGORIES)
+        );
         $this->object->setAssignedGroupes($this->getInput(self::F_ASSIGNED_GROUPS));
         $this->object->setUnsubscrfromgrpDesktop($this->getInput(self::F_UNSUBSCRIBE_GROUPS));
         $this->object->setAssignedGroupsOptionRequest($this->getInput(self::F_ASSIGNED_GROUPS_OPTION_REQUEST));
 
         //$assigned_groups_option_request = $this->getInput(self::F_ASSIGNED_GROUPS_OPTION_REQUEST);
 
-
         //todo ?
-        $this->object->setPortfolioTemplateId($this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) > 0 ? $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) : NULL);
-
+        $this->object->setPortfolioTemplateId(
+            $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) > 0 ? $this->getInput(self::F_PORTFOLIO_TEMPLATE_ID) : null
+        );
 
         $this->object->setPortfolioAssignedToGroups($this->getInput(self::F_PORTFOLIO_ASSIGNED_TO_GROUPS));
         $this->object->setBlogName($this->getInput(self::F_BLOG_NAME));
@@ -422,10 +447,10 @@ class Form extends ilPropertyFormGUI
 
         $assigned_orgus = $this->getInput(self::F_ASSIGNED_ORGUS);
         $this->object->setAssignedOrgus($assigned_orgus);
-        if (array_key_exists("0",$this->getInput(self::F_ASSIGNED_ORGU_POSITION))) {
+        if (array_key_exists("0", $this->getInput(self::F_ASSIGNED_ORGU_POSITION))) {
             $this->object->setAssignedOrguPosition($this->getInput(self::F_ASSIGNED_ORGU_POSITION)[0]);
         }
-        $this->object->setUnsubscrFromOrgus((int)$this->getInput(self::F_UNSUBSCRIBE_ORGUS));
+        $this->object->setUnsubscrFromOrgus((int) $this->getInput(self::F_UNSUBSCRIBE_ORGUS));
 
         $assigned_studyprograms = $this->getInput(self::F_ASSIGNED_STUDYPROGRAMS);
         $this->object->setAssignedStudyprograms($assigned_studyprograms);

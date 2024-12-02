@@ -1,23 +1,24 @@
 <?php
 
-use JetBrains\PhpStorm\NoReturn;
-use srag\Plugins\UserDefaults\UserDefaultsApi;
-
+use srag\Plugins\UserDefaults\API\UserDefaultsApi;
+use srag\Plugins\UserDefaults\API\Commands;
 
 /**
  * @ilCtrl_IsCalledBy ilUserDefaultsRestApiGUI: ilUserDefaultsConfigGUI
  */
 class ilUserDefaultsRestApiGUI
 {
+    /**
+     * @readonly
+     */
     private UserDefaultsApi $userDefaultsApi;
-
 
     /**
      * @return object{courses: string, globalRoles: string, groups: string, localRoles: string, orgUnits: string, orgUnitPositions: string, portfolioTemplates: string, studyProgrammes: string}
      */
     public static function commandNames(): object
     {
-        return new class() {
+        return new class () {
             public string $courses = "courses";
             public string $globalRoles = "globalRoles";
             public string $groups = "groups";
@@ -30,6 +31,9 @@ class ilUserDefaultsRestApiGUI
         };
     }
 
+    /**
+     * @readonly
+     */
     private ilCtrlInterface $ctrl;
 
     public function __construct()
@@ -42,74 +46,76 @@ class ilUserDefaultsRestApiGUI
             exit;
         };
 
-        $this->userDefaultsApi =  UserDefaultsApi::new();
+        $this->userDefaultsApi = UserDefaultsApi::new();
     }
 
     public function executeCommand(): void
     {
-        $cmd = $this->ctrl->getCmd();
+        $cmd = Commands::from($this->ctrl->getCmd());
+
         match ($cmd) {
-            $this->commandNames()->courses => $this->courses(),
-            $this->commandNames()->globalRoles => $this->globalRoles(),
-            $this->commandNames()->groups => $this->groups(),
-            $this->commandNames()->localRoles => $this->localRoles(),
-            $this->commandNames()->orgUnits => $this->orgUnits(),
-            $this->commandNames()->orgUnitPositions => $this->orgUnitPositions(),
-            $this->commandNames()->portfolioTemplates => $this->portfolioTemplates(),
-            $this->commandNames()->studyProgrammes => $this->studyProgrammes(),
+            Commands::courses => $this->courses(),
+            Commands::globalRoles => $this->globalRoles(),
+            Commands::groups => $this->groups(),
+            Commands::localRoles => $this->localRoles(),
+            Commands::orgUnits => $this->orgUnits(),
+            Commands::orgUnitPositions => $this->orgUnitPositions(),
+            Commands::portfolioTemplates => $this->portfolioTemplates(),
+            Commands::studyProgrammes => $this->studyProgrammes(),
+            default => null
         };
     }
 
-    #[NoReturn] public function courses(): void
+    public function courses(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->courses->findAll());
         exit;
     }
 
-    #[NoReturn] public function globalRoles(): void
+    public function globalRoles(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->globalRoles->findAll());
         exit;
     }
 
-    #[NoReturn] public function groups(): void
+    public function groups(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->groups->findAll());
         exit;
     }
 
-    #[NoReturn] public function localRoles(): void
+    public function localRoles(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->localRoles->findAll());
         exit;
     }
 
-    #[NoReturn] public function orgUnits(): void
+    public function orgUnits(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->orgUnits->findAll());
         exit;
     }
 
-    #[NoReturn] public function orgUnitPositions(): void
+    public function orgUnitPositions(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->orgUnits->findAllPositions());
         exit;
     }
 
-    #[NoReturn] public function portfolioTemplates(): void
+    public function portfolioTemplates(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->portfolioTemplates->findAll());
         exit;
     }
 
-    #[NoReturn] public function studyProgrammes(): void
+    public function studyProgrammes(): void
     {
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode($this->userDefaultsApi->studyProgrammes->findAll());

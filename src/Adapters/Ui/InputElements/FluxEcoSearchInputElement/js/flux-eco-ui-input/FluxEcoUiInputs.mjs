@@ -56,7 +56,7 @@ export default class FluxEcoUiInputs {
      */
     static create(params) {
         const fluxEcoUiForms = new this();
-        if(customElements.get(fluxEcoUiForms.#tageName) === undefined) {
+        if (customElements.get(fluxEcoUiForms.#tageName) === undefined) {
             customElements.define(fluxEcoUiForms.#tageName, FluxEcoUiSearchInputElement);
         }
 

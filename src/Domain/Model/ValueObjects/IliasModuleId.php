@@ -6,7 +6,6 @@ class IliasModuleId
 {
     private function __construct(public ObjId $objId, public RefId $refId)
     {
-
     }
 
     public static function new(ObjId $objId, RefId $refId): self

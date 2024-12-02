@@ -28,28 +28,25 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 {
     use UserDefaultsTrait;
 
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    const F_UDF_FIELD_KEY = 'field_key';
-    const F_UDF_FIELD_CATEGORY = 'field_category';
-    const F_CHECK_VALUE = 'check_value';
-    const F_CHECK_VALUE_MUL = 'check_value_mul_';
-    const F_UDF_NEGATE_ID = 'udf_negate_value';
-    const F_UDF_OPERATOR = 'udf_operator';
-    const F_CHECK_RADIO = 'check_radio';
-    const F_CHECK_TEXT = 'check_text';
-    const F_CHECK_SELECT = 'check_select';
-    protected UserSettingsGUI|UDFCheckGUI $parent_gui;
-    protected ?UDFCheck $object;
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const F_UDF_FIELD_KEY = 'field_key';
+    public const F_UDF_FIELD_CATEGORY = 'field_category';
+    public const F_CHECK_VALUE = 'check_value';
+    public const F_CHECK_VALUE_MUL = 'check_value_mul_';
+    public const F_UDF_NEGATE_ID = 'udf_negate_value';
+    public const F_UDF_OPERATOR = 'udf_operator';
+    public const F_CHECK_RADIO = 'check_radio';
+    public const F_CHECK_TEXT = 'check_text';
+    public const F_CHECK_SELECT = 'check_select';
     protected bool $is_new = true;
     private ilUserDefaultsPlugin $pl;
 
-
     /**
-     * @param UDFCheckGUI $parent_gui
+     * @param UDFCheckGUI   $parent_gui
      * @param UDFCheck|null $object
      * @throws \ilCtrlException
      */
-    public function __construct(UDFCheckGUI $parent_gui, UDFCheck $object = NULL)
+    public function __construct(protected \UDFCheckGUI $parent_gui, protected ?UDFCheck $object = null)
     {
         global $DIC;
 
@@ -58,11 +55,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->ctrl = $DIC->ctrl();
 
-        $this->parent_gui = $parent_gui;
-
-        $this->object = $object;
-
-        $this->is_new = (bool)($this->object === NULL);
+        $this->is_new = (bool) ($this->object === null);
 
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 
@@ -78,7 +71,10 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
     {
         $this->setTitle($this->pl->txt('form_title'));
 
-        $categories_radio = new ilRadioGroupInputGUI($this->txt(self::F_UDF_FIELD_CATEGORY), self::F_UDF_FIELD_CATEGORY);
+        $categories_radio = new ilRadioGroupInputGUI(
+            $this->txt(self::F_UDF_FIELD_CATEGORY),
+            self::F_UDF_FIELD_CATEGORY
+        );
         $this->addItem($categories_radio);
 
         foreach (UDFCheck::$class_names as $key => $class) {
@@ -102,7 +98,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 
             $op = new ilSelectInputGUI($this->txt(self::F_UDF_OPERATOR), self::F_UDF_OPERATOR);
             $op->setInfo($this->pl->txt('check_op_reg_ex_info'));
-            $options = array();
+            $options = [];
             foreach (UDFCheck::$operator_text_keys as $key => $v) {
                 $options[$key] = $this->pl->txt("check_op_" . $v);
             }
@@ -126,9 +122,35 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                             $this->addItem($se);
                             break;
                         default:
-                            $se = new ilSelectInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
-                            $se->setOptions($this->object->getDefinitionValues());
-                            $this->addItem($se);
+                            $radio = new ilRadioGroupInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_RADIO);
+                            $option_text = new ilRadioOption(
+                                $this->pl->txt('check_text_fields'),
+                                self::F_CHECK_TEXT
+                            );
+                            $option_text->addSubItem(
+                                new ilTextInputGUI(
+                                    $this->pl->txt(self::F_CHECK_VALUE),
+                                    self::F_CHECK_VALUE . '_text_value'
+                                )
+                            );
+                            $radio->addOption($option_text);
+
+                            $option_select = new ilRadioOption(
+                                $this->pl->txt('check_select_lists'),
+                                self::F_CHECK_SELECT
+                            );
+                            $selection = new \ilSelectInputGUI(
+                                $this->pl->txt(self::F_CHECK_VALUE),
+                                self::F_CHECK_VALUE . '_select_value'
+                            );
+                            $selection->setOptions(
+                                $this->object->getDefinitionValues()
+                            );
+                            $option_select->addSubItem(
+                                $selection
+                            );
+                            $radio->addOption($option_select);
+                            $this->addItem($radio);
                             break;
                     }
                     break;
@@ -137,17 +159,24 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                     if (self::isCustomUserFieldsHelperAvailable()) {
                         $plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
                         if ($plugin instanceof ilUDFDefinitionPlugin) {
-
                             $definition['required'] = true;
-                            
-                            $select_gui = $plugin->getFormPropertyForDefinition($definition, true, null, true);
+
+                            $select_gui = $plugin->getFormPropertyForDefinition($definition, true, null);
 
                             $check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);
 
-                            $check_radio_text = new ilRadioOption($this->pl->txt("check_text_fields"), self::F_CHECK_TEXT);
+                            $check_radio_text = new ilRadioOption(
+                                $this->pl->txt("check_text_fields"),
+                                self::F_CHECK_TEXT
+                            );
                             $check_radio->addOption($check_radio_text);
 
-                            foreach (json_decode($select_gui->getColumnDefinition()->rawEncodedJSON(),true) as $key => $name) {
+                            foreach (
+                                json_decode(
+                                    (string) $select_gui->getColumnDefinition()->rawEncodedJSON(),
+                                    true
+                                ) as $key => $name
+                            ) {
                                 if (is_array($name)) {
                                     $name = $name["name"] . " ( " . $name["default"] . " ) ";
                                 }
@@ -156,7 +185,10 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                                 $check_radio_text->addSubItem($text_gui);
                             }
 
-                            $check_radio_select = new ilRadioOption($this->pl->txt("check_select_lists"), self::F_CHECK_SELECT);
+                            $check_radio_select = new ilRadioOption(
+                                $this->pl->txt("check_select_lists"),
+                                self::F_CHECK_SELECT
+                            );
                             $check_radio->addOption($check_radio_select);
 
                             $select_gui->setPostVar(self::F_CHECK_VALUE);
@@ -180,10 +212,19 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                 self::F_UDF_FIELD_KEY . "_" . $this->object->getFieldCategory() => $this->object->getFieldKey(),
                 self::F_UDF_FIELD_CATEGORY => $this->object->getFieldCategory(),
                 self::F_CHECK_VALUE => $this->object->getCheckValue(),
+                self::F_CHECK_VALUE . '_text_value' => $this->object->getCheckValue(),
+                self::F_CHECK_VALUE . '_select_value' => $this->object->getCheckValue(),
                 self::F_UDF_NEGATE_ID => $this->object->isNegated(),
-                self::F_UDF_OPERATOR => $this->object->getOperator(),
-                self::F_CHECK_RADIO => self::F_CHECK_TEXT
+                self::F_UDF_OPERATOR => $this->object->getOperator()
             ];
+
+            // preselect radio-option due to value
+            if (in_array($this->object->getCheckValue(), $this->object->getDefinitionValues())) {
+                $array[self::F_CHECK_RADIO] = self::F_CHECK_SELECT;
+            } else {
+                $array[self::F_CHECK_RADIO] = self::F_CHECK_TEXT;
+            }
+
 
             $definition = $this->object->getDefinition();
 
@@ -195,7 +236,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                     $select_gui = $plugin->getFormPropertyForDefinition($definition);
 
                     $check_values = $this->object->getCheckValues();
-                    foreach ($check_values as $key => $name) {
+                    foreach (array_keys($check_values) as $key) {
                         $array[self::F_CHECK_VALUE_MUL . $key] = $check_values[$key];
                     }
                 }
@@ -226,16 +267,28 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                         $plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
                         if ($plugin instanceof ilUDFDefinitionPlugin) {
                             $definition['required'] = true;
-                            $select_gui = $plugin->getFormPropertyForDefinition($definition, true, null, true);
+                            $select_gui = $plugin->getFormPropertyForDefinition($definition, true, null);
                             $check_values = [];
-                            foreach (json_decode($select_gui->getColumnDefinition()->rawEncodedJSON(),true) as $key => $name) {
+                            foreach (
+                                json_decode(
+                                    (string) $select_gui->getColumnDefinition()->rawEncodedJSON(),
+                                    true
+                                ) as $key => $name
+                            ) {
                                 $check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);
                             }
                             $this->object->setCheckValues($check_values);
+                            break;
                         }
                     }
+
+                    // normal inputs
+                    $this->object->setCheckValues([$this->getInput(self::F_CHECK_VALUE . '_text_value')]);
+
                     break;
                 case self::F_CHECK_SELECT:
+                    $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE . '_select_value'));
+                    break;
                 default:
                     $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE));
                     break;
@@ -245,7 +298,9 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
             $this->object->update();
         } else {
             $this->object = UDFCheck::newInstance($this->getInput(self::F_UDF_FIELD_CATEGORY));
-            $this->object->setFieldKey($this->getInput(self::F_UDF_FIELD_KEY . "_" . $this->object->getFieldCategory()));
+            $this->object->setFieldKey(
+                $this->getInput(self::F_UDF_FIELD_KEY . "_" . $this->object->getFieldCategory())
+            );
             $this->object->setParentId($_GET[UserSettingsGUI::IDENTIFIER]);
             $this->object->create();
         }

@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\PortfolioTemplate;
 
+use srag\Plugins\UserDefaults\Adapters\Api\PortfolioTemplate\Responses\PortfolioTemplate;
 use srag\Plugins\UserDefaults\Domain\Ports\PortfolioTemplateService;
 
 class Facade
 {
-    private function __construct(private PortfolioTemplateService $portfolioService)
+    private function __construct(private readonly PortfolioTemplateService $portfolioService)
     {
-
     }
 
     public static function new(PortfolioTemplateService $portfolioService): Facade
@@ -25,7 +25,7 @@ class Facade
         $courseResponses = [];
 
         foreach ($courses as $course) {
-            $courseResponses[] = Responses\PortfolioTemplate::formDomain($course);
+            $courseResponses[] = PortfolioTemplate::formDomain($course);
         }
         return $courseResponses;
     }

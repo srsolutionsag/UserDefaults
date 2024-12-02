@@ -1,22 +1,32 @@
 (function ($) {
 
-	$.fn.extend({
-		multi_line_input: function (element_config, options) {
+    $.fn.extend({
+        multi_line_input: function (element_config, options) {
 
-			var settings = $.extend({
-				unique_values: false
-			}, options);
+            var settings = $.extend({
+                unique_values: false
+            }, options);
 
-			var element_config = element_config;
-			var element = this;
-			var limit = options.limit;
-			var sortable = options.sortable;
-			var counter = 1;
+            var element_config = element_config;
+            var element = this;
+            var limit = options.limit;
+            var sortable = options.sortable;
+            var counter = 1;
             var clone_line = $(this).find('.multi_input_line').first();
             var empty_id = "empty";
-			var date_config = {"locale":options.locale,"stepping":5,"useCurrent":false,"calendarWeeks":true,"toolbarPlacement":"top","showClear":true,"keepInvalid":true,"sideBySide":true,"format":"DD.MM.YYYY"};
+            var date_config = {
+                "locale": options.locale,
+                "stepping": 5,
+                "useCurrent": false,
+                "calendarWeeks": true,
+                "toolbarPlacement": "top",
+                "showClear": true,
+                "keepInvalid": true,
+                "sideBySide": true,
+                "format": "DD.MM.YYYY"
+            };
 
-            var setup_clone_line = function(clone_line) {
+            var setup_clone_line = function (clone_line) {
                 clone_line.hide();
                 clone_line.removeClass('multi_input_line');
 
@@ -33,97 +43,97 @@
 
             setup_clone_line(clone_line);
 
-			var setup_line = function (line, init) {
-				var init = init || false;
-				var $line = line;
+            var setup_line = function (line, init) {
+                var init = init || false;
+                var $line = line;
 
 
-				// '$("#'.$a_id.'").datetimepicker('.json_encode($config).')'
+                // '$("#'.$a_id.'").datetimepicker('.json_encode($config).')'
 
 
-				$(line).find('.add_button').on('click', function (e) {
-					var $length = $('.multi_input_line').length;
-					if (limit == 0 || $length < limit) {
-						var new_line = clone_line.clone();
-						new_line.show();
-						$(new_line).addClass("multi_input_line");
+                $(line).find('.add_button').on('click', function (e) {
+                    var $length = $('.multi_input_line').length;
+                    if (limit == 0 || $length < limit) {
+                        var new_line = clone_line.clone();
+                        new_line.show();
+                        $(new_line).addClass("multi_input_line");
 
-						setup_line(new_line);
+                        setup_line(new_line);
 
-						$(new_line).insertAfter($(this).parent().parent());
+                        $(new_line).insertAfter($(this).parent().parent());
 
-						let input = $(new_line).find('input.chosen');
-						input.parent().find('div.select2-container').remove();
-						let escaped_id = input.attr('id').replace(/\[/g, '\\[').replace(/]/g, '\\]');
-						SrMultipleSelect.init(escaped_id);
+                        let input = $(new_line).find('input.chosen');
+                        input.parent().find('div.select2-container').remove();
+                        let escaped_id = input.attr('id').replace(/\[/g, '\\[').replace(/]/g, '\\]');
+                        SrMultipleSelect.init(escaped_id);
 
-						$(element).change();
-						$(document).trigger('multi_line_add_button', [$line, new_line]);
-						return false;
-					}
-				});
+                        $(element).change();
+                        $(document).trigger('multi_line_add_button', [$line, new_line]);
+                        return false;
+                    }
+                });
 
-				$(line).find('.remove_button').on('click', function (e) {
-					if ($(line).parent().children().length > 2) {
-						$line.remove();
-					} else {
-						$line.find('input').val("");
-						$line.find('span.select2-chosen').text('');
-					}
-					$(element).change();
+                $(line).find('.remove_button').on('click', function (e) {
+                    if ($(line).parent().children().length > 2) {
+                        $line.remove();
+                    } else {
+                        $line.find('input').val("");
+                        $line.find('span.select2-chosen').text('');
+                    }
+                    $(element).change();
                     $(document).trigger('multi_line_remove_button', $line);
-					return false;
-				});
+                    return false;
+                });
 
-				if (sortable) {
-					$(line).find('.up_button').on('click', function(e) {
-						$(line).insertBefore($(line).prev());
-					});
+                if (sortable) {
+                    $(line).find('.up_button').on('click', function (e) {
+                        $(line).insertBefore($(line).prev());
+                    });
 
-					$(line).find('.down_button').on('click', function(e) {
-						$(line).insertAfter($(line).next());
-					});
-				}
+                    $(line).find('.down_button').on('click', function (e) {
+                        $(line).insertAfter($(line).next());
+                    });
+                }
 
-				if (!init) {
-					$line.find("textarea[name^='" + empty_id + "'], input[name^='" + empty_id + "'], select[name^='" + empty_id + "']").each(function () {
+                if (!init) {
+                    $line.find("textarea[name^='" + empty_id + "'], input[name^='" + empty_id + "'], select[name^='" + empty_id + "']").each(function () {
                         var name = $(this).attr('name');
-						var id = element.attr('id');
+                        var id = element.attr('id');
                         $(this).val('');
                         var regex = new RegExp('^' + empty_id + '\[[0-9]+\](.*)$', 'g');
                         var matches = regex.exec(name);
                         name = id + '[' + counter + ']' + matches[1];
-						i = 1;
-						while ($("[name='"+name+"']").length) {     // while element with this id already exists, take next id
-							name = id + '[' + (counter + i) + ']' + matches[1];
-							console.log('element exists: ' + (counter + i));
-							i++;
-						}
-						$(this).attr('name', name);
-						$(this).attr('id', name);
-					});
-				}
-				counter++;
-			};
+                        i = 1;
+                        while ($("[name='" + name + "']").length) {     // while element with this id already exists, take next id
+                            name = id + '[' + (counter + i) + ']' + matches[1];
+                            console.log('element exists: ' + (counter + i));
+                            i++;
+                        }
+                        $(this).attr('name', name);
+                        $(this).attr('id', name);
+                    });
+                }
+                counter++;
+            };
 
-			// hide/show delete icons
-			$(element).on('change', function (e) {
-				var remove_buttons = $(element).find('.multi_input_line .remove_button');
+            // hide/show delete icons
+            $(element).on('change', function (e) {
+                var remove_buttons = $(element).find('.multi_input_line .remove_button');
 
-				// if (remove_buttons.length > 1) {
-				// 	remove_buttons.show();
-				// } else {
-				// 	remove_buttons.hide();
-				// }
-			});
+                // if (remove_buttons.length > 1) {
+                // 	remove_buttons.show();
+                // } else {
+                // 	remove_buttons.hide();
+                // }
+            });
 
-			$(this).find('.multi_input_line').each(function () {
-				setup_line($(this), true);
-			});
-			$(element).change();
+            $(this).find('.multi_input_line').each(function () {
+                setup_line($(this), true);
+            });
+            $(element).change();
 
-			return element;
-		}
-	});
+            return element;
+        }
+    });
 
 }(jQuery));

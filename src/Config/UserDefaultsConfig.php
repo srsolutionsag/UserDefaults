@@ -17,41 +17,41 @@ use arConnector;
 class UserDefaultsConfig extends ActiveRecord
 {
     protected static string $table_name = "usr_def_config";
-    const TABLE_NAME = "usr_def_config";
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    const KEY_CATEGORY_REF_ID = "category_ref_id";
+    public const TABLE_NAME = "usr_def_config";
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const KEY_CATEGORY_REF_ID = "category_ref_id";
     /**
      * @var string
      */
-    const SQL_DATE_FORMAT = "Y-m-d H:i:s";
+    public const SQL_DATE_FORMAT = "Y-m-d H:i:s";
     /**
      * @var int
      */
-    const TYPE_BOOLEAN = 4;
+    public const TYPE_BOOLEAN = 4;
     /**
      * @var int
      */
-    const TYPE_DATETIME = 6;
+    public const TYPE_DATETIME = 6;
     /**
      * @var int
      */
-    const TYPE_DOUBLE = 3;
+    public const TYPE_DOUBLE = 3;
     /**
      * @var int
      */
-    const TYPE_INTEGER = 2;
+    public const TYPE_INTEGER = 2;
     /**
      * @var int
      */
-    const TYPE_JSON = 7;
+    public const TYPE_JSON = 7;
     /**
      * @var int
      */
-    const TYPE_STRING = 1;
+    public const TYPE_STRING = 1;
     /**
      * @var int
      */
-    const TYPE_TIMESTAMP = 5;
+    public const TYPE_TIMESTAMP = 5;
 
     /**
      * @var string
@@ -70,72 +70,59 @@ class UserDefaultsConfig extends ActiveRecord
      * @con_fieldtype   text
      * @con_is_notnull  false
      */
-    protected mixed $value = null;
-
+    protected $value = null;
 
     public function __construct(?string $primary_name_value = null, ?arConnector $connector = null)
     {
         parent::__construct($primary_name_value, $connector);
     }
 
-    public static function returnDbTableName() : string
+    public static function returnDbTableName(): string
     {
         return self::getTableName();
     }
 
-    public function getConnectorContainerName() : string
+    public function getConnectorContainerName(): string
     {
         return self::getTableName();
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getValue(): string|int
+    /**
+     * @return int|string
+     */
+    public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue(string|int $value) : void
+    /**
+     * @param string|int $value
+     */
+    public function setValue($value): void
     {
         $this->value = $value;
     }
 
-    public function sleep($field_name)
+    private static array $fields = [
+        self::KEY_CATEGORY_REF_ID => self::TYPE_INTEGER
+    ];
+
+    public static function getTableName(): string
     {
-        $field_value = $this->{$field_name};
-
-        switch ($field_name) {
-            default:
-                return parent::sleep($field_name);
-        }
-    }
-
-    public function wakeUp(/*string*/ $field_name, $field_value)
-    {
-        switch ($field_name) {
-            default:
-                return parent::wakeUp($field_name, $field_value);
-        }
-    }
-
-	private static array $fields = [
-		self::KEY_CATEGORY_REF_ID => self::TYPE_INTEGER
-	];
-
-
-    public static function getTableName() : string {
         return self::$table_name;
     }
 
-    public static function setTableName(string $table_name) : void
+    public static function setTableName(string $table_name): void
     {
         self::$table_name = $table_name;
     }
@@ -143,7 +130,8 @@ class UserDefaultsConfig extends ActiveRecord
     /**
      * @throws ilException
      */
-    public static function getField(string $field): int {
+    public static function getField(string $field): int
+    {
         if (array_key_exists($field, self::$fields)) {
             return self::$fields[$field];
         }

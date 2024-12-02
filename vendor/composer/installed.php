@@ -1,20 +1,20 @@
 <?php return array(
     'root' => array(
-        'name' => 'fluxapp/user-defaults',
-        'pretty_version' => '2.1.0',
-        'version' => '2.1.0.0',
-        'reference' => NULL,
-        'type' => 'plugin',
+        'name' => 'dhbw/user-defaults',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '173029dfbc3f38e9c16b708d88f2b8e2bdadb192',
+        'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'fluxapp/user-defaults' => array(
-            'pretty_version' => '2.1.0',
-            'version' => '2.1.0.0',
-            'reference' => NULL,
-            'type' => 'plugin',
+        'dhbw/user-defaults' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '173029dfbc3f38e9c16b708d88f2b8e2bdadb192',
+            'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,

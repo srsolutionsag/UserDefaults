@@ -1,10 +1,8 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-
-use srag\Plugins\UserDefaults\Adapters\Api;
-
-use srag\Plugins\UserDefaults\UserDefaultsApi;
+use ILIAS\DI\UIServices;
+use ILIAS\DI\RBACServices;
+use srag\Plugins\UserDefaults\API\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
@@ -16,37 +14,36 @@ class UserSettingsGUI
 {
     use UserDefaultsTrait;
 
-    const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    const CMD_INDEX = 'configure';
+    public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
+    public const CMD_INDEX = 'configure';
 
-    const CMD_CANCEL = 'cancel';
-    const CMD_CREATE = 'create';
-    const CMD_UPDATE = 'update';
-    const CMD_ADD = 'add';
-    const CMD_EDIT = 'edit';
-    const CMD_CONFIRM_DELETE = 'confirmDelete';
-    const CMD_DEACTIVATE = 'deactivate';
-    const CMD_ACTIVATE = 'activate';
-    const CMD_DELETE = 'delete';
-    const CMD_DUPLICATE = 'duplicate';
-    const CMD_ACTIVATE_MULTIPLE_CONFIRM = 'activateMultipleConfirm';
-    const CMD_ACTIVATE_MULTIPLE = 'activateMultiple';
-    const CMD_DEACTIVATE_MULTIPLE_CONFIRM = 'deactivateMultipleConfirm';
-    const CMD_DEACTIVATE_MULTIPLE = 'deactivateMultiple';
-    const CMD_DELETE_MULTIPLE_CONFIRM = 'deleteMultipleConfirm';
-    const CMD_DELETE_MULTIPLE = 'deleteMultiple';
-    const IDENTIFIER = 'set_id';
-    const CMD_LINK_TO_OBJECT = 'linkToObject';
+    public const CMD_CANCEL = 'cancel';
+    public const CMD_CREATE = 'create';
+    public const CMD_UPDATE = 'update';
+    public const CMD_ADD = 'add';
+    public const CMD_EDIT = 'edit';
+    public const CMD_CONFIRM_DELETE = 'confirmDelete';
+    public const CMD_DEACTIVATE = 'deactivate';
+    public const CMD_ACTIVATE = 'activate';
+    public const CMD_DELETE = 'delete';
+    public const CMD_DUPLICATE = 'duplicate';
+    public const CMD_ACTIVATE_MULTIPLE_CONFIRM = 'activateMultipleConfirm';
+    public const CMD_ACTIVATE_MULTIPLE = 'activateMultiple';
+    public const CMD_DEACTIVATE_MULTIPLE_CONFIRM = 'deactivateMultipleConfirm';
+    public const CMD_DEACTIVATE_MULTIPLE = 'deactivateMultiple';
+    public const CMD_DELETE_MULTIPLE_CONFIRM = 'deleteMultipleConfirm';
+    public const CMD_DELETE_MULTIPLE = 'deleteMultiple';
+    public const IDENTIFIER = 'set_id';
+    public const CMD_LINK_TO_OBJECT = 'linkToObject';
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $tpl;
-    private \ILIAS\DI\UIServices $ui;
+    private UIServices $ui;
     private ilDBInterface $db;
     private ilTree $repositoryTree;
-    private \ILIAS\DI\RBACServices $rbac;
+    private RBACServices $rbac;
     private ilObjectDataCache $objDataCache;
     private UserDefaultsApi $userDefaultsApi;
-
 
     /**
      * UserSettingsGUI constructor
@@ -56,11 +53,10 @@ class UserSettingsGUI
     {
         global $DIC;
         //is access granted
-        if(!ilUserDefaultsPlugin::grantAccess()) {
+        if (!ilUserDefaultsPlugin::grantAccess()) {
             echo "no Settings Permission";
             exit;
         };
-
 
         $this->ctrl = $DIC->ctrl();
         $this->ui = $DIC->ui();
@@ -74,7 +70,6 @@ class UserSettingsGUI
 
         $this->userDefaultsApi = UserDefaultsApi::new();
     }
-
 
     public function executeCommand(): void
     {
@@ -136,7 +131,6 @@ class UserSettingsGUI
         $this->userDefaultsApi->assignmentProcesses->renderTable($this);
     }
 
-
     protected function add(): void
     {
         $this->userDefaultsApi->assignmentProcesses->renderForm($this);
@@ -144,7 +138,7 @@ class UserSettingsGUI
 
     protected function create(): void
     {
-        $onSuccess = function () {
+        $onSuccess = function (): void {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -153,16 +147,16 @@ class UserSettingsGUI
 
     protected function edit(): void
     {
-       $this->userDefaultsApi->assignmentProcesses->renderForm($this, $_GET[self::IDENTIFIER]);
+        $this->userDefaultsApi->assignmentProcesses->renderForm($this, $_GET[self::IDENTIFIER]);
     }
 
     protected function update(): void
     {
-        $onSuccess = function () {
+        $onSuccess = function (): void {
             $this->tpl->setOnScreenMessage('success', $this->pl->txt('msg_entry_added'), true);
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
-       $this->userDefaultsApi->assignmentProcesses->handleFormSubmission($this, $_GET[self::IDENTIFIER], $onSuccess);
+        $this->userDefaultsApi->assignmentProcesses->handleFormSubmission($this, $_GET[self::IDENTIFIER], $onSuccess);
     }
 
     /**
@@ -206,7 +200,7 @@ class UserSettingsGUI
      */
     public function cancel(): void
     {
-        $this->ctrl->setParameter($this, self::IDENTIFIER, NULL);
+        $this->ctrl->setParameter($this, self::IDENTIFIER, null);
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
 
@@ -230,16 +224,16 @@ class UserSettingsGUI
             $groups = [];
         }
         $query = "SELECT obj.obj_id, obj.title
-				  FROM " . usrdefObj::TABLE_NAME . " AS obj
-				  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
-				  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
-			      WHERE obj.type = %s
-			      AND (" . $this->db->like("obj.title", "text", "%%" . $term . "%%") . " OR " . $this->db
+                  FROM " . usrdefObj::TABLE_NAME . " AS obj
+                  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
+                  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
+                  WHERE obj.type = %s
+                  AND (" . $this->db->like("obj.title", "text", "%%" . $term . "%%") . " OR " . $this->db
                 ->like("trans.title", "text", $term, "%%" . $term . "%%") . ")
-				" . (!empty($groups) ? "AND " . $this->db->in("ref.ref_id", $groups, false, "integer") : "") . "
-				  AND obj.title != %s
-				  AND ref.deleted IS NULL
-			      ORDER BY obj.title";
+                " . (!empty($groups) ? "AND " . $this->db->in("ref.ref_id", $groups, false, "integer") : "") . "
+                  AND obj.title != %s
+                  AND ref.deleted IS NULL
+                  ORDER BY obj.title";
         $types = ["text", "text"];
         $values = [$type, "__OrgUnitAdministration"];
 
@@ -269,7 +263,6 @@ class UserSettingsGUI
         exit;
     }*/
 
-
     /**
      * @throws ilException
      */
@@ -288,16 +281,16 @@ class UserSettingsGUI
         }
 
         $query = "SELECT obj.obj_id, obj.title
-				  FROM " . usrdefObj::TABLE_NAME . " AS obj
-				  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
-				  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
-			      WHERE obj.type = %s
-			      AND (" . $this->db->like("obj.title", "text", "%%" . $term . "%%") . " OR " . $this->db
+                  FROM " . usrdefObj::TABLE_NAME . " AS obj
+                  LEFT JOIN object_translation AS trans ON trans.obj_id = obj.obj_id
+                  JOIN object_reference AS ref ON obj.obj_id = ref.obj_id
+                  WHERE obj.type = %s
+                  AND (" . $this->db->like("obj.title", "text", "%%" . $term . "%%") . " OR " . $this->db
                 ->like("trans.title", "text", $term, "%%" . $term . "%%") . ")
-				" . (!empty($categories) ? "AND " . $this->db->in("ref.ref_id", $categories, false, "integer") : "") . "
-				  AND obj.title != %s
-				  AND ref.deleted IS NULL
-			      ORDER BY obj.title";
+                " . (!empty($categories) ? "AND " . $this->db->in("ref.ref_id", $categories, false, "integer") : "") . "
+                  AND obj.title != %s
+                  AND ref.deleted IS NULL
+                  ORDER BY obj.title";
         $types = ["text", "text"];
         $values = [$type, "__OrgUnitAdministration"];
 
@@ -324,14 +317,13 @@ class UserSettingsGUI
         $this->ctrl->redirectByClass(ilRepositoryGUI::class);
     }
 
-
     /**
      * @throws ilCtrlException
      */
     protected function activateMultipleConfirm(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -354,7 +346,7 @@ class UserSettingsGUI
     protected function activateMultiple(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -373,7 +365,7 @@ class UserSettingsGUI
     protected function deactivateMultipleConfirm(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -396,7 +388,7 @@ class UserSettingsGUI
     protected function deactivateMultiple(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };
@@ -414,7 +406,7 @@ class UserSettingsGUI
     protected function deleteMultipleConfirm(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         }
@@ -435,7 +427,7 @@ class UserSettingsGUI
     protected function deleteMultiple(): void
     {
         $setting_select = filter_input(INPUT_POST, 'setting_select', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (!is_array($setting_select) || count($setting_select) === 0) {
+        if (!is_array($setting_select) || $setting_select === []) {
             // No settings selected
             $this->ctrl->redirect($this, self::CMD_INDEX);
         };

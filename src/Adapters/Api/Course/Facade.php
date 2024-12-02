@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\Course;
 
+use srag\Plugins\UserDefaults\Adapters\Api\Course\Responses\Course;
 use srag\Plugins\UserDefaults\Domain\Ports\CourseService;
 
 class Facade
 {
-    private function __construct(private CourseService $courses)
+    private function __construct(private readonly CourseService $courses)
     {
-
     }
 
     public static function new(CourseService $courses): Facade
@@ -25,7 +25,7 @@ class Facade
         $courseResponses = [];
 
         foreach ($courses as $course) {
-            $courseResponses[] = Responses\Course::fromDomain($course);
+            $courseResponses[] = Course::fromDomain($course);
         }
         return $courseResponses;
     }

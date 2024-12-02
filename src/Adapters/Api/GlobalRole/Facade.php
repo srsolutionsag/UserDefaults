@@ -2,13 +2,13 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\GlobalRole;
 
+use srag\Plugins\UserDefaults\Adapters\Api\GlobalRole\Responses\GlobalRole;
 use srag\Plugins\UserDefaults\Domain\Ports\GlobalRoleService;
 
 class Facade
 {
-    private function __construct(private GlobalRoleService $globalRoleService)
+    private function __construct(private readonly GlobalRoleService $globalRoleService)
     {
-
     }
 
     public static function new(GlobalRoleService $globalRoleService): self
@@ -25,7 +25,7 @@ class Facade
         $courseResponses = [];
 
         foreach ($globalRoles as $globalRole) {
-            $courseResponses[] = Responses\GlobalRole::formDomain($globalRole);
+            $courseResponses[] = GlobalRole::formDomain($globalRole);
         }
         return $courseResponses;
     }

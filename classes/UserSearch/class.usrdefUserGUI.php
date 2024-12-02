@@ -78,9 +78,9 @@ class usrdefUserGUI
 
     protected function resetFilter(): void
     {
-        $tbale = new usrdefUserTableGUI($this, self::CMD_INDEX);
-        $tbale->resetFilter();
-        $tbale->resetOffset();
+        $table = new usrdefUserTableGUI($this, self::CMD_INDEX);
+        $table->resetFilter();
+        $table->resetOffset();
         $this->ctrl->redirect($this, self::CMD_INDEX);
     }
 

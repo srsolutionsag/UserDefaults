@@ -48,7 +48,9 @@ class UDFCheckTableGUI extends ilTable2GUI
         $this->setPrefix(self::USR_DEF_CONTENT);
         $this->setFormName(self::USR_DEF_CONTENT);
         $this->setId(self::USR_DEF_CONTENT);
-        $this->setTitle($this->pl->txt('check_table_title'));
+
+        $ilUserSetting = UserSetting::Find($_GET[UserSettungsGUI::IDENTIFIER]);
+        $this->setTitle($this->pl->txt('check_table_title') . ' ' . $ilUserSetting->getTitle());
 
         $this->tabs = $DIC['ilTabs'];
         $this->tabs->setBackTarget(

@@ -61,7 +61,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 
         $this->tabs = $DIC['ilTabs'];
         $this->tabs->setBackTarget(
-            $this->pl->txt('check_bak_check'),
+            $this->pl->txt('check_back_check'),
             $this->ctrl->getLinkTargetByClass(UDFCheckGUI::class, UDFCheckGUI::CMD_INDEX)
             );
 

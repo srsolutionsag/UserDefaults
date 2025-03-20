@@ -48,7 +48,7 @@ msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activ
 msg_confirm_delete#:#Do you really like to delete the dataset?
 msg_duplicate_successful#:#Cloned successfully?
 msg_no_users_selected#:#No Accounts selected
-check_table_title#:#UDF-Checks
+check_table_title#:#UDF-Checks for Set:
 check_add#:#Add UDF-Check
 check_name#:#Field
 check_operator#:#Operator

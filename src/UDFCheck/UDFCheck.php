@@ -496,8 +496,8 @@ abstract class UDFCheck extends ActiveRecord
                 continue;
             }
 
-            $value = count($values) > 1 ? $values[$key] : reset($values);
-
+            $value = count($values) > 1 ? $values[$key] ?? '' : reset($values);
+            
             switch ($this->getOperator()) {
                 case self::OP_EQUALS:
                     $valid = (strtolower($value) === strtolower($check_value));

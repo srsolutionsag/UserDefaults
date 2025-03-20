@@ -12,6 +12,7 @@ use ilLinkButton;
 use ilTable2GUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
+use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;
@@ -48,6 +49,12 @@ class UDFCheckTableGUI extends ilTable2GUI
         $this->setFormName(self::USR_DEF_CONTENT);
         $this->setId(self::USR_DEF_CONTENT);
         $this->setTitle($this->pl->txt('check_table_title'));
+
+        $this->tabs = $DIC['ilTabs'];
+        $this->tabs->setBackTarget(
+            $this->pl->txt('check_back'),
+            $this->ctrl->getLinkTargetByClass(UserSettingsGUI::class, UserSettingsGUI::CMD_INDEX)
+            );
         parent::__construct($parent_obj, $parent_cmd, $template_context);
         $this->ctrl->saveParameter($parent_obj, $this->getNavParameter());
         $this->setEnableNumInfo(true);

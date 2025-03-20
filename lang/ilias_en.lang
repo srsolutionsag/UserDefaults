@@ -1,5 +1,5 @@
-form_title#:#Create Setting
-form_modify_title#:#Edit Setting
+form_title#:#Create Setting for Set:
+form_modify_title#:#Edit Setting for Set:
 form_button_update#:#Update
 form_button_create#:#Create
 form_button_cancel#:#Cancel

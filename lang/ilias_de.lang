@@ -1,4 +1,5 @@
-form_title#:#Einstellungen erfassen
+form_title#:#Einstellungen erfassen für Einstellungs-Set
+form_modify_title#:#Einstellungen bearbeiten für Einstellungs-Set
 form_button_update#:#Update
 form_button_create#:#Erstellen
 form_button_cancel#:#Abbrechen
@@ -49,7 +50,7 @@ msg_activation_failed#:#Einstellung nicht aktiviert, da keine UDF-Checks vorhand
 msg_confirm_delete#:#Möchten Sie den Datensatz wirklich löschen?
 msg_duplicate_successful#:#Erfolgreich kopiert?
 msg_no_users_selected#:#Keine Benutzer ausgewählt
-check_table_title#:#UDF-Checks
+check_table_title#:#UDF-Checks für Einstellungs-Set:
 check_add#:#UDF-Check hinzufügen
 check_name#:#Feld
 check_operator#:#Vergleich
@@ -58,7 +59,8 @@ check_actions#:#Aktionen
 check_udf_field_id#:#UDF-Feld
 check_edit#:#Bearbeiten
 check_delete#:#Löschen
-check_back#:#<< Zurück
+check_back#:#Zurück zu Einstellungen
+check_back_check#:#Zurück zum UDF-Check
 check_cancel#:#Abbrechen
 check_udf_negate_value#:#Negieren
 check_udf_negate_value_info#:#Wenn diese Option gewählt ist, wird die Regel angewendet auf alle Benutzer die NICHT dem untenstehenden Wert entsprechen.
@@ -106,9 +108,7 @@ removeplugindataconfirm_msg_kept_data#:#Die %1$s-Daten wurden behalten
 removeplugindataconfirm_msg_removed_data#:#Die %1$s-Daten wurden auch entfernt
 removeplugindataconfirm_remove_data#:#Entferne %1$s-Daten
 check_field_key#:#Feld
-check_field_category#:#Kategorie
-check_field_category_1#:#ILIAS-Benutzerstammdatenfelder
-check_field_category_2#:#Benutzerdefinierte Felder
+check_field_category#:#Konten-Datenfelder-Kategorie
 tabs_global_settings#:#Globale Einstellungen
 save#:#Speichern
 saved#:#Gespeichert

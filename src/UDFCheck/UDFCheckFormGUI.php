@@ -59,6 +59,12 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 
         $this->is_new = (bool) ($this->object === null);
 
+        $this->tabs = $DIC['ilTabs'];
+        $this->tabs->setBackTarget(
+            $this->pl->txt('check_bak_check'),
+            $this->ctrl->getLinkTargetByClass(UDFCheckGUI::class, UDFCheckGUI::CMD_INDEX)
+            );
+
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 
         $this->lng = $DIC->language();

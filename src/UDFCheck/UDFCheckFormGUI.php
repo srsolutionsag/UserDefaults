@@ -12,8 +12,10 @@ use ilTextInputGUI;
 use ilUDFDefinitionPlugin;
 use ilUserDefaultsPlugin;
 use ilUserSearchOptions;
+use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
+use srag\Plugins\UserDefaults\UDFCheck\UDFCheckTableGUI;
 use UserSettingsGUI;
 
 /**
@@ -59,6 +61,8 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 
         $this->setFormAction($this->ctrl->getFormAction($this->parent_gui));
 
+        $this->lng = $DIC->language();
+
         $this->initForm();
     }
 
@@ -69,8 +73,16 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 
     protected function initForm(): void
     {
-        $this->setTitle($this->pl->txt('form_title'));
+        
+        $ilUserSetting = UserSetting::find($_GET[UserSettingsGUI::IDENTIFIER]);
 
+        if ($this->is_new) {
+            $formTitle = 'form_title';
+        } else {
+            $formTitle = 'form_modify_title';
+        }
+        $this->setTitle($this->pl->txt($formTitle). ' ' . $ilUserSetting->getTitle());
+        
         $categories_radio = new ilRadioGroupInputGUI(
             $this->txt(self::F_UDF_FIELD_CATEGORY),
             self::F_UDF_FIELD_CATEGORY
@@ -78,7 +90,14 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
         $this->addItem($categories_radio);
 
         foreach (UDFCheck::$class_names as $key => $class) {
-            $category_radio = new ilRadioOption($this->txt(self::F_UDF_FIELD_CATEGORY . "_" . $key), $key);
+
+            if (strpos($class,'UDFCheckUser')===false) {
+                $inputName = $this->lng->txt('user_defined_fields');
+            }else {
+                $inputName = $this->lng->txt('standard_fields');
+            }
+            $category_radio = new ilRadioOption($inputName, $key);
+            
             $category_radio->setDisabled(!$this->is_new);
 
             $te = new ilSelectInputGUI($this->txt(self::F_UDF_FIELD_KEY), self::F_UDF_FIELD_KEY . "_" . $key);

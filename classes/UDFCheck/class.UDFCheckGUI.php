@@ -44,7 +44,15 @@ class UDFCheckGUI
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->ctrl->saveParameter($this, self::IDENTIFIER_CATEGORY);
         $this->ctrl->saveParameter($this, self::IDENTIFIER);
-        $this->ctrl->setParameter($this, UserSettingsGUI::IDENTIFIER, $_GET[UserSettingsGUI::IDENTIFIER]);
+        // When clicking on the "Configure" tab, the set_id may be undefined.
+        // To prevent errors, we pass a null value if the parameter is not set.
+        if (isset($_GET[UserSettingsGUI:: IDENTIFIER])) {
+            $this->ctrl->setParameter($this, UserSettingsGUI::IDENTIFIER, $_GET[UserSettingsGUI::IDENTIFIER]);
+        } 
+         else{
+            $this->ctrl->setParameter($this, UserSettingsGUI:: IDENTIFIER, null);
+        }
+ 
         $this->ctrl->saveParameter($parent_gui, UserSettingsGUI::IDENTIFIER);
     }
 

@@ -28,13 +28,7 @@ abstract class UDFCheck extends ActiveRecord
     public const STATUS_INACTIVE = 1;
     public const STATUS_ACTIVE = 2;
     public const CHECK_SPLIT = ' → ';
-    /**
-     * @var array|null
-     */
     protected static ?array $all_definitions = null;
-    /**
-     * @var array
-     */
     public static array $operator_text_keys = [
         self::OP_EQUALS => 'equals',
         self::OP_STARTS_WITH => 'starts_with',
@@ -72,6 +66,7 @@ abstract class UDFCheck extends ActiveRecord
     ];
     private ilObjUser $user;
 
+    #[\Override]
     final public function getConnectorContainerName(): string
     {
         return static::TABLE_NAME;
@@ -82,9 +77,6 @@ abstract class UDFCheck extends ActiveRecord
         return static::TABLE_NAME;
     }
 
-    /**
-     * @param mixed $primary_key
-     */
     public function __construct(mixed $primary_key = 0)
     {
         global $DIC;
@@ -236,7 +228,6 @@ abstract class UDFCheck extends ActiveRecord
     }
 
     /**
-     * @var int
      *
      * @con_is_primary true
      * @con_is_unique  true
@@ -247,7 +238,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected ?int $id = 0;
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -264,7 +254,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected $field_key = 1;
     /**
-     * @var string
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -272,7 +261,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected string $check_value = '';
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -280,7 +268,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected int $operator = self::OP_EQUALS;
     /**
-     * @var bool
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -288,7 +275,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected bool $negated = false;
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -296,7 +282,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected int $owner = 6;
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -304,7 +289,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected int $status = self::STATUS_ACTIVE;
     /**
-     * @var int
      *
      * @db_has_field        true
      * @db_fieldtype        timestamp
@@ -312,7 +296,6 @@ abstract class UDFCheck extends ActiveRecord
      */
     protected int $create_date;
     /**
-     * @var int
      *
      * @db_has_field        true
      * @db_fieldtype        timestamp
@@ -347,6 +330,7 @@ abstract class UDFCheck extends ActiveRecord
         };
     }
 
+    #[\Override]
     public function update(): void
     {
         $this->setOwner($this->user->getId());
@@ -354,6 +338,7 @@ abstract class UDFCheck extends ActiveRecord
         parent::update();
     }
 
+    #[\Override]
     public function create(): void
     {
         $this->setOwner($this->user->getId());
@@ -386,7 +371,7 @@ abstract class UDFCheck extends ActiveRecord
     public function getCheckValues(): array
     {
         return array_map(
-            fn($check_value): string => trim((string) $check_value),
+            fn($check_value): string => trim($check_value),
             explode(self::CHECK_SPLIT, $this->check_value)
         );
     }

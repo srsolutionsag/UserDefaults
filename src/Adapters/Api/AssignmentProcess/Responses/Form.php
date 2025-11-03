@@ -23,6 +23,7 @@ use srag\Plugins\UserDefaults\API\Commands;
 class Form extends ilPropertyFormGUI
 {
     use UserDefaultsTrait;
+    public $tabs;
 
     public $positionRepo;
 
@@ -63,8 +64,6 @@ class Form extends ilPropertyFormGUI
     private UserDefaultsApi $userDefaultsApi;
 
     /**
-     * @param UserSettingsGUI $parent_gui
-     * @param UserSetting     $object
      * @throws \ilCtrlException
      */
     public function __construct(protected UserSettingsGUI $parent_gui, protected UserSetting $object)
@@ -375,7 +374,7 @@ class Form extends ilPropertyFormGUI
         if ($assignedOrguPosition == null) {
             $assignedOrguPosition = 0;
         }
-        $selectOrguPosVal = current(
+        current(
             array_filter(
                 $this->positionRepo->getAllPositions(),
                 fn($pos): bool => $pos->getId() == $assignedOrguPosition

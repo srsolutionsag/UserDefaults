@@ -30,6 +30,7 @@ class usrdefObj extends ActiveRecord
     /**
      * @deprecated
      */
+    #[\Override]
     public function getConnectorContainerName(): string
     {
         return self::TABLE_NAME;
@@ -135,8 +136,6 @@ class usrdefObj extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getType(): string
@@ -155,8 +154,6 @@ class usrdefObj extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getTitle(): string
@@ -175,8 +172,6 @@ class usrdefObj extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getDescription(): string
@@ -195,8 +190,6 @@ class usrdefObj extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getOwner(): int

@@ -38,6 +38,7 @@ class usrdefUserTableGUI extends ilTable2GUI
         $this->addCommandButton('selectUser', $this->pl->txt('button_select_user'));
         $this->setSelectAllCheckbox('id');
     }
+    #[\Override]
     protected function fillRow(array $a_set): void
     {
         foreach (array_keys($this->getSelectableColumns()) as $k) {
@@ -131,35 +132,30 @@ class usrdefUserTableGUI extends ilTable2GUI
         $this->setData($usrdefUser->getArray());
     }
 
+    #[\Override]
     public function getSelectableColumns(): array
     {
-        $cols['firstname'] = [
+        return ['firstname' => [
             'txt' => $this->pl->txt('usr_firstname'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'firstname'
-        ];
-        $cols['lastname'] = [
+        ], 'lastname' => [
             'txt' => $this->pl->txt('usr_lastname'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'lastname'
-        ];
-        $cols['email'] = [
+        ], 'email' => [
             'txt' => $this->pl->txt('usr_email'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'email'
-        ];
-        $cols['login'] = [
+        ], 'login' => [
             'txt' => $this->pl->txt('usr_login'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'login'
-        ];
-        $cols['actions'] = ['txt' => $this->pl->txt('common_actions'), 'default' => true, 'width' => '50px'];
-
-        return $cols;
+        ], 'actions' => ['txt' => $this->pl->txt('common_actions'), 'default' => true, 'width' => '50px']];
     }
 
     private function addColumns(): void
@@ -210,9 +206,6 @@ class usrdefUserTableGUI extends ilTable2GUI
         $this->filter[$item->getPostVar()] = $item->getValue();
     }
 
-    /**
-     * @return array
-     */
     protected function buildOrgunitOptions(): array
     {
         $all_children = ilObjOrgUnitTree::_getInstance()->getAllChildren(self::BASE_ORG_UNIT);

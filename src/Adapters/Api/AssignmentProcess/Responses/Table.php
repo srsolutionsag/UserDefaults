@@ -119,6 +119,7 @@ class Table extends ilTable2GUI
      * @throws DICException
      * @throws \JsonException
      */
+    #[\Override]
     protected function fillRow(array $a_set): void
     {
         $ilUserSetting = UserSetting::find($a_set['id']);
@@ -207,26 +208,20 @@ class Table extends ilTable2GUI
         //we don't want a filter here. So we override this method.
     }
 
+    #[\Override]
     public function getSelectableColumns(): array
     {
-        $cols['status_image'] = [
+        return ['status_image' => [
             'txt' => $this->pl->txt('set_status'),
             'default' => true,
             'width' => '30px',
             'sort_field' => 'status'
-        ];
-        $cols['title'] = [
+        ], 'title' => [
             'txt' => $this->pl->txt('set_title'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'title'
-        ];
-        $cols['on_create'] = ['txt' => $this->pl->txt('set_on_create'), 'default' => true, 'width' => 'auto'];
-        $cols['on_update'] = ['txt' => $this->pl->txt('set_on_update'), 'default' => true, 'width' => 'auto'];
-        $cols['on_manual'] = ['txt' => $this->pl->txt('set_on_manual'), 'default' => true, 'width' => 'auto'];
-        $cols['actions'] = ['txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px'];
-
-        return $cols;
+        ], 'on_create' => ['txt' => $this->pl->txt('set_on_create'), 'default' => true, 'width' => 'auto'], 'on_update' => ['txt' => $this->pl->txt('set_on_update'), 'default' => true, 'width' => 'auto'], 'on_manual' => ['txt' => $this->pl->txt('set_on_manual'), 'default' => true, 'width' => 'auto'], 'actions' => ['txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px']];
     }
 
     private function addColumns(): void
@@ -241,11 +236,13 @@ class Table extends ilTable2GUI
         }
     }
 
+    #[\Override]
     public function setExportFormats(array $formats): void
     {
         parent::setExportFormats([self::EXPORT_EXCEL, self::EXPORT_CSV]);
     }
 
+    #[\Override]
     protected function fillRowExcel(ilExcel $a_worksheet, int &$a_row, array $a_set): void
     {
         $col = 0;
@@ -260,6 +257,7 @@ class Table extends ilTable2GUI
         }
     }
 
+    #[\Override]
     protected function fillRowCSV(object $a_csv, array $a_set): void
     {
         foreach ($a_set as $key => $value) {
@@ -277,6 +275,7 @@ class Table extends ilTable2GUI
         $a_csv->addRow();
     }
 
+    #[\Override]
     public function numericOrdering($sort_field): bool
     {
         return in_array($sort_field, []);

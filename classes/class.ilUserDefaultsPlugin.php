@@ -134,6 +134,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         }
     }
 
+    #[\Override]
     public function getPluginName(): string
     {
         return self::PLUGIN_NAME;

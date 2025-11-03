@@ -20,6 +20,7 @@ use UserSettingsGUI;
 class UDFCheckTableGUI extends ilTable2GUI
 {
     use UserDefaultsTrait;
+    public $tabs;
 
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const USR_DEF_CONTENT = 'usr_def_content_checks';
@@ -106,6 +107,7 @@ class UDFCheckTableGUI extends ilTable2GUI
      * @throws ilCtrlException
      * @throws \JsonException
      */
+    #[\Override]
     protected function fillRow(array $a_set): void
     {
         $a_set["operator"] = $this->pl->txt("check_op_" . UDFCheck::$operator_text_keys[$a_set["operator"]]);
@@ -194,30 +196,25 @@ class UDFCheckTableGUI extends ilTable2GUI
         //we don't want a filter here. So we override this method.
     }
 
+    #[\Override]
     public function getSelectableColumns(): array
     {
-        $cols['field_key'] = [
+        return ['field_key' => [
             'txt' => $this->pl->txt('check_name'),
             'default' => true,
             'width' => '40%',
             'sort_field' => 'udf_definition_field_name'
-        ];
-        $cols['check_value'] = [
+        ], 'check_value' => [
             'txt' => $this->pl->txt('check_value'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'check_value'
-        ];
-        $cols['negated'] = [
+        ], 'negated' => [
             'txt' => $this->pl->txt('check_negation_gobal'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'check_negated'
-        ];
-        $cols['operator'] = ['txt' => $this->pl->txt('check_operator'), 'default' => true, 'width' => 'auto'];
-        $cols['actions'] = ['txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px'];
-
-        return $cols;
+        ], 'operator' => ['txt' => $this->pl->txt('check_operator'), 'default' => true, 'width' => 'auto'], 'actions' => ['txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px']];
     }
 
     private function addColumns(): void
@@ -230,11 +227,13 @@ class UDFCheckTableGUI extends ilTable2GUI
         }
     }
 
+    #[\Override]
     public function setExportFormats(array $formats): void
     {
         parent::setExportFormats([self::EXPORT_EXCEL, self::EXPORT_CSV]);
     }
 
+    #[\Override]
     protected function fillRowExcel(ilExcel $a_worksheet, int &$a_row, array $a_set): void
     {
         $col = 0;
@@ -249,6 +248,7 @@ class UDFCheckTableGUI extends ilTable2GUI
         }
     }
 
+    #[\Override]
     protected function fillRowCSV(\ilCSVWriter $a_csv, array $a_set): void
     {
         foreach ($a_set as $key => $value) {
@@ -266,6 +266,7 @@ class UDFCheckTableGUI extends ilTable2GUI
         $a_csv->addRow();
     }
 
+    #[\Override]
     public function numericOrdering(string $sort_field): bool
     {
         return in_array($sort_field, []);

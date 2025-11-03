@@ -54,7 +54,6 @@ class UserDefaultsConfig extends ActiveRecord
     public const TYPE_TIMESTAMP = 5;
 
     /**
-     * @var string
      *
      * @con_has_field   true
      * @con_fieldtype   text
@@ -70,7 +69,7 @@ class UserDefaultsConfig extends ActiveRecord
      * @con_fieldtype   text
      * @con_is_notnull  false
      */
-    protected $value = null;
+    protected $value;
 
     public function __construct(?string $primary_name_value = null, ?arConnector $connector = null)
     {
@@ -82,6 +81,7 @@ class UserDefaultsConfig extends ActiveRecord
         return self::getTableName();
     }
 
+    #[\Override]
     public function getConnectorContainerName(): string
     {
         return self::getTableName();

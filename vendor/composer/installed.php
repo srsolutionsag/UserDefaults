@@ -3,7 +3,7 @@
         'name' => 'dhbw/user-defaults',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '173029dfbc3f38e9c16b708d88f2b8e2bdadb192',
+        'reference' => 'c6a81f293a98760756fd79c7f1c6666b97edeb0e',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'dhbw/user-defaults' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '173029dfbc3f38e9c16b708d88f2b8e2bdadb192',
+            'reference' => 'c6a81f293a98760756fd79c7f1c6666b97edeb0e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

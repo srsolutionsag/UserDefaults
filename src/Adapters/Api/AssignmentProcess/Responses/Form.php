@@ -79,8 +79,8 @@ class Form extends ilPropertyFormGUI
         $this->tabs = $DIC['ilTabs'];
         $this->tabs->setBackTarget(
             $this->pl->txt('check_back'),
-            $this->ctrl->getLinkTarget($parent_gui,UserSettingsGUI::CMD_INDEX)
-            );
+            $this->ctrl->getLinkTarget($parent_gui, UserSettingsGUI::CMD_INDEX)
+        );
 
         $this->userDefaultsApi = UserDefaultsApi::new();
 

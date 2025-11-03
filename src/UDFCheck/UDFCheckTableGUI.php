@@ -56,7 +56,7 @@ class UDFCheckTableGUI extends ilTable2GUI
         $this->tabs->setBackTarget(
             $this->pl->txt('check_back'),
             $this->ctrl->getLinkTargetByClass(UserSettingsGUI::class, UserSettingsGUI::CMD_INDEX)
-            );
+        );
         parent::__construct($parent_obj, $parent_cmd, $template_context);
         $this->ctrl->saveParameter($parent_obj, $this->getNavParameter());
         $this->setEnableNumInfo(true);

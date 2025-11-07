@@ -2,7 +2,6 @@
 
 namespace srag\Plugins\UserDefaults\UDFCheck;
 
-use ilAdvancedSelectionListGUI;
 use ilCtrlException;
 use ilExcel;
 use ilException;
@@ -16,19 +15,22 @@ use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;
+use ILIAS\UI\Factory as UIFactory;
 
 class UDFCheckTableGUI extends ilTable2GUI
 {
     use UserDefaultsTrait;
-    public $tabs;
+
+    protected UIFactory $ui_factory;
+    protected \ilTabsGUI $tabs;
 
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const USR_DEF_CONTENT = 'usr_def_content_checks';
     protected array $filter = [];
     protected array $ignored_cols = [];
-    protected Renderer $renderer;
+    protected Renderer $ui_renderer;
     protected Factory $image;
-    private ilUserDefaultsPlugin $pl;
+    protected ilUserDefaultsPlugin $pl;
 
     /**
      * @throws ilCtrlException
@@ -41,7 +43,8 @@ class UDFCheckTableGUI extends ilTable2GUI
     ) {
         global $DIC;
 
-        $this->renderer = $DIC->ui()->renderer();
+        $this->ui_factory = $DIC->ui()->factory();
+        $this->ui_renderer = $DIC->ui()->renderer();
         $this->image = $DIC->ui()->factory()->image();
         $this->ctrl = $DIC->ctrl();
         $this->pl = ilUserDefaultsPlugin::getInstance();
@@ -50,7 +53,9 @@ class UDFCheckTableGUI extends ilTable2GUI
         $this->setFormName(self::USR_DEF_CONTENT);
         $this->setId(self::USR_DEF_CONTENT);
 
-        $ilUserSetting = UserSetting::Find($_GET[UserSettingsGUI::IDENTIFIER]);
+        $ilUserSetting = UserSetting::find($_GET[UserSettingsGUI::IDENTIFIER]) ?? throw new ilException(
+            "User Setting not found"
+        );
         $this->setTitle($this->pl->txt('check_table_title') . ' ' . $ilUserSetting->getTitle());
 
         $this->tabs = $DIC['ilTabs'];
@@ -124,25 +129,23 @@ class UDFCheckTableGUI extends ilTable2GUI
                 $this->ctrl->setParameter($this->parent_obj, UDFCheckGUI::IDENTIFIER, $a_set["id"]);
                 $this->ctrl->setParameter($ilUDFCheckGUI, UDFCheckGUI::IDENTIFIER, $a_set["id"]);
 
-                $current_selection_list = new ilAdvancedSelectionListGUI();
-                $current_selection_list->setListTitle($this->pl->txt('check_actions'));
-                $current_selection_list->setId('check_actions' . $a_set["id"]);
-                $current_selection_list->setUseImages(false);
-                $current_selection_list->addItem(
-                    $this->pl->txt('check_edit'),
-                    'check_edit',
-                    $this->ctrl
-                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT)
-                );
-                $current_selection_list->addItem(
-                    $this->pl->txt('check_delete'),
-                    'check_delete',
-                    $this->ctrl
-                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE)
+                // Create selection list for actions
+                $actions = [
+                    'check_edit' => $this->ui_factory->button()->shy(
+                        $this->pl->txt('check_edit'),
+                        $this->ctrl->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT)
+                    ),
+                    'check_delete' => $this->ui_factory->button()->shy(
+                        $this->pl->txt('check_delete'),
+                        $this->ctrl->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE)
+                    )
+                ];
+                $action_list = $this->ui_factory->dropdown()->standard(
+                    $actions
                 );
 
                 $this->tpl->setCurrentBlock('td');
-                $this->tpl->setVariable('VALUE', $current_selection_list->getHTML());
+                $this->tpl->setVariable('VALUE', $this->ui_renderer->render($action_list));
                 $this->tpl->parseCurrentBlock();
                 continue;
             }
@@ -199,22 +202,28 @@ class UDFCheckTableGUI extends ilTable2GUI
     #[\Override]
     public function getSelectableColumns(): array
     {
-        return ['field_key' => [
-            'txt' => $this->pl->txt('check_name'),
-            'default' => true,
-            'width' => '40%',
-            'sort_field' => 'udf_definition_field_name'
-        ], 'check_value' => [
-            'txt' => $this->pl->txt('check_value'),
-            'default' => true,
-            'width' => 'auto',
-            'sort_field' => 'check_value'
-        ], 'negated' => [
-            'txt' => $this->pl->txt('check_negation_gobal'),
-            'default' => true,
-            'width' => 'auto',
-            'sort_field' => 'check_negated'
-        ], 'operator' => ['txt' => $this->pl->txt('check_operator'), 'default' => true, 'width' => 'auto'], 'actions' => ['txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px']];
+        return [
+            'field_key' => [
+                'txt' => $this->pl->txt('check_name'),
+                'default' => true,
+                'width' => '40%',
+                'sort_field' => 'udf_definition_field_name'
+            ],
+            'check_value' => [
+                'txt' => $this->pl->txt('check_value'),
+                'default' => true,
+                'width' => 'auto',
+                'sort_field' => 'check_value'
+            ],
+            'negated' => [
+                'txt' => $this->pl->txt('check_negation_gobal'),
+                'default' => true,
+                'width' => 'auto',
+                'sort_field' => 'check_negated'
+            ],
+            'operator' => ['txt' => $this->pl->txt('check_operator'), 'default' => true, 'width' => 'auto'],
+            'actions' => ['txt' => $this->pl->txt('check_actions'), 'default' => true, 'width' => '150px']
+        ];
     }
 
     private function addColumns(): void

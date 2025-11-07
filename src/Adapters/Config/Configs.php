@@ -47,7 +47,7 @@ class Configs
             PortfolioTemplateService::new(IliasPortfolioTemplateRepository::new($DIC->database())),
             StudyProgrammeService::new(IliasStudyProgrammeRepository::new($DIC->database())),
             AssignmentProcessService::new(IliasStudyProgrammeRepository::new($DIC->database())),
-            \ilUserDefaultsPlugin::getInstance()->getDirectory() . "/src/Adapters",
+            "./Customizing/global/plugins/Services/EventHandling/EventHook/UserDefaults/src/Adapters",
             $DIC->ui()
         );
     }

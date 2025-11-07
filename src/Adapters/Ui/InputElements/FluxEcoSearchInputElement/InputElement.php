@@ -94,7 +94,12 @@ class InputElement extends ilFormPropertyGUI
      */
     public function render(): string
     {
-        $tpl = new ilTemplate(__DIR__ . "/templates/tpl.html", true, true);
+        $tpl = new ilTemplate(
+            "tpl.html",
+            true,
+            true,
+            __DIR__
+        );
         $tpl->setCurrentBlock("flux_eco_ui_search_input_element");
         $tpl->setVariable("MODULE_NAME", $this->postvar);
         $tpl->setVariable(

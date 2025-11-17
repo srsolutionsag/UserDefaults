@@ -9,6 +9,6 @@ trait UserDefaultsTrait
      */
     protected static function isCustomUserFieldsHelperAvailable(): bool
     {
-        return file_exists("./Services/User/classes/class.ilCustomUserFieldsHelper.php");
+        return file_exists("./components/ILIAS/User/classes/class.ilCustomUserFieldsHelper.php");
     }
 }

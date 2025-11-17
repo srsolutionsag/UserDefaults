@@ -9,9 +9,6 @@ class UDFCheckUser extends UDFCheck
 {
     public const TABLE_NAME = 'usr_def_checks_user';
     public const FIELD_CATEGORY = 1;
-    /**
-     * @var array|null
-     */
     protected static ?array $all_definitions_of_category = null;
 
     protected static function getDefinitionsOfCategory(): array

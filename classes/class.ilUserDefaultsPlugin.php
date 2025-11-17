@@ -11,10 +11,10 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
     public const PLUGIN_NAME = 'UserDefaults';
     public const PLUGIN_CLASS_NAME = self::class;
     // Known Components
-    public const SERVICES_USER = 'Services/User';
-    public const SERVICES_OBJECT = 'Services/Object';
-    public const SERVICES_AUTHENTICATION = 'Services/Authentication';
-    public const MODULES_ORGUNITS = 'Modules/OrgUnit';
+    public const SERVICES_USER = 'components/ILIAS/User';
+    public const SERVICES_OBJECT = 'components/ILIAS/ILIASObject';
+    public const SERVICES_AUTHENTICATION = 'components/ILIAS/Authentication';
+    public const MODULES_ORGUNITS = 'components/ILIAS/OrgUnit';
     // Known Actions
     public const CREATED_1 = 'saveAsNew';
     public const CREATED_2 = 'afterCreate';
@@ -134,6 +134,7 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
         }
     }
 
+    #[\Override]
     public function getPluginName(): string
     {
         return self::PLUGIN_NAME;
@@ -154,6 +155,11 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
     public function getImagePath(string $imageName): string
     {
         return $this->getDirectory() . "/templates/images/" . $imageName;
+    }
+
+    public function getDirectory(): string
+    {
+        return realpath(parent::getDirectory());
     }
 
     public static function grantAccess(): bool

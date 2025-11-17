@@ -37,18 +37,15 @@ class usrdefUser extends ActiveRecord
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
 
     /**
-     * @return string
-     *
      * @deprecated
      */
+    #[\Override]
     public function getConnectorContainerName(): string
     {
         return self::TABLE_NAME;
     }
 
     /**
-     * @return string
-     *
      * @deprecated
      */
     public static function returnDbTableName(): string
@@ -57,8 +54,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @var usrdefObj
-     *
      * @deprecated
      */
     protected usrdefObj $usrdefObj;
@@ -66,6 +61,7 @@ class usrdefUser extends ActiveRecord
     /**
      * @deprecated
      */
+    #[\Override]
     public function create(): void
     {
         throw new ilException('ActiveReacord Class ' . self::class . ' is not allowed to ' . __METHOD__ . ' objects');
@@ -74,6 +70,7 @@ class usrdefUser extends ActiveRecord
     /**
      * @deprecated
      */
+    #[\Override]
     public function update(): void
     {
         throw new ilException('ActiveReacord Class ' . self::class . ' is not allowed to ' . __METHOD__ . ' objects');
@@ -82,6 +79,7 @@ class usrdefUser extends ActiveRecord
     /**
      * @deprecated
      */
+    #[\Override]
     public function delete(): void
     {
         throw new ilException('ActiveReacord Class ' . self::class . ' is not allowed to ' . __METHOD__ . ' objects');
@@ -647,8 +645,6 @@ class usrdefUser extends ActiveRecord
     protected int $is_self_registered;
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getActive(): int
@@ -667,8 +663,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getAgreeDate(): ?string
@@ -705,8 +699,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return usrdefObj
-     *
      * @deprecated
      */
     public function getusrdefObj(): usrdefObj
@@ -715,8 +707,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @param usrdefObj $usrdefObj
-     *
      * @deprecated
      */
     public function setusrdefObj(usrdefObj $usrdefObj): void
@@ -725,8 +715,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getAuthMode(): ?string
@@ -745,8 +733,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getBirthday(): ?string
@@ -765,8 +751,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getCity(): string
@@ -785,8 +769,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getClientIp(): string
@@ -805,8 +787,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getCountry(): string
@@ -843,8 +823,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getDelicious(): string
@@ -863,8 +841,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getDepartment(): string
@@ -883,8 +859,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getEmail(): string
@@ -903,8 +877,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getExtAccount(): string
@@ -923,8 +895,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getFax(): string
@@ -943,8 +913,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getFeedHash(): ?string
@@ -963,8 +931,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getFirstname(): string
@@ -983,8 +949,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getGender(): string
@@ -1003,8 +967,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getHobby(): string
@@ -1023,8 +985,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getI2passwd(): string
@@ -1043,8 +1003,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getIlincId(): int
@@ -1063,8 +1021,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getIlincLogin(): string
@@ -1083,8 +1039,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getIlincPasswd(): string
@@ -1103,8 +1057,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getImAim(): string
@@ -1123,8 +1075,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getImIcq(): string
@@ -1143,8 +1093,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getImJabber(): string
@@ -1163,8 +1111,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getImMsn(): string
@@ -1183,8 +1129,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getImSkype(): string
@@ -1203,8 +1147,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getImVoip(): string
@@ -1223,8 +1165,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getImYahoo(): string
@@ -1243,8 +1183,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getInactivationDate(): ?string
@@ -1263,8 +1201,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getInstitution(): string
@@ -1283,8 +1219,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getIsSelfRegistered(): int
@@ -1321,8 +1255,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getLastPasswordChange(): int
@@ -1341,8 +1273,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getLastUpdate(): string
@@ -1379,8 +1309,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getLastname(): string
@@ -1417,8 +1345,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getLocZoom(): int
@@ -1437,8 +1363,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getLogin(): string
@@ -1457,8 +1381,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getLoginAttempts(): int
@@ -1495,8 +1417,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getMatriculation(): string
@@ -1515,8 +1435,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getPasswd(): string
@@ -1535,8 +1453,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getPhoneHome(): string
@@ -1555,8 +1471,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getPhoneMobile(): string
@@ -1575,8 +1489,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getPhoneOffice(): string
@@ -1595,8 +1507,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getProfileIncomplete(): int
@@ -1615,8 +1525,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getReferralComment(): string
@@ -1635,8 +1543,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getRegHash(): ?string
@@ -1655,8 +1561,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getSelCountry(): string
@@ -1675,8 +1579,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getStreet(): string
@@ -1695,8 +1597,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getTimeLimitFrom(): ?int
@@ -1715,8 +1615,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getTimeLimitMessage(): int
@@ -1735,8 +1633,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getTimeLimitOwner(): int
@@ -1755,8 +1651,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getTimeLimitUnlimited(): int
@@ -1775,8 +1669,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getTimeLimitUntil(): ?int
@@ -1795,8 +1687,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getTitle(): string
@@ -1815,8 +1705,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getUsrId(): ?int
@@ -1835,8 +1723,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return mixed
-     *
      * @deprecated
      */
     public function getZipcode(): string
@@ -1855,8 +1741,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @return boolean
-     *
      * @deprecated
      */
     public function isArSafeRead(): bool
@@ -1865,8 +1749,6 @@ class usrdefUser extends ActiveRecord
     }
 
     /**
-     * @param boolean $ar_safe_read
-     *
      * @deprecated
      */
     public function setArSafeRead(bool $ar_safe_read): void

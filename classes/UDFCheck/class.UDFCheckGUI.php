@@ -30,7 +30,7 @@ class UDFCheckGUI
      * @param \UserSettingsGUI|\UDFCheckGUI $parent_gui
      * @throws ilCtrlException
      */
-    public function __construct($parent_gui)
+    public function __construct(object $parent_gui)
     {
         global $DIC;
         //check Access

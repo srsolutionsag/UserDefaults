@@ -2,8 +2,9 @@
 
 namespace srag\Plugins\UserDefaults\Adapters\Api\AssignmentProcess\Responses;
 
+use ILIAS\UI\Renderer;
+use ILIAS\UI\Factory;
 use arException;
-use ilAdvancedSelectionListGUI;
 use ilExcel;
 use ilLinkButton;
 use ilTable2GUI;
@@ -20,6 +21,8 @@ class Table extends ilTable2GUI
 
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const USR_DEF_CONTENT = 'usr_def_content';
+    protected Renderer $ui_renderer;
+    protected Factory $ui_factory;
     protected array $filter = [];
     protected array $ignored_cols = [];
     private ilUserDefaultsPlugin $pl;
@@ -39,6 +42,8 @@ class Table extends ilTable2GUI
         $this->ctrl = $DIC->ctrl();
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->toolbar = $DIC->toolbar();
+        $this->ui_factory = $DIC->ui()->factory();
+        $this->ui_renderer = $DIC->ui()->renderer();
 
         $this->setPrefix(self::USR_DEF_CONTENT);
         $this->setFormName(self::USR_DEF_CONTENT);
@@ -119,67 +124,60 @@ class Table extends ilTable2GUI
      * @throws DICException
      * @throws \JsonException
      */
+    #[\Override]
     protected function fillRow(array $a_set): void
     {
-        $ilUserSetting = UserSetting::find($a_set['id']);
-        $ilUDFCheckGUI = new UDFCheckGUI($this->parent_obj);
+        $user_settings = UserSetting::find($a_set['id']) ?? throw new \ilException('User Setting not found: ' . $a_set['id']);
 
         $this->tpl->setCurrentBlock('setting_select');
-        $this->tpl->setVariable('SETTING_ID', $ilUserSetting->getId());
+        $this->tpl->setVariable('SETTING_ID', $user_settings->getId());
         $this->tpl->parseCurrentBlock();
 
         foreach (array_keys($this->getSelectableColumns()) as $k) {
             if ($k == 'actions') {
-                $this->ctrl->setParameter($this->parent_obj, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
-                $this->ctrl->setParameter($ilUDFCheckGUI, UserSettingsGUI::IDENTIFIER, $ilUserSetting->getId());
+                $this->ctrl->setParameter($this->parent_obj, UserSettingsGUI::IDENTIFIER, $user_settings->getId());
+                $this->ctrl->setParameterByClass(UDFCheckGUI::class, UserSettingsGUI::IDENTIFIER, $user_settings->getId());
 
-                $current_selection_list = new ilAdvancedSelectionListGUI();
-                $current_selection_list->setListTitle($this->pl->txt('set_actions'));
-                $current_selection_list->setId('set_actions' . $ilUserSetting->getId());
-                $current_selection_list->setUseImages(false);
-                $current_selection_list->addItem(
-                    $this->pl->txt('set_edit'),
-                    'set_edit',
-                    $this->ctrl
-                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_EDIT)
-                );
+                // Actions
+                // Create selection list for actions
+                $actions = [
+                    'set_edit' => $this->ui_factory->button()->shy(
+                        $this->pl->txt('check_edit'),
+                        $this->ctrl->getLinkTargetByClass(UserSettingsGUI::class, UserSettingsGUI::CMD_EDIT)
+                    ),
+                    'set_udf_checks' => $this->ui_factory->button()->shy(
+                        $this->pl->txt('set_udf_checks'),
+                        $this->ctrl->getLinkTargetByClass(UDFCheckGUI::class, UDFCheckGUI::CMD_INDEX)
+                    ),
+                ];
 
-                $current_selection_list->addItem(
-                    $this->pl->txt('set_udf_checks'),
-                    'set_udf_checks',
-                    $this->ctrl
-                        ->getLinkTarget($ilUDFCheckGUI, UDFCheckGUI::CMD_INDEX)
-                );
-                if ($ilUserSetting->getStatus() == UserSetting::STATUS_ACTIVE) {
-                    $current_selection_list->addItem(
+                if ($user_settings->getStatus() === UserSetting::STATUS_ACTIVE) {
+                    $actions['set_deactivate'] = $this->ui_factory->button()->shy(
                         $this->pl->txt('set_deactivate'),
-                        'set_deactivate',
-                        $this->ctrl
-                            ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DEACTIVATE)
+                        $this->ctrl->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DEACTIVATE)
                     );
                 } else {
-                    $current_selection_list->addItem(
+                    $actions['set_activate'] = $this->ui_factory->button()->shy(
                         $this->pl->txt('set_activate'),
-                        'set_activate',
-                        $this->ctrl
-                            ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_ACTIVATE)
+                        $this->ctrl->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_ACTIVATE)
                     );
                 }
-                $current_selection_list->addItem(
+
+                $actions['set_duplicate'] = $this->ui_factory->button()->shy(
                     $this->pl->txt('set_duplicate'),
-                    'set_duplicate',
-                    $this->ctrl
-                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DUPLICATE)
+                    $this->ctrl->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_DUPLICATE)
                 );
-                $current_selection_list->addItem(
+                $actions['set_delete'] = $this->ui_factory->button()->shy(
                     $this->pl->txt('set_delete'),
-                    'set_delete',
-                    $this->ctrl
-                        ->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE)
+                    $this->ctrl->getLinkTarget($this->parent_obj, UserSettingsGUI::CMD_CONFIRM_DELETE)
+                );
+
+                $action_list = $this->ui_factory->dropdown()->standard(
+                    $actions
                 );
 
                 $this->tpl->setCurrentBlock('td');
-                $this->tpl->setVariable('VALUE', $current_selection_list->getHTML());
+                $this->tpl->setVariable('VALUE', $this->ui_renderer->render($action_list));
                 $this->tpl->parseCurrentBlock();
                 continue;
             }
@@ -207,26 +205,20 @@ class Table extends ilTable2GUI
         //we don't want a filter here. So we override this method.
     }
 
+    #[\Override]
     public function getSelectableColumns(): array
     {
-        $cols['status_image'] = [
+        return ['status_image' => [
             'txt' => $this->pl->txt('set_status'),
             'default' => true,
             'width' => '30px',
             'sort_field' => 'status'
-        ];
-        $cols['title'] = [
+        ], 'title' => [
             'txt' => $this->pl->txt('set_title'),
             'default' => true,
             'width' => 'auto',
             'sort_field' => 'title'
-        ];
-        $cols['on_create'] = ['txt' => $this->pl->txt('set_on_create'), 'default' => true, 'width' => 'auto'];
-        $cols['on_update'] = ['txt' => $this->pl->txt('set_on_update'), 'default' => true, 'width' => 'auto'];
-        $cols['on_manual'] = ['txt' => $this->pl->txt('set_on_manual'), 'default' => true, 'width' => 'auto'];
-        $cols['actions'] = ['txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px'];
-
-        return $cols;
+        ], 'on_create' => ['txt' => $this->pl->txt('set_on_create'), 'default' => true, 'width' => 'auto'], 'on_update' => ['txt' => $this->pl->txt('set_on_update'), 'default' => true, 'width' => 'auto'], 'on_manual' => ['txt' => $this->pl->txt('set_on_manual'), 'default' => true, 'width' => 'auto'], 'actions' => ['txt' => $this->pl->txt('set_actions'), 'default' => true, 'width' => '150px']];
     }
 
     private function addColumns(): void
@@ -241,11 +233,13 @@ class Table extends ilTable2GUI
         }
     }
 
+    #[\Override]
     public function setExportFormats(array $formats): void
     {
         parent::setExportFormats([self::EXPORT_EXCEL, self::EXPORT_CSV]);
     }
 
+    #[\Override]
     protected function fillRowExcel(ilExcel $a_worksheet, int &$a_row, array $a_set): void
     {
         $col = 0;
@@ -260,6 +254,7 @@ class Table extends ilTable2GUI
         }
     }
 
+    #[\Override]
     protected function fillRowCSV(object $a_csv, array $a_set): void
     {
         foreach ($a_set as $key => $value) {
@@ -277,6 +272,7 @@ class Table extends ilTable2GUI
         $a_csv->addRow();
     }
 
+    #[\Override]
     public function numericOrdering($sort_field): bool
     {
         return in_array($sort_field, []);

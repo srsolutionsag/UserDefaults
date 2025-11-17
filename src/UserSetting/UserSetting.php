@@ -55,9 +55,6 @@ class UserSetting extends ActiveRecord
     private RBACServices $rbac;
     private ilObjUser $user;
 
-    /**
-     * @param mixed $primary_key
-     */
     public function __construct(mixed $primary_key = 0)
     {
         global $DIC;
@@ -84,6 +81,7 @@ class UserSetting extends ActiveRecord
         return self::TABLE_NAME;
     }
 
+    #[\Override]
     public function getConnectorContainerName(): string
     {
         return self::TABLE_NAME;
@@ -113,7 +111,7 @@ class UserSetting extends ActiveRecord
         $text = $this->getPortfolioName();
 
         foreach (self::$placeholders as $p) {
-            $text = preg_replace("/\\[" . $p . "\\]/uim", $this->getPlaceholder($p), $text);
+            $text = preg_replace("/\\[" . $p . "\\]/uim", $this->getPlaceholder($p), (string) $text);
         }
 
         return $text;
@@ -123,15 +121,16 @@ class UserSetting extends ActiveRecord
 
     /**
      * @param int   $primary_key
-     * @param array $add_constructor_args
      *
      * @return UserSetting
      */
+    #[\Override]
     public static function find($primary_key, array $add_constructor_args = []): ?ActiveRecord
     {
         return parent::find($primary_key, $add_constructor_args);
     }
 
+    #[\Override]
     public function delete(): void
     {
         foreach ($this->getUdfCheckObjects() as $udf_check) {
@@ -141,11 +140,12 @@ class UserSetting extends ActiveRecord
         parent::delete();
     }
 
+    #[\Override]
     public function update(): void
     {
         $this->setOwner($this->user->getId());
         $this->setUpdateDate(time());
-        if (!$this->hasChecks() && $this->getStatus() == self::STATUS_ACTIVE) {
+        if (!$this->hasChecks() && $this->getStatus() === self::STATUS_ACTIVE) {
             global $DIC;
             $tpl = $DIC["tpl"];
             $tpl->setOnScreenMessage('info', $this->pl->txt('msg_activation_failed'), true);
@@ -154,6 +154,7 @@ class UserSetting extends ActiveRecord
         parent::update();
     }
 
+    #[\Override]
     public function create(): void
     {
         $this->setOwner($this->user->getId());
@@ -243,12 +244,12 @@ class UserSetting extends ActiveRecord
     protected function assignLocalRoles(): void
     {
         $local_roles = $this->getAssignedLocalRoles();
-        if (count($local_roles) == 0) {
+        if (count($local_roles) === 0) {
             return;
         }
 
         foreach ($local_roles as $local_roles_obj_id) {
-            $this->rbac->admin()->assignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+            $this->rbac->admin()->assignUser((int) $local_roles_obj_id, $this->getUsrObject()->getId());
         }
     }
 
@@ -260,19 +261,19 @@ class UserSetting extends ActiveRecord
 
         $local_roles = $this->getAssignedLocalRoles();
 
-        if (count($local_roles) == 0) {
+        if (count($local_roles) === 0) {
             return;
         }
 
         foreach ($local_roles as $local_roles_obj_id) {
-            $this->rbac->admin()->deassignUser((int) $local_roles_obj_id, (int) $this->getUsrObject()->getId());
+            $this->rbac->admin()->deassignUser((int) $local_roles_obj_id, $this->getUsrObject()->getId());
         }
     }
 
     protected function assignCourses(): void
     {
         $courses = $this->getAssignedCourses();
-        if (count($courses) == 0) {
+        if (count($courses) === 0) {
             return;
         }
 
@@ -301,7 +302,7 @@ class UserSetting extends ActiveRecord
         }
 
         $courses = $this->getAssignedCourses();
-        if (count($courses) == 0) {
+        if (count($courses) === 0) {
             return;
         }
 
@@ -466,7 +467,7 @@ class UserSetting extends ActiveRecord
             }
         }
 
-        $backup_user = self::dic()->user();
+        self::dic()->user();
         $ilUser = $this->getUsrObject();
 
         $prtt_id = $this->getPortfolioTemplateId();
@@ -504,7 +505,7 @@ class UserSetting extends ActiveRecord
         $exc = new ilObjExercise($exc_ref_id);
         $ass = new ilExAssignment($ass_id);
         if ($ass->getExerciseId() === $exc->getId()
-            && $ass->getType() == ilExAssignment::TYPE_PORTFOLIO) {
+            && $ass->getType() === ilExAssignment::TYPE_PORTFOLIO) {
             // #16205
             $sub = new ilExSubmission($ass, $ilUser->getId());
             $sub->addResourceObject($target_id);
@@ -520,8 +521,6 @@ class UserSetting extends ActiveRecord
                 $ilPortfolioAccessHandler->addPermission($target->getId(), $grp_obj_id);
             }
         }
-
-        $ilUser = $backup_user;
     }
 
     protected function removePortfolio(): void
@@ -612,7 +611,6 @@ class UserSetting extends ActiveRecord
     }
 
     /**
-     * @var int
      *
      * @con_is_primary true
      * @con_is_unique  true
@@ -623,7 +621,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?int $id = 0;
     /**
-     * @var string
      *
      * @con_has_field true
      * @con_fieldtype text
@@ -631,7 +628,6 @@ class UserSetting extends ActiveRecord
      */
     protected string $title = '';
     /**
-     * @var string
      *
      * @con_has_field true
      * @con_fieldtype text
@@ -639,7 +635,6 @@ class UserSetting extends ActiveRecord
      */
     protected string $description = '';
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -647,7 +642,6 @@ class UserSetting extends ActiveRecord
      */
     protected int $status = self::STATUS_INACTIVE;
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -655,7 +649,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $global_roles = [4];
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -663,7 +656,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?bool $unsign_global_roles = false;
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -671,7 +663,6 @@ class UserSetting extends ActiveRecord
      */
     protected int $owner = 6;
     /**
-     * @var int
      *
      * @db_has_field        true
      * @db_fieldtype        timestamp
@@ -679,7 +670,6 @@ class UserSetting extends ActiveRecord
      */
     protected int $create_date = 0;
     /**
-     * @var int
      *
      * @db_has_field        true
      * @db_fieldtype        timestamp
@@ -687,7 +677,6 @@ class UserSetting extends ActiveRecord
      */
     protected int $update_date = 0;
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -695,7 +684,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $assigned_local_roles = [];
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -703,7 +691,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?bool $unsign_local_roles = false;
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -711,7 +698,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $assigned_courses = [];
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -719,7 +705,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $assigned_groupes = [];
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -727,7 +712,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?bool $unsubscr_from_crs_and_cat = false;
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -735,7 +719,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?bool $unsubscr_from_grp = false;
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -743,7 +726,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?bool $assigned_groups_option_request = false;
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -751,7 +733,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $assigned_groups_queue = [];
     /**
-     * @var bool
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -759,7 +740,6 @@ class UserSetting extends ActiveRecord
      */
     protected bool $groups_queue_desktop = false;
     /**
-     * @var bool
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -767,7 +747,6 @@ class UserSetting extends ActiveRecord
      */
     protected bool $groups_queue_parallel = false;
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -775,7 +754,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?int $portfolio_template_id = null;
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -783,7 +761,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $portfolio_assigned_to_groups = [];
     /**
-     * @var string
      *
      * @con_has_field true
      * @con_fieldtype text
@@ -791,7 +768,6 @@ class UserSetting extends ActiveRecord
      */
     protected string $blog_name = '';
     /**
-     * @var string
      *
      * @con_has_field true
      * @con_fieldtype text
@@ -799,7 +775,6 @@ class UserSetting extends ActiveRecord
      */
     protected string $portfolio_name = '';
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -807,7 +782,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?bool $remove_from_portfolio = false;
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -815,7 +789,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $assigned_orgus = [];
     /**
-     * @var int
      *
      * @con_has_field  true
      * @con_fieldtype  integer
@@ -823,7 +796,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?int $assigned_orgu_position = null;
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -831,7 +803,6 @@ class UserSetting extends ActiveRecord
      */
     protected ?bool $unsubscribe_from_orgus = false;
     /**
-     * @var array
      *
      * @con_has_field  true
      * @con_fieldtype  text
@@ -839,7 +810,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $assigned_studyprograms = [];
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -851,7 +821,6 @@ class UserSetting extends ActiveRecord
      */
     protected array $udf_check_objects = [];
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -859,7 +828,6 @@ class UserSetting extends ActiveRecord
      */
     protected bool $on_create = true;
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -867,7 +835,6 @@ class UserSetting extends ActiveRecord
      */
     protected bool $on_update = false;
     /**
-     * @var bool
      *
      * @con_has_field true
      * @con_fieldtype integer
@@ -908,11 +875,9 @@ class UserSetting extends ActiveRecord
                 $json_decode = json_decode((string) $field_value, true);
 
                 return is_array($json_decode) ? $json_decode : [];
-                break;
             case 'create_date':
             case 'update_date':
                 return strtotime((string) $field_value);
-                break;
         }
 
         return null;
@@ -920,7 +885,7 @@ class UserSetting extends ActiveRecord
 
     public function isGroupsQueueDesktop(): bool
     {
-        return (bool) ($this->groups_queue_desktop ?? false);
+        return $this->groups_queue_desktop ?? false;
     }
 
     public function setGroupsQueueDesktop(bool $groups_queue_desktop): void
@@ -1240,7 +1205,7 @@ class UserSetting extends ActiveRecord
 
     public function isOnCreate(): bool
     {
-        return (bool) $this->on_create;
+        return $this->on_create;
     }
 
     public function setOnCreate(bool $on_create): void
@@ -1260,7 +1225,7 @@ class UserSetting extends ActiveRecord
 
     public function isOnManual(): bool
     {
-        return (bool) $this->on_manual;
+        return $this->on_manual;
     }
 
     public function setOnManual(bool $on_manual): void
@@ -1318,7 +1283,7 @@ class UserSetting extends ActiveRecord
             if (!is_null($this->getAssignedOrguPosition())) {
                 $ua = $this->orgUnitAssignmentRepo->get(
                     $usr_id,
-                    (int) $this->getAssignedOrguPosition(),
+                    $this->getAssignedOrguPosition(),
                     $orgUnit->getRefId()
                 );
                 $this->orgUnitAssignmentRepo->delete($ua);
@@ -1393,7 +1358,7 @@ class UserSetting extends ActiveRecord
         return true;
     }
 
-    protected function copyDependencies(\srag\Plugins\UserDefaults\UserSetting\UserSetting $copy): array
+    protected function copyDependencies(UserSetting $copy): array
     {
         $original_udf_checks = $this->getUdfCheckObjects();
         /** @var UDFCheck[] $new_udf_checks */

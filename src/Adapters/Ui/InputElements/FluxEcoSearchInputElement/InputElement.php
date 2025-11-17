@@ -77,6 +77,7 @@ class InputElement extends ilFormPropertyGUI
         $this->selected_first = $a_value;
     }
 
+    #[\Override]
     public function checkInput(): bool
     {
         $lng = $this->lng;
@@ -93,9 +94,12 @@ class InputElement extends ilFormPropertyGUI
      */
     public function render(): string
     {
-        $lng = $this->lng;
-
-        $tpl = new ilTemplate(__DIR__ . "/templates/tpl.html", true, true);
+        $tpl = new ilTemplate(
+            "tpl.html",
+            true,
+            true,
+            __DIR__
+        );
         $tpl->setCurrentBlock("flux_eco_ui_search_input_element");
         $tpl->setVariable("MODULE_NAME", $this->postvar);
         $tpl->setVariable(

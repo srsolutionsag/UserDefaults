@@ -1,4 +1,5 @@
-form_title#:#Setup
+form_title#:#Setting for Set:
+form_modify_title#:#Edit Setting for Set:
 form_button_update#:#Update
 form_button_create#:#Create
 form_button_cancel#:#Cancel
@@ -47,7 +48,7 @@ msg_activation_failed#:#Due to missing UDF-Checks the Setting has not been activ
 msg_confirm_delete#:#Do you really like to delete the dataset?
 msg_duplicate_successful#:#Cloned successfully?
 msg_no_users_selected#:#No Accounts selected
-check_table_title#:#UDF-Checks
+check_table_title#:#UDF-Checks for Set:
 check_add#:#Add UDF-Check
 check_name#:#Field
 check_operator#:#Operator
@@ -56,7 +57,8 @@ check_actions#:#Actions
 check_udf_field_id#:#UDF-Field
 check_edit#:#Edit
 check_delete#:#Delete
-check_back#:#<< Back
+check_back#:#Back to Settings
+check_back_check#:#Back to UDFCheck
 check_cancel#:#Cancel
 check_udf_negate_value#:#Negate
 check_udf_negate_value_info#:#If you check this option, this rule is applied to all user that do NOT associate with the value given below.
@@ -104,9 +106,7 @@ removeplugindataconfirm_msg_kept_data#:#The %1$s data was kept
 removeplugindataconfirm_msg_removed_data#:#The %1$s data was also removed
 removeplugindataconfirm_remove_data#:#Remove %1$s data
 check_field_key#:#Field
-check_field_category#:#Category
-check_field_category_1#:#ILIAS user master data fields
-check_field_category_2#:#User default fields
+check_field_category#:#Field Category
 tabs_global_settings#:#Global setting
 save#:#Save
 saved#:#Saved

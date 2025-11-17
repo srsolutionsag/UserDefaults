@@ -10,9 +10,9 @@ final class Access
     use UserDefaultsTrait;
 
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
-    protected static ?Access $instance = null;
+    private static ?Access $instance = null;
 
-    public static function getInstance(): ?Access
+    public static function getInstance(): Access
     {
         if (self::$instance === null) {
             self::$instance = new self();

@@ -9,8 +9,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 class UDFCheckOld extends ActiveRecord
 {
-    use UserDefaultsTrait;
-
     /**
      * @var string
      *

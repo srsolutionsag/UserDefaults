@@ -22,7 +22,6 @@ use srag\Plugins\UserDefaults\API\Commands;
 
 class Form extends ilPropertyFormGUI
 {
-    use UserDefaultsTrait;
     public $tabs;
 
     public $positionRepo;

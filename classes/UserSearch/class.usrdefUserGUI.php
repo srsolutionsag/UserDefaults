@@ -11,8 +11,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class usrdefUserGUI
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const CMD_INDEX = 'index';
     public const CMD_APPLY_FILTER = 'applyFilter';

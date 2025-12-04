@@ -14,8 +14,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class usrdefUser extends ActiveRecord
 {
-    use UserDefaultsTrait;
-
     public $approve_date;
     public $create_date;
     public $last_login;

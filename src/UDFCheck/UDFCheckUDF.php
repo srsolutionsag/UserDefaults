@@ -23,9 +23,10 @@ class UDFCheckUDF extends UDFCheck
         foreach ($user_defined_fields->getDefinitions() as $field) {
             $udf_field = [];
 
-            if (!self::isCustomUserFieldsHelperAvailable() && !in_array(
-                $field['field_type'],
-                [UDF_TYPE_TEXT, UDF_TYPE_SELECT]
+            if (!in_array(
+                (int) $field['field_type'],
+                [UDF_TYPE_TEXT, UDF_TYPE_SELECT],
+                true
             )) {
                 continue;
             }

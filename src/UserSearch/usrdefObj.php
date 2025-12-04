@@ -12,8 +12,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class usrdefObj extends ActiveRecord
 {
-    use UserDefaultsTrait;
-
     /**
      * @var string
      *

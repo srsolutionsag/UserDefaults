@@ -12,8 +12,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class UserSettingsGUI
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const CMD_INDEX = 'configure';
 

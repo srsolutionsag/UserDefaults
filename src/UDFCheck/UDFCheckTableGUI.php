@@ -19,8 +19,6 @@ use ILIAS\UI\Factory as UIFactory;
 
 class UDFCheckTableGUI extends ilTable2GUI
 {
-    use UserDefaultsTrait;
-
     protected UIFactory $ui_factory;
     protected \ilTabsGUI $tabs;
 

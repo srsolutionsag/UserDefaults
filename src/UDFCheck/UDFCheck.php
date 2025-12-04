@@ -11,8 +11,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 abstract class UDFCheck extends ActiveRecord
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const OP_EQUALS = 1;
     public const OP_STARTS_WITH = 2;

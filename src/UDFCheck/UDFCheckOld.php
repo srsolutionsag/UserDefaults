@@ -5,7 +5,6 @@ namespace srag\Plugins\UserDefaults\UDFCheck;
 use ActiveRecord;
 use ilUserDefaultsPlugin;
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 class UDFCheckOld extends ActiveRecord
 {

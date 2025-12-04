@@ -4,7 +4,6 @@ namespace srag\Plugins\UserDefaults\UserSearch;
 
 use ActiveRecord;
 use ilUserDefaultsPlugin;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  *

@@ -3,7 +3,6 @@
 namespace srag\Plugins\UserDefaults\Access;
 
 use ilUserDefaultsPlugin;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 final class Access
 {

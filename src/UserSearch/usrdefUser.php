@@ -5,7 +5,6 @@ namespace srag\Plugins\UserDefaults\UserSearch;
 use ActiveRecord;
 use ilException;
 use ilUserDefaultsPlugin;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * Class usrdefUser

@@ -11,7 +11,6 @@ use ilTable2GUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;
 

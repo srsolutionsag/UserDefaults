@@ -26,7 +26,6 @@ use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
 use php4DOMDocument;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 //use ilObject;
 

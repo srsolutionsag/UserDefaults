@@ -13,7 +13,6 @@ use ilUDFDefinitionPlugin;
 use ilUserDefaultsPlugin;
 use ilUserSearchOptions;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;
 

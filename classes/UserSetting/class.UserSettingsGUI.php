@@ -1,10 +1,8 @@
 <?php
 
 use ILIAS\DI\UIServices;
-use ILIAS\DI\RBACServices;
 use srag\Plugins\UserDefaults\API\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * @ilCtrl_IsCalledBy UserSettingsGUI : ilUserDefaultsConfigGUI
@@ -37,10 +35,6 @@ class UserSettingsGUI
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $tpl;
     private UIServices $ui;
-    private ilDBInterface $db;
-    private ilTree $repositoryTree;
-    private RBACServices $rbac;
-    private ilObjectDataCache $objDataCache;
     private UserDefaultsApi $userDefaultsApi;
 
     /**
@@ -60,10 +54,6 @@ class UserSettingsGUI
         $this->ui = $DIC->ui();
         $this->tpl = $DIC->ui()->mainTemplate();
         $this->pl = ilUserDefaultsPlugin::getInstance();
-        $this->db = $DIC->database();
-        $this->repositoryTree = $DIC->repositoryTree();
-        $this->rbac = $DIC->rbac();
-        $this->objDataCache = $DIC["ilObjDataCache"];
         $this->ctrl->saveParameter($this, self::IDENTIFIER);
 
         $this->userDefaultsApi = UserDefaultsApi::new();

@@ -7,7 +7,6 @@ use ActiveRecordList;
 use ilObjUser;
 use ilUserDefaultsPlugin;
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 abstract class UDFCheck extends ActiveRecord
 {

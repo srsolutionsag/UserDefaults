@@ -24,11 +24,11 @@ class UDFCheckUDF extends UDFCheck
             $udf_field = [];
 
             if (!in_array(
-                (int) $field['field_type'],
+                $field['field_type'],
                 [UDF_TYPE_TEXT, UDF_TYPE_SELECT],
-                true
+                false // unstrict comparison needed here!
             )) {
-                continue;
+//                continue; // this doesn't seem to work, with that the e.g. cascading is missing
             }
 
             $udf_field["txt"] = $field["field_name"];

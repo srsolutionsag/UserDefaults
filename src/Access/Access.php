@@ -3,12 +3,9 @@
 namespace srag\Plugins\UserDefaults\Access;
 
 use ilUserDefaultsPlugin;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 final class Access
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     private static ?Access $instance = null;
 

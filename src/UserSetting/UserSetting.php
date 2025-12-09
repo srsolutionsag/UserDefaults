@@ -26,7 +26,6 @@ use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
 use php4DOMDocument;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 //use ilObject;
 
@@ -40,8 +39,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class UserSetting extends ActiveRecord
 {
-    use UserDefaultsTrait;
-
     public $orgUnitAssignmentRepo;
     public const TABLE_NAME = 'usr_def_sets';
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;

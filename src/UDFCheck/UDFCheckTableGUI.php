@@ -12,15 +12,12 @@ use ilTable2GUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;
 use ILIAS\UI\Factory as UIFactory;
 
 class UDFCheckTableGUI extends ilTable2GUI
 {
-    use UserDefaultsTrait;
-
     protected UIFactory $ui_factory;
     protected \ilTabsGUI $tabs;
 

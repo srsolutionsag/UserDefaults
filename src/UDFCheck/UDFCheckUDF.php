@@ -23,11 +23,12 @@ class UDFCheckUDF extends UDFCheck
         foreach ($user_defined_fields->getDefinitions() as $field) {
             $udf_field = [];
 
-            if (!self::isCustomUserFieldsHelperAvailable() && !in_array(
+            if (!in_array(
                 $field['field_type'],
-                [UDF_TYPE_TEXT, UDF_TYPE_SELECT]
+                [UDF_TYPE_TEXT, UDF_TYPE_SELECT],
+                false // unstrict comparison needed here!
             )) {
-                continue;
+//                continue; // this doesn't seem to work, with that the e.g. cascading is missing
             }
 
             $udf_field["txt"] = $field["field_name"];

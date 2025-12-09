@@ -7,12 +7,9 @@ use ActiveRecordList;
 use ilObjUser;
 use ilUserDefaultsPlugin;
 use srag\Plugins\UserDefaults\Config\UserDefaultsConfig;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 abstract class UDFCheck extends ActiveRecord
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const OP_EQUALS = 1;
     public const OP_STARTS_WITH = 2;
@@ -132,7 +129,7 @@ abstract class UDFCheck extends ActiveRecord
                 $check_array = get_object_vars($check);
 
                 $check_array["field_category"] = $check->getFieldCategory();
-                $check_array["field_key_txt"] = $check->getDefinition()["txt"];
+                $check_array["field_key_txt"] = $check->getDefinition()["txt"] ?? '-';
 
                 return $check_array;
             }, $checks);
@@ -206,7 +203,7 @@ abstract class UDFCheck extends ActiveRecord
             $definition["field_name"] = $definition["txt"];
             $definition["field_id"] = $definition["field_key"];
 
-            if ($definition['field_key'] == $this->field_key) {
+            if ($definition['field_key'] == $this->field_key) { // unstrict comparison needed here!
                 return $definition;
             }
         }
@@ -220,7 +217,7 @@ abstract class UDFCheck extends ActiveRecord
 
         $return = [];
 
-        foreach ($definition['field_values'] as $val) {
+        foreach ($definition['field_values'] ?? [] as $val) {
             $return[$val] = $val;
         }
 

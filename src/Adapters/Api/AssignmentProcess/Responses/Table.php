@@ -11,14 +11,11 @@ use ilTable2GUI;
 use ilUserDefaultsPlugin;
 use ilUtil;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UDFCheckGUI;
 use UserSettingsGUI;
 
 class Table extends ilTable2GUI
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const USR_DEF_CONTENT = 'usr_def_content';
     protected Renderer $ui_renderer;

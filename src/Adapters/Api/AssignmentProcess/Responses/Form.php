@@ -16,13 +16,11 @@ use ilUserDefaultsPlugin;
 use ilUserDefaultsRestApiGUI;
 use srag\Plugins\UserDefaults\API\UserDefaultsApi;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 use UserSettingsGUI;
 use srag\Plugins\UserDefaults\API\Commands;
 
 class Form extends ilPropertyFormGUI
 {
-    use UserDefaultsTrait;
     public $tabs;
 
     public $positionRepo;
@@ -59,7 +57,6 @@ class Form extends ilPropertyFormGUI
     public const F_ON_UPDATE = 'on_update';
     public const F_ON_MANUAL = 'on_manual';
     public const F_APPLICATION = 'application';
-    private array $orguPositions;
     private ilUserDefaultsPlugin $pl;
     private UserDefaultsApi $userDefaultsApi;
 

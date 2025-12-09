@@ -1,9 +1,7 @@
 <?php
 
 use ILIAS\HTTP\Services;
-use ILIAS\DI\UIServices;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  * @ilCtrl_IsCalledBy usrdefUserGUI : ilUserDefaultsConfigGUI
@@ -11,8 +9,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class usrdefUserGUI
 {
-    use UserDefaultsTrait;
-
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const CMD_INDEX = 'index';
     public const CMD_APPLY_FILTER = 'applyFilter';
@@ -24,7 +20,6 @@ class usrdefUserGUI
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $main_tpl;
-    private UIServices $ui;
     private Services $http;
 
     /**
@@ -40,7 +35,6 @@ class usrdefUserGUI
         };
 
         $this->ctrl = $DIC->ctrl();
-        $this->ui = $DIC->ui();
         $this->main_tpl = $DIC->ui()->mainTemplate();
         $this->pl = ilUserDefaultsPlugin::getInstance();
         ilSession::set(self::SESSION_ID, null);

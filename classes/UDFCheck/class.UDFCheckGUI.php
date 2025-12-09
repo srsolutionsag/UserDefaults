@@ -25,6 +25,7 @@ class UDFCheckGUI
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private UIServices $ui;
+    private \ILIAS\HTTP\Services $http;
 
     /**
      * @param \UserSettingsGUI|\UDFCheckGUI $parent_gui
@@ -40,6 +41,7 @@ class UDFCheckGUI
         };
 
         $this->ctrl = $DIC->ctrl();
+        $this->http = $DIC->http();
         $this->ui = $DIC->ui();
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->ctrl->saveParameter($this, self::IDENTIFIER_CATEGORY);
@@ -157,9 +159,12 @@ class UDFCheckGUI
 
     protected function getObject(): ?UDFCheck
     {
+        $field_category = (int) ($this->http->request()->getQueryParams()[self::IDENTIFIER_CATEGORY] ?? 0);
+        $id = (int) ($this->http->request()->getQueryParams()[self::IDENTIFIER] ?? 0);
+
         return UDFCheck::getCheckById(
-            (int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER_CATEGORY),
-            (int) filter_input(INPUT_GET, UDFCheckGUI::IDENTIFIER)
+            $field_category,
+            $id
         );
     }
 }

@@ -4,7 +4,6 @@ namespace srag\Plugins\UserDefaults\UserSearch;
 
 use ActiveRecord;
 use ilUserDefaultsPlugin;
-use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
 
 /**
  *
@@ -12,8 +11,6 @@ use srag\Plugins\UserDefaults\Utils\UserDefaultsTrait;
  */
 class usrdefObj extends ActiveRecord
 {
-    use UserDefaultsTrait;
-
     /**
      * @var string
      *

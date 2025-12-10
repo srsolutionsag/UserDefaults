@@ -1,5 +1,6 @@
 <?php
 
+use ILIAS\HTTP\Services;
 use ILIAS\DI\UIServices;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
 use srag\Plugins\UserDefaults\UDFCheck\UDFCheckFormGUI;
@@ -25,7 +26,7 @@ class UDFCheckGUI
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private UIServices $ui;
-    private \ILIAS\HTTP\Services $http;
+    private Services $http;
 
     /**
      * @param \UserSettingsGUI|\UDFCheckGUI $parent_gui

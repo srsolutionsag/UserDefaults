@@ -23,12 +23,9 @@ class UDFCheckUDF extends UDFCheck
         foreach ($user_defined_fields->getDefinitions() as $field) {
             $udf_field = [];
 
-            if (!in_array(
-                $field['field_type'],
-                [UDF_TYPE_TEXT, UDF_TYPE_SELECT],
-                false // unstrict comparison needed here!
-            )) {
-//                continue; // this doesn't seem to work, with that the e.g. cascading is missing
+            $field_type = (int) $field['field_type'];
+            if ($field_type === UDF_TYPE_WYSIWYG) {
+                continue; // The Plugin does not support WYSIWYG fields
             }
 
             $udf_field["txt"] = $field["field_name"];

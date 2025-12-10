@@ -28,6 +28,11 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
      */
     protected static ?self $instance = null;
 
+    /**
+     * @description We store handled events here to prevent loops (per user and user setting)
+     */
+    private array $handled_events = [];
+
     protected static array $mapping = [
         self::CREATED_1 => 'on_create',
         self::CREATED_2 => 'on_create',
@@ -129,8 +134,13 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
 
         $user_settings = UserSetting::where(['status' => UserSetting::STATUS_ACTIVE, $sets => true])->get();
         foreach ($user_settings as $user_setting) {
+            if (isset($this->handled_events[$a_event][$user->getId()][$user_setting->getId()])) {
+                // we need to prevent loops here
+                continue;
+            }
             /** @var UserSetting $user_setting */
             $user_setting->doAssignements($user);
+            $this->handled_events[$a_event][$user->getId()][$user_setting->getId()] = true;
         }
     }
 

@@ -39,7 +39,6 @@ use srag\Plugins\UserDefaults\UDFCheck\UDFCheck;
  */
 class UserSetting extends ActiveRecord
 {
-    public $orgUnitAssignmentRepo;
     public const TABLE_NAME = 'usr_def_sets';
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const STATUS_INACTIVE = 1;
@@ -48,6 +47,7 @@ class UserSetting extends ActiveRecord
     public const P_USER_LASTNAME = 'LASTNAME';
     public const P_USER_EMAIL = 'EMAIL';
     protected static array $placeholders = [self::P_USER_FIRSTNAME, self::P_USER_LASTNAME, self::P_USER_EMAIL];
+    private \OrgUnitUserAssignmentRepository $orgu_user_assignments;
     private ilUserDefaultsPlugin $pl;
     private RBACServices $rbac;
     private ilObjUser $user;
@@ -60,7 +60,7 @@ class UserSetting extends ActiveRecord
         $this->user = $DIC->user();
 
         $org_repo = \ilOrgUnitLocalDIC::dic();
-        $this->orgUnitAssignmentRepo = $org_repo["repo.UserAssignments"];
+        $this->orgu_user_assignments = $org_repo["repo.UserAssignments"];
 
         parent::__construct($primary_key);
     }
@@ -1249,7 +1249,8 @@ class UserSetting extends ActiveRecord
                 continue;
             }
             $orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
-            $this->orgUnitAssignmentRepo->get($usr_id, (int) $this->getAssignedOrguPosition(), $orgUnit->getRefId());
+            // ->get() already stores the assignment if not existing
+            $this->orgu_user_assignments->get($usr_id, (int) $this->getAssignedOrguPosition(), $orgUnit->getRefId());
         }
 
         return true;
@@ -1278,13 +1279,16 @@ class UserSetting extends ActiveRecord
             $orgUnit = new ilObjOrgUnit($orgu_ref_id, true);
 
             if (!is_null($this->getAssignedOrguPosition())) {
-                $ua = $this->orgUnitAssignmentRepo->find(
+                // Fixes: Xdebug has detected a possible infinite loop, and aborted your script with a stack depth of '512' frames
+                // The Repo now triggers a deassignUserFromPosition events which causes the infinite loop. we need to change the ->get() to a ->find and check for null
+                // Additionally, the event handling in ilUserDefaultsPlugin now checks for already triggered events to avoid infinite loops
+                $ua = $this->orgu_user_assignments->find(
                     $usr_id,
                     $this->getAssignedOrguPosition(),
                     $orgUnit->getRefId()
                 );
                 if ($ua !== null) {
-                    $this->orgUnitAssignmentRepo->delete($ua);
+                    $this->orgu_user_assignments->delete($ua);
                 }
             }
         }

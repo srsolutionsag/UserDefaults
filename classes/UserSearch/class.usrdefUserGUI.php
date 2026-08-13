@@ -1,26 +1,22 @@
 <?php
 
-use ILIAS\HTTP\Services;
+use ILIAS\Refinery\Factory as Refinery;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 
 /**
  * @ilCtrl_IsCalledBy usrdefUserGUI : ilUserDefaultsConfigGUI
- * @ilCtrl_Calls      usrdefUserGUI : ilpropertyformgui
  */
 class usrdefUserGUI
 {
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const CMD_INDEX = 'index';
-    public const CMD_APPLY_FILTER = 'applyFilter';
-    public const CMD_RESET_FILTER = 'resetFilter';
     public const CMD_SELECT_USER = 'selectUser';
-    public const CMD_CONFIRM = 'confirmSelectUser';
-    public const IDENTIFIER = 'usr_id';
-    public const SESSION_ID = 'multi_assign_user_id';
+
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $main_tpl;
-    private Services $http;
+    private ILIAS\HTTP\Wrapper\WrapperFactory $wrapper;
+    private Refinery $refinery;
 
     /**
      * usrdefUserGUI constructor
@@ -37,8 +33,8 @@ class usrdefUserGUI
         $this->ctrl = $DIC->ctrl();
         $this->main_tpl = $DIC->ui()->mainTemplate();
         $this->pl = ilUserDefaultsPlugin::getInstance();
-        ilSession::set(self::SESSION_ID, null);
-        $this->http = $DIC->http();
+        $this->wrapper = $DIC->http()->wrapper();
+        $this->refinery = $DIC->refinery();
     }
 
     /**
@@ -49,8 +45,6 @@ class usrdefUserGUI
         $cmd = $this->ctrl->getCmd(self::CMD_INDEX);
         match ($cmd) {
             self::CMD_INDEX,
-            self::CMD_APPLY_FILTER,
-            self::CMD_RESET_FILTER,
             self::CMD_SELECT_USER => $this->{$cmd}(),
             default => throw new ilException("Command not found: $cmd"),
         };
@@ -58,29 +52,13 @@ class usrdefUserGUI
 
     protected function index(): void
     {
-        $table = new usrdefUserTableGUI($this, self::CMD_INDEX);
-        $this->main_tpl->setContent($table->getHTML());
-    }
-
-    protected function applyFilter(): void
-    {
-        $table = new usrdefUserTableGUI($this, self::CMD_INDEX);
-        $table->resetOffset();
-        $table->writeFilterToSession();
-        $this->ctrl->redirect($this, self::CMD_INDEX);
-    }
-
-    protected function resetFilter(): void
-    {
-        $table = new usrdefUserTableGUI($this, self::CMD_INDEX);
-        $table->resetFilter();
-        $table->resetOffset();
-        $this->ctrl->redirect($this, self::CMD_INDEX);
+        $this->main_tpl->setContent((new usrdefUserTableGUI($this))->render());
     }
 
     protected function selectUser(): void
     {
-        $usr_ids = $this->http->request()->getParsedBody()['id'] ?? [];
+        $table = new usrdefUserTableGUI($this);
+        $usr_ids = $this->getSelectedUserIds($table);
 
         if ($usr_ids === []) {
             $this->main_tpl->setOnScreenMessage(
@@ -116,5 +94,31 @@ class usrdefUserGUI
             true
         );
         $this->ctrl->redirect($this, self::CMD_INDEX);
+    }
+
+    /**
+     * The table hands over the selected row ids, or a single ALL_OBJECTS marker
+     * when everything the current filter matches was selected.
+     *
+     * @return list<int>
+     */
+    private function getSelectedUserIds(usrdefUserTableGUI $table): array
+    {
+        $parameter = implode('_', usrdefUserTableGUI::NAMESPACE) . '_' . usrdefUserTableGUI::TOKEN_ROW_ID;
+
+        if (!$this->wrapper->query()->has($parameter)) {
+            return [];
+        }
+
+        $ids = $this->wrapper->query()->retrieve(
+            $parameter,
+            $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->string())
+        );
+
+        if (in_array(usrdefUserTableGUI::ALL_OBJECTS, $ids, true)) {
+            return $table->getAllMatchingUserIds();
+        }
+
+        return array_values(array_filter(array_map('intval', $ids)));
     }
 }

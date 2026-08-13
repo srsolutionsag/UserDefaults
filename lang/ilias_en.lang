@@ -79,6 +79,7 @@ usr_email#:#E-Mail
 usr_login#:#Login
 usr_repo#:#Member of Course/Group
 usr_orgu#:#Member of Org Unit
+usr_search_term#:#Login, name or e-mail
 common_actions#:#Actions
 button_select_user#:#Select Users
 userdef_users_assigned#:#%s Users updated

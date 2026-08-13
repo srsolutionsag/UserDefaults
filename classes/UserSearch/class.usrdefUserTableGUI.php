@@ -1,218 +1,272 @@
 <?php
 
-use ILIAS\DI\UIServices;
-use srag\Plugins\UserDefaults\UserSearch\usrdefUser;
+use ILIAS\Data\Factory as DataFactory;
+use ILIAS\Data\Order;
+use ILIAS\Data\Range;
+use ILIAS\UI\Component\Input\Container\Filter\Standard as StandardFilter;
+use ILIAS\UI\Component\Table\Data as DataTable;
+use ILIAS\UI\Component\Table\DataRetrieval;
+use ILIAS\UI\Component\Table\DataRowBuilder;
+use ILIAS\UI\Factory as UIFactory;
+use ILIAS\UI\Renderer as UIRenderer;
+use ILIAS\UI\URLBuilder;
+use ILIAS\UI\URLBuilderToken;
+use Psr\Http\Message\ServerRequestInterface;
 
-class usrdefUserTableGUI extends ilTable2GUI
+class usrdefUserTableGUI implements DataRetrieval
 {
-    protected const TABLE_ID = 'tbl_mutla_users';
-    protected const BASE_ORG_UNIT = 56;
-    protected array $filter = [];
-    protected ilCtrl $ctrl;
-    protected UIServices $ui;
-    protected ilUserDefaultsPlugin $pl;
+    public const ACTION_ASSIGN = 'assign';
+    public const ALL_OBJECTS = 'ALL_OBJECTS';
+    public const NAMESPACE = ['usrdef'];
+    public const TOKEN_ACTION = 'action';
+    public const TOKEN_ROW_ID = 'ids';
 
-    public function __construct(usrdefUserGUI $a_parent_obj, string $a_parent_cmd)
+    protected const TABLE_ID = 'usrdef_users';
+    protected const FILTER_ID = 'usrdef_user_filter';
+
+    /**
+     * Order fields are handed to ilUserQuery unvalidated, so only accept the
+     * ones this table actually offers.
+     */
+    protected const SORTABLE = ['login', 'firstname', 'lastname', 'email'];
+
+    /**
+     * DataQuery::withLimitedUsers() treats an empty list as "no restriction".
+     * An org unit matching nobody therefore has to be expressed as an id that
+     * cannot exist, or the filter would widen the result to every user.
+     */
+    protected const MATCHES_NOBODY = [-1];
+
+    private readonly ilCtrlInterface $ctrl;
+    private readonly UIFactory $ui_factory;
+    private readonly UIRenderer $ui_renderer;
+    private readonly ilUIService $ui_service;
+    private readonly ServerRequestInterface $request;
+    private readonly DataFactory $data_factory;
+    private readonly ilUserDefaultsPlugin $pl;
+    private readonly StandardFilter $filter;
+    private readonly DataTable $table;
+
+    public function __construct(private readonly usrdefUserGUI $parent_obj)
     {
         global $DIC;
+
         $this->ctrl = $DIC->ctrl();
-        $this->ui = $DIC->ui();
+        $this->ui_factory = $DIC->ui()->factory();
+        $this->ui_renderer = $DIC->ui()->renderer();
+        $this->ui_service = $DIC->uiService();
+        $this->request = $DIC->http()->request();
+        $this->data_factory = new DataFactory();
         $this->pl = ilUserDefaultsPlugin::getInstance();
 
-        $this->setId(self::TABLE_ID);
-        $this->setPrefix(self::TABLE_ID);
-        $this->setFormName(self::TABLE_ID);
-        $this->ctrl->saveParameter($a_parent_obj, $this->getNavParameter());
-        parent::__construct($a_parent_obj, $a_parent_cmd);
-        $this->parent_obj = $a_parent_obj;
-        $this->setRowTemplate('tpl.row.html', $this->pl->getDirectory());
-        $this->setEnableNumInfo(true);
-        $this->setFormAction($this->ctrl->getFormAction($a_parent_obj));
-        $this->addColumns();
-        $this->initFilters();
-        $this->setDefaultOrderField('title');
-        $this->setExternalSorting(true);
-        $this->setExternalSegmentation(true);
-        $this->setDisableFilterHiding(true);
-        $this->parseData();
-        $this->addCommandButton('selectUser', $this->pl->txt('button_select_user'));
-        $this->setSelectAllCheckbox('id');
+        $this->filter = $this->buildFilter();
+        $this->table = $this->buildTable();
     }
-    #[\Override]
-    protected function fillRow(array $a_set): void
-    {
-        foreach (array_keys($this->getSelectableColumns()) as $k) {
-            if ($k === 'actions') {
-                $this->tpl->setCurrentBlock('checkbox');
-                $this->tpl->setVariable('ID', $a_set['usr_id']);
-                $this->tpl->parseCurrentBlock();
-                continue;
-            }
 
-            if ($this->isColumnSelected($k)) {
-                if ($a_set[$k]) {
-                    $this->tpl->setCurrentBlock('td');
-                    $this->tpl->setVariable('VALUE', (is_array($a_set[$k]) ? implode(", ", $a_set[$k]) : $a_set[$k]));
-                    $this->tpl->parseCurrentBlock();
-                } else {
-                    $this->tpl->setCurrentBlock('td');
-                    $this->tpl->setVariable('VALUE', '&nbsp;');
-                    $this->tpl->parseCurrentBlock();
-                }
-            }
-        }
+    public function render(): string
+    {
+        return $this->ui_renderer->render([$this->filter, $this->table]);
     }
 
     /**
-     * @throws arException
-     * @throws DICException
-     * @throws Exception
+     * Every user the current filter matches. Used to resolve a "select all",
+     * which hands over a single ALL_OBJECTS marker instead of the ids.
+     *
+     * @return list<int>
      */
-    protected function parseData(): void
+    public function getAllMatchingUserIds(): array
     {
-        $this->determineOffsetAndOrder();
-        $this->determineLimit();
-        $usrdefUser = usrdefUser::getCollection();
-        $usrdefUser->orderBy($this->getOrderField(), $this->getOrderDirection());
-
-        foreach ($this->filter as $field => $value) {
-            if (in_array($field, ['repo', 'org'])) {
-                continue;
-            }
-            if ($value && !is_array($value)) {
-                $value = str_replace('%', '', $value);
-                if (strlen($value) < 3) {
-                    global $DIC;
-                    $tpl = $DIC["tpl"];
-                    $tpl->setOnScreenMessage('failure', $this->pl->txt('msg_failure_more_characters_needed'), true);
-                    continue;
-                }
-
-                $usrdefUser->where([$field => '%' . $value . '%'], 'LIKE');
-            }
+        $total = $this->getTotalRowCount(null, null, null);
+        if ($total === 0) {
+            return [];
         }
 
-        // CRS and GRPS
-        /*if ($this->filter['repo'] && is_array($this->filter['repo'])
-            && count($this->filter['repo']) > 0) {
-            $value = $this->filter['repo'];
-            $obj_ids = array();
-            foreach ($value as $ref_id) {
-                $obj_ids[] = ilObject2::_lookupObjId((int) $ref_id);
-            }
+        $query = $this->buildQuery();
+        $query->setOffset(0);
+        $query->setLimit($total);
 
-            $usrdefUser->innerjoin('obj_members', 'usr_id', 'usr_id');
-            $usrdefUser->where(array(
-                'obj_members.obj_id' => $obj_ids,
-                'obj_members.member' => 1,
-            ));
-        }*/
-
-        // ORGU
-        if (($this->filter['orgu'] ?? []) !== []) {
-            $value = $this->filter['orgu'];
-            $usrdefUser->innerjoin('il_orgu_ua', 'usr_id', 'user_id');
-            $usrdefUser->where(
-                ['il_orgu_ua.position_id' => ilOrgUnitPosition::CORE_POSITION_EMPLOYEE, 'il_orgu_ua.orgu_id' => $value]
-            );
-        }
-
-        $this->setMaxCount($usrdefUser->count());
-
-        $usrdefUser->where(['usr_id' => 13], '!=');
-        if (!$usrdefUser->hasSets()) {
-            global $DIC;
-            $tpl = $DIC["tpl"];
-            $tpl->setOnScreenMessage('success', 'Keine Ergebnisse für diesen Filter', true);
-        }
-        $usrdefUser->limit($this->getOffset(), $this->getOffset() + $this->getLimit());
-        $usrdefUser->orderBy('email');
-
-        // $usrdefUser->debug();
-        $this->setData($usrdefUser->getArray());
+        return array_map(
+            static fn(array $row): int => (int) $row['usr_id'],
+            $query->query()['set']
+        );
     }
 
-    #[\Override]
-    public function getSelectableColumns(): array
-    {
-        return ['firstname' => [
-            'txt' => $this->pl->txt('usr_firstname'),
-            'default' => true,
-            'width' => 'auto',
-            'sort_field' => 'firstname'
-        ], 'lastname' => [
-            'txt' => $this->pl->txt('usr_lastname'),
-            'default' => true,
-            'width' => 'auto',
-            'sort_field' => 'lastname'
-        ], 'email' => [
-            'txt' => $this->pl->txt('usr_email'),
-            'default' => true,
-            'width' => 'auto',
-            'sort_field' => 'email'
-        ], 'login' => [
-            'txt' => $this->pl->txt('usr_login'),
-            'default' => true,
-            'width' => 'auto',
-            'sort_field' => 'login'
-        ], 'actions' => ['txt' => $this->pl->txt('common_actions'), 'default' => true, 'width' => '50px']];
-    }
+    public function getRows(
+        DataRowBuilder $row_builder,
+        array $visible_column_ids,
+        Range $range,
+        Order $order,
+        mixed $additional_viewcontrol_data,
+        mixed $filter_data,
+        mixed $additional_parameters
+    ): Generator {
+        [$order_field, $order_direction] = $order->join([], fn($ret, $key, $value): array => [$key, $value]);
 
-    private function addColumns(): void
-    {
-        foreach ($this->getSelectableColumns() as $k => $v) {
-            if ($this->isColumnSelected($k)) {
-                $sort = array_key_exists('sort_field', $v) && $v['sort_field'] ? $v['sort_field'] : $k;
-                $this->addColumn($v['txt'], $sort, $v['width']);
-            }
+        $query = $this->buildQuery();
+        $query->setOffset($range->getStart());
+        $query->setLimit($range->getLength());
+        if (in_array($order_field, self::SORTABLE, true)) {
+            $query->setOrderField($order_field);
+            $query->setOrderDirection(strtolower((string) $order_direction) === 'desc' ? 'desc' : 'asc');
+        }
+
+        foreach ($query->query()['set'] as $record) {
+            yield $row_builder->buildDataRow((string) $record['usr_id'], [
+                'firstname' => (string) ($record['firstname'] ?? ''),
+                'lastname' => (string) ($record['lastname'] ?? ''),
+                'email' => (string) ($record['email'] ?? ''),
+                'login' => (string) ($record['login'] ?? ''),
+            ]);
         }
     }
 
-    protected function initFilters(): void
-    {
-        $this->setFilterCols(6);
-        // firstname
-        $te = new ilTextInputGUI($this->pl->txt('usr_firstname'), 'firstname');
-        $this->addAndReadFilterItem($te);
-        // lastname
-        $te = new ilTextInputGUI($this->pl->txt('usr_lastname'), 'lastname');
-        $this->addAndReadFilterItem($te);
-        // email
-        $te = new ilTextInputGUI($this->pl->txt('usr_email'), 'email');
-        $this->addAndReadFilterItem($te);
-        // login
-        $te = new ilTextInputGUI($this->pl->txt('usr_login'), 'login');
-        $this->addAndReadFilterItem($te);
+    public function getTotalRowCount(
+        mixed $additional_viewcontrol_data,
+        mixed $filter_data,
+        mixed $additional_parameters
+    ): ?int {
+        $query = $this->buildQuery();
+        $query->setOffset(0);
+        $query->setLimit(1);
 
-        /*$crs = $this->getCrsSelectorGUI();
-        $this->addAndReadFilterItem($crs);*/
-
-        // orgu
-        //todo
-        //$crs = $this->getOrguSelectorGUI();
-        //$this->addAndReadFilterItem($crs);
-
-        // orgu legacy
-        $orgu = new ilMultiSelectInputGUI($this->pl->txt('usr_orgu'), 'orgu');
-        $orgu_option = $this->buildOrgunitOptions();
-        $orgu->setOptions($orgu_option);
-        $this->addAndReadFilterItem($orgu);
+        return (int) $query->query()['cnt'];
     }
 
-    protected function addAndReadFilterItem(ilFormPropertyGUI $item): void
+    protected function buildTable(): DataTable
     {
-        $this->addFilterItem($item);
-        $item->readFromSession();
-        $this->filter[$item->getPostVar()] = $item->getValue();
+        return $this->ui_factory->table()->data(
+            $this,
+            $this->pl->txt('tabs_users'),
+            $this->getColumns()
+        )->withId(
+            self::TABLE_ID
+        )->withActions(
+            $this->getActions()
+        )->withOrder(
+            new Order(ilUserQuery::DEFAULT_ORDER_FIELD, Order::ASC)
+        )->withRequest($this->request);
     }
 
+    /**
+     * @return array<string, \ILIAS\UI\Component\Table\Column\Column>
+     */
+    protected function getColumns(): array
+    {
+        $column = $this->ui_factory->table()->column();
+
+        return [
+            'firstname' => $column->text($this->pl->txt('usr_firstname')),
+            'lastname' => $column->text($this->pl->txt('usr_lastname')),
+            'email' => $column->eMail($this->pl->txt('usr_email')),
+            'login' => $column->text($this->pl->txt('usr_login')),
+        ];
+    }
+
+    /**
+     * @return array<string, \ILIAS\UI\Component\Table\Action\Action>
+     */
+    protected function getActions(): array
+    {
+        $uri = $this->data_factory->uri(
+            ILIAS_HTTP_PATH . '/' . $this->ctrl->getLinkTarget(
+                $this->parent_obj,
+                usrdefUserGUI::CMD_SELECT_USER
+            )
+        );
+
+        /**
+         * @var URLBuilder      $url_builder
+         * @var URLBuilderToken $action_token
+         * @var URLBuilderToken $row_id_token
+         */
+        [$url_builder, $action_token, $row_id_token] = (new URLBuilder($uri))->acquireParameters(
+            self::NAMESPACE,
+            self::TOKEN_ACTION,
+            self::TOKEN_ROW_ID
+        );
+
+        return [
+            self::ACTION_ASSIGN => $this->ui_factory->table()->action()->multi(
+                $this->pl->txt('button_select_user'),
+                $url_builder->withParameter($action_token, self::ACTION_ASSIGN),
+                $row_id_token
+            )
+        ];
+    }
+
+    protected function buildFilter(): StandardFilter
+    {
+        $field = $this->ui_factory->input()->field();
+
+        $inputs = [
+            'query' => $field->text($this->pl->txt('usr_search_term')),
+        ];
+        $rendered = [true];
+
+        $org_units = $this->buildOrgunitOptions();
+        if ($org_units !== []) {
+            $inputs['orgu'] = $field->multiSelect($this->pl->txt('usr_orgu'), $org_units);
+            $rendered[] = true;
+        }
+
+        return $this->ui_service->filter()->standard(
+            self::FILTER_ID,
+            $this->ctrl->getLinkTarget($this->parent_obj, usrdefUserGUI::CMD_INDEX),
+            $inputs,
+            $rendered,
+            true,
+            true
+        );
+    }
+
+    protected function buildQuery(): ilUserQuery
+    {
+        $filter_data = $this->ui_service->filter()->getData($this->filter) ?? [];
+
+        $query = new ilUserQuery();
+
+        // ilUserQuery searches login, first-/lastname and both mail addresses at
+        // once, so the four separate inputs of the old table collapse into one.
+        $search_term = trim((string) ($filter_data['query'] ?? ''));
+        if ($search_term !== '') {
+            $query->setTextFilter($search_term);
+        }
+
+        $org_units = array_filter((array) ($filter_data['orgu'] ?? []));
+        if ($org_units !== []) {
+            $query->setUserFilter($this->resolveOrgUnitMembers($org_units));
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param list<int|string> $org_unit_ref_ids
+     * @return list<int>
+     */
+    protected function resolveOrgUnitMembers(array $org_unit_ref_ids): array
+    {
+        $usr_ids = ilObjOrgUnitTree::_getInstance()->getAssignedUsers(
+            array_map(static fn($ref_id): int => (int) $ref_id, $org_unit_ref_ids),
+            ilOrgUnitPosition::CORE_POSITION_EMPLOYEE
+        );
+
+        return $usr_ids === [] ? self::MATCHES_NOBODY : array_values(array_map('intval', $usr_ids));
+    }
+
+    /**
+     * @return array<int, string>
+     */
     protected function buildOrgunitOptions(): array
     {
-        $all_children = ilObjOrgUnitTree::_getInstance()->getAllChildren(self::BASE_ORG_UNIT);
+        $root_ref_id = ilObjOrgUnit::getRootOrgRefId();
+        if ($root_ref_id === 0) {
+            return [];
+        }
 
         $org_units = [];
-        foreach ($all_children as $child) {
-            if ($child === self::BASE_ORG_UNIT) {
+        foreach (ilObjOrgUnitTree::_getInstance()->getAllChildren($root_ref_id) as $child) {
+            if ($child === $root_ref_id) {
                 continue;
             }
             $org_units[$child] = ilObject::_lookupTitle(ilObject::_lookupObjId($child));

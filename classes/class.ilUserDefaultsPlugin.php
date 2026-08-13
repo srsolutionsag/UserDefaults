@@ -157,8 +157,6 @@ class ilUserDefaultsPlugin extends ilEventHookPlugin
             $this->db->dropTable($class::TABLE_NAME, false);
         }
         $this->db->dropTable(UserSetting::TABLE_NAME, false);
-        //self::dic()->database()->dropTable(usrdefUser::TABLE_NAME, false);
-        //self::dic()->database()->dropTable(usrdefObj::TABLE_NAME, false);
         $this->db->dropTable(UserDefaultsConfig::TABLE_NAME, false);
     }
 

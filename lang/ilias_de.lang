@@ -81,6 +81,7 @@ usr_email#:#E-Mail
 usr_login#:#Login
 usr_repo#:#Mitglied in Kurs/Gruppe
 usr_orgu#:#Mitarbeiter in Organisationseinheit
+usr_search_term#:#Login, Name oder E-Mail
 common_actions#:#Aktionen
 button_select_user#:#Benutzer auswählen
 userdef_users_assigned#:#%s Benutzer aktualisiert

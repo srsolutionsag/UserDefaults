@@ -1,6 +1,6 @@
 <?php
 
 $id = 'usrdef';
-$version = "2025.11.03";
-$ilias_min_version = '10.0';
-$ilias_max_version = '10.999';
+$version = "2026.08.13";
+$ilias_min_version = '11.0';
+$ilias_max_version = '11.999';

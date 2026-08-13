@@ -66,7 +66,6 @@ class UDFCheckUser extends UDFCheck
             'zipcode' => $user->getZipcode(),
             'city' => $user->getCity(),
             'country' => $user->getCountry(),
-            'sel_country' => $user->getSelectedCountry(),
             'email' => $user->getEmail(),
             'second_email' => $user->getSecondEmail(),
             'hobby' => $user->getHobby(),

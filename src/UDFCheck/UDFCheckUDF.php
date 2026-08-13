@@ -2,8 +2,16 @@
 
 namespace srag\Plugins\UserDefaults\UDFCheck;
 
+use ILIAS\User\Context;
+use ILIAS\User\LocalDIC;
+use ILIAS\User\Profile\Fields\Custom\Custom;
+use ILIAS\User\Profile\Profile;
+use ilMultiSelectInputGUI;
 use ilObjUser;
-use ilUserDefinedFields;
+use ilSelectInputGUI;
+use ilTextAreaInputGUI;
+use ilTextInputGUI;
+use ilUserSearchOptions;
 
 class UDFCheckUDF extends UDFCheck
 {
@@ -17,35 +25,75 @@ class UDFCheckUDF extends UDFCheck
             return self::$all_definitions_of_category;
         }
 
+        global $DIC;
+
         self::$all_definitions_of_category = [];
 
-        $user_defined_fields = ilUserDefinedFields::_getInstance();
-        foreach ($user_defined_fields->getDefinitions() as $field) {
-            $udf_field = [];
+        $lng = $DIC->language();
+        // Not $DIC['user']: that one is bound to a logged in user, while this
+        // code also runs from the cron context. getProfile() only delegates here.
+        $profile = LocalDIC::dic()[Profile::class];
 
-            $field_type = (int) $field['field_type'];
-            if ($field_type === UDF_TYPE_WYSIWYG) {
-                continue; // The Plugin does not support WYSIWYG fields
+        foreach ($profile->getFields() as $field) {
+            if (!$field->isCustom()) {
+                continue;
             }
 
-            $udf_field["txt"] = $field["field_name"];
-            $udf_field["field_category"] = self::FIELD_CATEGORY;
-            $udf_field["field_key"] = $field["field_id"];
-            $udf_field["field_type"] = $field["field_type"];
-            $udf_field["field_values"] = $field["field_values"];
+            $definition = $field->getDefinition();
+            if ($definition instanceof Custom && $definition->isUnspecific()) {
+                continue; // custom field without a type yet, nothing to check against
+            }
 
-            self::$all_definitions_of_category [] = $udf_field;
+            // Derive the type from the legacy input a field builds, the same way
+            // ilUserSearchOptions::__appendUserDefinedFields() does. Types
+            // contributed by other plugins end up in the default branch.
+            $input = $field->getLegacyInput($lng, Context::UserAdministration);
+            $type_and_values = match ($input::class) {
+                ilTextInputGUI::class,
+                ilTextAreaInputGUI::class => [ilUserSearchOptions::FIELD_TYPE_UDF_TEXT, []],
+                ilSelectInputGUI::class,
+                ilMultiSelectInputGUI::class => [
+                    ilUserSearchOptions::FIELD_TYPE_UDF_SELECT,
+                    self::optionsToValues($input->getOptions())
+                ],
+                default => null,
+            };
+
+            if ($type_and_values === null) {
+                continue;
+            }
+
+            self::$all_definitions_of_category[] = [
+                'txt' => $field->getLabel($lng),
+                'field_category' => self::FIELD_CATEGORY,
+                'field_key' => $field->getIdentifier(),
+                'field_type' => $type_and_values[0],
+                'field_values' => $type_and_values[1],
+            ];
         }
 
         return self::$all_definitions_of_category;
     }
 
+    /**
+     * @param array<string, string> $options
+     * @return list<string>
+     */
+    private static function optionsToValues(array $options): array
+    {
+        unset($options['']); // the "please select" entry a single select prepends
+
+        return array_values($options);
+    }
+
     protected function getFieldValue(ilObjUser $user): array
     {
-        $user->readUserDefinedFields();
-        if (isset($user->user_defined_data['f_' . $this->getFieldKey()])) {
-            return explode(self::CHECK_SPLIT, (string) $user->user_defined_data['f_' . $this->getFieldKey()]);
+        $value = $user->getProfileData()->getAdditionalFieldByIdentifier($this->getFieldKey());
+
+        if (is_array($value)) {
+            return $value;
         }
-        return [];
+
+        return ($value === null || $value === '') ? [] : [$value];
     }
 }

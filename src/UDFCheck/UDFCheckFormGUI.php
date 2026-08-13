@@ -127,11 +127,11 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
 
             switch ($field_type) {
                 case ilUserSearchOptions::FIELD_TYPE_TEXT:
-                case UDF_TYPE_TEXT:
+                case ilUserSearchOptions::FIELD_TYPE_UDF_TEXT:
                     $se = new ilTextInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
                     $this->addItem($se);
                     break;
-                case UDF_TYPE_SELECT:
+                case ilUserSearchOptions::FIELD_TYPE_UDF_SELECT:
                 case ilUserSearchOptions::FIELD_TYPE_SELECT:
                 case ilUserSearchOptions::FIELD_TYPE_MULTI:
                     switch ($this->object->getFieldKey()) {

@@ -3,6 +3,7 @@
 namespace srag\Plugins\UserDefaults\UserSetting;
 
 use ILIAS\DI\RBACServices;
+use ILIAS\Skill\Service\SkillPersonalService;
 use ActiveRecord;
 use DOMXPath;
 use ilCourseConstants;
@@ -20,7 +21,6 @@ use ilObjPortfolioTemplate;
 use ilObjStudyProgramme;
 use ilObjUser;
 use ilParticipants;
-use ilPersonalSkill;
 use ilPortfolioAccessHandler;
 use ilPortfolioTemplatePage;
 use ilUserDefaultsPlugin;
@@ -52,6 +52,7 @@ class UserSetting extends ActiveRecord
     private ilUserDefaultsPlugin $pl;
     private RBACServices $rbac;
     private ilObjUser $user;
+    private SkillPersonalService $personal_skills;
 
     public function __construct(mixed $primary_key = 0)
     {
@@ -59,6 +60,7 @@ class UserSetting extends ActiveRecord
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->rbac = $DIC->rbac();
         $this->user = $DIC->user();
+        $this->personal_skills = $DIC->skills()->personal();
 
         $org_repo = \ilOrgUnitLocalDIC::dic();
         $this->orgu_user_assignments = $org_repo["repo.UserAssignments"];
@@ -566,14 +568,16 @@ class UserSetting extends ActiveRecord
         $skill_ids = $this->getAllPortfolioSkills();
 
         foreach ($skill_ids as $skill_id) {
-            ilPersonalSkill::addPersonalSkill($user->getId(), $skill_id);
+            $this->personal_skills->addPersonalSkill($user->getId(), (int) $skill_id);
         }
     }
 
     protected function getAllPortfolioSkills(): array
     {
         $user = $this->getUsrObject();
-        $pskills = array_keys(ilPersonalSkill::getSelectedUserSkills($user->getId()));
+        // Still keyed by skill node id, so the ids stay comparable to the ones
+        // read from the portfolio template pages below.
+        $pskills = array_keys($this->personal_skills->getSelectedUserSkills($user->getId()));
         $skill_ids = [];
         foreach (ilPortfolioTemplatePage::getAllPortfolioPages($this->getPortfolioTemplateId()) as $page) {
             if ($page['type'] === ilPortfolioTemplatePage::TYPE_PAGE) {

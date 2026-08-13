@@ -3,13 +3,11 @@
 namespace srag\Plugins\UserDefaults\UDFCheck;
 
 use ilCheckboxInputGUI;
-use ilCustomUserFieldsHelper;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
 use ilSelectInputGUI;
 use ilTextInputGUI;
-use ilUDFDefinitionPlugin;
 use ilUserDefaultsPlugin;
 use ilUserSearchOptions;
 use srag\Plugins\UserDefaults\UserSetting\UserSetting;
@@ -32,7 +30,6 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
     public const F_UDF_FIELD_KEY = 'field_key';
     public const F_UDF_FIELD_CATEGORY = 'field_category';
     public const F_CHECK_VALUE = 'check_value';
-    public const F_CHECK_VALUE_MUL = 'check_value_mul_';
     public const F_UDF_NEGATE_ID = 'udf_negate_value';
     public const F_UDF_OPERATOR = 'udf_operator';
     public const F_CHECK_RADIO = 'check_radio';
@@ -172,50 +169,6 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                             break;
                     }
                     break;
-                default:
-                    $plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($field_type);
-                    if ($plugin instanceof ilUDFDefinitionPlugin) {
-                        $definition['required'] = true;
-
-                        $select_gui = $plugin->getFormPropertyForDefinition($definition, true, null);
-
-                        $check_radio = new ilRadioGroupInputGUI("", self::F_CHECK_RADIO);
-
-                        $check_radio_text = new ilRadioOption(
-                            $this->pl->txt("check_text_fields"),
-                            self::F_CHECK_TEXT
-                        );
-                        $check_radio->addOption($check_radio_text);
-
-                        $decoded_column_definition = json_decode(
-                            (string) $select_gui->getColumnDefinition()->rawEncodedJSON(),
-                            true,
-                            512,
-                            JSON_THROW_ON_ERROR
-                        ) ?? [];
-
-                        foreach ($decoded_column_definition as $key => $name) {
-                            if (is_array($name)) {
-                                $name = $name["name"] . " ( " . $name["default"] . " ) ";
-                            }
-
-                            $text_gui = new ilTextInputGUI($name, self::F_CHECK_VALUE_MUL . $key);
-                            $check_radio_text->addSubItem($text_gui);
-                        }
-
-                        $check_radio_select = new ilRadioOption(
-                            $this->pl->txt("check_select_lists"),
-                            self::F_CHECK_SELECT
-                        );
-                        $check_radio->addOption($check_radio_select);
-
-                        $select_gui->setPostVar(self::F_CHECK_VALUE);
-                        $select_gui->setRequired(false);
-                        $check_radio_select->addSubItem($select_gui);
-
-                        $this->addItem($check_radio);
-                    }
-                    break;
             }
         }
 
@@ -241,20 +194,6 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
             } else {
                 $array[self::F_CHECK_RADIO] = self::F_CHECK_TEXT;
             }
-
-            $definition = $this->object->getDefinition();
-
-            $field_type = (int) ($definition["field_type"] ?? -1);
-            $plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($field_type);
-            if ($plugin instanceof ilUDFDefinitionPlugin) {
-                $definition['required'] = true;
-                $select_gui = $plugin->getFormPropertyForDefinition($definition);
-
-                $check_values = $this->object->getCheckValues();
-                foreach (array_keys($check_values) as $key) {
-                    $array[self::F_CHECK_VALUE_MUL . $key] = $check_values[$key];
-                }
-            }
         } else {
             $array = [
                 self::F_UDF_FIELD_CATEGORY => UDFCheckUser::FIELD_CATEGORY
@@ -274,29 +213,6 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
             $check_radio = $this->getInput(self::F_CHECK_RADIO);
             switch ($check_radio) {
                 case self::F_CHECK_TEXT:
-                    $definition = $this->object->getDefinition();
-
-                    $plugin = ilCustomUserFieldsHelper::getInstance()->getPluginForType($definition["field_type"]);
-                    if ($plugin instanceof ilUDFDefinitionPlugin) {
-                        $definition['required'] = true;
-                        $select_gui = $plugin->getFormPropertyForDefinition($definition, true, null);
-                        $check_values = [];
-
-                        $decoded_column_definition = json_decode(
-                            (string) $select_gui->getColumnDefinition()->rawEncodedJSON(),
-                            true,
-                            512,
-                            JSON_THROW_ON_ERROR
-                        ) ?? [];
-
-                        foreach ($decoded_column_definition as $key => $name) {
-                            $check_values[] = $this->getInput(self::F_CHECK_VALUE_MUL . $key);
-                        }
-                        $this->object->setCheckValues($check_values);
-                        break;
-                    }
-
-                    // normal inputs
                     $this->object->setCheckValues([$this->getInput(self::F_CHECK_VALUE . '_text_value')]);
 
                     break;

@@ -230,3 +230,106 @@ if (!$DIC->database()->tableColumnExists(
 <?php
 \srag\Plugins\UserDefaults\UserSetting\UserSetting::updateDB();
 ?>
+<#28>
+<?php
+/**
+ * ILIAS 11 migrated udf_definition.field_id from integer IDs to UUIDs and left
+ * behind udf_field_id_map so plugins can pull their own references along. That
+ * table is scheduled for removal with ILIAS 12 (components/ILIAS/User/ROADMAP.md),
+ * so this step has to run while the installation is still on 11.
+ *
+ * Skipped silently when the map is absent: a fresh install on ILIAS 11 never had
+ * integer keys to begin with.
+ */
+global $DIC;
+
+$db = $DIC->database();
+$udf_check_table = \srag\Plugins\UserDefaults\UDFCheck\UDFCheckUDF::TABLE_NAME;
+
+if ($db->tableExists('udf_field_id_map') && $db->tableExists($udf_check_table)) {
+    $map = [];
+    $map_result = $db->query('SELECT old_field_id, field_id FROM udf_field_id_map');
+    while ($map_row = $db->fetchAssoc($map_result)) {
+        $map[(string) $map_row['old_field_id']] = (string) $map_row['field_id'];
+    }
+
+    $unmapped = [];
+    $check_result = $db->query('SELECT id, field_key FROM ' . $db->quoteIdentifier($udf_check_table));
+    while ($check_row = $db->fetchAssoc($check_result)) {
+        $field_key = (string) $check_row['field_key'];
+
+        // Already a UUID, so a repeated update run is a no-op.
+        if (!ctype_digit($field_key)) {
+            continue;
+        }
+
+        if (!isset($map[$field_key])) {
+            // The custom field was deleted in the core before the update. Leave
+            // the check alone rather than guessing, but make it visible.
+            $unmapped[] = $field_key;
+            continue;
+        }
+
+        $db->update(
+            $udf_check_table,
+            ['field_key' => [\ilDBConstants::T_TEXT, $map[$field_key]]],
+            ['id' => [\ilDBConstants::T_INTEGER, (int) $check_row['id']]]
+        );
+    }
+
+    if ($unmapped !== [] && $DIC->isDependencyAvailable('logger')) {
+        $DIC->logger()->root()->warning(
+            'UserDefaults: no UUID mapping for custom user field id(s) '
+            . implode(', ', array_unique($unmapped))
+            . '. The affected checks in ' . $udf_check_table . ' still carry their legacy id.'
+        );
+    }
+}
+?>
+<#29>
+<?php
+/**
+ * ILIAS 11 merged usr_data.sel_country into country and dropped
+ * ilObjUser::getSelectedCountry(), so checks on sel_country would silently
+ * evaluate against an empty value from here on.
+ */
+global $DIC;
+
+$db = $DIC->database();
+$user_check_table = \srag\Plugins\UserDefaults\UDFCheck\UDFCheckUser::TABLE_NAME;
+
+if ($db->tableExists($user_check_table)) {
+    $quoted_table = $db->quoteIdentifier($user_check_table);
+
+    $result = $db->queryF(
+        'SELECT id, parent_id FROM ' . $quoted_table . ' WHERE field_key = %s',
+        [\ilDBConstants::T_TEXT],
+        ['sel_country']
+    );
+
+    while ($row = $db->fetchAssoc($result)) {
+        $existing = $db->queryF(
+            'SELECT id FROM ' . $quoted_table . ' WHERE parent_id = %s AND field_key = %s',
+            [\ilDBConstants::T_INTEGER, \ilDBConstants::T_TEXT],
+            [(int) $row['parent_id'], 'country']
+        );
+
+        if ($db->fetchAssoc($existing)) {
+            // Renaming would duplicate an existing country check on the same
+            // setting, so drop the sel_country one instead.
+            $db->manipulateF(
+                'DELETE FROM ' . $quoted_table . ' WHERE id = %s',
+                [\ilDBConstants::T_INTEGER],
+                [(int) $row['id']]
+            );
+            continue;
+        }
+
+        $db->update(
+            $user_check_table,
+            ['field_key' => [\ilDBConstants::T_TEXT, 'country']],
+            ['id' => [\ilDBConstants::T_INTEGER, (int) $row['id']]]
+        );
+    }
+}
+?>

@@ -6,17 +6,25 @@ use srag\Plugins\UserDefaults\UserSetting\UserSetting;
 /**
  * @ilCtrl_IsCalledBy usrdefUserGUI : ilUserDefaultsConfigGUI
  */
-class usrdefUserGUI
+class usrdefUserGUI implements ilCtrlSecurityInterface
 {
     public const PLUGIN_CLASS_NAME = ilUserDefaultsPlugin::class;
     public const CMD_INDEX = 'index';
+    public const CMD_CONFIRM_SELECT_USER = 'confirmSelectUser';
     public const CMD_SELECT_USER = 'selectUser';
+    /**
+     * Every selected user runs through all manual settings in one request, so
+     * larger selections are refused instead of timing out half way through.
+     */
+    public const MAX_USERS = 500;
+    private const POST_USR_ID = 'usr_id';
 
     private ilCtrl $ctrl;
     private ilUserDefaultsPlugin $pl;
     private ilGlobalTemplateInterface $main_tpl;
     private ILIAS\HTTP\Wrapper\WrapperFactory $wrapper;
     private Refinery $refinery;
+    private ilLanguage $lng;
 
     /**
      * usrdefUserGUI constructor
@@ -35,6 +43,7 @@ class usrdefUserGUI
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->wrapper = $DIC->http()->wrapper();
         $this->refinery = $DIC->refinery();
+        $this->lng = $DIC->language();
     }
 
     /**
@@ -45,6 +54,7 @@ class usrdefUserGUI
         $cmd = $this->ctrl->getCmd(self::CMD_INDEX);
         match ($cmd) {
             self::CMD_INDEX,
+            self::CMD_CONFIRM_SELECT_USER,
             self::CMD_SELECT_USER => $this->{$cmd}(),
             default => throw new ilException("Command not found: $cmd"),
         };
@@ -55,17 +65,56 @@ class usrdefUserGUI
         $this->main_tpl->setContent((new usrdefUserTableGUI($this))->render());
     }
 
+    /**
+     * Assigning changes data for every selected user, so it must not run off a
+     * GET link the table action produces. ilCtrl checks the token of POST
+     * commands of this class, and refuses selectUser as a GET command.
+     */
+    public function getUnsafeGetCommands(): array
+    {
+        return [self::CMD_SELECT_USER];
+    }
+
+    public function getSafePostCommands(): array
+    {
+        return [];
+    }
+
+    protected function confirmSelectUser(): void
+    {
+        $usr_ids = $this->getSelectedUserIds(new usrdefUserTableGUI($this));
+        if (!$this->isSelectionAcceptable($usr_ids)) {
+            $this->ctrl->redirect($this, self::CMD_INDEX);
+            return;
+        }
+
+        $confirmation = new ilConfirmationGUI();
+        $confirmation->setFormAction($this->ctrl->getFormAction($this));
+        $confirmation->setHeaderText(sprintf($this->pl->txt('confirm_select_user'), count($usr_ids)));
+        foreach ($usr_ids as $usr_id) {
+            $name = ilObjUser::_lookupName($usr_id);
+            $confirmation->addItem(
+                self::POST_USR_ID . '[]',
+                (string) $usr_id,
+                trim($name['lastname'] . ', ' . $name['firstname'], ', ') . ' [' . $name['login'] . ']'
+            );
+        }
+        $confirmation->setConfirm($this->pl->txt('button_select_user'), self::CMD_SELECT_USER);
+        $confirmation->setCancel($this->lng->txt('cancel'), self::CMD_INDEX);
+
+        $this->main_tpl->setContent($confirmation->getHTML());
+    }
+
     protected function selectUser(): void
     {
-        $table = new usrdefUserTableGUI($this);
-        $usr_ids = $this->getSelectedUserIds($table);
+        $usr_ids = $this->wrapper->post()->has(self::POST_USR_ID)
+            ? array_values(array_filter($this->wrapper->post()->retrieve(
+                self::POST_USR_ID,
+                $this->refinery->kindlyTo()->listOf($this->refinery->kindlyTo()->int())
+            )))
+            : [];
 
-        if ($usr_ids === []) {
-            $this->main_tpl->setOnScreenMessage(
-                'failure',
-                $this->pl->txt('msg_no_users_selected'),
-                true
-            );
+        if (!$this->isSelectionAcceptable($usr_ids)) {
             $this->ctrl->redirect($this, self::CMD_INDEX);
             return;
         }
@@ -97,6 +146,28 @@ class usrdefUserGUI
     }
 
     /**
+     * @param list<int> $usr_ids
+     */
+    private function isSelectionAcceptable(array $usr_ids): bool
+    {
+        if ($usr_ids === []) {
+            $this->main_tpl->setOnScreenMessage('failure', $this->pl->txt('msg_no_users_selected'), true);
+            return false;
+        }
+
+        if (count($usr_ids) > self::MAX_USERS) {
+            $this->main_tpl->setOnScreenMessage(
+                'failure',
+                sprintf($this->pl->txt('msg_too_many_users_selected'), self::MAX_USERS),
+                true
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * The table hands over the selected row ids, or a single ALL_OBJECTS marker
      * when everything the current filter matches was selected.
      *
@@ -116,7 +187,7 @@ class usrdefUserGUI
         );
 
         if (in_array(usrdefUserTableGUI::ALL_OBJECTS, $ids, true)) {
-            return $table->getAllMatchingUserIds();
+            return $table->getAllMatchingUserIds(self::MAX_USERS + 1);
         }
 
         return array_values(array_filter(array_map('intval', $ids)));

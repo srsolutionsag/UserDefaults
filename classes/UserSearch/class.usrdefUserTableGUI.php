@@ -70,20 +70,17 @@ class usrdefUserTableGUI implements DataRetrieval
 
     /**
      * Every user the current filter matches. Used to resolve a "select all",
-     * which hands over a single ALL_OBJECTS marker instead of the ids.
+     * which hands over a single ALL_OBJECTS marker instead of the ids. Capped at
+     * $limit, so a caller can tell an oversized selection apart without loading
+     * the whole user base.
      *
      * @return list<int>
      */
-    public function getAllMatchingUserIds(): array
+    public function getAllMatchingUserIds(int $limit): array
     {
-        $total = $this->getTotalRowCount(null, null, null);
-        if ($total === 0) {
-            return [];
-        }
-
         $query = $this->buildQuery();
         $query->setOffset(0);
-        $query->setLimit($total);
+        $query->setLimit($limit);
 
         return array_map(
             static fn(array $row): int => (int) $row['usr_id'],
@@ -170,7 +167,7 @@ class usrdefUserTableGUI implements DataRetrieval
         $uri = $this->data_factory->uri(
             ILIAS_HTTP_PATH . '/' . $this->ctrl->getLinkTarget(
                 $this->parent_obj,
-                usrdefUserGUI::CMD_SELECT_USER
+                usrdefUserGUI::CMD_CONFIRM_SELECT_USER
             )
         );
 

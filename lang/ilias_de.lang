@@ -136,3 +136,5 @@ set_assigned_groups_queue_parallel_info#:#Gruppen werden gleichmässig aufgefül
 set_assigned_groups_queue_serial#:#Serielle Verteilung
 set_assigned_groups_queue_serial_info#:#Gruppen werden nacheinander aufgefüllt, d.h. es wird eine Gruppe bis zum Maximum gefüllt und dann mit der nächsten Gruppe fortgefahren.
 check_field_unavailable#:#Dieses Feld existiert in ILIAS nicht mehr oder kann vom Plugin nicht gelesen werden. Die Prüfung trifft nie zu, bis sie durch eine auf ein verfügbares Feld ersetzt wird.
+confirm_select_user#:#Alle manuellen Einstellungen auf diese %s Benutzer anwenden?
+msg_too_many_users_selected#:#Mehr als %s Benutzer ausgewählt, das sind zu viele für einen Durchgang. Bitte den Filter weiter einschränken.

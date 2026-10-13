@@ -246,10 +246,14 @@ class usrdefUserTableGUI implements DataRetrieval
      */
     protected function resolveOrgUnitMembers(array $org_unit_ref_ids): array
     {
-        $usr_ids = ilObjOrgUnitTree::_getInstance()->getAssignedUsers(
-            array_map(static fn($ref_id): int => (int) $ref_id, $org_unit_ref_ids),
-            ilOrgUnitPosition::CORE_POSITION_EMPLOYEE
-        );
+        // getEmployees() looks the employee position up by its core identifier;
+        // the position's database id is not guaranteed to be the same number.
+        $tree = ilObjOrgUnitTree::_getInstance();
+        $usr_ids = [];
+        foreach ($org_unit_ref_ids as $ref_id) {
+            $usr_ids = array_merge($usr_ids, $tree->getEmployees((int) $ref_id));
+        }
+        $usr_ids = array_unique($usr_ids);
 
         return $usr_ids === [] ? self::MATCHES_NOBODY : array_values(array_map('intval', $usr_ids));
     }

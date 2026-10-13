@@ -69,6 +69,7 @@ class UDFCheckUDF extends UDFCheck
                 'field_key' => $field->getIdentifier(),
                 'field_type' => $type_and_values[0],
                 'field_values' => $type_and_values[1],
+                'field_multi' => $input instanceof ilMultiSelectInputGUI,
             ];
         }
 
@@ -84,6 +85,12 @@ class UDFCheckUDF extends UDFCheck
         unset($options['']); // the "please select" entry a single select prepends
 
         return array_values($options);
+    }
+
+    #[\Override]
+    protected function isMultiValued(): bool
+    {
+        return (bool) ($this->getDefinition()['field_multi'] ?? false);
     }
 
     protected function getFieldValue(ilObjUser $user): array

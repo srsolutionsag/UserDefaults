@@ -468,6 +468,17 @@ abstract class UDFCheck extends ActiveRecord
 
     public function isValid(ilObjUser $user): bool
     {
+        // The field is gone from the core (deleted, never migrated, or a type
+        // this plugin cannot read). Without a value to look at, a negated or
+        // NOT_* check would match everyone, so refuse the match instead.
+        if ($this->getDefinition() === []) {
+            return false;
+        }
+
+        if (!isset(self::$operator_text_keys[$this->getOperator()])) {
+            return false;
+        }
+
         //more than one $value possible because of cascade-select plugin...
         $values = array_map(fn($value): string => trim((string) $value), $this->getFieldValue($user));
 
@@ -478,62 +489,14 @@ abstract class UDFCheck extends ActiveRecord
                 continue;
             }
 
-            $value = count($values) > 1
-                ? ($values[$key] ?? '')
-                : reset($values);
+            if ($this->isMultiValued()) {
+                $valid = $this->matchesAnyOf($values, $check_value);
+            } else {
+                $value = count($values) > 1
+                    ? ($values[$key] ?? '')
+                    : (string) reset($values);
 
-            switch ($this->getOperator()) {
-                case self::OP_EQUALS:
-                    $valid = (strtolower($value) === strtolower($check_value));
-                    break;
-
-                case self::OP_NOT_EQUALS:
-                    $valid = (strtolower($value) !== strtolower($check_value));
-                    break;
-
-                case self::OP_STARTS_WITH:
-                    $valid = (str_starts_with(strtolower($value), strtolower($check_value)));
-                    break;
-
-                case self::OP_NOT_STARTS_WITH:
-                    $valid = (!str_starts_with(strtolower($value), strtolower($check_value)));
-                    break;
-
-                case self::OP_ENDS_WITH:
-                    $valid = (strpos(strtolower($value), strtolower($check_value)) === (strlen($value) - strlen(
-                        $check_value
-                    )));
-                    break;
-
-                case self::OP_NOT_ENDS_WITH:
-                    $valid = (strpos(strtolower($value), strtolower($check_value)) !== (strlen($value) - strlen(
-                        $check_value
-                    )));
-                    break;
-
-                case self::OP_CONTAINS:
-                    $valid = (str_contains(strtolower($value), strtolower($check_value)));
-                    break;
-                case self::OP_NOT_CONTAINS:
-                    $valid = (!str_contains(strtolower($value), strtolower($check_value)));
-                    break;
-                case self::OP_IS_EMPTY:
-                    $valid = empty($value);
-                    break;
-                case self::OP_NOT_IS_EMPTY:
-                    $valid = (!empty($value));
-                    break;
-
-                case self::OP_REG_EX:
-                    // Fix RegExp
-                    if ($check_value[0] !== "/" && $check_value[strlen($check_value) - 1] !== "/") {
-                        $check_value = "/$check_value/";
-                    }
-                    $valid = (preg_match($check_value, $value) === 1);
-                    break;
-
-                default:
-                    return false;
+                $valid = $this->matches($value, $check_value);
             }
 
             // it's an AND condition
@@ -543,6 +506,82 @@ abstract class UDFCheck extends ActiveRecord
         }
 
         return $this->isNegated() !== $valid;
+    }
+
+    /**
+     * Whether the field holds a set of values (a multi select) rather than one
+     * value per entry of the check, as the cascade select did.
+     */
+    protected function isMultiValued(): bool
+    {
+        return false;
+    }
+
+    /**
+     * A positive operator holds if any of the selected values satisfies it, a
+     * negative one only if none of them violates it: NOT_EQUALS 'B' must fail
+     * for a user who selected both A and B.
+     *
+     * @param string[] $values
+     */
+    private function matchesAnyOf(array $values, string $check_value): bool
+    {
+        $results = array_map(
+            fn(string $value): bool => $this->matches($value, $check_value),
+            $values === [] ? [''] : $values
+        );
+
+        if (in_array($this->getOperator(), self::$operator_negative, true)) {
+            return !in_array(false, $results, true);
+        }
+
+        return in_array(true, $results, true);
+    }
+
+    private function matches(string $value, string $check_value): bool
+    {
+        switch ($this->getOperator()) {
+            case self::OP_EQUALS:
+                return (strtolower($value) === strtolower($check_value));
+
+            case self::OP_NOT_EQUALS:
+                return (strtolower($value) !== strtolower($check_value));
+
+            case self::OP_STARTS_WITH:
+                return (str_starts_with(strtolower($value), strtolower($check_value)));
+
+            case self::OP_NOT_STARTS_WITH:
+                return (!str_starts_with(strtolower($value), strtolower($check_value)));
+
+            case self::OP_ENDS_WITH:
+                return (strpos(strtolower($value), strtolower($check_value)) === (strlen($value) - strlen(
+                    $check_value
+                )));
+
+            case self::OP_NOT_ENDS_WITH:
+                return (strpos(strtolower($value), strtolower($check_value)) !== (strlen($value) - strlen(
+                    $check_value
+                )));
+
+            case self::OP_CONTAINS:
+                return (str_contains(strtolower($value), strtolower($check_value)));
+            case self::OP_NOT_CONTAINS:
+                return (!str_contains(strtolower($value), strtolower($check_value)));
+            case self::OP_IS_EMPTY:
+                return empty($value);
+            case self::OP_NOT_IS_EMPTY:
+                return (!empty($value));
+
+            case self::OP_REG_EX:
+                // Fix RegExp
+                if ($check_value[0] !== "/" && $check_value[strlen($check_value) - 1] !== "/") {
+                    $check_value = "/$check_value/";
+                }
+                return (preg_match($check_value, $value) === 1);
+
+            default:
+                return false;
+        }
     }
 
     /**

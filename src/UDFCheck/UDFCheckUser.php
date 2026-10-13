@@ -59,7 +59,7 @@ class UDFCheckUser extends UDFCheck
             'lastname' => $user->getLastname(),
             'firstname' => $user->getFirstname(),
             'login' => $user->getLogin(),
-            'title' => $user->getTitle(),
+            'title' => $user->getUTitle(),
             'institution' => $user->getInstitution(),
             'department' => $user->getDepartment(),
             'street' => $user->getStreet(),

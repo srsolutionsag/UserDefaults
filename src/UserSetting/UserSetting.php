@@ -52,7 +52,7 @@ class UserSetting extends ActiveRecord
     private ilUserDefaultsPlugin $pl;
     private RBACServices $rbac;
     private ilObjUser $user;
-    private SkillPersonalService $personal_skills;
+    private ?SkillPersonalService $personal_skills = null;
 
     public function __construct(mixed $primary_key = 0)
     {
@@ -60,7 +60,6 @@ class UserSetting extends ActiveRecord
         $this->pl = ilUserDefaultsPlugin::getInstance();
         $this->rbac = $DIC->rbac();
         $this->user = $DIC->user();
-        $this->personal_skills = $DIC->skills()->personal();
 
         $org_repo = \ilOrgUnitLocalDIC::dic();
         $this->orgu_user_assignments = $org_repo["repo.UserAssignments"];
@@ -568,8 +567,20 @@ class UserSetting extends ActiveRecord
         $skill_ids = $this->getAllPortfolioSkills();
 
         foreach ($skill_ids as $skill_id) {
-            $this->personal_skills->addPersonalSkill($user->getId(), (int) $skill_id);
+            $this->personalSkills()->addPersonalSkill($user->getId(), (int) $skill_id);
         }
+    }
+
+    /**
+     * Resolved on first use: building the skill service queries the database and
+     * needs the repository tree, which neither every ActiveRecord instance of this
+     * class nor the setup context running sql/dbupdate.php should pay for.
+     */
+    private function personalSkills(): SkillPersonalService
+    {
+        global $DIC;
+
+        return $this->personal_skills ??= $DIC->skills()->personal();
     }
 
     protected function getAllPortfolioSkills(): array
@@ -577,7 +588,7 @@ class UserSetting extends ActiveRecord
         $user = $this->getUsrObject();
         // Still keyed by skill node id, so the ids stay comparable to the ones
         // read from the portfolio template pages below.
-        $pskills = array_keys($this->personal_skills->getSelectedUserSkills($user->getId()));
+        $pskills = array_keys($this->personalSkills()->getSelectedUserSkills($user->getId()));
         $skill_ids = [];
         foreach (ilPortfolioTemplatePage::getAllPortfolioPages($this->getPortfolioTemplateId()) as $page) {
             if ($page['type'] === ilPortfolioTemplatePage::TYPE_PAGE) {

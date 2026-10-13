@@ -3,6 +3,7 @@
 namespace srag\Plugins\UserDefaults\UDFCheck;
 
 use ilCheckboxInputGUI;
+use ilNonEditableValueGUI;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
@@ -169,6 +170,15 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                             break;
                     }
                     break;
+                default:
+                    // The field no longer exists or has a type this plugin
+                    // cannot read. Show the stored value read only, so saving
+                    // the operator or negation does not wipe it.
+                    $se = new ilNonEditableValueGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_VALUE);
+                    $se->setValue($this->object->getCheckValue());
+                    $se->setInfo($this->pl->txt('check_field_unavailable'));
+                    $this->addItem($se);
+                    break;
             }
         }
 
@@ -220,7 +230,9 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                     $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE . '_select_value'));
                     break;
                 default:
-                    $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE));
+                    if (!$this->getItemByPostVar(self::F_CHECK_VALUE) instanceof ilNonEditableValueGUI) {
+                        $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE));
+                    }
                     break;
             }
             $this->object->setNegated($this->getInput(self::F_UDF_NEGATE_ID));

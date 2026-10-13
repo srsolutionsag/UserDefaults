@@ -135,3 +135,4 @@ set_assigned_groups_queue_parallel#:#Parallele Verteilung
 set_assigned_groups_queue_parallel_info#:#Gruppen werden gleichmässig aufgefüllt, d.h. es wird jeweils die Gruppe mit den wenigsten Teilnehmern gewählt. Sind alle voll, so wird die letzte Gruppe 'überfüllt'.
 set_assigned_groups_queue_serial#:#Serielle Verteilung
 set_assigned_groups_queue_serial_info#:#Gruppen werden nacheinander aufgefüllt, d.h. es wird eine Gruppe bis zum Maximum gefüllt und dann mit der nächsten Gruppe fortgefahren.
+check_field_unavailable#:#Dieses Feld existiert in ILIAS nicht mehr oder kann vom Plugin nicht gelesen werden. Die Prüfung trifft nie zu, bis sie durch eine auf ein verfügbares Feld ersetzt wird.

@@ -31,6 +31,7 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
     public const F_UDF_FIELD_KEY = 'field_key';
     public const F_UDF_FIELD_CATEGORY = 'field_category';
     public const F_CHECK_VALUE = 'check_value';
+    public const F_CHECK_VALUE_LEVEL = 'check_value_level_';
     public const F_UDF_NEGATE_ID = 'udf_negate_value';
     public const F_UDF_OPERATOR = 'udf_operator';
     public const F_CHECK_RADIO = 'check_radio';
@@ -170,6 +171,9 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                             break;
                     }
                     break;
+                case UDFCheckUDF::FIELD_TYPE_UDF_CASCADE:
+                    $this->addCascadeInputs($definition['field_levels'] ?? []);
+                    break;
                 default:
                     // The field no longer exists or has a type this plugin
                     // cannot read. Show the stored value read only, so saving
@@ -198,6 +202,11 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
                 self::F_UDF_OPERATOR => $this->object->getOperator()
             ];
 
+            foreach ($this->object->getCheckValues() as $level => $check_value) {
+                $array[self::F_CHECK_VALUE_LEVEL . $level] = $check_value;
+            }
+            $array[self::F_CHECK_VALUE . '_cascade_value'] = $this->object->getCheckValue();
+
             // preselect radio-option due to value
             if (in_array($this->object->getCheckValue(), $this->object->getDefinitionValues())) {
                 $array[self::F_CHECK_RADIO] = self::F_CHECK_SELECT;
@@ -223,10 +232,19 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
             $check_radio = $this->getInput(self::F_CHECK_RADIO);
             switch ($check_radio) {
                 case self::F_CHECK_TEXT:
+                    if ($this->isCascade()) {
+                        $this->object->setCheckValues($this->getLevelInputs());
+                        break;
+                    }
                     $this->object->setCheckValues([$this->getInput(self::F_CHECK_VALUE . '_text_value')]);
 
                     break;
                 case self::F_CHECK_SELECT:
+                    if ($this->isCascade()) {
+                        // Serialized with ' → ' between the levels, as CHECK_SPLIT expects.
+                        $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE . '_cascade_value'));
+                        break;
+                    }
                     $this->object->setCheckValue($this->getInput(self::F_CHECK_VALUE . '_select_value'));
                     break;
                 default:
@@ -248,6 +266,62 @@ class UDFCheckFormGUI extends ilPropertyFormGUI
         }
 
         return $this->object->getId();
+    }
+
+    /**
+     * Either one text input per level, or the cascading select itself. A level
+     * left empty in the text inputs is not checked, so a check can stop at an
+     * upper level.
+     *
+     * @param list<string> $levels
+     */
+    protected function addCascadeInputs(array $levels): void
+    {
+        $radio = new ilRadioGroupInputGUI($this->pl->txt(self::F_CHECK_VALUE), self::F_CHECK_RADIO);
+
+        $option_text = new ilRadioOption($this->pl->txt('check_text_fields'), self::F_CHECK_TEXT);
+        foreach ($levels as $level => $name) {
+            $option_text->addSubItem(new ilTextInputGUI(
+                $name !== '' ? $name : $this->pl->txt(self::F_CHECK_VALUE) . ' ' . ($level + 1),
+                self::F_CHECK_VALUE_LEVEL . $level
+            ));
+        }
+        $radio->addOption($option_text);
+
+        $cascade_input = $this->object instanceof UDFCheckUDF ? $this->object->getCascadeInput() : null;
+        if ($cascade_input !== null) {
+            $cascade_input->setPostVar(self::F_CHECK_VALUE . '_cascade_value');
+            $cascade_input->setRequired(false);
+
+            $option_select = new ilRadioOption($this->pl->txt('check_select_lists'), self::F_CHECK_SELECT);
+            $option_select->addSubItem($cascade_input);
+            $radio->addOption($option_select);
+        }
+
+        $this->addItem($radio);
+    }
+
+    protected function isCascade(): bool
+    {
+        return $this->object instanceof UDFCheckUDF && $this->object->isCascade();
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function getLevelInputs(): array
+    {
+        $values = [];
+        foreach (array_keys($this->object->getDefinition()['field_levels'] ?? []) as $level) {
+            $values[] = (string) $this->getInput(self::F_CHECK_VALUE_LEVEL . $level);
+        }
+
+        // Trailing empty levels would only leave a dangling separator behind.
+        while ($values !== [] && trim((string) end($values)) === '') {
+            array_pop($values);
+        }
+
+        return $values;
     }
 
     protected function addCommandButtons(): void

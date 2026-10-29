@@ -492,7 +492,7 @@ abstract class UDFCheck extends ActiveRecord
             if ($this->isMultiValued()) {
                 $valid = $this->matchesAnyOf($values, $check_value);
             } else {
-                $value = count($values) > 1
+                $value = count($values) > 1 || $this->isPositional()
                     ? ($values[$key] ?? '')
                     : (string) reset($values);
 
@@ -506,6 +506,16 @@ abstract class UDFCheck extends ActiveRecord
         }
 
         return $this->isNegated() !== $valid;
+    }
+
+    /**
+     * Whether each part of the check value belongs to the value at the same
+     * position, as with the levels of a cascading select, even where the user
+     * has only filled in the first level.
+     */
+    protected function isPositional(): bool
+    {
+        return false;
     }
 
     /**
